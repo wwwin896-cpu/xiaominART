@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="{{ .Language.Lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{{ .Site.Params.description }}">
+  <meta name="robots" content="noindex, nofollow">
+  <title>{{ if not .IsHome }}{{ .Title }}｜{{ end }}{{ .Site.Title }}</title>
+  {{ range .Translations }}<link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}">{{ end }}
+  <link rel="stylesheet" href="{{ "css/site.css" | relURL }}">
+</head>
+<body>
+  <div class="testbar">{{ if eq .Language.Lang "en" }}Hugo + GitHub Pages + Cloudflare preparation build · Demo content · No real transactions{{ else }}Hugo + GitHub Pages + Cloudflare 准备版 · 演示内容 · 暂未接入真实交易{{ end }}</div>
+  <header class="site-header">
+    <a class="brand" href="{{ "" | relLangURL }}">{{ if eq .Language.Lang "en" }}XiaominART{{ else }}小民艺术 <span>XIAOMINART</span>{{ end }}</a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">{{ if eq .Language.Lang "en" }}Menu{{ else }}菜单{{ end }}</button>
+    <nav id="site-nav" class="site-nav" aria-label="{{ if eq .Language.Lang "en" }}Main navigation{{ else }}主导航{{ end }}">
+      <a href="{{ "#intentions" | relLangURL }}">{{ if eq .Language.Lang "en" }}Find by feeling{{ else }}按心意找作品{{ end }}</a>
+      <a href="{{ "#seasons" | relLangURL }}">{{ if eq .Language.Lang "en" }}Four seasons{{ else }}四时有字{{ end }}</a>
+      <a href="{{ "#custom" | relLangURL }}">{{ if eq .Language.Lang "en" }}Commission a gesture{{ else }}定制一份心意{{ end }}</a>
+      {{ range .Translations }}<a href="{{ .Permalink }}">{{ .Language.LanguageName }}</a>{{ end }}
+    </nav>
+  </header>
+  <main>{{ block "main" . }}{{ end }}</main>
+  <footer class="site-footer">
+    <strong>{{ if eq .Language.Lang "en" }}Write your days into words.{{ else }}把日子，写成字。{{ end }}</strong>
+    <span>{{ if eq .Language.Lang "en" }}Static preparation build; orders and admin remain in the independent test service.{{ else }}当前为静态官网准备版；订单与后台仍在独立测试工程中。{{ end }}</span>
+  </footer>
+  <script>
+    const menu = document.querySelector('.menu-toggle');
+    const nav = document.querySelector('#site-nav');
+    menu?.addEventListener('click', () => { const open = nav.classList.toggle('open'); menu.setAttribute('aria-expanded', String(open)); });
+  </script>
+</body>
+</html>

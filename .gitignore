@@ -1,0 +1,16 @@
+﻿# Hugo build output
+public/
+resources/
+.hugo_build.lock
+
+# Runtime/test data and secrets
+node_modules/
+**/data/
+**/*.sqlite
+**/*.sqlite-wal
+**/*.sqlite-shm
+**/.env
+**/.env.*
+!**/.env.example
+**/*_err.log
+**/*_out.log

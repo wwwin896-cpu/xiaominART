@@ -1,0 +1,27 @@
+{
+  "scope": "xiaominART same-version real-browser re-verification (built-in browser requested; built-in disabled -> used user Chrome)",
+  "server": { "port": 4345, "dataDir": "%TEMP%\\xiaominart-browser-final", "nodeEnv": "test", "adminUser": "admin", "pid": 24356 },
+  "browserTab": "tab-vtab-626743833 (user Chrome, built-in browser unavailable)",
+  "orderNumber": "TEST-20260913-D50A9C",
+  "orderAccessToken": "98f54b1f04abbcc89a937766f5f95414e803b685585f4738",
+  "screenshots": ["01-home-1440.png","02-shop-1440.png","03-detail-lu-1440.png","04-detail-lu-added-1440.png","05-cart-1440.png","06-cart-qty-modified-1440.png","07-cart-empty-1440.png","08-checkout-empty-1440.png","09-checkout-filled-1440.png","10-checkout-submit-failed-1440.png","11-order-result-1440.png"],
+  "completed": [
+    "Desk 1440 home->shop->/shop/lu ok",
+    "select spec (standard) + qty2 + add to cart ok (localStorage L/standard/2)",
+    "cart shows product/spec/qty/total 598 ok",
+    "modify qty -> 299 ok; refresh persistence ok",
+    "remove item -> empty ok; refresh persistence ok",
+    "clear cart -> empty ok",
+    "order result page ok (TEST-20260913-D50A9C, CNY 598, spec correct)"
+  ],
+  "failed": [
+    "checkout UI submit BROKEN: /checkout inline script calls cartRead() but cartScript not included -> ReferenceError 'cartRead is not defined'; button click throws, no order created, no message shown"
+  ],
+  "remaining": [
+    "Admin login + query order/stock + modify product price/stock/published + refresh verify",
+    "Order status paid->fulfilled/cancelled + audit visibility",
+    "Custom page XSS harmless-marker submit + admin text-only check",
+    "Order result invalid-token path",
+    "Mobile 375 menu reachability + shop sort high->default + failure/retry prompt checks"
+  ]
+}

@@ -1,0 +1,25 @@
+{{ define "main" }}
+{{ $en := eq .Language.Lang "en" }}
+<section class="hero wrap">
+  <div class="hero-copy">
+    <p class="kicker">{{ if $en }}XIAOMINART{{ else }}小民艺术 XIAOMINART{{ end }}</p>
+    <h1>{{ .Site.Params.heroTitle }}</h1>
+    <p class="hero-lead">{{ .Site.Params.heroLead }}</p>
+    <div class="actions"><a class="button" href="#intentions">{{ if $en }}See the works{{ else }}看看作品{{ end }}</a><a class="button button-quiet" href="#custom">{{ if $en }}Commission a gesture{{ else }}定制一份心意{{ end }}</a></div>
+  </div>
+  <div class="hero-art"><div class="art-placeholder">{{ if $en }}Real authorized work<br><small>Placeholder composition · pending approved assets</small>{{ else }}待替换真实授权作品<br><small>当前为构图占位，不代表正式作品</small>{{ end }}</div></div>
+</section>
+<section id="intentions" class="section wrap">
+  <div class="section-heading"><p class="kicker">{{ if $en }}Find by feeling{{ else }}按心意找作品{{ end }}</p><h2>{{ if $en }}What would you write into words?{{ else }}你想把哪份心意，写成字？{{ end }}</h2><p>{{ if $en }}Creative directions, not promises of outcomes.{{ else }}这里是创作方向，不是功效承诺。{{ end }}</p></div>
+  <div class="intentions">
+    {{ if $en }}{{ $items := slice (dict "key" "福" "text" "A wish for peace at home.") (dict "key" "禄" "text" "A blessing for the work you do.") (dict "key" "寿" "text" "A gesture of respect for elders.") (dict "key" "喜" "text" "A memory for a joyful occasion.") (dict "key" "财" "text" "A good-wish for a new business.") (dict "key" "运" "text" "Encouragement for a new beginning.") }}{{ range $items }}<a class="intention" href="#works"><b>{{ .key }}</b><span>{{ .text }}</span></a>{{ end }}{{ else }}{{ $items := slice (dict "key" "福" "text" "给家一份平安。") (dict "key" "禄" "text" "给努力一份祝愿。") (dict "key" "寿" "text" "给长辈一份敬意。") (dict "key" "喜" "text" "给喜事一份纪念。") (dict "key" "财" "text" "给开业一份祝贺。") (dict "key" "运" "text" "给新的开始一份鼓励。") }}{{ range $items }}<a class="intention" href="#works"><b>{{ .key }}</b><span>{{ .text }}</span></a>{{ end }}{{ end }}
+  </div>
+  <p class="note">{{ if $en }}“运” remains a thematic direction until a distinct body of work is ready.{{ else }}“运”暂作为专题方向；当有明确差异化作品后再扩充，不为凑六类重复图片。{{ end }}</p>
+</section>
+<section id="seasons" class="season wrap">
+  <div><p class="kicker">{{ if $en }}Four seasons, written{{ else }}四时有字{{ end }}</p><h2>{{ if $en }}Let each season leave its own line.{{ else }}让当季的日子，留下当季的一笔。{{ end }}</h2><p>{{ if $en }}Begin with completed seasonal work. Add solar-term stories when the creative rhythm is steady.{{ else }}先展示已经完成的季节作品。随着创作和更新稳定，再逐步加入节气故事。{{ end }}</p></div>
+  <div class="season-card"><span>{{ if $en }}Current feature{{ else }}本季专题{{ end }}</span><strong>{{ if $en }}Approved seasonal work pending{{ else }}待补真实作品与季节内容{{ end }}</strong><small>{{ if $en }}Keep the brand system; change only the feature copy and works.{{ else }}统一品牌风格，只替换专题文案和相关作品。{{ end }}</small></div>
+</section>
+<section id="works" class="works wrap"><p class="kicker">{{ if $en }}Works{{ else }}作品入口{{ end }}</p><h2>{{ if $en }}福禄寿喜财运 helps visitors choose a work.{{ else }}福禄寿喜财运，帮助你选作品。{{ end }}</h2><p>{{ if $en }}Real SKUs, imagery, pricing, inventory, specifications, and rights must be approved before release.{{ else }}真实 SKU、图片、价格、库存、规格和授权确认后上线。{{ end }}</p></section>
+<section id="custom" class="custom wrap"><div><p class="kicker">{{ if $en }}Commission a gesture{{ else }}定制一份心意{{ end }}</p><h2>{{ if $en }}Your words deserve a careful listen.{{ else }}你的话，小民认真听。{{ end }}</h2><p>{{ if $en }}Tell us who it is for, where it will live, and what you want to say. This static link is a preparation placeholder; the ordering service remains under separate testing.{{ else }}告诉小民写给谁、挂在哪里、想说什么。当前入口只作静态引导，正式定制服务仍在独立测试工程验收。{{ end }}</p></div><a class="button" href="#custom">{{ if $en }}Share an intention{{ else }}提交定制意向{{ end }}</a></section>
+{{ end }}
