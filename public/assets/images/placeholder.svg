@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">四季福愿概念图</title>
+  <desc id="desc">暖纸色背景上的五个祝愿主题字样与非量产说明</desc>
+  <rect width="1200" height="800" fill="#ede5d7"/>
+  <rect x="80" y="80" width="1040" height="640" fill="#fffdf8" stroke="#9b3d32" stroke-width="2"/>
+  <path d="M140 205H1060M140 595H1060" stroke="#d9d0c1" stroke-width="1"/>
+  <text x="600" y="175" text-anchor="middle" fill="#9b3d32" font-family="Georgia, serif" font-size="24" letter-spacing="5">XIAOMINART / FIRST WORK</text>
+  <g fill="#9b3d32" font-family="serif" font-size="190" text-anchor="middle">
+    <text x="270" y="430">福</text><text x="435" y="430">禄</text><text x="600" y="430">寿</text><text x="765" y="430">喜</text><text x="930" y="430">财</text>
+  </g>
+  <text x="600" y="535" text-anchor="middle" fill="#25231f" font-family="sans-serif" font-size="28">四季福愿 · 心事成字</text>
+  <text x="600" y="650" text-anchor="middle" fill="#756f65" font-family="sans-serif" font-size="18">概念图 · 非量产实物</text>
+</svg>

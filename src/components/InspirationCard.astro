@@ -1,0 +1,46 @@
+---
+import CaseNotice from './CaseNotice.astro';
+const { item } = Astro.props;
+const frameNames: Record<string, string> = { 'matte-black': '哑光黑细框', champagne: '哑光香槟金细框', 'natural-oak': '原木细框' };
+---
+<article class="inspiration-card reveal" data-reveal data-spaces={item.spaces.join('|')} data-style={item.style.join('|')} data-artist={item.artist} data-palette={item.palette.join('|')} aria-label={`${item.title}，${item.en}，${item.spaces.join('、')}空间参考`}>
+  <a class="gallery-trigger" href={`/inspiration/${item.slug}/`} data-gallery-title={item.title} data-gallery-en={item.en} data-gallery-tag={item.tag} data-gallery-tone={item.slug} aria-label={`${item.title} ${item.en}`}>
+    <div class="framed-scenes" data-tone={item.slug}>
+      {(item.frames as string[]).map((frame: string, index: number) => <div class:list={['framed-art', `frame-${frame}`, index === 1 && 'secondary-frame']} role="img" aria-label={`${item.title}，${item.spaces.join('、')}场景中的${frameNames[frame]}画框效果参考`}><div class="art-paper"><span class="serif" aria-hidden="true">{item.title.slice(0, 1)}</span></div></div>)}
+      <small class="scene-label">{item.spaces.join('｜')}</small>
+    </div>
+    <div class="inspiration-copy"><span class="eyebrow">{item.category}</span><h3 class="serif">{item.title}</h3><p lang="en">{item.en}</p><p>{item.note}</p><div class="space-tags">{(item.spaces as string[]).map((space: string) => <span>{space}</span>)}</div><CaseNotice compact /></div>
+  </a>
+  <div class="card-actions"><a class="btn btn-link" href={`/inspiration/${item.slug}/#client-story`}>客户说 / Client story</a><button class="btn btn-link card-share" type="button" data-share-title={item.title} data-share-url={`/inspiration/${item.slug}/`}>分享 / Share</button><a class="btn btn-link" href={`/custom-commission/?inspiration=${encodeURIComponent(`灵感参考案例：【${item.title}】`)}&tag=${encodeURIComponent(item.tag)}`}>以此为灵感定制 / Commission from this direction →</a></div>
+</article>
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.card-share').forEach((button) => button.addEventListener('click', async () => { const title = button.dataset.shareTitle || ''; const url = new URL(button.dataset.shareUrl || '/', window.location.origin).href; try { await navigator.clipboard.writeText(`${title}｜小民艺术\n${url}`); button.textContent = '链接已复制 / Copied'; } catch { button.textContent = '请复制地址 / Copy URL'; } }));
+</script>
+<style>
+  .inspiration-card { border-top: 1px solid var(--line); padding-top: 14px; }
+  .inspiration-card:focus-within .framed-scenes { filter: brightness(1.035); }
+  .inspiration-card > a:first-child { display: block; }
+  .framed-scenes { aspect-ratio: 1.15; background: var(--paper-deep); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+  .framed-art { width: 58%; aspect-ratio: .74; padding: 10px; background: #211f1c; box-shadow: 0 15px 30px rgba(43, 41, 36, .14); transform: rotate(-3deg); }
+  .framed-art.secondary-frame { position: absolute; width: 44%; transform: translate(30%, 13%) rotate(6deg); z-index: 0; opacity: .8; }
+  .framed-art:first-child { z-index: 1; }
+  .frame-champagne { background: #b4945a; }
+  .frame-natural-oak { background: #a77f55; }
+  .art-paper { width: 100%; height: 100%; background: var(--paper-light); display: grid; place-items: center; color: var(--cinnabar); border: 1px solid rgba(43, 41, 36, .12); }
+  .art-paper span { font-size: clamp(52px, 7vw, 96px); }
+  .scene-label { position: absolute; left: 14px; bottom: 12px; z-index: 2; color: var(--ink-soft); font: 10px var(--font-mono); letter-spacing: .08em; }
+  .inspiration-copy { padding: 18px 0 16px; }
+  h3 { font-size: 28px; font-weight: 500; margin: 11px 0 2px; }
+  .inspiration-copy > p { margin: 5px 0 0; color: var(--ink-soft); font-size: 14px; }
+  .inspiration-copy > p[lang='en'] { font: 16px var(--font-display-en), Georgia, serif; color: var(--ink); }
+  .space-tags { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 12px; color: var(--muted); font-size: 12px; }
+  .space-tags span + span::before { content: '·'; margin-right: 14px; color: var(--line); }
+  .inspiration-copy .case-notice { margin-top: 12px; }
+  .card-actions { display: flex; flex-wrap: wrap; gap: 14px 18px; align-items: center; }
+  .card-actions { display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: center; }
+  .btn-link { font-size: 12px; min-height: 44px; }
+  .inspiration-card:hover .framed-scenes { filter: brightness(1.035); }
+  .card-share{border:0;border-bottom:1px solid var(--cinnabar);background:transparent;color:var(--cinnabar);cursor:pointer;padding:0}
+  @media (max-width: 767px) { .card-actions { display: grid; gap: 12px; justify-content: start; } }
+  @media (max-width: 767px) { .framed-art { width: 55%; } .framed-art.secondary-frame { width: 43%; } }
+</style>

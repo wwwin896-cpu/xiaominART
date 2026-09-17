@@ -1,0 +1,17 @@
+---
+const { artist } = Astro.props;
+---
+<article class="artist-card"><div class="artist-mark" role="img" aria-label={`${artist.name} 艺术家档案占位`}><span class="serif">{artist.name.slice(-1)}</span><small>ARTIST / 00</small></div><div><span class="eyebrow">{artist.discipline}</span><h3 class="serif">{artist.name}</h3><p lang="en">{artist.en}</p><p>{artist.bio}</p><div class="artist-tags">{artist.media.slice(0, 3).map((medium: string) => <span>{medium}</span>)}{artist.projectTypes.slice(0, 2).map((type: string) => <span>{type}</span>)}</div><a class="btn btn-link" href={`/artists/${artist.slug}/`}>查看艺术家 / View artist →</a></div></article>
+<style>
+  .artist-card { display: grid; grid-template-columns: minmax(0, 34%) minmax(0, 1fr); gap: 24px; min-width: 0; border-top: 1px solid var(--line); padding-top: 16px; }
+  .artist-mark { aspect-ratio: .9; background: var(--paper-deep); display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--cinnabar); }
+  .artist-mark span { font-size: 72px; }
+  .artist-mark small { font: 10px var(--font-mono); color: var(--ink-soft); margin-top: 14px; }
+  h3 { font-size: 30px; font-weight: 500; margin: 12px 0 2px; }
+  .artist-card p { color: var(--ink-soft); font-size: 14px; margin: 7px 0; overflow-wrap: anywhere; }
+  .artist-card p[lang='en'] { font: 16px var(--font-display-en), Georgia, serif; color: var(--ink); }
+  .artist-tags { display: flex; flex-wrap: wrap; gap: 6px 12px; color: var(--meta); font-size: 11px; margin-top: 12px; }
+  .artist-tags span + span::before { content: '·'; margin-right: 12px; color: var(--line); }
+  .btn-link { display: inline-flex; margin-top: 18px; font-size: 12px; }
+  @media (max-width: 767px) { .artist-card { grid-template-columns: 88px 1fr; gap: 16px; } .artist-mark { aspect-ratio: 1; } .artist-mark span { font-size: 42px; } h3 { font-size: 25px; } }
+</style>

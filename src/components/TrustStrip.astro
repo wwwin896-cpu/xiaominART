@@ -1,0 +1,13 @@
+---
+const items = ['编号可查', '视频为证', '原创书写', '故事卡与手写回应'];
+---
+<div class="trust" data-component="trust-strip">
+  {items.map((item) => <span><b>—</b> {item}<small>能力确认后开放</small></span>)}
+</div>
+<style>
+  .trust { display: grid; grid-template-columns: repeat(4, 1fr); border-block: 1px solid var(--border); padding: 18px 0; gap: 16px; }
+  .trust span { font-size: 13px; color: var(--muted); }
+  .trust b { color: var(--accent); font-weight: 400; }
+  .trust small { display: block; color: var(--meta); font-size: 10px; margin: 4px 0 0 18px; }
+  @media (max-width: 767px) { .trust { grid-template-columns: repeat(2, 1fr); gap: 18px 8px; } }
+</style>

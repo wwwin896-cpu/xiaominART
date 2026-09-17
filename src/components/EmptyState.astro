@@ -1,0 +1,9 @@
+---
+const { title = '内容准备中', body = '真实案例与授权资料确认后，会在这里逐步公开。' } = Astro.props;
+---
+<aside class="empty-state"><span class="eyebrow">Archive / 档案</span><h2 class="serif">{title}</h2><p>{body}</p></aside>
+<style>
+  .empty-state { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 28px 0; }
+  .empty-state h2 { font-size: 34px; font-weight: 500; margin: 14px 0 6px; }
+  .empty-state p { color: var(--ink-soft); max-width: 600px; margin: 0; }
+</style>

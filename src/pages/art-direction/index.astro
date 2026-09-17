@@ -1,0 +1,41 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { directionQuiz, artists, inspirations } from '../../data/content';
+---
+<Layout title="3分钟找到你的艺术方向｜XIAOMINART" description="通过几个轻量问题梳理空间、风格、预算与时间，再带着透明的方向建议开启定制咨询。">
+  <section class="container page-head"><span class="eyebrow">Direction finder / 艺术方向工具</span><h1 class="serif">3分钟找到你的艺术方向。</h1><p lang="en">A short way to name the direction you are looking for.</p><p>这不是自动匹配或报价工具。你的选择只帮助我们把第一次沟通说得更具体，结果会标注为方向建议。</p></section>
+  <section class="container quiz-wrap"><form id="direction-quiz">{directionQuiz.map((question, index) => <fieldset data-question={question.id}><legend><span class="mono">0{index + 1}</span><strong>{question.question}</strong><small lang="en">{question.en}</small></legend><div class="quiz-options">{question.options.map((option) => <label><input type="radio" name={question.id} value={option} required /><span>{option}</span></label>)}</div></fieldset>)}<button class="btn btn-primary" type="submit">查看方向建议 <span>→</span></button></form></section>
+  <div id="direction-data" hidden data-artists={JSON.stringify(artists)} data-inspirations={JSON.stringify(inspirations)}></div><section class="container section result" hidden aria-live="polite"><span class="eyebrow">A transparent suggestion / 方向建议</span><h2 class="serif">你的选择，指向一条可以继续讨论的路。</h2><div class="result-copy"></div><div class="suggestion-grid"><div><span class="eyebrow">艺术家方向</span><a class="artist-suggestion" href="/artists/">查看艺术家档案 →</a></div><div><span class="eyebrow">灵感方向</span><a class="inspiration-suggestion" href="/inspiration/">浏览相关灵感 →</a></div></div><div class="result-actions"><a class="btn btn-primary result-cta" href="/custom-commission/">开启定制咨询 <span>→</span></a><button class="btn btn-secondary poster-cta" type="button">生成我的艺术方向海报 / Save direction</button></div><canvas class="direction-poster" width="1080" height="1080" aria-hidden="true"></canvas></section>
+</Layout>
+<script>
+  const dataNode = document.querySelector<HTMLElement>('#direction-data');
+  const artists = JSON.parse(dataNode?.dataset.artists || '[]') as Array<{slug:string;name:string;en:string;styles:string[]}>;
+  const inspirations = JSON.parse(dataNode?.dataset.inspirations || '[]') as Array<{slug:string;title:string;en:string;spaces:string[];style:string[]}>;
+  const form = document.querySelector<HTMLFormElement>('#direction-quiz');
+  const result = document.querySelector<HTMLElement>('.result');
+  const copy = document.querySelector<HTMLElement>('.result-copy');
+  const artistLink = document.querySelector<HTMLAnchorElement>('.artist-suggestion');
+  const inspirationLink = document.querySelector<HTMLAnchorElement>('.inspiration-suggestion');
+  const cta = document.querySelector<HTMLAnchorElement>('.result-cta');
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const data = new FormData(form);
+    const space = String(data.get('space') || '其他');
+    const style = String(data.get('style') || '尚未确定');
+    const medium = String(data.get('medium') || '尚未确定');
+    const budget = String(data.get('budget') || '尚未确定');
+    const timeline = String(data.get('timeline') || '不急');
+    const artist = artists.find((item) => item.styles.includes(style)) || artists[0];
+    const inspiration = inspirations.find((item) => item.spaces.includes(space) && item.style.includes(style)) || inspirations.find((item) => item.spaces.includes(space)) || inspirations[0];
+    if (result) result.hidden = false;
+    if (copy) copy.innerHTML = `<p>空间：<b>${space}</b>　风格：<b>${style}</b></p><p>载体：<b>${medium}</b>　预算：<b>${budget}</b>　时间：<b>${timeline}</b></p><p class="pending-note">建议仅供沟通参考；艺术家、媒介、周期与最终预算仍需根据完整项目 brief 确认。</p>`;
+    if (artistLink) { artistLink.textContent = `${artist.name} / ${artist.en} →`; artistLink.href = `/artists/${artist.slug}/`; }
+    if (inspirationLink) { inspirationLink.textContent = `${inspiration.title} / ${inspiration.en} →`; inspirationLink.href = `/inspiration/${inspiration.slug}/`; }
+    const params = new URLSearchParams({ space, style, medium, budget, timeline, direction: `${style} / ${space} / ${medium}`, inspiration: inspiration.title });
+    if (cta) cta.href = `/custom-commission/?${params.toString()}`;
+    result?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  document.querySelector<HTMLButtonElement>('.poster-cta')?.addEventListener('click', () => { const canvas = document.querySelector<HTMLCanvasElement>('.direction-poster'); if (!canvas) return; const ctx = canvas.getContext('2d'); if (!ctx) return; const copyText = document.querySelector<HTMLElement>('.result-copy')?.innerText || ''; ctx.fillStyle = '#f4efe5'; ctx.fillRect(0, 0, 1080, 1080); ctx.fillStyle = '#1c2430'; ctx.font = '42px serif'; ctx.fillText('小民艺术 · 日常表达', 90, 130); ctx.fillStyle = '#2A5A6B'; ctx.font = '72px serif'; ctx.fillText('方寸之间，安放你的心境', 90, 270); ctx.fillStyle = '#2e3440'; ctx.font = '30px sans-serif'; copyText.split('　').join(' ').split('、').join(' / ').slice(0, 180).split('\\n').forEach((line, index) => ctx.fillText(line, 90, 430 + index * 54)); ctx.fillStyle = '#6b7280'; ctx.font = '24px sans-serif'; ctx.fillText('xiaominart.com · 方向建议仅作沟通参考', 90, 930); const link = document.createElement('a'); link.download = 'xiaominart-direction.png'; link.href = canvas.toDataURL('image/png'); link.click(); });
+</script>
+<style>.page-head{padding:94px 0 72px}.page-head h1{font-size:clamp(52px,7vw,90px);font-weight:500;line-height:1.16;margin:22px 0}.page-head p{max-width:700px;color:var(--ink-soft);font-size:18px}.page-head p[lang=en]{font:24px var(--font-display-en),Georgia,serif;color:var(--cinnabar-deep)}.quiz-wrap{border-top:1px solid var(--line);border-bottom:1px solid var(--line)}#direction-quiz fieldset{border:0;border-bottom:1px solid var(--line);padding:28px 0;margin:0}#direction-quiz legend{width:100%;display:flex;align-items:baseline;gap:16px;margin-bottom:18px}#direction-quiz legend span{color:var(--cinnabar)}#direction-quiz legend strong{font:500 24px var(--font-display),Georgia,serif}#direction-quiz legend small{color:var(--meta);font:15px var(--font-display-en),Georgia,serif}.quiz-options{display:flex;flex-wrap:wrap;gap:10px 24px}.quiz-options label{cursor:pointer;color:var(--ink-soft);font-size:14px}.quiz-options input{position:absolute;opacity:0}.quiz-options label span{display:block;padding:7px 0;border-bottom:1px solid transparent}.quiz-options input:checked+span{color:var(--cinnabar);border-color:var(--cinnabar)}#direction-quiz>.btn{margin:28px 0}.result{border-top:2px solid var(--cinnabar)}.result h2{font-size:clamp(38px,5vw,62px);font-weight:500;max-width:760px;margin:18px 0}.result-copy{color:var(--ink-soft)}.result-copy b{color:var(--ink);font-weight:500}.pending-note{font-size:13px;color:var(--meta);border-left:1px solid var(--line);padding-left:12px}.suggestion-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:28px 0}.suggestion-grid>div{border-top:1px solid var(--line);padding-top:14px}.suggestion-grid a{display:block;font:22px var(--font-display),Georgia,serif;color:var(--cinnabar);margin-top:12px}.result-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px}.result-cta{margin-top:0}.direction-poster{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}@media(max-width:767px){.page-head{padding:58px 0 48px}.page-head h1{font-size:53px}.page-head p[lang=en]{font-size:20px}#direction-quiz legend{display:block}#direction-quiz legend strong{display:block;margin:8px 0}.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:8px}.quiz-options label span{border:1px solid var(--line);padding:10px 8px;min-height:44px}.quiz-options input:checked+span{border-color:var(--cinnabar)}.suggestion-grid{grid-template-columns:1fr;gap:20px}}
+</style>

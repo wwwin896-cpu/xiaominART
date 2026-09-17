@@ -1,0 +1,43 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import FactBoundary from '../../components/FactBoundary.astro';
+import { faqs } from '../../data/content';
+const groups = [
+  { title: '关于定制流程', en: 'The commission process', items: [
+    ['为什么网站没有成品直接购买？什么是艺术共创？', 'XIAOMINART 专注艺术共创定制，每件作品会结合你的故事、空间与想法由艺术家独立创作，不做批量复刻现货。画廊内案例仅作为风格灵感参考，不售卖同款。'],
+    ['定制一幅作品需要多长时间？', '时间取决于主题、媒介、艺术家档期、确认节点与交付方式。提交简报后，我们会在适合进入下一次沟通时说明可讨论的时间范围。'],
+    ['哪些需求可以定制，哪些暂不承接？', '可承接纸本水墨、综合材料作品、小型艺术器物、居家墙面定制、企业空间艺术与艺术礼赠。暂不承接纯照片临摹复刻、侵权 IP 主题、极低预算大型装置等，具体可行性沟通后确认。'],
+    ['定制是否可以加急？', '部分小幅礼赠项目支持加急，可能产生额外创作费用，建议提前沟通确认时间可行性；大型空间项目一般无法加急。'],
+    ['我需要参与哪些环节？', '你会参与意图梳理、方向确认和必要的创作节点。不需要先懂艺术，只需告诉我们人物、空间或想留下的气息。'],
+    ['可以修改几次？', '修改节点与范围会在项目方案中提前说明。我们不把未经确认的次数写成固定承诺，而是根据创作方式与项目边界共同确认。'],
+  ]},
+  { title: '关于价格与支付', en: 'Budget and payment', items: [
+    ['定制作品多少钱？', '可先参考定价参考页的预算起点。它不是商品价格或购买入口，最终范围会结合尺寸、材质、艺术家、复杂度与交付边界确认。'],
+    ['付款方式有哪些？', '付款方式会在项目确认阶段根据双方约定说明。提交表单只用于初步沟通，不会触发支付。'],
+    ['需要付定金吗？', '是否需要定金、节点如何安排，会在双方确认项目范围后写入项目说明；初步咨询阶段无需付款。'],
+    ['是否可以开具发票？', '个人可开普通发票；企业项目的发票类型与开票信息请在企业定制表单中提前备注，并以项目确认时的主体与方案为准。'],
+  ]},
+  { title: '关于交付与售后', en: 'Delivery and aftercare', items: [
+    ['作品如何交付？', '交付方式会结合作品形态、包装或安装条件、地点与项目范围确认。网站不会对未确认的物流或交期作承诺。'],
+    ['运输损坏怎么办？', '如项目包含运输，我们会在项目确认时说明包装、交接与异常处理边界；初步咨询阶段可在表单中写明地点与特殊要求。'],
+    ['有售后保障吗？', '维护、安装或后续服务范围需按具体媒介和项目方案确认。我们会把已确认的边界写清楚，而不是用统一承诺替代项目说明。'],
+    ['作品如何运输、包装？海外是否可交付？', '作品本体为基础交付内容；装裱、特殊包装与物流为可选增值项，报价时单独列明。国内采用专业艺术品包装运输；海外交付可评估物流方案。'],
+    ['艺术品收到后如何保养？', '纸本作品避免长期阳光直射与潮湿环境，远离油烟。如需修复维护，可联系我们获取保养建议。'],
+    ['作品版权归谁？', '艺术家保留作品著作权；客户拥有作品实物所有权。如需商用版权授权，需要单独约定。'],
+  ]},
+  { title: '关于版权与权利', en: 'Rights and usage', items: [
+    ['作品的版权归谁？', '版权、署名、展示与使用范围会在项目确认阶段单独说明。不同创作与合作方式可能对应不同约定。'],
+    ['我可以把作品用于商业宣传吗？', '商业宣传、媒体发布、社交平台展示等用途需要在项目沟通中提前提出，并以双方确认的授权范围为准。'],
+  ]},
+];
+---
+<Layout title="常见问题｜FAQ｜XIAOMINART" description="了解 XIAOMINART 的定制流程、预算参考、交付边界与版权沟通方式。">
+  <section class="container page-head"><span class="eyebrow">FAQ / 常见问题</span><h1 class="serif">先把问题说清楚。</h1><p lang="en">Clear questions make a thoughtful commission.</p><p>不知道的地方，我们会清楚说明沟通边界；不先写一个好听的数字。</p></section>
+  <section class="container faq-groups">{groups.map((group) => <section class="faq-group"><div class="group-title"><span class="eyebrow">{group.en}</span><h2 class="serif">{group.title}</h2></div><div class="faq-list">{group.items.map(([question, answer], i) => <details><summary><span class="mono">{String(i + 1).padStart(2, '0')}</span><strong>{question}</strong><b aria-hidden="true">+</b></summary><p>{answer}</p></details>)}</div></section>)}</section>
+  <section class="container faq-groups bilingual-faq"><section class="faq-group"><div class="group-title"><span class="eyebrow">Core questions / 核心问题</span><h2 class="serif">中英文对照</h2></div><div class="faq-list">{faqs.map(([question, answer], i) => <details><summary><span class="mono">{String(i + 1).padStart(2, '0')}</span><strong>{question}</strong><b aria-hidden="true">+</b></summary><p>{answer}</p></details>)}</div></section></section>
+  <section class="container section faq-end"><FactBoundary /><h2 class="serif">还没找到答案？</h2><p>把具体场景告诉我们，我们会先阅读，再回复是否适合进入下一次交流。</p><a class="btn btn-primary" href="/custom-commission/">开启定制咨询 / Begin a consultation →</a></section>
+</Layout>
+<style>
+  .page-head{padding:96px 0 72px}.page-head h1{font-size:clamp(52px,7vw,82px);margin:20px 0}.page-head p{max-width:680px;color:var(--ink-soft);font-size:18px}.page-head p[lang='en']{font:24px var(--font-display-en),Georgia,serif;color:var(--cinnabar-deep)}.faq-group{display:grid;grid-template-columns:.42fr 1fr;gap:70px;border-top:1px solid var(--line);padding:34px 0 50px}.group-title h2{font-size:34px;font-weight:500;line-height:1.3;margin:17px 0}.faq-list{border-top:1px solid var(--line)}details{border-bottom:1px solid var(--line)}summary{display:grid;grid-template-columns:50px 1fr 30px;align-items:center;list-style:none;padding:22px 0;cursor:pointer;min-height:44px}summary::-webkit-details-marker{display:none}summary .mono{color:var(--cinnabar)}summary b{font-size:24px;font-weight:400;color:var(--cinnabar)}details[open] summary b{transform:rotate(45deg)}details p{margin:0 50px 24px;color:var(--ink-soft);max-width:720px;line-height:1.8}.faq-end{border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.faq-end h2{font-size:clamp(38px,5vw,64px);font-weight:500;margin:30px 0 12px}.faq-end p{color:var(--ink-soft);max-width:620px}
+  @media(max-width:767px){.page-head{padding:56px 0 40px}.page-head h1{font-size:53px}.page-head p[lang='en']{font-size:20px}.faq-group{display:block;padding:26px 0 34px}.group-title h2{font-size:29px}.faq-list{margin-top:26px}summary{grid-template-columns:34px 1fr 24px;gap:8px;padding:18px 0}details p{margin-left:34px}.faq-end .btn{width:100%;text-align:center}}
+</style>

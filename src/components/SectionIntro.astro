@@ -1,0 +1,15 @@
+---
+const { index, eyebrow, title, en, body } = Astro.props;
+---
+<div class="section-intro">
+  <div><span class="eyebrow">{index} / {eyebrow}</span><h2 class="serif">{title}</h2></div>
+  {body && <p>{body}</p>}
+  {en && <span class="intro-en" lang="en">{en}</span>}
+</div>
+<style>
+  .section-intro { display: flex; justify-content: space-between; align-items: end; gap: 36px; margin-bottom: 44px; }
+  h2 { margin: 12px 0 0; font-size: clamp(30px, 4vw, 50px); font-weight: 500; letter-spacing: var(--tracking-display); line-height: 1.3; }
+  .section-intro > p { max-width: 430px; margin: 0; color: var(--ink-soft); }
+  .intro-en { color: var(--muted); font: 15px / 1.6 var(--font-display-en), Georgia, serif; max-width: 220px; }
+  @media (max-width: 767px) { .section-intro { display: block; margin-bottom: 30px; } .section-intro > p, .intro-en { display: block; margin-top: 16px; } }
+</style>

@@ -1,0 +1,19 @@
+---
+import Layout from '../../layouts/Layout.astro';
+const tiers = [
+  { title: '书写类作品', en: 'Calligraphy works', range: '从 ¥8,000 起', body: '适合从一句话、一段关系或一个纪念时刻开始的定制方向。实际范围会结合尺寸、媒介、艺术家与创作复杂度沟通。' },
+  { title: '空间定制作品', en: 'Spatial commissions', range: '从 ¥30,000 起', body: '适用于居所、书房、茶室、企业会客厅与文化空间。尺寸、材质、安装条件、艺术家与现场协作会影响最终方案。' },
+  { title: '企业礼赠定制', en: 'Corporate gifting', range: '从 ¥50,000 起', body: '适用于企业礼赠、周年与品牌活动。数量、包装方式、定制深度、时间节点和交付范围需在项目简报后确认。' },
+  { title: '艺术礼盒', en: 'Art gift', range: '从 ¥3,000 起', body: '艺术礼盒从关系、场景与一句话开始，不对应固定货架商品。内容形式、礼赠对象与交付边界会影响参考范围。' },
+];
+---
+<Layout title="定制作品定价参考｜Pricing Guide｜XIAOMINART" description="了解 XIAOMINART 东方艺术定制的预算参考范围与影响因素。最终以项目沟通与确认方案为准。">
+  <section class="page-head container"><span class="eyebrow">Pricing Guide / 定价参考</span><h1 class="serif">定制作品定价参考。</h1><p lang="en">A budget reference for a work made around your intention.</p><p>这里提供的是创作沟通的预算参考，不是现货商品价格，也不构成报价或购买承诺。最终范围会在理解场景、艺术方向与交付边界后确认。</p></section>
+  <section class="container section pricing-grid">{tiers.map((tier, i) => <article class="pricing-card"><span class="mono">0{i + 1}</span><h2 class="serif">{tier.title}</h2><p lang="en">{tier.en}</p><strong>{tier.range}</strong><p>{tier.body}</p></article>)}</section>
+  <section class="container section pricing-note"><span class="eyebrow">Scope / 影响因素</span><h2 class="serif">先确认意图，再确认边界。</h2><p>尺寸、材质、艺术家级别、创作复杂度、数量、安装或包装条件、交付周期与项目协作方式，都可能影响最终方案。我们会在定制沟通中逐项说明。</p><a class="btn btn-primary" href="/custom-commission/">开启定制咨询 / Begin a consultation →</a></section>
+</Layout>
+<style>
+  .page-head{padding:94px 0 72px}.page-head h1{font-size:clamp(52px,7vw,90px);font-weight:500;line-height:1.16;margin:22px 0}.page-head p{max-width:680px;color:var(--ink-soft);font-size:18px}.page-head p[lang=en]{font:24px var(--font-display-en),Georgia,serif;color:var(--cinnabar-deep)}
+  .pricing-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border-top:1px solid var(--line);border-left:1px solid var(--line)}.pricing-card{min-height:300px;padding:24px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}.pricing-card h2{font-size:36px;font-weight:500;margin:32px 0 5px}.pricing-card p{max-width:520px;color:var(--ink-soft);font-size:14px}.pricing-card p[lang=en]{font:18px var(--font-display-en),Georgia,serif;color:var(--ink)}.pricing-card strong{display:block;color:var(--cinnabar-deep);font:22px var(--font-display-en),Georgia,serif;margin:22px 0 8px}.pricing-note{border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.pricing-note h2{font-size:clamp(38px,5vw,64px);font-weight:500;margin:20px 0}.pricing-note p{max-width:680px;color:var(--ink-soft)}
+  @media(max-width:767px){.page-head{padding:58px 0 48px}.page-head h1{font-size:53px}.page-head p[lang=en]{font-size:20px}.pricing-grid{grid-template-columns:1fr}.pricing-card{min-height:0;padding:22px 16px}.pricing-card h2{font-size:30px;margin:22px 0 5px}.pricing-note .btn{width:100%;text-align:center}}
+</style>

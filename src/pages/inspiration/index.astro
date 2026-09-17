@@ -1,0 +1,121 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import InspirationCard from '../../components/InspirationCard.astro';
+import CaseNotice from '../../components/CaseNotice.astro';
+import BudgetReference from '../../components/BudgetReference.astro';
+import { inspirations } from '../../data/content';
+const filterGroups = [
+  { key: 'style', label: '风格 / Style', options: ['留白', '朱砂', '山水', '墨色', '器物'] },
+  { key: 'space', label: '空间 / Space', options: ['玄关', '客厅', '茶室', '书房', '办公室', '企业会客厅', '民宿空间'] },
+  { key: 'artist', label: '艺术家 / Artist', options: ['斗升小民', '墨结构', '案上山房'] },
+  { key: 'palette', label: '色彩方向 / Palette', options: ['纸白', '朱砂', '墨色', '灰', '木色'] },
+];
+---
+<Layout title="灵感参考｜Inspiration Gallery｜XIAOMINART" description="从空间、色彩、材质与书写气息寻找东方艺术定制灵感。">
+  <section class="page-head container"><span class="eyebrow">Inspiration Gallery / 灵感参考</span><h1 class="serif">从一处气息，<br />开始想象自己的作品。</h1><p lang="en">Look for a feeling, not an identical object.</p><p>这里没有现货目录。每一个案例都只帮助你描述喜欢的色彩、材质、尺度与气质，最终作品将从你的场景重新创作。</p><CaseNotice /></section>
+  <section class="container space-filter" aria-labelledby="filter-title"><div class="filter-heading"><span class="eyebrow" id="filter-title">Filter the gallery / 筛选灵感方向</span><span class="filter-hint">每组可多选 / Select multiple in each group</span></div><div class="filter-groups">{filterGroups.map((group) => <fieldset data-filter-group={group.key}><legend>{group.label}</legend><div class="filter-options">{group.options.map((option) => <label><input type="checkbox" value={option} data-filter-key={group.key} /><span>{option}</span></label>)}</div></fieldset>)}</div><select class="filter-select" aria-label="选择筛选维度"><option value="">移动端筛选 / Filter</option>{filterGroups.flatMap((group) => group.options.map((option) => <option value={`${group.key}:${option}`}>{group.label} · {option}</option>))}</select><div class="filter-status"><p class="filter-notice">案例仅作风格参考，不售卖同款</p><span class="result-count" aria-live="polite">显示 {inspirations.length} 个方向 / {inspirations.length} directions</span></div></section>
+  <section class="container section gallery"><div class="gallery-tools"><button class="btn btn-secondary" type="button" data-random-inspiration>随机看看 / Surprise me</button><button class="btn btn-link" type="button" data-copy-gallery>复制画廊链接 / Copy link</button><span data-gallery-share-status aria-live="polite"></span></div><div class="gallery-grid">{inspirations.map((item) => <InspirationCard item={item} />)}</div><p class="empty-results" hidden>暂未找到对应方向，请调整筛选条件。 / No matching references yet.</p></section>
+  <section class="container section"><BudgetReference /></section>
+  <section id="manuscripts" class="container section reference-block"><span class="eyebrow">Creative Manuscripts / 创作手稿</span><h2 class="serif">看见落笔之前的犹豫与取舍。</h2><p>手稿、局部结构与创作过程将在获得授权后逐步公开。</p></section>
+  <section id="materials" class="container section reference-block"><span class="eyebrow">Inspiration Materials / 灵感素材</span><h2 class="serif">从纸、墨、木与空间的气息取意。</h2><p>素材只用于帮助描述方向，不构成可购买的材料或商品清单。</p></section>
+  <section id="reference-sets" class="container section reference-block"><span class="eyebrow">Reference Sets / 参考图集</span><h2 class="serif">以图集整理观看，而不是复制作品。</h2><p>参考图集会按主题、色彩与空间语境持续整理。</p></section>
+  <div class="gallery-lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="gallery-dialog-title"><button type="button" class="gallery-close" aria-label="关闭大图 / Close preview">×</button><button type="button" class="gallery-prev" aria-label="上一张 / Previous reference">←</button><div class="gallery-preview"><span id="gallery-dialog-title" class="serif"></span><small></small><p></p></div><button type="button" class="gallery-next" aria-label="下一张 / Next reference">→</button></div>
+</Layout>
+<script>
+  const filterOptions = [...document.querySelectorAll<HTMLInputElement>('.filter-options input')];
+  const filterSelect = document.querySelector<HTMLSelectElement>('.filter-select');
+  const cards = [...document.querySelectorAll<HTMLElement>('.inspiration-card')];
+  const emptyResults = document.querySelector<HTMLElement>('.empty-results');
+  const resultCount = document.querySelector<HTMLElement>('.result-count');
+  const cardValues = (card: HTMLElement, key: string) => (card.dataset[key === 'space' ? 'spaces' : key] ?? '').split('|').filter(Boolean);
+  const applyFilter = () => {
+    const selectedByGroup = filterOptions.filter((input) => input.checked).reduce<Record<string, string[]>>((groups, input) => { (groups[input.dataset.filterKey || 'space'] ||= []).push(input.value); return groups; }, {});
+    const activeGroups = Object.entries(selectedByGroup);
+    let visibleCount = 0;
+    cards.forEach((card) => {
+      const matches = activeGroups.every(([key, values]) => values.some((value) => cardValues(card, key).includes(value)));
+      card.hidden = !matches;
+      if (matches) visibleCount += 1;
+    });
+    if (resultCount) resultCount.textContent = `显示 ${visibleCount} 个方向 / ${visibleCount} directions`;
+    if (emptyResults) emptyResults.hidden = visibleCount > 0;
+  };
+  const updateShareUrl = () => { const params = new URLSearchParams(); filterOptions.filter((input) => input.checked).forEach((input) => params.append(input.dataset.filterKey || 'filter', input.value)); history.replaceState(null, '', `${location.pathname}${params.toString() ? `?${params}` : ''}`); };
+  filterOptions.forEach((input) => input.addEventListener('change', () => { applyFilter(); updateShareUrl(); }));
+  const randomButton = document.querySelector<HTMLButtonElement>('[data-random-inspiration]');
+  randomButton?.addEventListener('click', () => { const visible = cards.filter((card) => !card.hidden); const chosen = visible[Math.floor(Math.random() * visible.length)] || cards[0]; chosen?.scrollIntoView({ behavior: 'smooth', block: 'center' }); chosen?.querySelector<HTMLAnchorElement>('.gallery-trigger')?.focus(); });
+  const copyButton = document.querySelector<HTMLButtonElement>('[data-copy-gallery]');
+  copyButton?.addEventListener('click', async () => { const status = document.querySelector<HTMLElement>('[data-gallery-share-status]'); try { await navigator.clipboard.writeText(location.href); if (status) status.textContent = '画廊链接已复制 / Link copied'; } catch { if (status) status.textContent = '请复制浏览器地址 / Copy the browser URL'; } });
+  filterSelect?.addEventListener('change', () => { if (!filterSelect.value) return; const [key, value] = filterSelect.value.split(':'); const target = filterOptions.find((input) => input.dataset.filterKey === key && input.value === value); if (target) target.checked = !target.checked; filterSelect.value = ''; applyFilter(); });
+  const triggers = [...document.querySelectorAll<HTMLAnchorElement>('[data-gallery-title]')];
+  const lightbox = document.querySelector<HTMLElement>('.gallery-lightbox');
+  const preview = lightbox?.querySelector<HTMLElement>('.gallery-preview');
+  let current = 0;
+  let lastTrigger: HTMLAnchorElement | null = null;
+  const closeLightbox = () => { if (!lightbox) return; lightbox.classList.remove('open'); lightbox.setAttribute('aria-hidden', 'true'); document.body.classList.remove('menu-open'); lastTrigger?.focus(); };
+  const show = (index: number) => { current = (index + triggers.length) % triggers.length; const trigger = triggers[current]; if (!preview || !trigger || !lightbox) return; const title = preview.querySelector<HTMLElement>('span'); const tag = preview.querySelector<HTMLElement>('small'); const en = preview.querySelector<HTMLElement>('p'); if (!title || !tag || !en) return; title.textContent = trigger.dataset.galleryTitle || ''; tag.textContent = trigger.dataset.galleryTag || ''; en.textContent = trigger.dataset.galleryEn || ''; preview.dataset.tone = trigger.dataset.galleryTone || ''; lightbox.classList.add('open'); lightbox.setAttribute('aria-hidden', 'false'); document.body.classList.add('menu-open'); lightbox.querySelector<HTMLButtonElement>('.gallery-close')?.focus(); };
+  triggers.forEach((trigger, index) => trigger.addEventListener('click', (event) => { if (window.matchMedia('(min-width: 768px)').matches) { event.preventDefault(); lastTrigger = trigger; show(index); } }));
+  lightbox?.querySelector<HTMLButtonElement>('.gallery-close')?.addEventListener('click', closeLightbox);
+  lightbox?.querySelector<HTMLButtonElement>('.gallery-prev')?.addEventListener('click', () => show(current - 1));
+  lightbox?.querySelector<HTMLButtonElement>('.gallery-next')?.addEventListener('click', () => show(current + 1));
+  document.addEventListener('keydown', (event) => { if (!lightbox?.classList.contains('open')) return; if (event.key === 'Escape') closeLightbox(); if (event.key === 'ArrowLeft') show(current - 1); if (event.key === 'ArrowRight') show(current + 1); });
+</script>
+<style>
+  .gallery-tools{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:24px}.gallery-tools span{color:var(--meta);font-size:12px}.page-head { padding: 94px 0 72px; }
+  .page-head h1 { font-size: clamp(52px, 7vw, 90px); font-weight: 500; line-height: 1.16; margin: 22px 0; }
+  .page-head p { max-width: 680px; color: var(--ink-soft); font-size: 18px; }
+  .page-head p[lang='en'] { font: 24px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); }
+  .space-filter { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 22px 0 18px; }
+  .filter-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; }
+  .filter-hint { color: var(--meta); font-size: 12px; }
+  .filter-groups { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 18px; }
+  fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+  legend { color: var(--ink); font-size: 13px; margin-bottom: 5px; }
+  .filter-options { display: flex; flex-wrap: wrap; gap: 0 18px; }
+  .filter-options label { position: relative; color: var(--ink-soft); cursor: pointer; font-size: 13px; min-height: 44px; display: inline-flex; align-items: center; }
+  .filter-options input { position: absolute; opacity: 0; pointer-events: none; }
+  .filter-options label span { display: block; padding: 10px 0; border-bottom: 1px solid transparent; transition: color .2s, border-color .2s; }
+  .filter-options input:checked + span { color: var(--cinnabar); border-color: var(--cinnabar); }
+  .filter-select { display: none; }
+  .filter-status { display: flex; justify-content: space-between; gap: 18px; align-items: baseline; }
+  .filter-notice { margin: 18px 0 0; color: var(--cinnabar-deep); font-size: 12px; }
+  .result-count { margin-top: 18px; color: var(--meta); font-size: 12px; }
+  .filter-options label:focus-within span { color: var(--cinnabar); border-color: var(--cinnabar); }
+  .gallery { border-top: 0; }
+  .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 46px 24px; }
+  .empty-results { color: var(--muted); padding: 28px 0; border-top: 1px solid var(--line); }
+  .inspiration-card[hidden] { display: none; }
+  .reference-block { border-top: 1px solid var(--line); }
+  .reference-block h2 { max-width: 760px; font-size: clamp(34px, 5vw, 62px); font-weight: 500; line-height: 1.25; }
+  .reference-block p { max-width: 680px; color: var(--ink-soft); }
+  .gallery-lightbox { position: fixed; inset: 0; z-index: 20; display: flex; align-items: center; justify-content: center; gap: 24px; background: rgba(24,22,19,.96); opacity: 0; visibility: hidden; transition: opacity .25s ease, visibility .25s ease; }
+  .gallery-lightbox.open { opacity: 1; visibility: visible; }
+  .gallery-preview { width: min(72vw,760px); aspect-ratio: 1.15; background: var(--paper-deep); display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--ink); }
+  .gallery-preview span { font-size: clamp(90px,14vw,180px); }
+  .gallery-preview small { font: 11px var(--font-mono); letter-spacing: .08em; }
+  .gallery-preview p { font: 22px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); }
+  .gallery-preview[data-tone='red-seal'] { background: #e8d8c9; }
+  .gallery-preview[data-tone='desk-mountain'] { background: #ddd2bf; }
+  .gallery-preview[data-tone='ink-breath'] { background: #cfcfc4; }
+  .gallery-preview[data-tone='seasonal-letter'] { background: #e6ded0; }
+  .gallery-preview[data-tone='threshold-light'] { background: #d7d8ca; }
+  .gallery-close, .gallery-prev, .gallery-next { border: 0; background: transparent; color: var(--paper-light); font-size: 34px; cursor: pointer; padding: 16px; }
+  .gallery-close { position: absolute; right: 24px; top: 18px; }
+  .gallery-lightbox button:focus-visible { outline: 2px solid var(--gilt); outline-offset: 3px; }
+  @media (max-width: 767px) {
+    .page-head { padding: 58px 0 48px; }
+    .page-head h1 { font-size: 53px; }
+    .page-head p[lang='en'] { font-size: 20px; }
+    .filter-groups { display: none; }
+    .filter-select { display: block; width: 100%; margin-top: 16px; padding: 12px 10px; border: 1px solid var(--line); border-radius: 0; background: var(--paper-light); color: var(--ink); font: inherit; }
+    .filter-status { display: block; }
+    .result-count { display: block; }
+    .filter-notice { margin-top: 14px; }
+    .gallery-grid { grid-template-columns: 1fr; gap: 36px; }
+    .gallery-lightbox { gap: 6px; }
+    .gallery-preview { width: 78vw; }
+    .gallery-preview p { font-size: 17px; }
+    .gallery-close { right: 6px; top: 6px; }
+    .gallery-prev, .gallery-next { font-size: 25px; padding: 8px; }
+  }
+</style>

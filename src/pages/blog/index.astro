@@ -1,0 +1,23 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { blogPosts } from '../../data/content';
+---
+<Layout title="Blog｜创作笔记｜XIAOMINART" description="XIAOMINART 关于艺术定制、观看与东方日常的创作笔记。">
+  <section class="page-head container"><span class="eyebrow">Blog / Journal</span><h1 class="serif">关于创作，<br />也关于如何观看。</h1><p lang="en">Notes on making, seeing and living with art.</p><p>记录定制方法、艺术家工作方式、礼赠与空间，以及作品如何在日常里找到位置。</p></section>
+  <section class="container section post-list">{blogPosts.map((post, i) => <article><span class="mono">0{i + 1}</span><div><span class="eyebrow">{post.pillar}</span><h2 class="serif">{post.title}</h2><p lang="en">{post.en}</p><p>{post.excerpt}</p><small>{post.date}</small></div><a class="btn btn-link" href={`/blog/${post.slug}/`}>阅读 / Read →</a></article>)}</section>
+</Layout>
+<style>
+  .page-head { padding: 94px 0 72px; }
+  .page-head h1 { font-size: clamp(52px, 7vw, 90px); font-weight: 500; line-height: 1.16; margin: 22px 0; }
+  .page-head p { max-width: 680px; color: var(--ink-soft); font-size: 18px; }
+  .page-head p[lang='en'] { font: 24px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); }
+  .post-list { border-top: 1px solid var(--line); }
+  .post-list article { display: grid; grid-template-columns: 55px 1fr 90px; gap: 24px; align-items: start; padding: 26px 0; border-bottom: 1px solid var(--line); }
+  .post-list article > .mono { color: var(--cinnabar); }
+  .post-list h2 { font-size: 35px; font-weight: 500; margin: 12px 0 3px; }
+  .post-list p { color: var(--ink-soft); font-size: 14px; max-width: 650px; margin: 8px 0; }
+  .post-list p[lang='en'] { font: 18px var(--font-display-en), Georgia, serif; color: var(--ink); }
+  .post-list small { color: var(--meta); }
+  .post-list .btn { justify-self: end; }
+  @media (max-width: 767px) { .page-head { padding: 58px 0 48px; } .page-head h1 { font-size: 53px; } .page-head p[lang='en'] { font-size: 20px; } .post-list article { grid-template-columns: 30px 1fr; gap: 12px; } .post-list article > .btn { grid-column: 2; justify-self: start; } .post-list h2 { font-size: 28px; } }
+</style>

@@ -1,0 +1,6 @@
+---
+import Layout from '../../layouts/Layout.astro'; import { seasons } from '../../data/content';
+---
+<Layout title="四季节气｜小民艺术" description="四季与节气内容，记录当下适合写给谁和推荐的祝愿。"><section class="container page-head"><span class="eyebrow">Seasonal calendar / 四季节气</span><h1 class="serif">让祝愿，<br/>跟着季节慢下来。</h1><p>四季是内容容器，不等于独立商品。节气页面会持续记录当下的心事入口。</p></section><section class="container season-list">{seasons.map((s, i) => <a href={`/seasons/${s.slug}/`}><span class="mono">0{i+1}</span><strong class="serif">{s.name}</strong><span><b>{s.line}</b><small>{s.note}</small></span><span>→</span></a>)}</section></Layout>
+<style>.page-head{padding:96px 0 72px}.page-head h1{font-size:clamp(52px,7vw,84px);line-height:1.1;margin:20px 0}.page-head p{color:var(--muted);font-size:17px}.season-list{border-top:1px solid var(--border)}.season-list a{display:grid;grid-template-columns:60px 110px 1fr 30px;align-items:center;gap:18px;border-bottom:1px solid var(--border);padding:24px 0}.season-list a:hover{background:var(--surface);padding-left:12px;padding-right:12px}.season-list strong{font-size:64px;color:var(--accent)}.season-list small{display:block;color:var(--muted);margin-top:5px}@media(max-width:767px){.page-head{padding:56px 0 40px}.season-list a{grid-template-columns:32px 70px 1fr 20px}.season-list strong{font-size:48px}}
+</style>

@@ -1,0 +1,8 @@
+---
+const { compact = false } = Astro.props;
+---
+<p class:list={['case-notice', compact && 'compact']}>案例仅作风格参考，不售卖同款 | For reference only, identical artwork is not for sale.</p>
+<style>
+  .case-notice { max-width: 620px; }
+  .compact { font-size: 12px; line-height: 1.65; }
+</style>

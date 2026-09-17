@@ -1,0 +1,9 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { blogPosts } from '../../data/content';
+export function getStaticPaths(){ return blogPosts.map((post) => ({ params: { slug: post.slug }, props: { post } })); }
+const { post } = Astro.props;
+---
+<Layout title={`${post.title}｜Blog｜XIAOMINART`} description={post.excerpt}><article class="post container"><span class="eyebrow">{post.pillar} / Blog</span><h1 class="serif">{post.title}</h1><p lang="en" class="post-en">{post.en}</p><p class="post-meta">{post.date}</p><div class="post-body"><p>{post.excerpt}</p><h2 class="serif">从一个具体的意图开始</h2><p>艺术定制不是把一个既有图案换成另一个名字，而是从真实的场景与关系出发，重新讨论什么值得被看见、被触摸与被留下。每一次委托都拥有独立的语境，因此也需要独立的创作判断。</p><h2 class="serif">让形式服从感受</h2><p>我们会在书写、器物、空间、色彩与尺度之间进行取舍。没有固定货架，也不提供案例同款。灵感库只帮助你找到方向，真正的作品从你的故事重新开始。</p><a class="btn btn-primary" href="/custom-commission/">从你的故事开始 / Start a commission →</a></div></article></Layout>
+<style>.post{padding:94px 0 110px}.post h1{max-width:850px;font-size:clamp(52px,7vw,90px);font-weight:500;line-height:1.16;margin:22px 0}.post-en{font:26px var(--font-display-en),Georgia,serif;color:var(--cinnabar-deep)}.post-meta{color:var(--meta);font-size:12px}.post-body{max-width:720px;border-top:1px solid var(--line);margin-top:54px;padding-top:28px}.post-body p{color:var(--ink-soft);font-size:17px}.post-body h2{font-size:35px;font-weight:500;margin-top:46px}.post-body .btn{margin-top:26px}@media(max-width:767px){.post{padding:58px 0 70px}.post h1{font-size:53px}.post-en{font-size:21px}.post-body{margin-top:38px}.post-body h2{font-size:30px}}
+</style>

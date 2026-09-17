@@ -1,0 +1,29 @@
+---
+import { blessings } from '../data/content';
+---
+<div class="rail" data-component="blessing-rail">
+  {blessings.map((item) => <a class="rail-item" href={`/blessings/${item.slug}/`}>
+    <span class="glyph serif">{item.title}</span>
+    <span class="rail-copy"><b>{item.pinyin}</b><small lang="en">{item.en}</small><em>{item.scene}</em></span>
+    <span class="arrow">→</span>
+  </a>)}
+</div>
+<style>
+  .rail { display: grid; grid-template-columns: repeat(5, 1fr); border-block: 1px solid var(--border); }
+  .rail-item { position: relative; padding: 28px 20px 24px; display: flex; flex-direction: column; gap: 13px; border-right: 1px solid var(--border); min-height: 220px; background: rgba(255, 253, 248, .48); transition: background-color .2s, color .2s, transform .2s; }
+  .rail-item:last-child { border-right: 0; }
+  .rail-item:hover, .rail-item:focus-visible { background: var(--surface); color: var(--accent); transform: translateY(-2px); }
+  .glyph { font-size: 68px; line-height: 1; color: var(--accent); }
+  .rail-copy b { font: 12px var(--font-mono); display: block; }
+  .rail-copy small { display: block; color: var(--meta); margin-top: 3px; font-size: 11px; }
+  .rail-copy em { display: block; font-style: normal; color: var(--muted); font-size: 12px; line-height: 1.6; margin-top: 14px; }
+  .arrow { margin-top: auto; color: var(--accent); font-size: 20px; }
+  @media (max-width: 767px) {
+    .rail { grid-template-columns: 1fr; }
+    .rail-item { min-height: 0; display: grid; grid-template-columns: 52px 1fr 24px; align-items: center; padding: 17px 0; border-right: 0; border-bottom: 1px solid var(--border); }
+    .rail-item:last-child { border-bottom: 0; }
+    .glyph { font-size: 42px; }
+    .rail-copy em { margin-top: 5px; }
+    .arrow { margin: 0; }
+  }
+</style>

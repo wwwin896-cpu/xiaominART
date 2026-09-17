@@ -1,0 +1,118 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SectionIntro from '../components/SectionIntro.astro';
+import InspirationCard from '../components/InspirationCard.astro';
+import ArtistCard from '../components/ArtistCard.astro';
+import CaseNotice from '../components/CaseNotice.astro';
+import CustomerStories from '../components/CustomerStories.astro';
+import BudgetReference from '../components/BudgetReference.astro';
+import { processSteps, inspirations, artists, giftDirections } from '../data/content';
+---
+<Layout title="小民艺术 · 日常表达" description="方寸之间，安放你的心境。小民艺术以书画摆件、小型器物与生活场景为载体，和你共同完成一份日常表达。">
+  <section class="hero container">
+    <div class="hero-copy"><span class="eyebrow">小民艺术 / 日常表达</span><h1 class="serif">方寸之间，<br />安放你的心境。</h1><p lang="en" class="hero-en">Everyday expression, made meaningful.</p><p class="hero-body">从一句话、一件摆件或一处生活场景开始。我们把东方书写与器物带回普通人的日常，给心境留下一个安静的位置。</p><p class="hero-boundary">不售卖现成画作，仅接受艺术定制共创。<span lang="en">No ready-made artwork for sale; commissions only.</span></p><div class="hero-actions"><a class="btn btn-primary" href="/custom-commission/">开启定制咨询 / Begin a consultation →</a><a class="btn btn-secondary" href="/inspiration/">浏览灵感参考 / Explore inspiration</a><span class="hero-inspiration-hint">选择你的空间，浏览适配的艺术方向 / Choose your space, then explore a direction.</span></div></div>
+    <div class="hero-visual"><div class="hero-art"><span class="serif">意</span><small>CONCEPTUAL DIRECTION / 01</small></div><p class="hero-caption">每个案例都是一次创作方向的记录，不是现货陈列。</p></div>
+  </section>
+
+  <section class="container social-proof" aria-label="品牌信息 / Brand notes"><div><span class="eyebrow">Brand notes / 品牌主张</span><strong>小民艺术 · 日常表达</strong></div><div><span>Everyday / 日常</span><strong>把书画与器物带回生活</strong></div><div><span>Human scale / 方寸</span><strong>从一句话与一处空间开始</strong></div><div><span>Thoughtful / 共同</span><strong>先沟通，再确认创作边界</strong></div><p>品牌内容会随真实创作与授权故事持续更新。</p></section>
+
+  <section class="container section process-section"><SectionIntro index="01" eyebrow="Co-create" title="四步，共同完成一件作品。" en="Four steps, one work made with intention." body="你不需要先懂艺术。只需要带来一个具体的人、一处空间，或一个想被认真表达的时刻。" /><div class="process-grid">{processSteps.map((step) => <article class="process-step"><span class="mono">{step.no}</span><h3 class="serif">{step.zh}</h3><p lang="en">{step.en}</p><p>{step.body}</p></article>)}</div><a class="btn btn-primary" href="/custom-commission/">开启定制咨询 / Begin a consultation →</a></section>
+
+  <section id="inspiration" class="container section inspiration-section"><SectionIntro index="02" eyebrow="Inspiration Gallery" title="从参考开始，不从复制开始。" en="Begin with a direction, never with a replica." body="这里记录材质、色彩、空间与书写气息。案例仅作风格参考，不售卖同款。" /><div class="gallery-grid">{inspirations.slice(0, 6).map((item) => <InspirationCard item={item} />)}</div><CaseNotice /><a class="btn btn-secondary" href="/discover/">3分钟找到你的艺术方向 / Find your direction →</a></section>
+
+  <CustomerStories />
+  <section class="container section"><BudgetReference /></section>
+
+  <section id="artists" class="container section artist-section"><SectionIntro index="03" eyebrow="Artists" title="让合适的艺术家，回应你的意图。" en="The right artist for the intention." body="我们以主题、媒介、尺度与工作方式进行匹配，艺术家详情页呈现其语言与创作方向。" /><div class="artist-grid">{artists.map((artist) => <ArtistCard artist={artist} />)}</div><a class="btn btn-secondary" href="/artists/">查看艺术家矩阵 / Explore all artists →</a></section>
+
+  <section id="business" class="container section business-section"><div class="business-copy"><span class="eyebrow">04 / Business Custom</span><h2 class="serif">为企业、空间与重要活动，定制一份可被记住的艺术表达。</h2><p lang="en">For teams, spaces and occasions that deserve a thoughtful visual language.</p><p>企业礼赠、文化空间、婚礼与周年、民宿与品牌活动，都可以从一个共同的意图开始。先提交场景，再确认创作边界。</p><a class="btn btn-secondary" href="/business/">了解企业定制 / Explore business custom →</a></div><div class="business-list">{['企业礼赠 / Corporate gifting','空间定制 / Spatial commissions','婚礼与周年 / Weddings & anniversaries','品牌活动 / Cultural events'].map((item, i) => <div><span class="mono">0{i + 1}</span><span>{item}</span></div>)}</div></section>
+
+  <section id="gift" class="container section gift-section"><SectionIntro index="05" eyebrow="Art Gift" title="艺术礼盒，也可以从故事开始。" en="An art gift begins with a story." body="礼盒不是固定货架，而是为一段关系、一场相逢或一份感谢共同取意。" /><div class="gift-grid">{giftDirections.map((gift) => <article><span class="serif">{gift.title}</span><small lang="en">{gift.en}</small><p>{gift.body}</p><a class="btn btn-link" href="/custom-commission/">开启定制咨询 / Commission this direction →</a></article>)}</div></section>
+
+  <section id="about" class="container section about-section"><div><span class="eyebrow">06 / About</span><h2 class="serif">小民艺术 · 日常表达。</h2></div><div><p lang="en" class="about-en">XIAOMINART is an art commissioning platform translating the sensibility of Eastern art into contemporary, personal works.</p><p>我们不把东方艺术做成遥远的装饰符号，也不把艺术家变成无法接近的名字。XIAOMINART 是一个东方艺术定制平台：让书写、器物、空间与人的故事，在具体的生活里重新相遇。</p><a class="btn btn-secondary" href="/about/">了解品牌故事 / About the studio →</a></div></section>
+
+  <section class="container section journal-preview"><SectionIntro index="07" eyebrow="Journal / Blog" title="关于创作，也关于如何观看。" en="Notes on making and seeing." /><div class="journal-line"><a href="/journal/">阅读 Journal / 创作笔记 →</a><span>方法、艺术家与定制现场的长期记录。</span></div></section>
+</Layout>
+<style>
+  .social-proof { display: grid; grid-template-columns: 1.15fr 1fr 1.35fr 1fr; gap: 24px; align-items: end; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 20px 0; }
+  .social-proof div { display: flex; flex-direction: column; gap: 6px; }
+  .social-proof div > span:not(.eyebrow) { color: var(--muted); font-size: 11px; }
+  .social-proof strong { font-size: 14px; font-weight: 400; color: var(--ink-soft); }
+  .social-proof p { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 11px; }
+  .hero { min-height: 690px; padding: 90px 0 110px; display: grid; grid-template-columns: 1fr .85fr; gap: 86px; align-items: center; }
+  .hero h1 { font-size: clamp(40px, 5.45vw, 68px); line-height: 1.2; font-weight: 500; letter-spacing: 0; margin: 20px 0 22px; white-space: nowrap; }
+  .hero-en { font: 21px / 1.5 var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); margin: 0 0 20px; }
+  .hero-body { max-width: 520px; color: var(--ink-soft); font-size: 18px; line-height: 1.8; }
+  .hero-boundary { max-width: 520px; margin: 16px 0 0; color: var(--cinnabar-deep); font-size: 13px; letter-spacing: .01em; line-height: 1.65; }
+  .hero-boundary span { display: block; margin-top: 3px; color: var(--muted); font: 14px / 1.55 var(--font-display-en), Georgia, serif; }
+  .hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 28px; }
+  .hero-inspiration-hint { flex-basis: 100%; color: var(--muted); font-size: 12px; margin-top: -4px; }
+  .hero-visual { padding: 24px; background: var(--paper-deep); }
+  .hero-art { aspect-ratio: .9; border: 1px solid var(--line); background: var(--paper-light); display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--cinnabar); position: relative; }
+  .hero-art::before, .hero-art::after { content: ''; position: absolute; border: 1px solid rgba(43, 41, 36, .18); width: 64%; height: 66%; transform: rotate(-7deg); }
+  .hero-art::after { width: 42%; height: 53%; transform: rotate(11deg); border-color: rgba(165, 72, 59, .36); }
+  .hero-art span { position: relative; z-index: 1; font-size: 150px; }
+  .hero-art small { position: relative; z-index: 1; font: 10px var(--font-mono); color: var(--ink-soft); letter-spacing: .12em; }
+  .hero-caption { font-size: 12px; color: var(--ink-soft); margin: 14px 0 0; }
+  .process-section, .inspiration-section, .artist-section, .gift-section, .about-section, .journal-preview { border-top: 1px solid var(--line); }
+  .process-grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-bottom: 30px; }
+  .process-step { min-height: 250px; padding: 20px 20px 24px 0; }
+  .process-step + .process-step { border-left: 1px solid var(--line); padding-left: 20px; }
+  .process-step > span { color: var(--cinnabar); font-size: 13px; }
+  .process-step h3 { font-size: 28px; font-weight: 500; margin: 38px 0 5px; }
+  .process-step p { color: var(--ink-soft); font-size: 14px; margin: 8px 0 0; }
+  .process-step p[lang='en'] { font: 17px var(--font-display-en), Georgia, serif; color: var(--ink); }
+  .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 46px 24px; }
+  .artist-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin-bottom: 34px; min-width: 0; }
+  .artist-grid > * { min-width: 0; }
+  .business-section { display: grid; grid-template-columns: 1.1fr .9fr; gap: 90px; background: var(--ink); color: var(--paper-light); padding-inline: max(24px, calc((100vw - var(--container)) / 2)); width: 100%; max-width: none; }
+  .business-copy { max-width: 650px; }
+  .business-copy h2 { font-size: clamp(34px, 4vw, 56px); font-weight: 500; line-height: 1.3; margin: 18px 0; }
+  .business-copy p { color: #d8d1c5; max-width: 610px; }
+  .business-copy p[lang='en'] { font: 20px / 1.5 var(--font-display-en), Georgia, serif; color: var(--paper); }
+  .business-copy .btn { margin-top: 20px; }
+  .business-list { border-top: 1px solid rgba(244, 239, 229, .3); align-self: center; }
+  .business-list div { display: flex; gap: 22px; padding: 19px 0; border-bottom: 1px solid rgba(244, 239, 229, .3); color: var(--paper); }
+  .business-list .mono { color: var(--gilt); }
+  .gift-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .gift-grid article { padding: 28px 24px 30px 0; min-height: 230px; }
+  .gift-grid article + article { border-left: 1px solid var(--line); padding-left: 24px; }
+  .gift-grid .serif { display: block; font-size: 31px; }
+  .gift-grid small { display: block; font: 16px var(--font-display-en), Georgia, serif; color: var(--ink-soft); margin-top: 5px; }
+  .gift-grid p { color: var(--ink-soft); font-size: 14px; }
+  .about-section { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; }
+  .about-section h2 { font-size: clamp(36px, 5vw, 64px); line-height: 1.25; font-weight: 500; margin: 20px 0; }
+  .about-section p { color: var(--ink-soft); max-width: 590px; }
+  .about-en { font: 23px / 1.5 var(--font-display-en), Georgia, serif; color: var(--ink) !important; }
+  .journal-line { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; padding: 20px 0; }
+  .journal-line a { color: var(--cinnabar); }
+  .journal-line span { color: var(--ink-soft); font-size: 13px; }
+  @media (max-width: 767px) {
+    .social-proof { grid-template-columns: 1fr; gap: 14px; padding: 18px 0; }
+    .social-proof p { grid-column: auto; }
+    .hero { min-height: 0; padding: 60px 0 70px; display: block; }
+    .hero-visual { margin-top: 44px; }
+    .hero h1 { font-size: clamp(34px, 10.5vw, 44px); line-height: 1.22; letter-spacing: 0; white-space: nowrap; }
+    .hero-en { font-size: 19px; line-height: 1.45; }
+    .hero-body { font-size: 16px; line-height: 1.8; }
+    .hero-boundary { font-size: 12px; }
+    .hero-boundary span { font-size: 13px; }
+    .hero-actions { margin-top: 24px; }
+    .hero-actions { display: grid; gap: 12px; }
+    .hero-actions .btn { width: 100%; }
+    .process-grid, .gallery-grid, .artist-grid, .gift-grid, .about-section, .business-section { grid-template-columns: 1fr; }
+    .process-step, .process-step + .process-step { min-height: 0; padding: 19px 0; border-left: 0; border-bottom: 1px solid var(--line); }
+    .process-step:last-child { border-bottom: 0; }
+    .process-step h3 { margin: 11px 0 3px; }
+    .gallery-grid { gap: 36px; }
+    .artist-grid { gap: 32px; }
+    .business-section { padding-block: 64px; gap: 38px; }
+    .business-copy h2 { font-size: 36px; }
+    .gift-grid article, .gift-grid article + article { min-height: 0; padding: 22px 0; border-left: 0; border-bottom: 1px solid var(--line); }
+    .gift-grid article:last-child { border-bottom: 0; }
+    .about-section { gap: 22px; }
+    .about-en { font-size: 20px; }
+    .journal-line { display: block; }
+    .journal-line span { display: block; margin-top: 12px; }
+  }
+</style>

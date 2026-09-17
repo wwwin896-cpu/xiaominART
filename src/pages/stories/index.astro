@@ -1,0 +1,6 @@
+---
+import Layout from '../../layouts/Layout.astro'; import FactBoundary from '../../components/FactBoundary.astro';
+---
+<Layout title="墙上的故事｜小民艺术" description="经授权的用户故事与作品记录。默认私密，公开需要单独授权。"><section class="container page-head"><span class="eyebrow">Stories on the wall / 墙上的故事</span><h1 class="serif">每一幅字，<br/>先属于一个人。</h1><p>故事默认只有你和写字的我们可见。公开，需要你单独授权。</p></section><section class="container empty"><span class="eyebrow">Archive status / 档案状态</span><h2 class="serif">故事墙正在留白。</h2><p>第一批作品完成打样、编号与授权后，会在这里逐件公开。我们不会用编造的评价填充空位。</p><a class="btn btn-secondary" href="/custom-commission/">从故事开始定制 →</a></section><section class="container section"><FactBoundary /></section></Layout>
+<style>.page-head{padding:96px 0 72px}.page-head h1{font-size:clamp(52px,7vw,84px);line-height:1.1;margin:20px 0}.page-head p{color:var(--muted);font-size:17px}.empty{border-block:1px solid var(--border);padding:64px 0;max-width:760px;margin-left:max(16px,calc((100% - 1120px)/2));margin-right:auto}.empty h2{font-size:48px;margin:18px 0}.empty p{color:var(--muted);max-width:520px}@media(max-width:767px){.page-head{padding:56px 0 40px}.empty{margin-inline:16px;padding:48px 0}.empty h2{font-size:38px}}
+</style>

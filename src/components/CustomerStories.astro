@@ -1,0 +1,36 @@
+---
+import { customerStories } from '../data/content';
+---
+<section class="customer-stories" aria-labelledby="customer-stories-title">
+  <div class="stories-heading">
+    <div><span class="eyebrow">Client Stories / 客户故事</span><h2 id="customer-stories-title" class="serif">让每一次共创，留下可被回看的关系。</h2></div>
+    <p>这里记录已完成整理的创作方向与公开故事。更多真实案例将持续呈现，隐私与授权始终优先。</p>
+  </div>
+  <div class="stories-grid">
+    {customerStories.map((story) => <article class="story-card">
+      <div class="story-top"><span class="story-initials" aria-hidden="true">{story.initials}</span><div><strong>{story.client}</strong><span>{story.type}</span></div></div>
+      <blockquote>“{story.quote}”</blockquote>
+      <p lang="en">{story.en}</p>
+      <span class="story-status">{story.status}</span>
+      <a class="story-link" href={`/inspiration/${story.caseSlug}/#client-story`}>了解更多 / Learn more →</a>
+    </article>)}
+  </div>
+</section>
+<style>
+  .customer-stories { border-top: 1px solid var(--line); padding: var(--space-24) 0; }
+  .stories-heading { display: grid; grid-template-columns: 1.1fr .9fr; gap: 80px; align-items: end; margin-bottom: 44px; }
+  .stories-heading h2 { max-width: 650px; font-size: clamp(34px, 4vw, 56px); font-weight: 500; line-height: 1.25; margin: 16px 0 0; }
+  .stories-heading > p { max-width: 480px; color: var(--ink-soft); font-size: 14px; line-height: 1.8; }
+  .stories-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+  .story-card { border: 1px solid var(--line); padding: 24px; min-height: 310px; display: flex; flex-direction: column; }
+  .story-top { display: flex; align-items: center; gap: 12px; }
+  .story-initials { width: 42px; height: 42px; display: grid; place-items: center; border: 1px solid var(--line); color: var(--cinnabar); font-family: var(--font-display-zh); }
+  .story-top strong, .story-top span { display: block; }
+  .story-top strong { font-size: 14px; font-weight: 500; }
+  .story-top div span { margin-top: 3px; color: var(--muted); font-size: 11px; }
+  blockquote { margin: 28px 0 10px; color: var(--ink-soft); font-size: 16px; line-height: 1.8; }
+  .story-card p[lang='en'] { margin: 0; color: var(--muted); font: 15px / 1.55 var(--font-display-en), Georgia, serif; }
+  .story-status { margin-top: 18px; color: var(--cinnabar-deep); font-size: 11px; letter-spacing: .03em; }
+  .story-link { margin-top: auto; padding-top: 22px; color: var(--cinnabar); border-bottom: 1px solid var(--cinnabar); width: fit-content; font-size: 12px; }
+  @media (max-width: 767px) { .stories-heading { display: block; margin-bottom: 30px; } .stories-heading > p { margin-top: 18px; } .stories-grid { grid-template-columns: 1fr; gap: 16px; } .story-card { min-height: 0; } }
+</style>

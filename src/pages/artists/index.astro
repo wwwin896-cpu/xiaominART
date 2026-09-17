@@ -1,0 +1,8 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ArtistCard from '../../components/ArtistCard.astro';
+import { artists } from '../../data/content';
+---
+<Layout title="艺术家｜Artists｜XIAOMINART" description="认识参与 XIAOMINART 定制创作的艺术家与创作方向。"><section class="page-head container"><span class="eyebrow">Artists / 艺术家</span><h1 class="serif">每一种意图，<br />都值得找到合适的手。</h1><p lang="en">Different intentions call for different hands.</p><p>艺术家不是商品标签，而是共同创作关系中的另一位作者。这里呈现创作方向与工作方式，最终匹配以定制表单沟通为准。</p></section><section class="container section artist-matrix"><div class="artist-grid">{artists.map((artist) => <ArtistCard artist={artist} />)}</div></section><section class="container section matching"><span class="eyebrow">Matching / 艺术家匹配</span><h2 class="serif">告诉我们你想留下什么，<br />我们再讨论由谁回应。</h2><a class="btn btn-primary" href="/custom-commission/">进入定制表单 / Start a commission →</a></section></Layout>
+<style>.page-head{padding:94px 0 72px}.page-head h1{font-size:clamp(52px,7vw,90px);font-weight:500;line-height:1.16;margin:22px 0}.page-head p{max-width:650px;color:var(--ink-soft);font-size:18px}.page-head p[lang=en]{font:24px var(--font-display-en),Georgia,serif;color:var(--cinnabar-deep)}.artist-matrix{border-top:1px solid var(--line);min-width:0}.artist-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;min-width:0}.artist-grid>*{min-width:0}.matching{border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.matching h2{font-size:clamp(36px,5vw,62px);font-weight:500;line-height:1.3;margin:20px 0 30px}@media(max-width:767px){.page-head{padding:58px 0 48px}.page-head h1{font-size:53px}.page-head p[lang=en]{font-size:20px}.artist-grid{grid-template-columns:1fr;gap:34px}}
+</style>

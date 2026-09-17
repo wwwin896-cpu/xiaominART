@@ -1,0 +1,13 @@
+{
+  "framework": "astro",
+  "outputDirectory": "dist",
+  "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "xiaominart.com" }],
+      "destination": "https://www.xiaominart.com/$1",
+      "permanent": true
+    }
+  ]
+}

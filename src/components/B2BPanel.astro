@@ -1,0 +1,11 @@
+---
+const { title = 'B端企业定制', body = '为企业、空间与重要活动定制一份可被记住的艺术表达。' } = Astro.props;
+---
+<section class="b2b-panel"><div><span class="eyebrow">Business Custom / B端企业定制</span><h2 class="serif">{title}</h2><p>{body}</p><a class="btn btn-primary" href="/business-custom/">提交项目简报 / Share a brief →</a></div><span class="panel-mark">B2B</span></section>
+<style>
+  .b2b-panel { background: var(--ink); color: var(--paper-light); padding: 48px; display: flex; justify-content: space-between; gap: 30px; align-items: end; }
+  .b2b-panel h2 { font-size: 42px; font-weight: 500; margin: 18px 0 10px; }
+  .b2b-panel p { color: var(--paper-deep); max-width: 560px; }
+  .panel-mark { color: var(--gilt); font: 12px var(--font-mono); letter-spacing: .14em; }
+  @media (max-width: 767px) { .b2b-panel { padding: 30px 24px; display: block; } .b2b-panel h2 { font-size: 34px; } .panel-mark { display: block; margin-top: 28px; } }
+</style>

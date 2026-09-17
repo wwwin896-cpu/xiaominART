@@ -1,0 +1,11 @@
+---
+import Layout from '../../layouts/Layout.astro';
+const stages = [['01', '已提交愿望', '我们已收到你的方向与联系信息。'], ['02', '字句审核', '确认内容、版权与创作边界。'], ['03', '书体匹配', '讨论艺术家、媒介与表达方向。'], ['04', '创作中', '按确认节点推进创作与反馈。'], ['05', '待交付', '确认装裱、物流与交付范围。']];
+---
+<Layout title="定制进度｜Progress｜小民艺术" description="通过专属链接查看定制共创的阶段说明。">
+  <section class="container progress-head"><span class="eyebrow">Commission progress / 定制进度</span><h1 class="serif">让每一个节点，<br />都被清楚地看见。</h1><p>这是进度页面模板。正式项目会通过邮件发送专属链接，当前页面不展示任何真实订单或个人信息。</p></section>
+  <section class="container progress-list">{stages.map((stage, index) => <article class:list={{active:index === 0}}><span class="mono">{stage[0]}</span><div><h2 class="serif">{stage[1]}</h2><p>{stage[2]}</p></div><span class="stage-status">{index === 0 ? '当前节点' : '待进入'}</span></article>)}</section>
+  <section class="container progress-note"><p>需要查询具体项目？请通过邮箱 hello@xiaominart.com 联系，并注明你的项目称呼。</p><a class="btn btn-primary" href="mailto:hello@xiaominart.com?subject=小民艺术定制进度咨询">邮件联系 →</a></section>
+</Layout>
+<style>.progress-head{padding:96px 0 72px}.progress-head h1{font-size:clamp(52px,7vw,90px);font-weight:500;line-height:1.15;margin:22px 0}.progress-head p{max-width:620px;color:var(--ink-soft);font-size:18px;line-height:1.8}.progress-list{border-top:1px solid var(--line)}.progress-list article{display:grid;grid-template-columns:80px 1fr 100px;gap:20px;align-items:center;padding:24px 0;border-bottom:1px solid var(--line)}.progress-list h2{font-size:30px;font-weight:500;margin:0 0 6px}.progress-list p{margin:0;color:var(--ink-soft);font-size:14px}.progress-list article.active{border-left:3px solid #2A5A6B;padding-left:16px}.stage-status{font-size:12px;color:var(--meta)}.progress-note{border-top:1px solid var(--line);margin-top:48px;padding-top:24px;color:var(--ink-soft)}@media(max-width:767px){.progress-head{padding:58px 0 48px}.progress-head h1{font-size:53px}.progress-list article{grid-template-columns:42px 1fr;gap:12px}.stage-status{grid-column:2}.progress-note{margin-top:30px}}
+</style>

@@ -1,0 +1,11 @@
+---
+const { post } = Astro.props;
+---
+<article class="blog-card"><span class="eyebrow">{post.pillar}</span><h3 class="serif">{post.title}</h3><p lang="en">{post.en}</p><p>{post.excerpt}</p><a class="btn btn-link" href={`/blog/${post.slug}/`}>阅读 / Read →</a></article>
+<style>
+  .blog-card { border-top: 1px solid var(--line); padding: 18px 0 24px; }
+  h3 { font-size: 29px; font-weight: 500; line-height: 1.35; margin: 12px 0 4px; }
+  p { color: var(--ink-soft); font-size: 14px; margin: 7px 0; }
+  p[lang='en'] { font: 17px var(--font-display-en), Georgia, serif; color: var(--ink); }
+  .btn-link { display: inline-flex; margin-top: 14px; font-size: 12px; }
+</style>
