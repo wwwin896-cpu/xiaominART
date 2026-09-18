@@ -1,0 +1,26 @@
+# xiaominART Netlify preparation configuration.
+# Deployment is intentionally blocked until the current Node/SQLite app is migrated
+# to an Astro + Netlify Functions/SSR architecture and production data services are approved.
+
+[build]
+  command = "npm run netlify:preflight"
+  publish = "dist"
+  environment = { NODE_VERSION = "22.23.2" }
+
+[build.environment]
+  NETLIFY_PREP_ONLY = "true"
+
+[context.deploy-preview]
+  command = "npm run netlify:preflight"
+
+[context.branch-deploy]
+  command = "npm run netlify:preflight"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# No DNS, production redirects, payment callbacks, or public rewrite are defined here.

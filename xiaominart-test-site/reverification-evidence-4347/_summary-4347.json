@@ -1,0 +1,30 @@
+{
+  "scope": "xiaominART minimal same-version re-verification on FRESH isolated port 4347 (post validateItems/cancel-copy/form-script/menu-style fixes)",
+  "browser": "user Chrome (built-in browser disabled in Settings > Browser)",
+  "server": { "port": 4347, "dataDir": "%TEMP%\\xiaominart-browser-final-4347", "nodeEnv": "test", "adminUser": "admin" },
+  "orders": [
+    { "orderNumber": "TEST-20260913-4E57FD", "path": "UI /checkout 模拟成功", "status": "paid / 模拟支付成功", "total": 598, "spec": "禄 · 给日子一份笃定 / 演示标准斗方 / x2", "result": "PASS" },
+    { "orderNumber": "TEST-20260913-28AA06", "path": "UI /checkout 模拟取消", "status": "已取消", "total": 299, "message": "内部模拟支付已取消，未创建成功收入", "result": "PASS" }
+  ],
+  "customRequest": { "number": "CUSTOM-20260913-559748", "markers": "<b>safe</b>, </script>, <script>window.__xss=1</script>, quotes, <img onerror>", "executed": false },
+  "results": {
+    "shop_lu_spec_standard_qty2_add": "PASS (cart L/standard/2, specId retained)",
+    "cart_spec_qty_total598": "PASS (演示标准斗方 x2, ¥598)",
+    "checkout_ui_success_to_order_result": "PASS (TEST-20260913-4E57FD, CNY 598, spec 演示标准斗方 x2)",
+    "simulate_cancel_status_and_message": "PASS (TEST-20260913-28AA06, 已取消)",
+    "custom_markers_not_executed": "PASS (form page + admin: window.__xss undefined, 0 injected script/img; admin shows literal text)",
+    "mobile375_custom_bounds": "PASS (no overflow, scrollWidth 360<=375, 10 controls)",
+    "mobile375_checkout_bounds": "PASS (no overflow, 6 controls)",
+    "mobile375_admin_login_bounds": "PASS (no overflow, 3 controls)",
+    "admin_login_query_same_order": "PASS (TEST-20260913-4E57FD found: paid, ¥598, 演示标准斗方 x2)"
+  },
+  "screenshots": [
+    "01-cart-1440.png",
+    "02-order-result-1440.png",
+    "03-custom-375.png",
+    "04-checkout-375.png",
+    "05-admin-login-375.png",
+    "06-admin-order-query-1440.png"
+  ],
+  "notes": "Evidence isolated in reverification-evidence-4347/; 4346 and older evidence untouched. No real payment/domain/customer data."
+}

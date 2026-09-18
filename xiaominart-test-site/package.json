@@ -1,0 +1,15 @@
+{
+  "name": "xiaominart-test-site",
+  "version": "0.2.0-reverification",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node server.mjs",
+    "start": "node server.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "netlify:preflight": "node scripts/netlify-preflight.mjs"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  }
+}

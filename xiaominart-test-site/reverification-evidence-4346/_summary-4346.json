@@ -1,0 +1,31 @@
+{
+  "scope": "xiaominART re-verification on FRESH isolated port 4346 after /checkout cartRead fix",
+  "browser": "user Chrome (built-in browser disabled in Settings > Browser)",
+  "server": { "port": 4346, "dataDir": "%TEMP%\\xiaominart-browser-final-4346", "nodeEnv": "test", "adminUser": "admin" },
+  "fixConfirmedInSource": "server.mjs checkoutPage() now includes cartScript() (defines cartRead); runtime typeof cartRead === 'function'",
+  "orders": [
+    { "orderNumber": "TEST-20260913-286FDE", "path": "UI /checkout 模拟成功", "status": "模拟支付成功", "total": 598, "result": "PASS" },
+    { "orderNumber": "TEST-20260913-0BE61D", "path": "UI /checkout 模拟失败", "status": "模拟支付失败", "total": 299, "message": "内部模拟支付失败，未创建成功收入" },
+    { "orderNumber": "TEST-20260913-BB0BF1", "path": "UI /checkout 模拟取消", "status": "已取消", "total": 299, "message": "内部模拟支付已取消，未创建成功收入" }
+  ],
+  "results": {
+    "shop_lu_add_to_cart_qty2": "PASS (L/standard/2)",
+    "cart_contents_total_598": "PASS",
+    "checkout_ui_submit_success_order_result": "PASS (TEST-20260913-286FDE, CNY 598, cart cleared)",
+    "simulate_failure_feedback": "PASS (TEST-20260913-0BE61D, 模拟支付失败)",
+    "simulate_cancel_feedback": "PASS (TEST-20260913-BB0BF1, 已取消)",
+    "network_failure_wait_fail_retry_inputs_retained": "PASS (pending: 正在创建测试订单…; button disabled; error: 网络已断开；输入已保留，可安全重试。)",
+    "mobile375_custom_bounds": "PASS (no overflow, docScrollWidth 360 <= 375)",
+    "mobile375_checkout_bounds": "PASS (no overflow, docScrollWidth 360 <= 375)",
+    "mobile375_admin_login_bounds": "PASS (no overflow, docScrollWidth 360 <= 375)"
+  },
+  "screenshots": [
+    "01-cart-1440.png",
+    "02-order-result-1440.png",
+    "03-checkout-failure-retry-1440.png",
+    "04-custom-375.png",
+    "05-checkout-375.png",
+    "06-admin-login-375.png"
+  ],
+  "notes": "Reused previous session's 4345 evidence untouched in reverification-evidence/. Chrome debugger permission was denied intermittently; recovered by opening a new tab."
+}

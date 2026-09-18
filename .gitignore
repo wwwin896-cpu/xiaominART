@@ -2,3 +2,15 @@
 .env*
 node_modules/
 dist/
+public/
+resources/
+.hugo_build.lock
+**/data/
+**/*.sqlite
+**/*.sqlite-wal
+**/*.sqlite-shm
+**/.env
+**/.env.*
+!**/.env.example
+**/*_err.log
+**/*_out.log

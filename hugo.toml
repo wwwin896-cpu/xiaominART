@@ -1,0 +1,37 @@
+baseURL = 'https://www.xiaominart.com/'
+languageCode = 'zh-cn'
+defaultContentLanguage = 'zh-cn'
+title = '小民艺术 XIAOMINART'
+theme = []
+enableRobotsTXT = true
+
+[languages]
+  [languages.zh-cn]
+    languageName = '中文'
+    weight = 1
+    contentDir = 'content/zh-cn'
+  [languages.en]
+    languageName = 'English'
+    weight = 2
+    contentDir = 'content/en'
+
+[params]
+  description = '小民艺术：为自己的日子，也为在意的人，写一份看得见的心意。'
+  demoMode = true
+
+[languages.zh-cn.params]
+  heroTitle = '把日子，写成字。'
+  heroLead = '为自己的日子，也为在意的人，写一份看得见的心意。'
+
+[languages.en.params]
+  description = 'XiaominART turns everyday stories and feelings into visible words.'
+  heroTitle = 'Write your days into words.'
+  heroLead = 'A visible gesture of care—for your own days and for the people you hold dear.'
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = false
+
+[outputs]
+  home = ['HTML', 'RSS']
