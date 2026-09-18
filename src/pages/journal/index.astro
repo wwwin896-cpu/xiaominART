@@ -2,8 +2,8 @@
 import Layout from '../../layouts/Layout.astro';
 import { blogPosts } from '../../data/content';
 ---
-<Layout title="创作笔记｜Journal｜小民艺术" description="记录小民艺术的创作方法、日常观看与共创笔记。">
-  <section class="container journal-head"><span class="eyebrow">Journal / 创作笔记</span><h1 class="serif">关于创作，<br />也关于如何观看。</h1><p>把作品放回生活，把方法写给正在寻找方向的人。</p></section>
+<Layout title="静气生活｜Journal｜小民艺术" description="记录小民艺术的送礼故事、家居日常、创作方法与生活美学。">
+  <section class="container journal-head"><span class="eyebrow">Quiet Living / 静气生活</span><h1 class="serif">关于如何生活，<br />也关于如何观看。</h1><p>把作品放回生活，把一份心意写给正在寻找安静方向的人。</p></section>
   <section class="container journal-list">{blogPosts.map((post) => <a href={`/blog/${post.slug}/`}><span class="mono">{post.pillar}</span><h2 class="serif">{post.title}</h2><p>{post.excerpt}</p><span>{post.date} →</span></a>)}</section>
 </Layout>
 <style>.journal-head{padding:96px 0 72px}.journal-head h1{font-size:clamp(52px,7vw,90px);font-weight:500;line-height:1.15;margin:22px 0}.journal-head p{color:var(--ink-soft);font-size:18px}.journal-list{border-top:1px solid var(--line)}.journal-list>a{display:grid;grid-template-columns:160px 1.2fr 1fr 120px;gap:24px;align-items:center;padding:24px 0;border-bottom:1px solid var(--line);color:var(--ink)}.journal-list h2{font-size:28px;font-weight:500}.journal-list p,.journal-list>a>span:last-child{font-size:13px;color:var(--ink-soft)}.journal-list>a:hover h2{color:var(--cinnabar)}@media(max-width:767px){.journal-head{padding:58px 0 48px}.journal-head h1{font-size:53px}.journal-list>a{display:block;padding:22px 0}.journal-list h2{font-size:25px;margin:10px 0}.journal-list p{line-height:1.7}}

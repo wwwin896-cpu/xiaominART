@@ -6,22 +6,24 @@ import ArtistCard from '../components/ArtistCard.astro';
 import CaseNotice from '../components/CaseNotice.astro';
 import CustomerStories from '../components/CustomerStories.astro';
 import BudgetReference from '../components/BudgetReference.astro';
-import { processSteps, inspirations, artists, giftDirections } from '../data/content';
+import { processSteps, inspirations, artists, giftDirections, giftTierLabels } from '../data/content';
 ---
 <Layout title="小民艺术 · 日常表达" description="方寸之间，安放你的心境。小民艺术以书画摆件、小型器物与生活场景为载体，和你共同完成一份日常表达。">
   <section class="hero container">
-    <div class="hero-copy"><span class="eyebrow">小民艺术 / 日常表达</span><h1 class="serif">方寸之间，<br />安放你的心境。</h1><p lang="en" class="hero-en">Everyday expression, made meaningful.</p><p class="hero-body">从一句话、一件摆件或一处生活场景开始。我们把东方书写与器物带回普通人的日常，给心境留下一个安静的位置。</p><p class="hero-boundary">不售卖现成画作，仅接受艺术定制共创。<span lang="en">No ready-made artwork for sale; commissions only.</span></p><div class="hero-actions"><a class="btn btn-primary" href="/custom-commission/">开启定制咨询 / Begin a consultation →</a><a class="btn btn-secondary" href="/inspiration/">浏览灵感参考 / Explore inspiration</a><span class="hero-inspiration-hint">选择你的空间，浏览适配的艺术方向 / Choose your space, then explore a direction.</span></div></div>
-    <div class="hero-visual"><div class="hero-art"><span class="serif">意</span><small>CONCEPTUAL DIRECTION / 01</small></div><p class="hero-caption">每个案例都是一次创作方向的记录，不是现货陈列。</p></div>
+    <div class="hero-copy"><span class="eyebrow">小民艺术 / 静气生活</span><h1 class="serif">一份带着书香静气的心意。</h1><p lang="en" class="hero-en">A thoughtful gift with the quiet of a good room.</p><p class="hero-body">家居摆件、人情好礼，也可以是一句认真写下的话。先从送给谁、想表达什么开始，我们帮你找到一份不喧哗但会被记住的心意。</p><div class="hero-actions"><a class="btn btn-primary" href="/gift-guide/">打开送礼指南 / Gift guide →</a><a class="btn btn-secondary" href="/scenes/">按生活场景看看 / Explore scenes</a><span class="hero-inspiration-hint">可做家居陈设｜可作人情伴手礼｜支持礼品包装 + 手写贺卡</span></div></div>
+    <div class="hero-visual"><div class="hero-art"><span class="serif">礼</span><small>QUIET LIVING / 01</small></div><p class="hero-caption">从一份礼物开始，让家和关系都多一点安静的分量。</p></div>
   </section>
 
   <section class="container social-proof" aria-label="品牌信息 / Brand notes"><div><span class="eyebrow">Brand notes / 品牌主张</span><strong>小民艺术 · 日常表达</strong></div><div><span>Everyday / 日常</span><strong>把书画与器物带回生活</strong></div><div><span>Human scale / 方寸</span><strong>从一句话与一处空间开始</strong></div><div><span>Thoughtful / 共同</span><strong>先沟通，再确认创作边界</strong></div><p>品牌内容会随真实创作与授权故事持续更新。</p></section>
 
   <section class="container section process-section"><SectionIntro index="01" eyebrow="Co-create" title="四步，共同完成一件作品。" en="Four steps, one work made with intention." body="你不需要先懂艺术。只需要带来一个具体的人、一处空间，或一个想被认真表达的时刻。" /><div class="process-grid">{processSteps.map((step) => <article class="process-step"><span class="mono">{step.no}</span><h3 class="serif">{step.zh}</h3><p lang="en">{step.en}</p><p>{step.body}</p></article>)}</div><a class="btn btn-primary" href="/custom-commission/">开启定制咨询 / Begin a consultation →</a></section>
 
-  <section id="inspiration" class="container section inspiration-section"><SectionIntro index="02" eyebrow="Inspiration Gallery" title="从参考开始，不从复制开始。" en="Begin with a direction, never with a replica." body="这里记录材质、色彩、空间与书写气息。案例仅作风格参考，不售卖同款。" /><div class="gallery-grid">{inspirations.slice(0, 6).map((item) => <InspirationCard item={item} />)}</div><CaseNotice /><a class="btn btn-secondary" href="/discover/">3分钟找到你的艺术方向 / Find your direction →</a></section>
+  <section id="gifts" class="container section gift-preview"><SectionIntro index="01" eyebrow="Gift Guide / 送礼指南" title="从送给谁开始，找到一份合适的心意。" en="Start with who it is for." body="按场景、预算和关系挑选，不需要先懂艺术。礼品包装、手写贺卡和预计发货时间都在详情里说清楚。" /><div class="gift-tier-preview">{Object.entries(giftTierLabels).map(([key, tier]) => <a href={`/gift-guide/?tier=${key}#gift-list`}><span class="eyebrow">{tier.name}</span><strong>{tier.range}</strong><p>{tier.body}</p><span class="btn btn-link">查看这一档 →</span></a>)}</div><div class="gift-preview-actions"><a class="btn btn-primary" href="/gift-guide/">打开送礼指南 →</a><a class="btn btn-secondary" href="/custom-commission/?context=送礼建议">不知道怎么选？获取建议</a></div></section>
 
-  <CustomerStories />
+  <section id="inspiration" class="container section inspiration-section"><SectionIntro index="02" eyebrow="Life Scenes / 生活场景" title="把喜欢的气息，放进真实的生活。" en="Find a feeling for a real room." body="从书房、客厅、茶室到送礼心意，先看场景，再决定你想留下什么。" /><div class="gallery-grid">{inspirations.slice(0, 6).map((item) => <InspirationCard item={item} />)}</div><CaseNotice /><a class="btn btn-secondary" href="/scenes/">查看生活场景 / Explore scenes →</a></section>
+
   <section class="container section"><BudgetReference /></section>
+  <CustomerStories />
 
   <section id="artists" class="container section artist-section"><SectionIntro index="03" eyebrow="Artists" title="让合适的艺术家，回应你的意图。" en="The right artist for the intention." body="我们以主题、媒介、尺度与工作方式进行匹配，艺术家详情页呈现其语言与创作方向。" /><div class="artist-grid">{artists.map((artist) => <ArtistCard artist={artist} />)}</div><a class="btn btn-secondary" href="/artists/">查看艺术家矩阵 / Explore all artists →</a></section>
 
@@ -29,7 +31,7 @@ import { processSteps, inspirations, artists, giftDirections } from '../data/con
 
   <section id="gift" class="container section gift-section"><SectionIntro index="05" eyebrow="Art Gift" title="艺术礼盒，也可以从故事开始。" en="An art gift begins with a story." body="礼盒不是固定货架，而是为一段关系、一场相逢或一份感谢共同取意。" /><div class="gift-grid">{giftDirections.map((gift) => <article><span class="serif">{gift.title}</span><small lang="en">{gift.en}</small><p>{gift.body}</p><a class="btn btn-link" href="/custom-commission/">开启定制咨询 / Commission this direction →</a></article>)}</div></section>
 
-  <section id="about" class="container section about-section"><div><span class="eyebrow">06 / About</span><h2 class="serif">小民艺术 · 日常表达。</h2></div><div><p lang="en" class="about-en">XIAOMINART is an art commissioning platform translating the sensibility of Eastern art into contemporary, personal works.</p><p>我们不把东方艺术做成遥远的装饰符号，也不把艺术家变成无法接近的名字。XIAOMINART 是一个东方艺术定制平台：让书写、器物、空间与人的故事，在具体的生活里重新相遇。</p><a class="btn btn-secondary" href="/about/">了解品牌故事 / About the studio →</a></div></section>
+  <section id="about" class="container section about-section"><div><span class="eyebrow">06 / About</span><h2 class="serif">小民艺术 · 日常表达。</h2></div><div><p lang="en" class="about-en">XIAOMINART is an art commissioning platform translating the sensibility of Eastern art into contemporary, personal works.</p><p>我们不把艺术做成遥远的装饰符号，也不把创作者变成无法接近的名字。小民艺术让书写、器物、空间与人的故事，在具体的生活里重新相遇。</p><a class="btn btn-secondary" href="/about/">了解品牌故事 / About the studio →</a></div></section>
 
   <section class="container section journal-preview"><SectionIntro index="07" eyebrow="Journal / Blog" title="关于创作，也关于如何观看。" en="Notes on making and seeing." /><div class="journal-line"><a href="/journal/">阅读 Journal / 创作笔记 →</a><span>方法、艺术家与定制现场的长期记录。</span></div></section>
 </Layout>
@@ -40,7 +42,7 @@ import { processSteps, inspirations, artists, giftDirections } from '../data/con
   .social-proof strong { font-size: 14px; font-weight: 400; color: var(--ink-soft); }
   .social-proof p { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 11px; }
   .hero { min-height: 690px; padding: 90px 0 110px; display: grid; grid-template-columns: 1fr .85fr; gap: 86px; align-items: center; }
-  .hero h1 { font-size: clamp(40px, 5.45vw, 68px); line-height: 1.2; font-weight: 500; letter-spacing: 0; margin: 20px 0 22px; white-space: nowrap; }
+  .hero h1 { font-size: clamp(40px, 5.45vw, 68px); line-height: 1.2; font-weight: 500; letter-spacing: 0; margin: 20px 0 22px; }
   .hero-en { font: 21px / 1.5 var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); margin: 0 0 20px; }
   .hero-body { max-width: 520px; color: var(--ink-soft); font-size: 18px; line-height: 1.8; }
   .hero-boundary { max-width: 520px; margin: 16px 0 0; color: var(--cinnabar-deep); font-size: 13px; letter-spacing: .01em; line-height: 1.65; }
@@ -54,7 +56,13 @@ import { processSteps, inspirations, artists, giftDirections } from '../data/con
   .hero-art span { position: relative; z-index: 1; font-size: 150px; }
   .hero-art small { position: relative; z-index: 1; font: 10px var(--font-mono); color: var(--ink-soft); letter-spacing: .12em; }
   .hero-caption { font-size: 12px; color: var(--ink-soft); margin: 14px 0 0; }
-  .process-section, .inspiration-section, .artist-section, .gift-section, .about-section, .journal-preview { border-top: 1px solid var(--line); }
+  .process-section, .inspiration-section, .artist-section, .gift-section, .about-section, .journal-preview, .gift-preview { border-top: 1px solid var(--line); }
+  .gift-tier-preview { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .gift-tier-preview a { display: block; padding: 24px 22px 28px 0; }
+  .gift-tier-preview a + a { border-left: 1px solid var(--line); padding-left: 22px; }
+  .gift-tier-preview strong { display: block; margin: 18px 0 8px; font: 24px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); }
+  .gift-tier-preview p { margin: 0 0 16px; color: var(--ink-soft); font-size: 14px; }
+  .gift-preview-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 24px; }
   .process-grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-bottom: 30px; }
   .process-step { min-height: 250px; padding: 20px 20px 24px 0; }
   .process-step + .process-step { border-left: 1px solid var(--line); padding-left: 20px; }
@@ -92,7 +100,7 @@ import { processSteps, inspirations, artists, giftDirections } from '../data/con
     .social-proof p { grid-column: auto; }
     .hero { min-height: 0; padding: 60px 0 70px; display: block; }
     .hero-visual { margin-top: 44px; }
-    .hero h1 { font-size: clamp(34px, 10.5vw, 44px); line-height: 1.22; letter-spacing: 0; white-space: nowrap; }
+    .hero h1 { font-size: clamp(34px, 10.5vw, 44px); line-height: 1.22; letter-spacing: 0; }
     .hero-en { font-size: 19px; line-height: 1.45; }
     .hero-body { font-size: 16px; line-height: 1.8; }
     .hero-boundary { font-size: 12px; }
@@ -100,7 +108,11 @@ import { processSteps, inspirations, artists, giftDirections } from '../data/con
     .hero-actions { margin-top: 24px; }
     .hero-actions { display: grid; gap: 12px; }
     .hero-actions .btn { width: 100%; }
-    .process-grid, .gallery-grid, .artist-grid, .gift-grid, .about-section, .business-section { grid-template-columns: 1fr; }
+    .process-grid, .gallery-grid, .artist-grid, .gift-grid, .gift-tier-preview, .about-section, .business-section { grid-template-columns: 1fr; }
+    .gift-tier-preview a, .gift-tier-preview a + a { padding: 20px 0; border-left: 0; border-bottom: 1px solid var(--line); }
+    .gift-tier-preview a:last-child { border-bottom: 0; }
+    .gift-preview-actions { display: grid; }
+    .gift-preview-actions .btn { width: 100%; }
     .process-step, .process-step + .process-step { min-height: 0; padding: 19px 0; border-left: 0; border-bottom: 1px solid var(--line); }
     .process-step:last-child { border-bottom: 0; }
     .process-step h3 { margin: 11px 0 3px; }

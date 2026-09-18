@@ -1,13 +1,9 @@
 export const navItems = [
-  { href: '/', zh: '首页', en: 'Home' },
-  { href: '/inspiration/', zh: '灵感画廊', en: 'Gallery' },
-  { href: '/artists/', zh: '艺术家', en: 'Artists' },
-  { href: '/custom/', zh: '方寸心境', en: 'Fangcun Mood' },
-  { href: '/commission/', zh: '个人定制', en: 'Personal Commission' },
-  { href: '/business-custom/', zh: '企业定制', en: 'Business Custom' },
-  { href: '/blog/', zh: 'Journal', en: 'Journal' },
+  { href: '/gift-guide/', zh: '送礼指南', en: 'Gift Guide' },
+  { href: '/scenes/', zh: '生活场景', en: 'Scenes' },
+  { href: '/journal/', zh: '静气生活', en: 'Quiet Living' },
+  { href: '/business-gifts/', zh: '企业伴手礼', en: 'Business Gifts' },
   { href: '/about/', zh: '关于我们', en: 'About' },
-  { href: '/faq/', zh: '常见问题', en: 'FAQ' },
 ];
 
 export const processSteps = [
@@ -20,16 +16,15 @@ export const processSteps = [
 export const inspirations = [
   { slug: 'quiet-entry', title: '静入', en: 'A Quiet Entrance', category: '空间气质 / Spatial mood', note: '以留白、低饱和纸色和一笔墨色建立入口的安静秩序。', tag: '纸白 · 墨色', spaces: ['玄关', '客厅'], style: ['留白'], artist: '斗升小民', palette: ['纸白', '墨色'], frames: ['matte-black', 'natural-oak'] },
   { slug: 'red-seal', title: '一点朱砂', en: 'A Cinnabar Note', category: '色彩方向 / Colour direction', note: '不追求热闹，只用一处朱砂把观看的重心轻轻点亮。', tag: '朱砂 · 留白', spaces: ['客厅', '茶室'], style: ['朱砂', '留白'], artist: '斗升小民', palette: ['朱砂', '纸白'], frames: ['champagne', 'matte-black'] },
-  { slug: 'desk-mountain', title: '案上有山', en: 'A Mountain on the Desk', category: '案头意象 / Desk object', note: '将山水的起伏收进器物，让日常工作拥有可停留的边界。', tag: '木色 · 线条', spaces: ['书房', '办公室'], style: ['山水', '器物'], artist: '案上山房', palette: ['木色', '纸白'], frames: ['natural-oak', 'matte-black'] },
-  { slug: 'ink-breath', title: '墨有呼吸', en: 'Ink with Breath', category: '书写气息 / Ink gesture', note: '观察墨色浓淡、速度与停顿，寻找不被复制的手感。', tag: '墨色 · 手感', spaces: ['茶室', '书房'], style: ['墨色'], artist: '墨结构', palette: ['墨色', '灰'], frames: ['matte-black', 'champagne'] },
+  { slug: 'desk-mountain', title: '案上有山', en: 'A Mountain on the Desk', category: '案头意象 / Desk object', note: '将山水的起伏收进器物，让日常工作拥有可停留的边界。', tag: '木色 · 线条', spaces: ['书房', '办公室'], style: ['山水', '器物'], artist: '斗升小民', palette: ['木色', '纸白'], frames: ['natural-oak', 'matte-black'] },
+  { slug: 'ink-breath', title: '墨有呼吸', en: 'Ink with Breath', category: '书写气息 / Ink gesture', note: '观察墨色浓淡、速度与停顿，寻找不被复制的手感。', tag: '墨色 · 手感', spaces: ['茶室', '书房'], style: ['墨色'], artist: '斗升小民', palette: ['墨色', '灰'], frames: ['matte-black', 'champagne'] },
   { slug: 'seasonal-letter', title: '四时一笺', en: 'A Letter for the Season', category: '礼赠方向 / Gift direction', note: '让一份礼物从季节、关系与一句话开始，而不是从货架开始。', tag: '节气 · 心意', spaces: ['玄关', '民宿空间'], style: ['留白', '器物'], artist: '斗升小民', palette: ['纸白', '木色'], frames: ['champagne', 'natural-oak'] },
-  { slug: 'threshold-light', title: '门槛的光', en: 'Light at the Threshold', category: '空间定制 / Spatial commission', note: '为民宿、会客厅与文化空间寻找一处不喧哗的识别。', tag: '空间 · 光线', spaces: ['企业会客厅', '民宿空间'], style: ['留白', '山水'], artist: '墨结构', palette: ['灰', '木色'], frames: ['natural-oak', 'champagne'] },
+  { slug: 'threshold-light', title: '门槛的光', en: 'Light at the Threshold', category: '空间定制 / Spatial commission', note: '为民宿、会客厅与文化空间寻找一处不喧哗的识别。', tag: '空间 · 光线', spaces: ['企业会客厅', '民宿空间'], style: ['留白', '山水'], artist: '斗升小民', palette: ['灰', '木色'], frames: ['natural-oak', 'champagne'] },
 ];
 
 export const artists = [
   { slug: 'xiaomin', name: '斗升小民', en: 'Dou Sheng Xiaomin', discipline: '书写与东方日常 / Calligraphy & everyday rituals', bio: '以书写为入口，关注人与人之间那些需要被郑重说出的时刻。', philosophy: '让一句话先被听见，再寻找适合它的笔墨、尺度与停顿。', styles: ['留白', '墨色'], media: ['书写', '纸本'], projectTypes: ['小幅礼赠', '居家墙面'], portfolio: ['静入', '一点朱砂', '四时一笺'], experience: '经历与展览信息将随创作笔记持续呈现。', siteNote: '落地实景图与公开案例将随授权故事持续呈现。', quote: '参考报价需结合尺寸、媒介、创作复杂度与交付边界沟通确认。' },
-  { slug: 'ink-structure', name: '墨结构', en: 'Ink Structure', discipline: '书法与空间 / Calligraphy & space', bio: '以结构、尺度与留白回应建筑和生活空间的秩序。', philosophy: '让作品与空间保持呼吸，在观看距离与材料关系中建立安静的秩序。', styles: ['墨色', '山水'], media: ['书法', '空间构成'], projectTypes: ['居家墙面', '商业空间'], portfolio: ['墨有呼吸', '门槛的光', '案上有山'], experience: '经历与展览信息将随创作笔记持续呈现。', siteNote: '落地实景图与公开案例将随授权故事持续呈现。', quote: '参考报价需结合空间尺度、媒介、安装与交付边界沟通确认。' },
-  { slug: 'wooden-mountain', name: '案上山房', en: 'Mountain on the Desk', discipline: '文房器物 / Scholar objects', bio: '从木、纸、石与使用痕迹中，寻找器物的安定感。', philosophy: '从可触摸的材料和日常使用出发，让器物成为人与空间之间的缓慢回应。', styles: ['器物', '留白'], media: ['木', '纸', '文房器物'], projectTypes: ['小幅礼赠', '商业空间'], portfolio: ['案上有山', '四时一笺', '静入'], experience: '经历与展览信息将随创作笔记持续呈现。', siteNote: '落地实景图与公开案例将随授权故事持续呈现。', quote: '参考报价需结合材料、尺度、数量与制作边界沟通确认。' },
+
 ];
 
 export const enterpriseCases = [
@@ -84,6 +79,43 @@ export const giftDirections = [
   { title: '一室一意', en: 'One room, one intention', body: '为居所、工作室或文化空间建立一处沉静的视觉锚点。' },
   { title: '一群人的礼', en: 'A gift for a collective', body: '适用于企业、婚礼、周年与活动场景的艺术化定制。' },
 ];
+
+export type GiftProduct = {
+  slug: string;
+  name: string;
+  en: string;
+  scene: string;
+  sceneLabel: string;
+  tier: 'entry' | 'thoughtful' | 'keepsake';
+  price: string;
+  meaning: string;
+  recipient: string;
+  dispatch: string;
+  packaging: string;
+  visual: string;
+};
+
+export const giftProducts: GiftProduct[] = [
+  { slug: 'quiet-entry-gift', name: '静入 · 书房小礼', en: 'A Quiet Entrance · Study Gift', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥100–300', meaning: '以一处留白，为新居留住第一份安静。', recipient: '适合送给刚搬入新家的朋友、同事或长辈。', dispatch: '预计确认后 7–10 个工作日发出', packaging: '含基础礼盒与手写贺卡选项', visual: '静入' },
+  { slug: 'cinnabar-note-gift', name: '一点朱砂 · 生日心意', en: 'A Cinnabar Note · Birthday Gift', scene: 'birthday', sceneLabel: '生日心意', tier: 'thoughtful', price: '¥300–500', meaning: '用一处温和朱砂，替你说出值得庆祝的好消息。', recipient: '适合送给朋友、伴侣或希望认真表达感谢的人。', dispatch: '预计确认后 7–10 个工作日发出', packaging: '含礼盒包装、祝福卡和贺卡文字预览', visual: '朱' },
+  { slug: 'seasonal-letter-gift', name: '四时一笺 · 节日问候', en: 'A Letter for the Season · Festival Gift', scene: 'festival', sceneLabel: '节日问候', tier: 'thoughtful', price: '¥300–500', meaning: '从一个节气和一句问候开始，让礼物慢慢抵达日常。', recipient: '适合节日送长辈、朋友或重要合作伙伴。', dispatch: '预计确认后 10–14 个工作日发出', packaging: '含节日主题包装与手写贺卡选项', visual: '笺' },
+  { slug: 'desk-mountain-keepsake', name: '案上有山 · 雅致贺礼', en: 'A Mountain on the Desk · Keepsake', scene: 'opening', sceneLabel: '开业贺礼', tier: 'keepsake', price: '¥800 以上', meaning: '把稳重、开阔与持续生长的祝愿，放在案头。', recipient: '适合开业、晋升、周年等需要郑重表达的时刻。', dispatch: '预计确认后 14–21 个工作日发出', packaging: '含珍藏礼盒、包装升级与贺卡文字预览', visual: '山' },
+  { slug: 'ink-breath-teacher', name: '墨有呼吸 · 谢师礼', en: 'Ink with Breath · Teacher Gift', scene: 'thanks', sceneLabel: '感谢恩师 / 朋友', tier: 'keepsake', price: '¥800 以上', meaning: '以墨色的浓淡和停顿，表达长久的感谢与敬意。', recipient: '适合送给老师、 mentor 或在人生阶段给予帮助的人。', dispatch: '预计确认后 14–21 个工作日发出', packaging: '含珍藏礼盒、说明卡与手写贺卡选项', visual: '墨' },
+];
+
+export const giftScenes = [
+  { slug: 'housewarming', name: '乔迁之喜', en: 'Housewarming', body: '为新居添一处书香静气。' },
+  { slug: 'opening', name: '开业贺礼', en: 'Opening gift', body: '用一份有文化温度的心意，祝愿事业开张。' },
+  { slug: 'birthday', name: '生日心意', en: 'Birthday', body: '不追逐热闹，认真表达对一个人的在意。' },
+  { slug: 'festival', name: '节日问候', en: 'Festival greeting', body: '让节日礼物拥有一段可以被记住的故事。' },
+  { slug: 'thanks', name: '感谢恩师 / 朋友', en: 'Thank you', body: '把感谢写下来，送给曾经照亮你的人。' },
+];
+
+export const giftTierLabels = {
+  entry: { name: '入门款', en: 'Everyday gift', range: '¥100–300', body: '适合日常表达、朋友小聚与轻量心意。' },
+  thoughtful: { name: '心意款', en: 'Thoughtful gift', range: '¥300–500', body: '适合生日、节日与需要认真准备的关系。' },
+  keepsake: { name: '珍藏款', en: 'Keepsake gift', range: '¥800 以上', body: '适合开业、周年、谢师等重要时刻。' },
+};
 
 export const blogPosts = [
   { slug: 'why-commission', title: '为什么从定制开始，而不是从现货开始？', en: 'Why begin with commission, not inventory?', pillar: '方法 / Method', date: '阅读时间 4 min', excerpt: '艺术的价值不只在于被看见，也在于它如何回应一个具体的人、一个空间和一段关系。' },

@@ -1,0 +1,60 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import GiftCard from '../../components/GiftCard.astro';
+import { giftProducts, giftScenes, giftTierLabels } from '../../data/content';
+---
+<Layout title="送礼指南｜小民艺术" description="按送礼场景和预算，挑选一份带着书香静气的家居礼物、人情伴手礼或企业心意。">
+  <section class="container page-head"><span class="eyebrow">Gift Guide / 送礼指南</span><h1 class="serif">从送给谁开始，<br />找到一份合适的心意。</h1><p lang="en">Start with who it is for, not with a shelf.</p><p>不需要先懂艺术。选择场景和预算，先看寓意、适合对象、包装方式与预计发货时间，再决定是否需要个性化建议。</p><div class="gift-quick-links"><a class="btn btn-primary" href="#gift-list">浏览礼物 / Browse gifts →</a><a class="btn btn-secondary" href="/custom-commission/?context=送礼建议">不知道怎么选？获取建议</a></div></section>
+  <section id="gift-filters" class="container filter-panel" aria-label="送礼筛选"><div class="filter-heading"><div><span class="eyebrow">Filter by occasion and budget</span><h2 class="serif">按场景与预算筛选</h2></div><div class="filter-controls"><button class="btn btn-link" type="button" data-show-wishlist>只看我的心愿单</button><button class="btn btn-link" type="button" data-reset>清除筛选</button></div></div><div class="filter-row"><div class="filter-group"><span>送礼场景</span><div class="filter-options" data-filter-group="scene"><button type="button" class="filter-chip is-active" data-value="all">全部</button>{giftScenes.map((scene) => <button type="button" class="filter-chip" data-value={scene.slug}>{scene.name}</button>)}</div></div><div class="filter-group"><span>预算参考</span><div class="filter-options" data-filter-group="tier"><button type="button" class="filter-chip is-active" data-value="all">全部</button>{Object.entries(giftTierLabels).map(([key, tier]) => <button type="button" class="filter-chip" data-value={key}>{tier.name} {tier.range}</button>)}</div></div></div><p class="filter-status" data-filter-status aria-live="polite"></p></section>
+  <section id="gift-list" class="container section gift-list-section"><div class="list-heading"><div><span class="eyebrow">Curated gifts / 参考礼物</span><h2 class="serif">先看一份具体的心意。</h2></div><span class="saved-note" id="wishlist">心愿单保存在本机浏览器 / Wishlist saved on this device</span></div><div class="gift-grid">{giftProducts.map((product) => <GiftCard product={product} />)}</div><div class="no-results" data-no-results hidden><h3 class="serif">还没有匹配的礼物</h3><p>可以清除筛选，或提交送礼场景，我们会协助你从关系、预算和时间开始梳理。</p><a class="btn btn-secondary" href="/custom-commission/?context=送礼建议">获取送礼建议 →</a></div></section>
+  <section class="container section gift-faq"><span class="eyebrow">Gift FAQ / 送礼常见问题</span><h2 class="serif">包装、时效和心意，提前说清楚。</h2><div class="faq-grid"><details><summary>可以写手写贺卡吗？</summary><p>当前礼物方向均保留手写贺卡选项。正式下单或确认前，我们会再次确认贺卡文字和包装方案。</p></details><details><summary>可以直接寄给收礼人吗？</summary><p>送礼咨询时可以备注直寄需求。是否支持去除价格信息、配送地址和时效，需要结合具体礼物方向确认。</p></details><details><summary>多久可以发货？</summary><p>页面展示的是当前参考时间，最终以礼物方向、包装方式和确认时间为准；急件请先提交咨询，不把未确认的时间当作承诺。</p></details><details><summary>可以退换吗？</summary><p>不同礼物方向和个性化程度的售后边界不同。确认前我们会说明退换范围，定制内容请先沟通后再决定。</p></details></div></section>
+</Layout>
+<script>
+  const cards = [...document.querySelectorAll<HTMLElement>('[data-gift-card]')];
+  const status = document.querySelector<HTMLElement>('[data-filter-status]');
+  const empty = document.querySelector<HTMLElement>('[data-no-results]');
+  const state = { scene: 'all', tier: 'all', wishlist: false };
+  const getWishlist = (): string[] => { try { return JSON.parse(localStorage.getItem('xiaominart-wishlist') || '[]'); } catch { return []; } };
+  const apply = () => { let visible = 0; const saved = getWishlist(); cards.forEach((card) => { const match = (state.scene === 'all' || card.dataset.scene === state.scene) && (state.tier === 'all' || card.dataset.tier === state.tier) && (!state.wishlist || saved.includes(card.dataset.slug || '')); card.hidden = !match; if (match) visible += 1; }); if (status) status.textContent = `${visible} 份礼物方向可查看 / ${visible} gift directions`; if (empty) empty.hidden = visible > 0; };
+  document.querySelectorAll<HTMLButtonElement>('[data-filter-group] .filter-chip').forEach((button) => button.addEventListener('click', () => { const group = button.closest<HTMLElement>('[data-filter-group]')?.dataset.filterGroup as 'scene' | 'tier'; if (!group) return; state[group] = button.dataset.value || 'all'; button.closest('[data-filter-group]')?.querySelectorAll('.filter-chip').forEach((chip) => chip.classList.remove('is-active')); button.classList.add('is-active'); apply(); }));
+  document.querySelector<HTMLButtonElement>('[data-reset]')?.addEventListener('click', () => { state.scene = 'all'; state.tier = 'all'; state.wishlist = false; document.querySelectorAll<HTMLButtonElement>('.filter-chip').forEach((chip) => chip.classList.toggle('is-active', chip.dataset.value === 'all')); document.querySelector<HTMLButtonElement>('[data-show-wishlist]')?.classList.remove('is-active'); apply(); });
+  document.querySelector<HTMLButtonElement>('[data-show-wishlist]')?.addEventListener('click', (event) => { state.wishlist = !state.wishlist; (event.currentTarget as HTMLButtonElement).classList.toggle('is-active', state.wishlist); apply(); });
+  window.addEventListener('storage', apply);
+  const params = new URLSearchParams(window.location.search);
+  const initialScene = params.get('scene');
+  const initialTier = params.get('tier');
+  if (initialScene && [...document.querySelectorAll<HTMLButtonElement>('[data-filter-group="scene"] .filter-chip')].some((chip) => chip.dataset.value === initialScene)) { state.scene = initialScene; }
+  if (initialTier && [...document.querySelectorAll<HTMLButtonElement>('[data-filter-group="tier"] .filter-chip')].some((chip) => chip.dataset.value === initialTier)) { state.tier = initialTier; }
+  document.querySelectorAll<HTMLButtonElement>('.filter-chip').forEach((chip) => { const group = chip.closest<HTMLElement>('[data-filter-group]')?.dataset.filterGroup; chip.classList.toggle('is-active', chip.dataset.value === (group === 'scene' ? state.scene : state.tier)); });
+  apply();
+</script>
+<style>
+  .page-head { padding: 90px 0 58px; }
+  .page-head h1 { font-size: clamp(48px, 7vw, 86px); line-height: 1.18; font-weight: 500; margin: 20px 0; }
+  .page-head p { max-width: 700px; color: var(--ink-soft); font-size: 18px; }
+  .page-head p[lang='en'] { font: 24px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); }
+  .gift-quick-links { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 26px; }
+  .filter-panel, .gift-list-section, .gift-faq { border-top: 1px solid var(--line); }
+  .filter-panel { padding: 28px 0 18px; }
+  .filter-heading, .list-heading { display: flex; justify-content: space-between; align-items: end; gap: 24px; }
+  .filter-controls { display: flex; gap: 16px; align-items: center; }
+  .filter-controls .is-active { color: var(--cinnabar); }
+  .filter-heading h2, .list-heading h2, .gift-faq h2 { font-size: 36px; font-weight: 500; margin: 12px 0 20px; }
+  .filter-row { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; border-top: 1px solid var(--line); padding-top: 20px; }
+  .filter-group > span { display: block; color: var(--muted); font-size: 12px; margin-bottom: 10px; }
+  .filter-options { display: flex; flex-wrap: wrap; gap: 8px; }
+  .filter-chip { min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); background: transparent; color: var(--ink-soft); font-size: 12px; }
+  .filter-chip.is-active, .filter-chip:hover { color: var(--paper-light); background: var(--cinnabar); border-color: var(--cinnabar); }
+  .filter-status { color: var(--cinnabar-deep); font-size: 12px; min-height: 1.5em; margin: 17px 0 0; }
+  .saved-note { color: var(--muted); font-size: 12px; }
+  .gift-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 44px 24px; }
+  .no-results { border-block: 1px solid var(--line); padding: 34px 0; }
+  .no-results h3 { font-size: 28px; font-weight: 500; margin: 0 0 8px; }
+  .no-results p { color: var(--ink-soft); max-width: 560px; }
+  .faq-grid { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid var(--line); }
+  .faq-grid details { border-bottom: 1px solid var(--line); padding: 18px 20px 18px 0; }
+  .faq-grid details:nth-child(even) { padding-left: 20px; border-left: 1px solid var(--line); }
+  .faq-grid summary { cursor: pointer; font-weight: 500; min-height: 44px; }
+  .faq-grid p { color: var(--ink-soft); font-size: 14px; margin: 12px 0 0; }
+  @media (max-width: 767px) { .page-head { padding: 56px 0 42px; } .page-head h1 { font-size: 47px; } .page-head p { font-size: 16px; } .page-head p[lang='en'] { font-size: 20px; } .gift-quick-links, .gift-quick-links .btn { width: 100%; } .gift-quick-links { display: grid; } .filter-heading, .list-heading { display: block; } .filter-controls { margin-bottom: 18px; justify-content: space-between; } .filter-heading h2, .list-heading h2, .gift-faq h2 { font-size: 29px; } .filter-row, .gift-grid, .faq-grid { grid-template-columns: 1fr; } .filter-row { gap: 20px; } .filter-chip { flex: 1 1 auto; } .faq-grid details, .faq-grid details:nth-child(even) { padding: 16px 0; border-left: 0; } .saved-note { display: block; margin-bottom: 22px; } }
+</style>

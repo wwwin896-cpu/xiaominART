@@ -1,0 +1,45 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { giftProducts, giftTierLabels } from '../../data/content';
+export function getStaticPaths() { return giftProducts.map((product) => ({ params: { slug: product.slug }, props: { product } })); }
+const { product } = Astro.props;
+const tier = giftTierLabels[product.tier];
+---
+<Layout title={`${product.name}｜送礼指南｜小民艺术`} description={`${product.meaning}${product.recipient}${product.packaging}`}>
+  <section class="container detail-head"><div class="detail-visual"><span class="serif">{product.visual}</span><small>{product.sceneLabel} · {tier.name}</small></div><div class="detail-copy"><span class="eyebrow">{product.sceneLabel} / {tier.name}</span><h1 class="serif">{product.name}</h1><p lang="en">{product.en}</p><strong class="price">{product.price}</strong><p>{product.meaning}</p><p>{product.recipient}</p><div class="detail-actions"><button class="btn btn-secondary wishlist-button" type="button" data-wishlist={product.slug} aria-pressed="false">♡ 加入心愿单</button><a class="btn btn-primary" href={`/custom-commission/?context=送礼建议&inspiration=${encodeURIComponent(product.name)}`}>获取送礼建议 →</a></div><p class="detail-note">当前为送礼方向参考，不是直接付款商品。最终价格、包装和交期会在确认具体方案后说明。</p></div></section>
+  <section class="container detail-info"><article><span class="eyebrow">Meaning / 礼品寓意</span><h2 class="serif">送出一份有分量的安静。</h2><p>{product.meaning}</p></article><article><span class="eyebrow">Packaging / 礼品包装</span><h2 class="serif">把仪式感也准备好。</h2><p>{product.packaging}。如需直寄给收礼人，请在咨询时备注，我们会说明可行的配送和价格信息。</p></article><article><span class="eyebrow">Dispatch / 预计发货</span><h2 class="serif">时间提前说清楚。</h2><p>{product.dispatch}。页面为当前参考范围，不等同于未确认的交付承诺；急件请先咨询。</p></article></section>
+  <section class="container section card-faq"><span class="eyebrow">Gift FAQ / 送礼常见问题</span><h2 class="serif">还有几个问题，直接在这里看。</h2><div class="faq-grid"><details><summary>可以写贺卡吗？</summary><p>可以。咨询时提交贺卡文字，我们会在确认礼物方向时一起确认字数、版式与包装。</p></details><details><summary>可以直接寄给收礼人吗？</summary><p>可以提出直寄需求；收件信息、是否去除价格信息和物流时效需根据具体方案确认。</p></details><details><summary>这件礼物可以退换吗？</summary><p>个性化内容和包装方案的售后边界不同。确认前会说明可退换范围，再决定是否进入下一步。</p></details><details><summary>如何开始？</summary><p>点击“获取送礼建议”，告诉我们送给谁、什么场景、预算和时间，我们会先阅读再回复。</p></details></div></section>
+</Layout>
+<script>
+  const key = 'xiaominart-wishlist';
+  const button = document.querySelector<HTMLButtonElement>('[data-wishlist]');
+  const getItems = () => { try { return JSON.parse(localStorage.getItem(key) || '[]'); } catch { return []; } };
+  const sync = () => { if (!button) return; const saved = getItems().includes(button.dataset.wishlist); button.classList.toggle('is-saved', saved); button.setAttribute('aria-pressed', String(saved)); button.textContent = saved ? '♥ 已加入心愿单' : '♡ 加入心愿单'; };
+  sync();
+  button?.addEventListener('click', () => { const slug = button.dataset.wishlist || ''; const items = getItems(); localStorage.setItem(key, JSON.stringify(items.includes(slug) ? items.filter((item: string) => item !== slug) : [...items, slug])); sync(); window.dispatchEvent(new StorageEvent('storage', { key })); });
+</script>
+<style>
+  .detail-head { display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1fr); gap: 70px; align-items: center; padding: 90px 0 80px; }
+  .detail-visual { aspect-ratio: 1.05; background: var(--paper-deep); display: grid; place-items: center; align-content: center; gap: 10px; color: var(--cinnabar); }
+  .detail-visual span { font-size: clamp(130px, 20vw, 240px); }
+  .detail-visual small { color: var(--ink-soft); font: 11px var(--font-mono); }
+  .detail-copy h1 { font-size: clamp(46px, 6vw, 78px); line-height: 1.2; font-weight: 500; margin: 18px 0 4px; }
+  .detail-copy p { max-width: 580px; color: var(--ink-soft); font-size: 17px; }
+  .detail-copy p[lang='en'] { font: 24px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); }
+  .price { display: block; margin: 22px 0 4px; font: 26px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); }
+  .detail-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+  .detail-note { border-left: 2px solid var(--line); padding-left: 14px; font-size: 12px !important; }
+  .wishlist-button.is-saved { background: var(--cinnabar); color: var(--paper-light); border-color: var(--cinnabar); }
+  .detail-info { display: grid; grid-template-columns: repeat(3, 1fr); border-block: 1px solid var(--line); padding: 0; }
+  .detail-info article { padding: 28px 22px 34px 0; }
+  .detail-info article + article { padding-left: 22px; border-left: 1px solid var(--line); }
+  .detail-info h2 { font-size: 29px; font-weight: 500; line-height: 1.3; margin: 20px 0 12px; }
+  .detail-info p, .faq-grid p { color: var(--ink-soft); font-size: 14px; }
+  .card-faq { border-top: 1px solid var(--line); }
+  .card-faq h2 { font-size: clamp(36px, 5vw, 60px); font-weight: 500; margin: 18px 0 30px; }
+  .faq-grid { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid var(--line); }
+  .faq-grid details { padding: 18px 20px 18px 0; border-bottom: 1px solid var(--line); }
+  .faq-grid details:nth-child(even) { padding-left: 20px; border-left: 1px solid var(--line); }
+  .faq-grid summary { cursor: pointer; min-height: 44px; font-weight: 500; }
+  @media (max-width: 767px) { .detail-head { display: block; padding: 54px 0 54px; } .detail-copy { padding-top: 32px; } .detail-copy h1 { font-size: 46px; } .detail-copy p { font-size: 16px; } .detail-actions { display: grid; } .detail-actions .btn { width: 100%; } .detail-info, .faq-grid { grid-template-columns: 1fr; } .detail-info article, .detail-info article + article { padding: 22px 0; border-left: 0; border-bottom: 1px solid var(--line); } .detail-info article:last-child { border-bottom: 0; } .faq-grid details, .faq-grid details:nth-child(even) { padding: 16px 0; border-left: 0; } }
+</style>

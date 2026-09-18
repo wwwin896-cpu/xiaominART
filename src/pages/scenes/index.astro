@@ -1,0 +1,28 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import InspirationCard from '../../components/InspirationCard.astro';
+import { inspirations } from '../../data/content';
+---
+<Layout title="生活场景｜静气生活｜小民艺术" description="从书房、客厅、茶室到送礼心意，找到适合你日常的安静方向。">
+  <section class="container page-head"><span class="eyebrow">Scenes / 生活场景</span><h1 class="serif">先看生活里的位置，<br />再决定想留下什么。</h1><p lang="en">A quiet object begins with a real place.</p><p>小民艺术不是只能被远观的作品。它可以进入书房、客厅、茶室，也可以成为一份送给重要之人的礼物。</p></section>
+  <section class="container scene-grid"><article><span class="scene-mark serif">书</span><span class="eyebrow">Study calm / 书房静气</span><h2 class="serif">让案头多一处可以停留的目光。</h2><p>适合工作、阅读和需要慢下来的日常，从一件小型器物或一句字开始。</p><a class="btn btn-link" href="/gift-guide/?scene=housewarming#gift-list">看适合的心意 →</a></article><article><span class="scene-mark serif">客</span><span class="eyebrow">Living room / 客厅雅致</span><h2 class="serif">让家有一处不喧哗的重心。</h2><p>用纸、木、墨色和留白建立柔和的空间气息，不把生活变成展厅。</p><a class="btn btn-link" href="/inspiration/">浏览空间参考 →</a></article><article><span class="scene-mark serif">茶</span><span class="eyebrow">Tea room / 茶室禅意</span><h2 class="serif">把一段安静的时间，放在手边。</h2><p>适合茶室、工作室和喜欢以器物照看日常的人。</p><a class="btn btn-link" href="/custom-commission/?context=茶室场景">获取场景建议 →</a></article><article><span class="scene-mark serif">礼</span><span class="eyebrow">Gift / 送礼心意</span><h2 class="serif">先想送给谁，再挑一份合适的礼。</h2><p>从乔迁、开业、生日、节日和感谢开始，送礼指南会说明寓意、包装和时效。</p><a class="btn btn-link" href="/gift-guide/">打开送礼指南 →</a></article><article><span class="scene-mark serif">企</span><span class="eyebrow">Business gift / 企业伴手礼</span><h2 class="serif">把企业想说的话，放进一份有温度的礼。</h2><p>适合客户答谢、员工福利、会议礼品和开业庆典，支持从企业字句开始讨论。</p><a class="btn btn-link" href="/business-gifts/">了解企业伴手礼 →</a></article></section>
+  <section class="container section scene-gallery"><div class="section-heading"><span class="eyebrow">Reference / 参考方向</span><h2 class="serif">从一个真实的空间想象。</h2></div><div class="gallery-grid">{inspirations.slice(0, 3).map((item) => <InspirationCard item={item} />)}</div></section>
+</Layout>
+<style>
+  .page-head { padding: 90px 0 66px; }
+  .page-head h1 { font-size: clamp(48px, 7vw, 86px); line-height: 1.18; font-weight: 500; margin: 20px 0; }
+  .page-head p { max-width: 700px; color: var(--ink-soft); font-size: 18px; }
+  .page-head p[lang='en'] { font: 24px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); }
+  .scene-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--line); }
+  .scene-grid article { min-height: 320px; padding: 26px 26px 32px 0; border-bottom: 1px solid var(--line); }
+  .scene-grid article:nth-child(even) { padding-left: 26px; border-left: 1px solid var(--line); }
+  .scene-mark { display: grid; place-items: center; width: 64px; height: 64px; background: var(--paper-deep); color: var(--cinnabar); font-size: 35px; margin-bottom: 26px; }
+  .scene-grid h2 { font-size: 32px; font-weight: 500; line-height: 1.35; margin: 14px 0 10px; }
+  .scene-grid p { color: var(--ink-soft); max-width: 480px; font-size: 14px; }
+  .scene-grid .btn { margin-top: 12px; }
+  .scene-gallery { border-top: 1px solid var(--line); }
+  .section-heading { margin-bottom: 28px; }
+  .section-heading h2 { font-size: 40px; font-weight: 500; margin: 14px 0; }
+  .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  @media (max-width: 767px) { .page-head { padding: 56px 0 42px; } .page-head h1 { font-size: 47px; } .page-head p { font-size: 16px; } .page-head p[lang='en'] { font-size: 20px; } .scene-grid, .gallery-grid { grid-template-columns: 1fr; } .scene-grid article, .scene-grid article:nth-child(even) { min-height: 0; padding: 24px 0; border-left: 0; } .scene-grid article:last-child { border-bottom: 0; } .scene-grid h2 { font-size: 29px; } }
+</style>

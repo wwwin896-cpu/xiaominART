@@ -1,0 +1,52 @@
+---
+import type { GiftProduct } from '../data/content';
+import { giftTierLabels } from '../data/content';
+const { product } = Astro.props as { product: GiftProduct };
+const tier = giftTierLabels[product.tier];
+---
+<article class="gift-card" data-gift-card data-scene={product.scene} data-tier={product.tier} data-slug={product.slug}>
+  <a class="gift-visual" href={`/gift-guide/${product.slug}/`} aria-label={`${product.name}详情`}>
+    <span class="serif">{product.visual}</span>
+    <small>{product.sceneLabel} · {tier.name}</small>
+  </a>
+  <div class="gift-card-body">
+    <span class="eyebrow">{product.sceneLabel} / {tier.name}</span>
+    <h3 class="serif"><a href={`/gift-guide/${product.slug}/`}>{product.name}</a></h3>
+    <p lang="en">{product.en}</p>
+    <p>{product.meaning}</p>
+    <div class="gift-card-meta"><strong>{product.price}</strong><span>{product.dispatch}</span></div>
+    <div class="gift-card-actions">
+      <button class="wishlist-button btn btn-secondary" type="button" data-wishlist={product.slug} aria-pressed="false">♡ 加入心愿单</button>
+      <a class="btn btn-link" href={`/gift-guide/${product.slug}/`}>查看详情 →</a>
+    </div>
+  </div>
+</article>
+<style>
+  .gift-card { border-top: 1px solid var(--line); min-width: 0; }
+  .gift-visual { display: grid; place-items: center; align-content: center; gap: 8px; aspect-ratio: 1.2; background: var(--paper-deep); color: var(--cinnabar); }
+  .gift-visual span { font-size: clamp(72px, 9vw, 120px); }
+  .gift-visual small { color: var(--ink-soft); font: 10px var(--font-mono); letter-spacing: .06em; }
+  .gift-card-body { padding: 18px 0 0; }
+  .gift-card h3 { font-size: 28px; font-weight: 500; margin: 9px 0 2px; }
+  .gift-card h3 a:hover { color: var(--cinnabar); }
+  .gift-card p { margin: 7px 0 0; color: var(--ink-soft); font-size: 14px; }
+  .gift-card p[lang='en'] { font: 16px var(--font-display-en), Georgia, serif; color: var(--ink); }
+  .gift-card-meta { display: flex; flex-direction: column; gap: 3px; margin-top: 16px; }
+  .gift-card-meta strong { font: 22px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); }
+  .gift-card-meta span { color: var(--muted); font-size: 12px; }
+  .gift-card-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 16px; margin-top: 14px; }
+  .wishlist-button { min-height: 44px; padding: 9px 12px; font-size: 12px; }
+  .wishlist-button.is-saved { background: var(--cinnabar); color: var(--paper-light); border-color: var(--cinnabar); }
+  @media (max-width: 767px) { .gift-visual { aspect-ratio: 1.35; } .gift-card-actions { display: grid; grid-template-columns: 1fr; gap: 8px; } .gift-card-actions .btn { width: 100%; } }
+</style>
+<script>
+  const key = 'xiaominart-wishlist';
+  const getItems = () => { try { return JSON.parse(localStorage.getItem(key) || '[]'); } catch { return []; } };
+  const setItems = (items: string[]) => { localStorage.setItem(key, JSON.stringify(items)); window.dispatchEvent(new StorageEvent('storage', { key })); };
+  document.querySelectorAll<HTMLButtonElement>('[data-wishlist]').forEach((button) => {
+    const slug = button.dataset.wishlist || '';
+    const sync = () => { const saved = getItems().includes(slug); button.classList.toggle('is-saved', saved); button.setAttribute('aria-pressed', String(saved)); button.textContent = saved ? '♥ 已加入心愿单' : '♡ 加入心愿单'; };
+    sync();
+    button.addEventListener('click', () => { const items = getItems(); const next = items.includes(slug) ? items.filter((item: string) => item !== slug) : [...items, slug]; setItems(next); sync(); });
+  });
+</script>
