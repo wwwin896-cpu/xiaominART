@@ -55,9 +55,7 @@ const isCurrent = (href: string) => { const normalized = href.replace(/\/$/, '')
     <nav class="mobile-shopping-bar" aria-label="移动端底部导航"><a href="/gifts/" aria-label="浏览小民好礼"><span class="bar-zh">礼物</span><small lang="en">Gifts</small></a><a href="/scenes/" aria-label="浏览生活场景"><span class="bar-zh">场景</span><small lang="en">Scenes</small></a><a href="/journal/" aria-label="阅读静气生活"><span class="bar-zh">故事</span><small lang="en">Stories</small></a><a href="/gift-guide/#wishlist" aria-label="我的心愿单"><span class="bar-zh">我的</span><small lang="en">Mine <span data-wishlist-count></span></small></a></nav>
     <footer class="site-footer" data-component="site-footer">
       <div class="container footer-grid">
-        <div><p class="eyebrow">XIAOMINART / 日常之礼</p><p class="footer-claim serif">愿你在这方寸之间，<br />找到属于自己的山河。</p><p class="muted">方寸之境，也藏山河。A quiet corner for what you want to say.</p></div>
-        <div><p class="eyebrow">Explore</p>{navItems.slice(0, 5).map((item) => <a href={item.href}>{item.zh}<small lang="en">{item.en}</small></a>)}</div>
-        <div><p class="eyebrow">Connect</p><a href="/gift-guide/">送礼指南 / Gift Guide</a><a href="/journal/">静气生活 / Quiet Living</a><a href="/business-gifts/">企业礼赠 / Business Gifts</a><a href="/about/">关于我们 / About</a><a href="/contact/">联系 / Contact</a><a href="/help/">FAQ / 常见问题</a><a class="footer-cta" href="/contact/">与我们聊聊 →</a></div>
+        <div><p class="eyebrow">XIAOMINART / 日常之礼</p><p class="footer-claim serif">愿你在这方寸之间，<br />找到属于自己的定制心意。</p></div>
         <div class="footer-contact"><p class="eyebrow">Contact / 联系</p><a href={`mailto:${siteContact.email}`}>{siteContact.email}</a>{siteContact.wechatId ? <p>微信 / 企业微信：<strong>{siteContact.wechatId}</strong>（备注来意，尽快回复）</p> : siteContact.wechatQr ? <p>微信 / 企业微信：扫码添加（备注来意，尽快回复）</p> : <p>微信 / 企业微信：提交<a href="/custom-commission/">定制咨询表单</a>并留下你的微信号，我们会主动添加你。</p>}{siteContact.wechatQr ? <a class="wechat-qr-link" href={siteContact.wechatQr} target="_blank" rel="noopener" title="点击查看大图，长按识别添加"><img class="wechat-qr" src={siteContact.wechatQr} width="112" height="112" alt="小民艺术微信二维码" loading="lazy" /></a> : null}<p>送礼问题可先从送礼指南开始；需要个性化建议，可提交咨询。</p></div>
       </div>
       <div class="container trust-signals" aria-label="信息边界 / Information boundaries"><div><span class="eyebrow">Artist / 艺术家</span><strong>由具体创作方向与沟通内容开始</strong></div><div><span class="eyebrow">Projects / 项目</span><strong>已确认内容才会公开呈现</strong></div><div><span class="eyebrow">Privacy / 隐私</span><strong>客户故事与图像获得授权后发布</strong></div><p>我们不使用未经核验的客户数量、媒体曝光或合作机构作为背书。</p></div>
@@ -113,7 +111,7 @@ const isCurrent = (href: string) => { const normalized = href.replace(/\/$/, '')
   .header-cta span { margin-left: 8px; }
   .menu-toggle { display: none; margin-left: auto; background: transparent; border: 1px solid var(--ink); padding: 9px 12px; min-height: 44px; }
   .site-footer { border-top: 1px solid var(--line); padding: 80px 0 24px; margin-top: 0; }
-  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 36px; }
+  .footer-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 36px; align-items: start; }
   .footer-grid a { display: flex; flex-direction: column; gap: 2px; margin: 10px 0; color: var(--ink-soft); min-height: 44px; justify-content: center; }
   .footer-contact p { color: var(--ink-soft); font-size: 13px; line-height: 1.8; }
   .footer-contact a[href^="/custom-commission"] { color: var(--cinnabar); border-bottom: 1px solid var(--cinnabar); }
@@ -127,7 +125,7 @@ const isCurrent = (href: string) => { const normalized = href.replace(/\/$/, '')
   .trust-signals p { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 11px; }
   .footer-grid a:hover { color: var(--cinnabar); }
   .footer-cta { color: var(--cinnabar) !important; border-bottom: 1px solid var(--cinnabar); padding-bottom: 4px; }
-  .footer-claim { font-size: 39px; line-height: 1.25; margin: 20px 0 8px; }
+  .footer-claim { font-size: 24px; line-height: 1.5; margin: 18px 0 0; }
   .muted { color: var(--ink-soft); }
   .footer-bottom { border-top: 1px solid var(--line); margin-top: 58px; padding-top: 16px; display: flex; justify-content: space-between; gap: 16px; color: var(--ink-soft); font-size: 11px; }
   @media (max-width: 1100px) { .header-inner { gap: 16px; } nav { gap: 12px; font-size: 16px; } .header-cta { display: none; } }
