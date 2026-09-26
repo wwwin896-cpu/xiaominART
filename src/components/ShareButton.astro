@@ -52,6 +52,9 @@
   .share-icon { flex-shrink: 0; }
   .share-label { font-size: 12px; letter-spacing: .14em; }
   .share-toast { position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%); z-index: 16; max-width: min(86vw, 420px); padding: 12px 18px; background: var(--ink); color: var(--paper-light); font-size: 13px; line-height: 1.6; text-align: center; box-shadow: var(--shadow); }
+  @media (min-width: 768px) {
+    .share-button { display: none; }
+  }
   @media (max-width: 767px) {
     .share-button { right: 15px; bottom: calc(150px + env(safe-area-inset-bottom)); width: 46px; height: 46px; min-width: 46px; min-height: 46px; padding: 0; border-radius: 50%; background: rgba(250, 247, 240, .96); }
     .share-label { display: none; }
