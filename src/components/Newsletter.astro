@@ -1,7 +1,7 @@
 <section class="newsletter" aria-labelledby="newsletter-title">
   <span class="eyebrow">Journal / 创作笔记</span>
   <h2 id="newsletter-title" class="serif">订阅和关注</h2>
-  <p>订阅创作笔记，获取最新案例与艺术灵感。邮件服务配置由运营后台统一管理。</p>
+  <p>订阅创作笔记，获取最新案例与艺术灵感。每月最多一封，随时可退订。</p>
   <p lang="en">Subscribe and follow studio notes, new references and quiet inspiration.</p>
   <form class="newsletter-form" data-newsletter-form>
     <label class="sr-only" for="newsletter-email">邮箱 / Email</label>
@@ -11,12 +11,25 @@
   <p class="newsletter-status" data-newsletter-status aria-live="polite" role="status"></p>
 </section>
 <script>
+  import { subscribeEmail, CONTACT_FALLBACK } from '../scripts/cloud-forms';
   const newsletterForm = document.querySelector<HTMLFormElement>('[data-newsletter-form]');
   const newsletterStatus = document.querySelector<HTMLElement>('[data-newsletter-status]');
-  newsletterForm?.addEventListener('submit', (event) => {
+  const newsletterSubmit = newsletterForm?.querySelector<HTMLButtonElement>('button[type="submit"]');
+  newsletterForm?.addEventListener('submit', async (event) => {
     event.preventDefault();
-    if (newsletterStatus) newsletterStatus.textContent = '订阅意向已记录，我们会在邮件服务启用后发送内容。 / Your interest has been noted; updates will be sent through the studio mailing channel.';
-    newsletterForm.reset();
+    if (!newsletterForm || !newsletterStatus || !newsletterSubmit) return;
+    const email = String(new FormData(newsletterForm).get('email') || '').trim();
+    if (!email) { newsletterStatus.textContent = '请先填写邮箱地址。'; return; }
+    newsletterSubmit.disabled = true;
+    newsletterStatus.textContent = '正在订阅…';
+    const result = await subscribeEmail(email, `footer_newsletter:${window.location.pathname}`);
+    newsletterSubmit.disabled = false;
+    if (result.ok) {
+      newsletterStatus.textContent = result.message || '订阅成功！最新案例与创作笔记会发送到你的邮箱。';
+      newsletterForm.reset();
+    } else {
+      newsletterStatus.textContent = `订阅失败，请稍后重试；${CONTACT_FALLBACK}`;
+    }
   });
 </script>
 <style>
