@@ -14,3 +14,4 @@ resources/
 !**/.env.example
 **/*_err.log
 **/*_out.log
+dist-new/
