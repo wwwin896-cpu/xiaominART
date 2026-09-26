@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import { giftOccasions } from '../../data/content';
 ---
-<Layout title="送礼场合｜选礼指南｜小民艺术" description="生日、乔迁、节日、感谢、开业和周年等送礼场合的礼物方向与私享礼遇建议。">
+<Layout title="送礼场合｜选礼指南｜小民艺术" description="生日、乔迁、节日、感谢、开业和周年等送礼场合的礼物方向与小民好礼建议。">
   <section class="container page-head"><span class="eyebrow">Occasions / 送礼场合</span><h1 class="serif">每一个值得表达的时刻，<br />都有合适的礼。</h1><p>场合页是选礼指南的搜索入口，先确认时刻，再进入具体礼物方向。</p><a class="btn btn-primary" href="/gift-guide/">进入选礼指南 →</a></section>
   <section class="container section landing-grid">{giftOccasions.map((item) => <article><span class="eyebrow">{item.en}</span><h2 class="serif"><a href={`/occasions/${item.slug}/`}>{item.title}</a></h2><p>{item.intro}</p><a class="btn btn-link" href={`/occasions/${item.slug}/`}>查看场合建议 →</a></article>)}</section>
 </Layout>

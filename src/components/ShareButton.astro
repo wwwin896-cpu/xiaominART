@@ -1,0 +1,57 @@
+---
+// 全站分享按钮：移动端唤起系统分享面板（微信好友 / 朋友圈），桌面端复制链接；
+// 微信内置浏览器提示使用右上角菜单分享。
+---
+<button class="share-button" type="button" data-event="share_click" aria-label="分享本页给微信好友或朋友圈"><span class="share-glyph" aria-hidden="true">↗</span><span class="share-label">分享</span></button>
+<div class="share-toast" data-share-toast role="status" aria-live="polite" hidden></div>
+<script>
+  const button = document.querySelector<HTMLButtonElement>('.share-button');
+  const toast = document.querySelector<HTMLElement>('[data-share-toast]');
+  let toastTimer: ReturnType<typeof setTimeout> | undefined;
+  const showToast = (message: string) => {
+    if (!toast) return;
+    toast.textContent = message;
+    toast.hidden = false;
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { toast.hidden = true; }, 3200);
+  };
+  const copy = async (text: string) => {
+    try { await navigator.clipboard.writeText(text); return true; } catch {
+      try {
+        const helper = document.createElement('textarea');
+        helper.value = text; helper.style.position = 'fixed'; helper.style.opacity = '0';
+        document.body.appendChild(helper); helper.select();
+        const ok = document.execCommand('copy'); helper.remove(); return ok;
+      } catch { return false; }
+    }
+  };
+  button?.addEventListener('click', async () => {
+    const shareData: ShareData = {
+      title: document.title.replace(/｜小民艺术.*$/, '').replace(/｜XIAOMINART.*$/i, '') || '小民艺术',
+      text: document.querySelector<HTMLMetaElement>('meta[name="description"]')?.content || '小民好礼，为重要的人选一份心意。',
+      url: window.location.href,
+    };
+    const inWeChat = /MicroMessenger/i.test(navigator.userAgent);
+    if (inWeChat) {
+      showToast('在微信里点右上角「···」，选择「发送给朋友」或「分享到朋友圈」');
+      await copy(window.location.href);
+      return;
+    }
+    if (typeof navigator.share === 'function') {
+      try { await navigator.share(shareData); return; } catch (error) { if ((error as DOMException)?.name === 'AbortError') return; }
+    }
+    const copied = await copy(window.location.href);
+    showToast(copied ? '链接已复制，去粘贴给微信好友或朋友圈吧' : `复制失败，请手动复制地址：${window.location.href}`);
+  });
+</script>
+<style>
+  .share-button { position: fixed; right: 22px; bottom: 90px; z-index: 12; display: flex; align-items: center; gap: 6px; padding: 10px 14px; min-height: 44px; border: 1px solid var(--ink); background: var(--paper-light); color: var(--ink); box-shadow: var(--shadow); cursor: pointer; }
+  .share-button:hover { border-color: var(--cinnabar); color: var(--cinnabar); }
+  .share-glyph { font-size: 14px; line-height: 1; }
+  .share-label { font-size: 12px; letter-spacing: .06em; }
+  .share-toast { position: fixed; left: 50%; bottom: 84px; transform: translateX(-50%); z-index: 16; max-width: min(86vw, 420px); padding: 12px 18px; background: var(--ink); color: var(--paper-light); font-size: 13px; line-height: 1.6; text-align: center; box-shadow: var(--shadow); }
+  @media (max-width: 767px) {
+    .share-button { right: 14px; bottom: calc(146px + env(safe-area-inset-bottom)); padding: 9px 12px; }
+    .share-toast { bottom: 132px; }
+  }
+</style>

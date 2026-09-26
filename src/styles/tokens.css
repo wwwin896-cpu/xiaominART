@@ -39,10 +39,10 @@
   --text-sm: 13px;
   --text-base: 16px;
   --text-lg: 18px;
-  --text-xl: 26px;
-  --text-2xl: 36px;
-  --text-3xl: 54px;
-  --text-4xl: clamp(54px, 7.8vw, 98px);
+  --text-xl: 24px;
+  --text-2xl: 30px;
+  --text-3xl: 42px;
+  --text-4xl: clamp(38px, 5.2vw, 64px);
   --leading-display: 1.16;
   --leading-body: 1.8;
   --space-1: 4px;

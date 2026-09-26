@@ -15,3 +15,4 @@ resources/
 **/*_out.log
 dist-new/
 !src/data/*.ts
+dist-vercel-test/

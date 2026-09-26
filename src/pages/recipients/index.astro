@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import { giftRecipients } from '../../data/content';
 ---
-<Layout title="送礼对象｜选礼指南｜小民艺术" description="按长辈、伴侣、朋友、老师、客户和团队等对象，找到合适的私享礼遇。">
+<Layout title="送礼对象｜选礼指南｜小民艺术" description="按长辈、伴侣、朋友、老师、客户和团队等对象，找到合适的小民好礼。">
   <section class="container page-head"><span class="eyebrow">Recipients / 送礼对象</span><h1 class="serif">关系有不同的距离，<br />礼物也应有合适的分寸。</h1><p>对象页是选礼指南的关系型搜索入口，帮助你从收礼人的身份和关系开始选择。</p><a class="btn btn-primary" href="/gift-guide/">进入选礼指南 →</a></section>
   <section class="container section landing-grid">{giftRecipients.map((item) => <article><span class="eyebrow">{item.en}</span><h2 class="serif"><a href={`/recipients/${item.slug}/`}>{item.title}</a></h2><p>{item.intro}</p><a class="btn btn-link" href={`/recipients/${item.slug}/`}>查看对象建议 →</a></article>)}</section>
 </Layout>

@@ -1,7 +1,7 @@
 export const navItems = [
   {
-    href: '/gifts/', zh: '私享礼遇', en: 'Private Gifts', children: [
-      { href: '/gifts/', zh: '全部私享礼遇', en: 'All Private Gifts' },
+    href: '/gifts/', zh: '小民好礼', en: 'Xiaomin Gifts', children: [
+      { href: '/gifts/', zh: '全部小民好礼', en: 'All Gifts' },
       { href: '/gifts/?collection=seasonal', zh: '新品 / 节气系列', en: 'New / Seasonal' },
     ],
   },
@@ -101,7 +101,7 @@ export const directionQuiz = [
 export const giftDirections = [
   { title: '一人一语', en: 'One person, one line', body: '为重要的人留下一句只属于你们的文字方向。' },
   { title: '一室一意', en: 'One room, one intention', body: '为居所、工作室或文化空间建立一处沉静的视觉锚点。' },
-  { title: '一群人的礼', en: 'A gift for a collective', body: '适用于企业、婚礼、周年与活动场景的艺术化定制。' },
+  { title: '一群人的礼', en: 'A gift for a collective', body: '适用于企业、团队与活动场景的心意定制。' },
 ];
 
 export type GiftProduct = {
@@ -164,7 +164,7 @@ export const giftTierLabels = {
 };
 
 export const channelPages = [
-  { slug: 'xiaohongshu-housewarming', title: '小红书｜乔迁礼物选礼指南', campaign: 'housewarming-gift', intro: '为新居准备一份不喧哗的礼。', ctaLabel: '查看乔迁私享礼遇', ctaUrl: '/occasions/housewarming/' },
+  { slug: 'xiaohongshu-housewarming', title: '小红书｜乔迁礼物选礼指南', campaign: 'housewarming-gift', intro: '为新居准备一份不喧哗的礼。', ctaLabel: '查看乔迁小民好礼', ctaUrl: '/occasions/housewarming/' },
   { slug: 'xiaohongshu-teacher-gift', title: '小红书｜谢师礼怎么选', campaign: 'teacher-thanks-gift', intro: '把感谢写下来，送给曾经照亮你的人。', ctaLabel: '查看谢师礼方向', ctaUrl: '/occasions/teacher-thanks/' },
 ];
 
@@ -180,7 +180,7 @@ export const blessings = [
   { slug: 'fu', title: '福', pinyin: 'Fú', en: 'A sense of wholeness', meaning: '关于安稳、圆满与被好好接住。', scene: '适合家庭、乔迁与想为日常留一笔的时刻。' },
   { slug: 'lu', title: '禄', pinyin: 'Lù', en: 'Purpose & practice', meaning: '关于所做之事、学业与职业方向。', scene: '适合为长期努力、事业与学习寻找一份视觉表达。' },
   { slug: 'shou', title: '寿', pinyin: 'Shòu', en: 'A long horizon', meaning: '对时间、陪伴与日常安康的温和祝愿。', scene: '适合长辈、生日与值得慢慢过的日子。' },
-  { slug: 'xi', title: '喜', pinyin: 'Xǐ', en: 'A shared joy', meaning: '把值得庆祝的相逢、成家与好消息写下来。', scene: '适合婚礼、周年、新居与重要相逢。' },
+  { slug: 'xi', title: '喜', pinyin: 'Xǐ', en: 'A shared joy', meaning: '把值得庆祝的相逢、好消息写下来。', scene: '适合新居、纪念时刻与重要相逢。' },
   { slug: 'cai', title: '财', pinyin: 'Cái', en: 'A life in abundance', meaning: '关于丰足、流动与把日子经营好的心愿。', scene: '适合开业、乔迁与为生活添一份笃定。' },
 ];
 

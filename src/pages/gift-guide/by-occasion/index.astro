@@ -3,8 +3,8 @@ import Layout from '../../../layouts/Layout.astro';
 import { getGiftCatalog } from '../../../lib/keystatic';
 const { occasions: giftOccasions } = getGiftCatalog();
 ---
-<Layout title="按场合选礼｜选礼指南｜小民艺术" description="按生日、乔迁、节日、感谢、开业和周年等场合，找到一份有东方审美的私享礼遇。">
-  <section class="container page-head"><span class="eyebrow">By Occasion / 按场合选礼</span><h1 class="serif">先确认要表达的时刻，<br />再选择合适的礼。</h1><p lang="en">Start with the occasion, then find the feeling.</p><p>不同场合需要不同的分寸。这里先帮你按礼赠时刻找到方向，再进入对应的私享礼遇详情。</p><a class="btn btn-primary" href="/gifts/">查看全部私享礼遇 →</a></section>
+<Layout title="按场合选礼｜选礼指南｜小民艺术" description="按生日、乔迁、节日、感谢、开业和周年等场合，找到一份有东方审美的小民好礼。">
+  <section class="container page-head"><span class="eyebrow">By Occasion / 按场合选礼</span><h1 class="serif">先确认要表达的时刻，<br />再选择合适的礼。</h1><p lang="en">Start with the occasion, then find the feeling.</p><p>不同场合需要不同的分寸。这里先帮你按礼赠时刻找到方向，再进入对应的小民好礼详情。</p><a class="btn btn-primary" href="/gifts/">查看全部小民好礼 →</a></section>
   <section class="container section landing-grid">{giftOccasions.map((item) => <article><span class="eyebrow">{item.en}</span><h2 class="serif"><a href={`/occasions/${item.slug}/`}>{item.title}</a></h2><p>{item.intro}</p><a class="btn btn-link" href={`/occasions/${item.slug}/`}>查看这一场合 →</a></article>)}</section>
 </Layout>
 <style>

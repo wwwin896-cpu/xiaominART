@@ -8,9 +8,9 @@ export function getStaticPaths() { return getGiftCatalog().occasions.map((item) 
 const { item } = Astro.props;
 const products = getGiftsForScene(item.scenes);
 ---
-<Layout title={`${item.title}｜送礼场合｜小民艺术`} description={`${item.intro} 小民艺术提供有东方审美的私享礼遇建议。`}>
+<Layout title={`${item.title}｜送礼场合｜小民艺术`} description={`${item.intro} 小民艺术提供有东方审美的小民好礼建议。`}>
   <section class="container page-head"><span class="eyebrow">Occasion / {item.en}</span><h1 class="serif">{item.title}</h1><p lang="en">{item.en}</p><p>{item.intro} 从预算、对象、包装和交付时间开始，找到更合适的表达。</p><a class="btn btn-primary" href="/gift-guide/">返回选礼指南 →</a></section>
-  <section class="container section related"><span class="eyebrow">Private Gifts / 相关私享礼遇</span><h2 class="serif">适合这个时刻的礼物方向</h2><div class="gift-grid">{products.length ? products.map((product) => <GiftCard product={product} />) : <p>相关礼物正在整理中，可以先提交送礼建议。</p>}</div></section>
+  <section class="container section related"><span class="eyebrow">Xiaomin Gifts / 相关小民好礼</span><h2 class="serif">适合这个时刻的礼物方向</h2><div class="gift-grid">{products.length ? products.map((product) => <GiftCard product={product} />) : <p>相关礼物正在整理中，可以先提交送礼建议。</p>}</div></section>
   <section class="container section next-step"><h2 class="serif">还不确定？告诉我们你想表达什么。</h2><a class="btn btn-primary" href={`/custom-commission/?context=${encodeURIComponent(item.title)}`} data-event="gift_advice_click">获取送礼建议 →</a></section>
 </Layout>
 <style>

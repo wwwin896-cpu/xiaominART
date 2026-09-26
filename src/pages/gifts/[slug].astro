@@ -7,6 +7,6 @@ export const prerender = true;
 export function getStaticPaths() { return getGiftCatalog().products.map((product) => ({ params: { slug: product.slug }, props: { product } })); }
 const { product } = Astro.props;
 ---
-<Layout title={`${product.name}｜私享礼遇｜小民艺术`} description={`${product.meaning}${product.recipient}${product.packaging}`}>
+<Layout title={`${product.name}｜小民好礼｜小民艺术`} description={`${product.meaning}${product.recipient}${product.packaging}`}>
   <GiftProductDetail product={product} />
 </Layout>
