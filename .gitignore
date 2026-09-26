@@ -2,7 +2,6 @@
 .env*
 node_modules/
 dist/
-public/
 resources/
 .hugo_build.lock
 **/data/

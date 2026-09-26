@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 72" width="100%" height="100%" fill="none">
+  <!-- 
+    xiaominART 官方品牌标识 (浅色/白底模式 · 方案二深化版)
+    - 符号：【斗升小民】量具金石古印（纯镂空透底）
+    - 上行：扁平化现代无衬线英文 xiaominART
+    - 下行：中文副标「小民艺术 · 日常表达」，两端严格等宽对齐
+  -->
+
+  <!-- 左侧镂空古印符号 -->
+  <g transform="translate(6, 4)">
+    <path d="M12 14 L52 14 L46 52 L18 52 Z" 
+          stroke="#B8321B" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
+    
+    <path d="M16.5 18 L47.5 18 L42.5 48 L21.5 48 Z" 
+          stroke="#B8321B" stroke-width="0.8" stroke-opacity="0.3" stroke-linejoin="round" fill="none"/>
+
+    <path d="M32 8 V40" 
+          stroke="#B8321B" stroke-width="3.2" stroke-linecap="round"/>
+          
+    <path d="M23 29 Q32 36 41 29" 
+          stroke="#B8321B" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+          
+    <circle cx="32" cy="46" r="2.2" fill="#B8321B"/>
+    
+    <circle cx="14" cy="14" r="1" fill="#B8321B" opacity="0.6"/>
+    <circle cx="50" cy="14" r="1" fill="#B8321B" opacity="0.6"/>
+  </g>
+
+  <!-- 右侧字标组合：两端等宽对齐 (260px) -->
+  <g transform="translate(86, 0)">
+    <text x="0" y="36" 
+          font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Montserrat', 'Helvetica Neue', Arial, sans-serif" 
+          font-size="31" 
+          font-weight="400" 
+          fill="#1C1B18" 
+          letter-spacing="0.8"
+          textLength="260"
+          lengthAdjust="spacing">
+      xiaomin<tspan font-weight="800" fill="#9C6F28" letter-spacing="1.5">ART</tspan>
+    </text>
+
+    <text x="0" y="60" 
+          font-family="'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', 'STSong', serif" 
+          font-size="12.5" 
+          font-weight="600" 
+          fill="#4A4740" 
+          textLength="260"
+          lengthAdjust="spacing">
+      小民艺术 · 日常表达
+    </text>
+  </g>
+</svg>

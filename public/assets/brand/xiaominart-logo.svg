@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 72" width="100%" height="100%" fill="none">
+  <!-- 
+    xiaominART 官方品牌标识 (浅色/白底标准版)
+    - 符号：【斗升小民】量具金石古印（镂空透底）
+    - 上行：浓郁深炭黑 xiaomin + 沉雅金 ART
+    - 下行：加大号加深标宋「小民艺术｜日常之礼」，与上方英文 100% 绝对垂直切齐
+  -->
+
+  <!-- 左侧镂空古印符号 -->
+  <g transform="translate(6, 4)">
+    <path d="M12 14 L52 14 L46 52 L18 52 Z" 
+          stroke="#B8321B" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
+    
+    <path d="M16.5 18 L47.5 18 L42.5 48 L21.5 48 Z" 
+          stroke="#B8321B" stroke-width="0.8" stroke-opacity="0.3" stroke-linejoin="round" fill="none"/>
+
+    <path d="M32 8 V40" 
+          stroke="#B8321B" stroke-width="3.2" stroke-linecap="round"/>
+    <path d="M23 29 Q32 36 41 29" 
+          stroke="#B8321B" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+    <circle cx="32" cy="46" r="2.2" fill="#B8321B"/>
+
+    <circle cx="14" cy="14" r="1" fill="#B8321B" opacity="0.6"/>
+    <circle cx="50" cy="14" r="1" fill="#B8321B" opacity="0.6"/>
+  </g>
+
+  <!-- 右侧字标排版：260px 绝对等宽垂直对齐 -->
+  <g transform="translate(86, 0)">
+    <!-- 上行英文：进一步加深的浓郁深炭灰 xiaomin + 沉雅金 ART -->
+    <text x="0" y="36" 
+          font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'Helvetica Neue', Arial, sans-serif" 
+          font-size="31" 
+          font-weight="600" 
+          fill="#181716" 
+          letter-spacing="0.5" 
+          textLength="260" 
+          lengthAdjust="spacing">
+      xiaomin<tspan font-weight="800" fill="#9C6F28" letter-spacing="1.5">ART</tspan>
+    </text>
+
+    <!-- 下行中文副标：加大号(14px)、加深玄黑粗宋「小民艺术｜日常之礼」 -->
+    <text x="0" y="60" 
+          font-family="'Noto Serif SC', 'Songti SC', 'Source Han Serif SC', serif" 
+          font-size="14" 
+          font-weight="700" 
+          fill="#181716" 
+          textLength="260" 
+          lengthAdjust="spacing">
+      小民艺术｜日常之礼
+    </text>
+  </g>
+</svg>
