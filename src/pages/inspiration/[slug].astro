@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import CaseNotice from '../../components/CaseNotice.astro';
 import { inspirations, customerStories } from '../../data/content';
+export const prerender = true;
 export function getStaticPaths(){ return inspirations.map((item) => ({ params: { slug: item.slug }, props: { item } })); }
 const { item } = Astro.props;
 const story = customerStories.find((entry) => entry.caseSlug === item.slug);

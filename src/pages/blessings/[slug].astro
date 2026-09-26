@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro'; import { blessings } from '../../data/content';
+export const prerender = true;
 export function getStaticPaths(){ return blessings.map((item)=>({params:{slug:item.slug},props:{item}})); }
 const { item } = Astro.props;
 ---

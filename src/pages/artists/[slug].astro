@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { artists } from '../../data/content';
+export const prerender = true;
 export function getStaticPaths(){ return artists.map((artist) => ({ params: { slug: artist.slug }, props: { artist } })); }
 const { artist } = Astro.props;
 ---

@@ -1,0 +1,46 @@
+primaryItems:
+  - label: 私享礼遇
+    englishLabel: Private Gifts
+    href: /gifts/
+    visible: true
+    order: 1
+    children:
+      - label: 全部私享礼遇
+        englishLabel: All Private Gifts
+        href: /gifts/
+        visible: true
+        order: 1
+      - label: 新品 / 节气系列
+        englishLabel: New / Seasonal
+        href: /gifts/?collection=seasonal
+        visible: true
+        order: 2
+  - label: 选礼指南
+    englishLabel: Gift Guide
+    href: /gift-guide/
+    visible: true
+    order: 2
+    children:
+      - label: 按场合选礼
+        englishLabel: By Occasion
+        href: /gift-guide/by-occasion/
+        visible: true
+        order: 1
+      - label: 按对象选礼
+        englishLabel: By Recipient
+        href: /gift-guide/by-recipient/
+        visible: true
+        order: 2
+  - label: 企业礼赠
+    englishLabel: Corporate Gifting
+    href: /business-gifts/
+    visible: true
+    order: 3
+    children: []
+  - label: 品牌故事
+    englishLabel: Our Story
+    href: /about/
+    visible: true
+    order: 4
+    children: []
+footerItems: []

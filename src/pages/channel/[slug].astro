@@ -1,0 +1,14 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { channelPages } from '../../data/content';
+export const prerender = true;
+export function getStaticPaths() { return channelPages.map((page) => ({ params: { slug: page.slug }, props: { page } })); }
+const { page } = Astro.props;
+---
+<Layout title={`${page.title}｜小民艺术`} description={`${page.intro} 小民艺术为小红书种草内容提供具体礼赠承接。`}>
+  <section class="container channel-hero"><span class="eyebrow">Xiaohongshu / 小红书专题</span><h1 class="serif">{page.title}</h1><p lang="en">A focused landing page for a real gifting moment.</p><p>{page.intro} 这里不重复讲一遍品牌，而是从具体的送礼任务开始，帮助你继续了解场合、对象、预算和包装。</p><a class="btn btn-primary" href={page.ctaUrl} data-event="channel_landing_view">{page.ctaLabel} →</a></section>
+  <section class="container section channel-path"><span class="eyebrow">How to continue / 下一步</span><div class="path-grid"><article><b>01</b><h2 class="serif">先确认场合</h2><p>看清这份礼物适合什么时刻，以及它想表达怎样的关系。</p></article><article><b>02</b><h2 class="serif">再看礼物细节</h2><p>了解寓意、包装、手写贺卡和制作 / 发货参考。</p></article><article><b>03</b><h2 class="serif">进入小程序或咨询</h2><p>已确认商品会进入微信小程序；未配置时提供送礼建议，不展示虚构链接。</p></article></div><a class="btn btn-secondary" href="/gift-guide/">不知道怎么选？进入选礼指南 →</a></section>
+</Layout>
+<style>
+  .channel-hero { padding: 96px 0 76px; } .channel-hero h1 { max-width: 900px; font-size: clamp(48px, 7vw, 86px); font-weight: 500; line-height: 1.18; margin: 20px 0; } .channel-hero p { max-width: 700px; color: var(--ink-soft); font-size: 18px; } .channel-hero p[lang='en'] { font: 24px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); } .channel-hero .btn { margin-top: 18px; } .channel-path { border-top: 1px solid var(--line); } .path-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 22px 0 26px; } .path-grid article { min-height: 220px; padding: 22px 22px 28px 0; } .path-grid article + article { border-left: 1px solid var(--line); padding-left: 22px; } .path-grid b { color: var(--cinnabar); font: 13px var(--font-mono); } .path-grid h2 { margin: 38px 0 10px; font-size: 30px; font-weight: 500; } .path-grid p { color: var(--ink-soft); font-size: 14px; } @media (max-width: 767px) { .channel-hero { padding: 56px 0 46px; } .channel-hero h1 { font-size: 48px; } .channel-hero p { font-size: 16px; } .path-grid { grid-template-columns: 1fr; } .path-grid article, .path-grid article + article { min-height: 0; padding: 20px 0; border-left: 0; border-bottom: 1px solid var(--line); } .path-grid article:last-child { border-bottom: 0; } .path-grid h2 { margin: 16px 0 8px; } }
+</style>

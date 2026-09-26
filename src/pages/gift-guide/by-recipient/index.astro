@@ -1,0 +1,12 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { getGiftCatalog } from '../../../lib/keystatic';
+const { recipients: giftRecipients } = getGiftCatalog();
+---
+<Layout title="按对象选礼｜选礼指南｜小民艺术" description="按长辈、伴侣、朋友、老师、客户和团队等对象，找到一份合适的东方日常之礼。">
+  <section class="container page-head"><span class="eyebrow">By Recipient / 按对象选礼</span><h1 class="serif">先想起要送给谁，<br />再让礼物替你表达。</h1><p lang="en">Start with the relationship, then find the right gesture.</p><p>关系不同，礼物的分寸也不同。这里从收礼对象出发，帮助你找到更合适的预算、寓意和交付方式。</p><a class="btn btn-primary" href="/gifts/">查看全部私享礼遇 →</a></section>
+  <section class="container section landing-grid">{giftRecipients.map((item) => <article><span class="eyebrow">{item.en}</span><h2 class="serif"><a href={`/recipients/${item.slug}/`}>{item.title}</a></h2><p>{item.intro}</p><a class="btn btn-link" href={`/recipients/${item.slug}/`}>查看这一对象 →</a></article>)}</section>
+</Layout>
+<style>
+  .page-head { padding: 90px 0 66px; } .page-head h1 { font-size: clamp(48px, 7vw, 86px); line-height: 1.18; font-weight: 500; margin: 20px 0; } .page-head p { max-width: 700px; color: var(--ink-soft); font-size: 18px; } .page-head p[lang='en'] { font: 24px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); } .page-head .btn { margin-top: 18px; } .landing-grid { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid var(--line); } .landing-grid article { min-height: 250px; padding: 26px 26px 30px 0; border-bottom: 1px solid var(--line); } .landing-grid article:nth-child(even) { padding-left: 26px; border-left: 1px solid var(--line); } .landing-grid h2 { font-size: 34px; font-weight: 500; margin: 16px 0 10px; } .landing-grid p { max-width: 520px; color: var(--ink-soft); font-size: 15px; } @media (max-width: 767px) { .page-head { padding: 56px 0 42px; } .page-head h1 { font-size: 47px; } .page-head p { font-size: 16px; } .page-head p[lang='en'] { font-size: 20px; } .landing-grid { grid-template-columns: 1fr; } .landing-grid article, .landing-grid article:nth-child(even) { min-height: 0; padding: 24px 0; border-left: 0; } }
+</style>

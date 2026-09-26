@@ -1,0 +1,15 @@
+---
+import Layout from '../../layouts/Layout.astro';
+const faqGroups = [
+  { title: '选礼', items: [['如何开始选礼？', '可以从私享礼遇、选礼指南、场合或对象开始。还不确定时，提交送礼建议即可。'], ['可以直接在小程序下单吗？', '小程序商品链接会在商品、价格和交付信息确认后配置。尚未配置时，页面只提供送礼建议入口。']] },
+  { title: '包装与交付', items: [['可以写手写贺卡吗？', '可以。确认礼物方向时提交贺卡文字，我们会一起确认字数、版式与包装。'], ['多久可以发货？', '页面展示的是当前参考时间，最终以礼物方向、包装方式和确认时间为准；急件请先提交咨询。']] },
+  { title: '售后与定制', items: [['礼物可以退换吗？', '不同礼物方向和个性化程度的售后边界不同。确认前会说明退换范围，定制内容请先沟通后再决定。'], ['定制和私享礼遇有什么不同？', '私享礼遇提供已经整理好的礼物方向；定制会从人物、空间或一句话开始，共同确定创作边界。']] },
+];
+---
+<Layout title="帮助中心｜包装、交付与选礼 FAQ｜小民艺术" description="关于小民艺术私享礼遇、选礼、包装、手写贺卡、交付、售后和定制的常见问题。">
+  <section class="container help-hero"><span class="eyebrow">Help / 帮助中心</span><h1 class="serif">把礼物的细节，<br />提前说清楚。</h1><p>这里回答选礼、包装、手写贺卡、交付、售后和定制相关问题。未找到答案时，可以直接获取送礼建议。</p><a class="btn btn-primary" href="/custom-commission/?context=送礼建议" data-event="gift_advice_click">获取送礼建议 →</a></section>
+  <section class="container section faq-sections">{faqGroups.map((group) => <section><span class="eyebrow">{group.title}</span><div class="faq-list">{group.items.map(([question, answer]) => <details><summary>{question}</summary><p>{answer}</p></details>)}</div></section>)}</section>
+</Layout>
+<style>
+  .help-hero { padding: 96px 0 70px; } .help-hero h1 { font-size: clamp(50px, 7vw, 88px); font-weight: 500; line-height: 1.18; margin: 20px 0; } .help-hero p { max-width: 700px; color: var(--ink-soft); font-size: 18px; } .help-hero .btn { margin-top: 18px; } .faq-sections { border-top: 1px solid var(--line); } .faq-sections > section { padding: 28px 0 40px; border-bottom: 1px solid var(--line); } .faq-list { max-width: 820px; margin-top: 20px; border-top: 1px solid var(--line); } details { padding: 18px 0; border-bottom: 1px solid var(--line); } summary { cursor: pointer; min-height: 44px; font-weight: 500; } details p { max-width: 680px; color: var(--ink-soft); line-height: 1.8; } @media (max-width: 767px) { .help-hero { padding: 56px 0 46px; } .help-hero h1 { font-size: 50px; } .help-hero p { font-size: 16px; } }
+</style>

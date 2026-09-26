@@ -6,7 +6,7 @@ const frameNames: Record<string, string> = { 'matte-black': '哑光黑细框', c
 <article class="inspiration-card reveal" data-reveal data-spaces={item.spaces.join('|')} data-style={item.style.join('|')} data-artist={item.artist} data-palette={item.palette.join('|')} aria-label={`${item.title}，${item.en}，${item.spaces.join('、')}空间参考`}>
   <a class="gallery-trigger" href={`/inspiration/${item.slug}/`} data-gallery-title={item.title} data-gallery-en={item.en} data-gallery-tag={item.tag} data-gallery-tone={item.slug} aria-label={`${item.title} ${item.en}`}>
     <div class="framed-scenes" data-tone={item.slug}>
-      {(item.frames as string[]).map((frame: string, index: number) => <div class:list={['framed-art', `frame-${frame}`, index === 1 && 'secondary-frame']} role="img" aria-label={`${item.title}，${item.spaces.join('、')}场景中的${frameNames[frame]}画框效果参考`}><div class="art-paper"><span class="serif" aria-hidden="true">{item.title.slice(0, 1)}</span></div></div>)}
+      {item.image ? <img class="scene-photo" src={item.image} alt={`${item.title}｜${item.spaces.join('、')}场景中的书法与器物陈设`} loading="lazy" decoding="async" /> : (item.frames as string[]).map((frame: string, index: number) => <div class:list={['framed-art', `frame-${frame}`, index === 1 && 'secondary-frame']} role="img" aria-label={`${item.title}，${item.spaces.join('、')}场景中的${frameNames[frame]}画框效果参考`}><div class="art-paper"><span class="serif" aria-hidden="true">{item.title.slice(0, 1)}</span></div></div>)}
       <small class="scene-label">{item.spaces.join('｜')}</small>
     </div>
     <div class="inspiration-copy"><span class="eyebrow">{item.category}</span><h3 class="serif">{item.title}</h3><p lang="en">{item.en}</p><p>{item.note}</p><div class="space-tags">{(item.spaces as string[]).map((space: string) => <span>{space}</span>)}</div><CaseNotice compact /></div>
@@ -21,6 +21,7 @@ const frameNames: Record<string, string> = { 'matte-black': '哑光黑细框', c
   .inspiration-card:focus-within .framed-scenes { filter: brightness(1.035); }
   .inspiration-card > a:first-child { display: block; }
   .framed-scenes { aspect-ratio: 1.15; background: var(--paper-deep); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+  .scene-photo { width: 100%; height: 100%; object-fit: cover; display: block; }
   .framed-art { width: 58%; aspect-ratio: .74; padding: 10px; background: #211f1c; box-shadow: 0 15px 30px rgba(43, 41, 36, .14); transform: rotate(-3deg); }
   .framed-art.secondary-frame { position: absolute; width: 44%; transform: translate(30%, 13%) rotate(6deg); z-index: 0; opacity: .8; }
   .framed-art:first-child { z-index: 1; }

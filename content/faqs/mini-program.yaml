@@ -1,0 +1,5 @@
+question: 可以直接在小程序下单吗？
+category: gift-guide
+published: true
+answer: |
+  小程序商品链接会在确认商品、价格和交付信息后配置。尚未配置时，页面会提供送礼建议入口，不展示虚构的支付链接。

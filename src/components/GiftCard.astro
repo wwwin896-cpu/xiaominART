@@ -5,27 +5,29 @@ const { product } = Astro.props as { product: GiftProduct };
 const tier = giftTierLabels[product.tier];
 ---
 <article class="gift-card" data-gift-card data-scene={product.scene} data-tier={product.tier} data-slug={product.slug}>
-  <a class="gift-visual" href={`/gift-guide/${product.slug}/`} aria-label={`${product.name}详情`}>
-    <span class="serif">{product.visual}</span>
+  <a class="gift-visual" href={`/gifts/${product.slug}/`} aria-label={`${product.name}详情`}>
+    {product.image ? <img src={product.image} alt={`${product.name}｜${product.sceneLabel}场景`} loading="lazy" decoding="async" /> : <span class="serif">{product.visual}</span>}
     <small>{product.sceneLabel} · {tier.name}</small>
   </a>
   <div class="gift-card-body">
     <span class="eyebrow">{product.sceneLabel} / {tier.name}</span>
-    <h3 class="serif"><a href={`/gift-guide/${product.slug}/`}>{product.name}</a></h3>
+      <h3 class="serif"><a href={`/gifts/${product.slug}/`}>{product.name}</a></h3>
     <p lang="en">{product.en}</p>
     <p>{product.meaning}</p>
     <div class="gift-card-meta"><strong>{product.price}</strong><span>{product.dispatch}</span></div>
     <div class="gift-card-actions">
       <button class="wishlist-button btn btn-secondary" type="button" data-wishlist={product.slug} aria-pressed="false">♡ 加入心愿单</button>
-      <a class="btn btn-link" href={`/gift-guide/${product.slug}/`}>查看详情 →</a>
+      <a class="btn btn-link" href={`/gifts/${product.slug}/`} data-event="gift_detail_view">查看详情 →</a>
     </div>
   </div>
 </article>
 <style>
   .gift-card { border-top: 1px solid var(--line); min-width: 0; }
   .gift-visual { display: grid; place-items: center; align-content: center; gap: 8px; aspect-ratio: 1.2; background: var(--paper-deep); color: var(--cinnabar); }
+  .gift-visual img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .gift-visual span { font-size: clamp(72px, 9vw, 120px); }
-  .gift-visual small { color: var(--ink-soft); font: 10px var(--font-mono); letter-spacing: .06em; }
+  .gift-visual small { position: absolute; left: 12px; bottom: 10px; z-index: 1; color: var(--paper-light); text-shadow: 0 1px 5px rgba(0, 0, 0, .55); font: 10px var(--font-mono); letter-spacing: .06em; }
+  .gift-visual { position: relative; }
   .gift-card-body { padding: 18px 0 0; }
   .gift-card h3 { font-size: 28px; font-weight: 500; margin: 9px 0 2px; }
   .gift-card h3 a:hover { color: var(--cinnabar); }

@@ -4,6 +4,10 @@
     "allowJs": true,
     "checkJs": true,
     "jsx": "preserve",
-    "jsxImportSource": "astro"
-  }
+    "jsxImportSource": "astro",
+    "types": ["node"]
+  },
+  "exclude": [    "xiaominart-test-site",
+    "keystatic.config.ts",
+    ".workspace-trash"]
 }

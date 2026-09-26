@@ -1,0 +1,18 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import GiftCard from '../../components/GiftCard.astro';
+import { getGiftCatalog, getGiftsForScene } from '../../lib/keystatic';
+const { recipients: giftRecipients } = getGiftCatalog();
+export const prerender = true;
+export function getStaticPaths() { return getGiftCatalog().recipients.map((item) => ({ params: { slug: item.slug }, props: { item } })); }
+const { item } = Astro.props;
+const products = getGiftsForScene(item.scenes);
+---
+<Layout title={`${item.title}｜送礼对象｜小民艺术`} description={`${item.intro} 从关系和场合开始选择小民艺术的私享礼遇。`}>
+  <section class="container page-head"><span class="eyebrow">Recipient / {item.en}</span><h1 class="serif">{item.title}</h1><p lang="en">{item.en}</p><p>{item.intro} 先确认关系的分寸，再查看礼物寓意、预算、包装和交付参考。</p><a class="btn btn-primary" href="/gift-guide/">返回选礼指南 →</a></section>
+  <section class="container section related"><span class="eyebrow">Private Gifts / 相关私享礼遇</span><h2 class="serif">适合这段关系的礼物方向</h2><div class="gift-grid">{products.length ? products.map((product) => <GiftCard product={product} />) : <p>相关礼物正在整理中，可以先提交送礼建议。</p>}</div></section>
+  <section class="container section next-step"><h2 class="serif">想让礼物更贴合你们的故事？</h2><a class="btn btn-primary" href={`/custom-commission/?context=${encodeURIComponent(item.title)}`} data-event="gift_advice_click">获取送礼建议 →</a></section>
+</Layout>
+<style>
+  .page-head { padding: 90px 0 66px; } .page-head h1 { font-size: clamp(52px, 7vw, 90px); font-weight: 500; margin: 20px 0 8px; } .page-head p { max-width: 700px; color: var(--ink-soft); font-size: 18px; } .page-head p[lang='en'] { font: 25px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); } .page-head .btn { margin-top: 18px; } .related, .next-step { border-top: 1px solid var(--line); } .related h2, .next-step h2 { font-size: clamp(38px, 5vw, 64px); font-weight: 500; margin: 18px 0 32px; } .gift-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 44px 24px; } @media (max-width: 767px) { .page-head { padding: 56px 0 42px; } .page-head h1 { font-size: 48px; } .page-head p { font-size: 16px; } .gift-grid { grid-template-columns: 1fr; } }
+</style>
