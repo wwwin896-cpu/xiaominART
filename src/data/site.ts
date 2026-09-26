@@ -4,5 +4,5 @@
 export const siteContact = {
   email: 'hello@xiaominart.com',
   wechatId: '',
-  wechatQr: '',
+  wechatQr: '/assets/images/wechat-qr.jpg',
 };
