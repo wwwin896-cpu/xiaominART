@@ -1,158 +1,116 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import SectionIntro from '../components/SectionIntro.astro';
-import InspirationCard from '../components/InspirationCard.astro';
-import { inspirations } from '../data/content';
-import { getGiftCatalog } from '../lib/keystatic';
-const { products: giftProducts, tiers: giftTierLabels } = getGiftCatalog();
-const featuredScenes = inspirations.slice(0, 3);
-const directionExamples = [
-  { label: '方向示例 01', title: '为一个人的书房，留一处安静', body: '从人物、空间和想留下的情绪开始，讨论一件适合进入日常的书写或纸本作品。', href: '/inspiration/quiet-entry/' },
-  { label: '方向示例 02', title: '为一段关系，写下一句心意', body: '把生日、感谢或纪念日中的一句话，转译成可以被长期看见的礼物方向。', href: '/inspiration/ink-breath/' },
-  { label: '方向示例 03', title: '为一群人，准备一份共同的礼', body: '围绕企业、团队或活动主题，讨论书写、礼盒和交付方式。', href: '/business-gifts/' },
+const sceneCards = [
+  { title: '书房与玄关的静谧点缀', body: '一幅小字，让进门的那一刻安静下来。', price: '¥100', image: '/assets/scenes/entry-console-scroll.jpg', href: '/occasions/housewarming/', alt: '玄关案头的书法小字' },
+  { title: '传递温度的社交名片', body: '比鲜花更持久的，是一句认真写下的话。', price: '¥300', image: '/assets/scenes/sideboard-fan-calligraphy.jpg', href: '/gifts/', alt: '礼盒中的手写扇面书法' },
+  { title: '安放情绪的私密空间', body: '茶室或客厅里，一处让你深呼吸的角落。', price: '¥500', image: '/assets/scenes/tea-wall-scroll.jpg', href: '/scenes/', alt: '茶室墙上的书法横卷' },
+];
+const storyCards = [
+  { title: '书房定制 · 给父母的生日礼物', quote: '一直想送给父母一份不一样的生日礼物，小民老师把那句「平安喜乐」写在了宣纸上，装裱好送到家里那一刻，妈妈红了眼眶。', image: '/assets/scenes/study-desk-scroll.jpg', alt: '书房案头的手写书法' },
+  { title: '企业礼赠 · 合作伙伴周年庆', quote: '给合作了十年的伙伴选了一份定制作品，对方收到后说「这比任何商务礼品都让我感动」。后来那份作品一直挂在他办公室最显眼的位置。', image: '/assets/scenes/dining-room-long-calligraphy.jpg', alt: '企业空间里的书法横幅' },
+];
+const steps = [
+  { no: '壹', title: '倾听', body: '告诉我们空间、人物与想留下的情绪，不必先懂艺术。' },
+  { no: '贰', title: '取意', body: '从字、色、材质中，找到属于你的视觉方向。' },
+  { no: '叁', title: '创作', body: '匹配的艺术家为你专属创作，过程中保留必要的确认节点。' },
+  { no: '肆', title: '抵达', body: '作品以适合你的方式，带着温度抵达。' },
 ];
 ---
-<Layout title="小民艺术｜小民好礼，为重要的人选一份心意" description="小民好礼，为升斗小民的日常准备拿得出手的心意。书画、器物与定制作品，从一句想说的话开始，先沟通，再确认。">
-  <section class="hero container">
-    <div class="hero-copy">
-      <span class="eyebrow">XIAOMINART / 小民好礼</span>
-      <h1 class="serif">为重要的人，<br />送一份拿得出手的心意。</h1>
-      <p lang="en" class="hero-en">Thoughtful gifts for the people who matter.</p>
-      <p class="hero-body">书画、器物与定制作品，从一句想说的话开始。不用做功课，不用懂行，我们把寓意、包装和分寸都替你把关。</p>
-      <div class="hero-actions">
-        <a class="btn btn-primary home-cinnabar-cta" href="/custom-commission/" data-event="custom_inquiry_start">马上咨询 →</a>
-        <a class="btn btn-secondary" href="/gift-guide/" data-event="gift_guide_view">先看看能送什么</a>
-      </div>
-      <p class="hero-note">把想说的话交给我们｜先沟通，再确认内容与预算｜礼盒包装与手写贺卡可安排</p>
+<Layout title="小民艺术 XIAOMINART｜方寸之境，也藏山河" description="书画礼品定制平台。在喧嚣之外，寻一处安放身心的角落。这里的每一笔墨痕，都是对生活的另一种回答。">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-media" aria-hidden="true"><img src="/assets/scenes/tea-gold-calligraphy.jpg" alt="" loading="eager" fetchpriority="high" /></div>
+    <div class="container hero-inner">
+      <span class="eyebrow">XIAOMINART / 书画礼品定制</span>
+      <h1 id="hero-title" class="serif">方寸之境，<br />也藏山河。</h1>
+      <p class="hero-sub">在喧嚣之外，寻一处安放身心的角落。<br />这里的每一笔墨痕，都是对生活的另一种回答。</p>
+      <a class="btn btn-primary hero-cta" href="/gift-guide/" data-event="gift_guide_view">探寻一份心意 →</a>
     </div>
-    <div class="hero-visual" aria-label="小民好礼视觉示意"><div class="hero-art"><span class="serif">礼</span><small>INTENTION / 01</small></div><p class="hero-caption">把心意变成一件可以送得出手、进得了生活的礼物。</p></div>
   </section>
 
-  <section class="container trust-bar" aria-label="服务承诺 / Service commitments">
-    <div><span class="eyebrow">01 / Clear first step</span><strong>免费初步沟通</strong><small>先了解送给谁、什么时刻</small></div>
-    <div><span class="eyebrow">02 / Confirmed direction</span><strong>确认后再创作</strong><small>不在未确认前承诺成品</small></div>
-    <div><span class="eyebrow">03 / Thoughtful delivery</span><strong>包装与手写贺卡</strong><small>礼赠需求可一并讨论</small></div>
-    <div><span class="eyebrow">04 / Human response</span><strong>工作日在线，尽快回复</strong><small>急事建议直接加微信</small></div>
-  </section>
-
-  <section class="container section process-section" aria-labelledby="process-title">
-    <SectionIntro index="02" eyebrow="How it works / 送礼三步" title="送对一份礼，三步到位。" en="Three steps from intention to gift." body="你只需带来一个具体的人、一个时刻，或一句想被认真表达的话。" />
-    <div class="process-grid">
-      <article class="process-step"><span class="mono">01</span><h3 class="serif">说出你的心意</h3><p>告诉我们送给谁、什么场合，以及想留下的情绪。</p><small>不用先做功课</small></article>
-      <article class="process-step"><span class="mono">02</span><h3 class="serif">一起定方向</h3><p>匹配合适的礼物方向，确认内容、尺度、预算与节点。</p><small>过程中保留确认节点</small></article>
-      <article class="process-step"><span class="mono">03</span><h3 class="serif">收到专属心意</h3><p>方案确认后进入创作与交付，包装和贺卡需求一并说明。</p><small>交付边界提前说清</small></article>
+  <section class="container section choices" aria-labelledby="choices-title">
+    <div class="section-lead"><span class="eyebrow">01 / 心意之选</span><h2 id="choices-title" class="serif">为生活添一份心意。</h2><p>不是冰冷的印刷品，而是带着温度的手泽。或是案头的一抹清欢，或是心头的一声叹息。</p></div>
+    <div class="choice-grid">
+      {sceneCards.map((card) => <a class="choice-card" href={card.href} data-event="scene_view"><figure><img src={card.image} alt={card.alt} loading="lazy" decoding="async" /></figure><div class="choice-copy"><h3 class="serif">{card.title}</h3><p>{card.body}</p><div class="choice-meta"><span class="price">心意起点约 {card.price}</span><span class="card-link">以此为灵感 →</span></div></div></a>)}
     </div>
-    <a class="btn btn-primary home-cinnabar-cta" href="/custom-commission/" data-event="custom_inquiry_start">马上咨询 →</a>
   </section>
 
-  <section class="container section directions-section" aria-labelledby="directions-title">
-    <SectionIntro index="03" eyebrow="Works & directions / 礼物与方向" title="从具体的方向，想象你的礼物。" en="Reference a feeling, not a replica." body="以下是创作方向示例，不代表已完成客户案例；真实项目会在获得授权后公开。" />
-    <div class="direction-grid">{directionExamples.map((item) => <article><span class="eyebrow">{item.label}</span><h3 class="serif">{item.title}</h3><p>{item.body}</p><a class="btn btn-link" href={item.href}>查看方向 →</a></article>)}</div>
+  <section class="container section stories" aria-labelledby="stories-title">
+    <div class="section-lead"><span class="eyebrow">02 / 他们的定制故事</span><h2 id="stories-title" class="serif">从一句话，到一件作品。</h2><p>每一份心意背后，都有一段真实的故事。</p></div>
+    <div class="story-grid">
+      {storyCards.map((card) => <article class="story-card"><figure><img src={card.image} alt={card.alt} loading="lazy" decoding="async" /></figure><div class="story-copy"><h3 class="serif">{card.title}</h3><blockquote>「{card.quote}」</blockquote><span class="story-tag">灵感源自真实故事</span></div></article>)}
+    </div>
+    <a class="btn btn-link stories-more" href="/journal/">看看更多故事 →</a>
   </section>
 
-  <section class="container section gift-preview" aria-labelledby="gift-preview-title">
-    <SectionIntro index="04" eyebrow="Xiaomin Gifts / 小民好礼" title="不知道送什么？从预算开始选。" en="A clearer way to choose a thoughtful gift." body="每个档位都对应具体的使用场景；详情页会说明寓意、对象、包装和发货参考。" />
-    <div class="gift-tier-preview">{Object.entries(giftTierLabels).map(([key, tier]) => <a href={`/gift-guide/?tier=${key}#gift-list`}><span class="eyebrow">{tier.name}</span><strong>{tier.range}</strong><p>{tier.body}</p><span class="tier-detail">查看这一档 →</span></a>)}</div>
-    <div class="gift-preview-actions"><a class="btn btn-primary home-cinnabar-cta" href="/gift-guide/" data-event="gift_guide_view">查看送礼指南 →</a><a class="btn btn-secondary" href="/custom-commission/?context=送礼建议" data-event="gift_advice_click">不知道怎么选？获取建议</a></div>
-    <div class="gift-products-mini">{giftProducts.slice(0, 3).map((gift) => <a href={`/gifts/${gift.slug}/`}><span>{gift.sceneLabel}</span><strong class="serif">{gift.name}</strong><small>{gift.price}</small></a>)}</div>
+  <section class="container section process" aria-labelledby="process-title">
+    <div class="section-lead"><span class="eyebrow">03 / 我们的共创过程</span><h2 id="process-title" class="serif">一份作品的诞生。</h2><p>把心事交给我们，剩下的慢慢来。</p></div>
+    <div class="process-rail">
+      {steps.map((step) => <article class="process-card"><span class="mono step-no">{step.no}</span><h3 class="serif">{step.title}</h3><p>{step.body}</p></article>)}
+    </div>
   </section>
 
-  <section class="container section inspiration-section" aria-labelledby="scene-title">
-    <SectionIntro index="05" eyebrow="Life Scenes / 生活场景" title="把喜欢的气息，放进真实的生活。" en="Find a feeling for a real room." body="精选三个入口，先看心意如何走进生活，再决定你想留下什么。" />
-    <div class="gallery-grid">{featuredScenes.map((item) => <InspirationCard item={item} />)}</div>
-    <a class="btn btn-secondary section-end-link" href="/scenes/" data-event="scene_view">查看全部生活场景 →</a>
+  <section class="container section closing" aria-labelledby="closing-title">
+    <span class="eyebrow">04 / 与我们聊聊</span>
+    <h2 id="closing-title" class="serif">每一份心意，都值得被认真对待。</h2>
+    <p>无需先懂艺术，我们先聊聊您想表达的话。</p>
+    <a class="btn btn-primary" href="/contact/" data-event="custom_inquiry_start">与我们聊聊 →</a>
   </section>
-
-  <section class="business-section" aria-labelledby="business-title">
-    <div class="business-copy"><span class="eyebrow">06 / Corporate Gifting</span><h2 id="business-title" class="serif">为企业和团队，定制一份可被记住的心意。</h2><p lang="en">For teams, spaces and occasions that deserve a thoughtful visual language.</p><p>企业礼赠、文化空间和品牌活动，都可以从一个共同的意图开始。先提交场景，再确认内容与边界。</p><a class="btn btn-primary" href="/business-gifts/" data-event="business_inquiry_start">了解企业礼赠方案 →</a></div>
-    <div class="business-list"><div><span class="mono">01</span><span>企业礼赠 / Corporate gifting</span></div><div><span class="mono">02</span><span>团队与活动 / Team occasions</span></div><div><span class="mono">03</span><span>文化空间 / Cultural spaces</span></div><div><span class="mono">04</span><span>品牌活动 / Brand events</span></div></div>
-  </section>
-
-  <section class="container section final-cta" aria-labelledby="final-cta-title"><span class="eyebrow">07 / Start a conversation</span><h2 id="final-cta-title" class="serif">准备好送出这份心意了吗？</h2><p>带来一个具体的人、一个时刻，或一句想说的话，剩下的交给我们。</p><div><a class="btn btn-primary home-cinnabar-cta" href="/custom-commission/" data-event="custom_inquiry_start">快速留言 →</a><a class="btn btn-secondary" href="/help/">查看常见问题</a></div><small>提交后我们会尽快回复；急事可直接扫码加页脚微信。</small></section>
 </Layout>
 <style>
-  .home-cinnabar-cta { background: var(--cinnabar); color: #fff; border-color: var(--cinnabar); }
-  .home-cinnabar-cta:hover { background: var(--cinnabar-deep); border-color: var(--cinnabar-deep); }
-  .hero { min-height: 680px; padding: 88px 0 100px; display: grid; grid-template-columns: 1fr .85fr; gap: 86px; align-items: center; }
-  .hero h1 { font-size: clamp(30px, 3.4vw, 46px); line-height: 1.35; font-weight: 500; margin: 20px 0 22px; letter-spacing: .02em; }
-  .hero-en { font: 21px / 1.5 var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); margin: 0 0 20px; }
-  .hero-body { max-width: 560px; color: var(--ink-soft); font-size: 18px; line-height: 1.8; }
-  .hero-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 28px; }
-  .hero-note { color: var(--muted); font-size: 12px; line-height: 1.7; margin-top: 18px; }
-  .hero-visual { padding: 24px; background: var(--paper-deep); }
-  .hero-art { aspect-ratio: .9; border: 1px solid var(--line); background: var(--paper-light); display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--cinnabar); position: relative; }
-  .hero-art::before, .hero-art::after { content: ''; position: absolute; border: 1px solid rgba(43, 41, 36, .18); width: 64%; height: 66%; transform: rotate(-7deg); }
-  .hero-art::after { width: 42%; height: 53%; transform: rotate(11deg); border-color: rgba(165, 72, 59, .36); }
-  .hero-art span { position: relative; z-index: 1; font-size: 150px; }
-  .hero-art small { position: relative; z-index: 1; font: 10px var(--font-mono); color: var(--ink-soft); letter-spacing: .12em; }
-  .hero-caption { font-size: 12px; color: var(--ink-soft); margin: 14px 0 0; }
-  .trust-bar { display: grid; grid-template-columns: repeat(4, 1fr); border-block: 1px solid var(--line); padding: 20px 0; gap: 24px; }
-  .trust-bar div { display: flex; flex-direction: column; gap: 6px; }
-  .trust-bar strong { font-size: 15px; font-weight: 500; }
-  .trust-bar small { color: var(--muted); font-size: 11px; }
-  .process-section, .directions-section, .gift-preview, .inspiration-section, .final-cta { border-top: 1px solid var(--line); }
-  .process-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-block: 1px solid var(--line); margin-bottom: 30px; }
-  .process-step { min-height: 245px; padding: 20px 20px 24px 0; }
-  .process-step + .process-step { border-left: 1px solid var(--line); padding-left: 20px; }
-  .process-step > span { color: var(--cinnabar); }
-  .process-step h3 { font-size: 22px; font-weight: 500; margin: 38px 0 8px; }
-  .process-step p { color: var(--ink-soft); font-size: 14px; line-height: 1.8; }
-  .process-step small { display: block; margin-top: 22px; color: var(--cinnabar-deep); font-size: 12px; }
-  .direction-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-block: 1px solid var(--line); }
-  .direction-grid article { min-height: 260px; padding: 22px 22px 26px 0; display: flex; flex-direction: column; }
-  .direction-grid article + article { border-left: 1px solid var(--line); padding-left: 22px; }
-  .direction-grid h3 { font-size: 22px; font-weight: 500; line-height: 1.4; margin: 22px 0 10px; }
-  .direction-grid p { color: var(--ink-soft); font-size: 14px; line-height: 1.8; }
-  .direction-grid .btn { margin-top: auto; }
-  .gift-tier-preview { display: grid; grid-template-columns: repeat(3, 1fr); border-block: 1px solid var(--line); }
-  .gift-tier-preview a { display: block; padding: 24px 22px 28px 0; }
-  .gift-tier-preview a + a { border-left: 1px solid var(--line); padding-left: 22px; }
-  .gift-tier-preview strong { display: block; margin: 18px 0 8px; font: 24px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); }
-  .gift-tier-preview p { margin: 0 0 16px; color: var(--ink-soft); font-size: 14px; }
-  .tier-detail { color: var(--cinnabar); font-size: 12px; }
-  .gift-preview-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 24px; }
-  .gift-products-mini { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 30px; }
-  .gift-products-mini a { border-top: 1px solid var(--line); padding-top: 14px; }
-  .gift-products-mini span, .gift-products-mini small { display: block; color: var(--muted); font-size: 11px; }
-  .gift-products-mini strong { display: block; margin: 9px 0 6px; font-size: 19px; font-weight: 500; }
-  .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-  .section-end-link { display: inline-flex; margin-top: 30px; }
-  .business-section { display: grid; grid-template-columns: 1.1fr .9fr; gap: 90px; background: var(--ink); color: var(--paper-light); padding: 88px max(24px, calc((100vw - var(--container)) / 2)); width: 100%; max-width: none; }
-  .business-copy { max-width: 650px; }
-  .business-copy h2 { font-size: clamp(26px, 2.8vw, 40px); font-weight: 500; line-height: 1.4; margin: 18px 0; }
-  .business-copy p { color: #d8d1c5; max-width: 610px; line-height: 1.8; }
-  .business-copy p[lang='en'] { font: 20px / 1.5 var(--font-display-en), Georgia, serif; color: var(--paper); }
-  .business-copy .btn { margin-top: 20px; }
-  .business-list { border-top: 1px solid rgba(244, 239, 229, .3); align-self: center; }
-  .business-list div { display: flex; gap: 22px; padding: 19px 0; border-bottom: 1px solid rgba(244, 239, 229, .3); color: var(--paper); }
-  .business-list .mono { color: var(--gilt); }
-  .final-cta { text-align: center; padding-bottom: 100px; }
-  .final-cta h2 { font-size: clamp(28px, 3.6vw, 48px); font-weight: 500; margin: 20px 0; }
-  .final-cta p { max-width: 610px; margin: 0 auto; color: var(--ink-soft); font-size: 17px; line-height: 1.8; }
-  .final-cta div { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin: 28px 0 16px; }
-  .final-cta small { color: var(--muted); font-size: 12px; }
+  .hero { position: relative; min-height: min(88vh, 820px); display: flex; align-items: center; overflow: hidden; }
+  .hero-media { position: absolute; inset: 0; }
+  .hero-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .hero-media::after { content: ''; position: absolute; inset: 0; background: linear-gradient(100deg, rgba(244, 239, 229, .96) 0%, rgba(244, 239, 229, .86) 42%, rgba(244, 239, 229, .42) 100%); }
+  .hero-inner { position: relative; z-index: 1; padding: 96px 0; }
+  .hero h1 { font-size: clamp(38px, 5.6vw, 72px); line-height: 1.25; font-weight: 500; letter-spacing: .04em; margin: 22px 0 26px; }
+  .hero-sub { max-width: 460px; color: var(--ink-soft); font-size: 17px; line-height: 2; margin: 0 0 34px; }
+  .hero-cta { min-width: 200px; }
+  .choices, .stories, .process, .closing { border-top: 1px solid var(--line-soft); }
+  .section-lead { max-width: 560px; margin-bottom: 44px; }
+  .section-lead h2 { font-size: clamp(24px, 2.8vw, 38px); font-weight: 500; line-height: 1.4; margin: 14px 0 12px; letter-spacing: .02em; }
+  .section-lead p { color: var(--ink-soft); margin: 0; line-height: 1.9; }
+  .choice-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+  .choice-card { display: flex; flex-direction: column; }
+  .choice-card figure { margin: 0; overflow: hidden; aspect-ratio: 4 / 5; background: var(--paper-deep); }
+  .choice-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease, filter .5s ease; }
+  .choice-card:hover img { transform: scale(1.035); filter: brightness(1.05); }
+  .choice-copy { padding: 18px 2px 0; }
+  .choice-copy h3 { font-size: 20px; font-weight: 500; margin: 0 0 8px; }
+  .choice-copy p { color: var(--ink-soft); font-size: 14px; line-height: 1.8; margin: 0 0 14px; }
+  .choice-meta { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .choice-meta .price { color: var(--cinnabar-deep); font-size: 13px; }
+  .choice-meta .card-link { color: var(--cinnabar); font-size: 12px; white-space: nowrap; }
+  .story-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; }
+  .story-card { display: grid; grid-template-columns: .9fr 1.1fr; border: 1px solid var(--line); background: var(--paper-light); }
+  .story-card figure { margin: 0; overflow: hidden; }
+  .story-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease, filter .5s ease; }
+  .story-card:hover img { transform: scale(1.03); filter: brightness(1.05); }
+  .story-copy { padding: 26px 26px 24px; display: flex; flex-direction: column; gap: 12px; }
+  .story-copy h3 { font-size: 19px; font-weight: 500; margin: 0; line-height: 1.5; }
+  .story-copy blockquote { margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.95; }
+  .story-tag { margin-top: auto; color: var(--muted); font-size: 11px; letter-spacing: .08em; }
+  .stories-more { margin-top: 30px; }
+  .process-rail { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px; }
+  .process-card { border-top: 1px solid var(--line); padding: 22px 18px 0 0; }
+  .step-no { color: var(--cinnabar); font-size: 13px; }
+  .process-card h3 { font-size: 22px; font-weight: 500; margin: 16px 0 10px; }
+  .process-card p { color: var(--ink-soft); font-size: 14px; line-height: 1.9; margin: 0; }
+  .closing { text-align: center; border-top: 1px solid var(--line-soft); }
+  .closing h2 { font-size: clamp(24px, 2.8vw, 36px); font-weight: 500; margin: 16px 0 12px; }
+  .closing p { color: var(--ink-soft); margin: 0 0 28px; }
+  @media (max-width: 900px) { .choice-grid { gap: 20px; } .story-card { grid-template-columns: 1fr; } .story-card figure { aspect-ratio: 16 / 9; } }
   @media (max-width: 767px) {
-    .hero { min-height: 0; padding: 58px 0 66px; display: block; }
-    .hero h1 { font-size: clamp(26px, 7.2vw, 34px); }
-    .hero-en { font-size: 18px; }
-    .hero-body { font-size: 16px; }
-    .hero-actions { display: grid; gap: 12px; }
-    .hero-actions .btn { width: 100%; }
-    .hero-visual { margin-top: 42px; }
-    .trust-bar, .process-grid, .direction-grid, .gift-tier-preview, .gift-products-mini, .business-section { grid-template-columns: 1fr; }
-    .trust-bar { gap: 16px; }
-    .process-step, .process-step + .process-step { min-height: 0; padding: 20px 0; border-left: 0; border-bottom: 1px solid var(--line); }
-    .process-step:last-child { border-bottom: 0; }
-    .process-step h3 { margin: 14px 0 8px; }
-    .direction-grid article, .direction-grid article + article { min-height: 0; padding: 22px 0; border-left: 0; border-bottom: 1px solid var(--line); }
-    .direction-grid article:last-child { border-bottom: 0; }
-    .gift-tier-preview a, .gift-tier-preview a + a { padding: 20px 0; border-left: 0; border-bottom: 1px solid var(--line); }
-    .gift-tier-preview a:last-child { border-bottom: 0; }
-    .gift-preview-actions, .final-cta div { display: grid; }
-    .gift-preview-actions .btn, .final-cta .btn { width: 100%; }
-    .gift-products-mini { gap: 16px; }
-    .business-section { padding-block: 64px; gap: 38px; }
-    .business-copy h2 { font-size: 26px; }
-    .final-cta { padding-bottom: 86px; }
+    .hero { min-height: 78vh; }
+    .hero-media::after { background: linear-gradient(180deg, rgba(244, 239, 229, .94) 0%, rgba(244, 239, 229, .78) 60%, rgba(244, 239, 229, .5) 100%); }
+    .hero-inner { padding: 72px 0; }
+    .hero h1 { font-size: clamp(34px, 10vw, 46px); }
+    .hero-sub { font-size: 15px; }
+    .section { padding: 56px 0; }
+    .section-lead { margin-bottom: 30px; }
+    .choice-grid { grid-template-columns: 1fr; gap: 34px; }
+    .choice-card figure { aspect-ratio: 4 / 3; }
+    .story-grid { grid-template-columns: 1fr; gap: 20px; }
+    .process-rail { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 16px; padding-bottom: 8px; margin: 0 -16px; padding-inline: 16px; }
+    .process-card { flex: 0 0 74%; scroll-snap-align: start; }
   }
 </style>

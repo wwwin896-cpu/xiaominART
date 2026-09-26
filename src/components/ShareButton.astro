@@ -1,8 +1,9 @@
 ---
 // 全站分享按钮：移动端唤起系统分享面板（微信好友 / 朋友圈），桌面端复制链接；
 // 微信内置浏览器提示使用右上角菜单分享。
+// 形态：桌面为印章按钮上方的「分享」胶囊；移动端为拇指区内的圆形图标钮。
 ---
-<button class="share-button" type="button" data-event="share_click" aria-label="分享本页给微信好友或朋友圈"><span class="share-glyph" aria-hidden="true">↗</span><span class="share-label">分享</span></button>
+<button class="share-button" type="button" data-event="share_click" aria-label="分享本页给微信好友或朋友圈"><svg class="share-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true"><path d="M12 15V4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M8 7.5 12 3.5l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.5 11H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span class="share-label">分享</span></button>
 <div class="share-toast" data-share-toast role="status" aria-live="polite" hidden></div>
 <script>
   const button = document.querySelector<HTMLButtonElement>('.share-button');
@@ -28,12 +29,12 @@
   button?.addEventListener('click', async () => {
     const shareData: ShareData = {
       title: document.title.replace(/｜小民艺术.*$/, '').replace(/｜XIAOMINART.*$/i, '') || '小民艺术',
-      text: document.querySelector<HTMLMetaElement>('meta[name="description"]')?.content || '小民好礼，为重要的人选一份心意。',
+      text: '方寸之境，也藏山河。' + (document.querySelector<HTMLMetaElement>('meta[name="description"]')?.content || ''),
       url: window.location.href,
     };
     const inWeChat = /MicroMessenger/i.test(navigator.userAgent);
     if (inWeChat) {
-      showToast('在微信里点右上角「···」，选择「发送给朋友」或「分享到朋友圈」');
+      showToast('点右上角「···」，即可发送给朋友或分享到朋友圈');
       await copy(window.location.href);
       return;
     }
@@ -45,13 +46,15 @@
   });
 </script>
 <style>
-  .share-button { position: fixed; right: 22px; bottom: 90px; z-index: 12; display: flex; align-items: center; gap: 6px; padding: 10px 14px; min-height: 44px; border: 1px solid var(--ink); background: var(--paper-light); color: var(--ink); box-shadow: var(--shadow); cursor: pointer; }
-  .share-button:hover { border-color: var(--cinnabar); color: var(--cinnabar); }
-  .share-glyph { font-size: 14px; line-height: 1; }
-  .share-label { font-size: 12px; letter-spacing: .06em; }
-  .share-toast { position: fixed; left: 50%; bottom: 84px; transform: translateX(-50%); z-index: 16; max-width: min(86vw, 420px); padding: 12px 18px; background: var(--ink); color: var(--paper-light); font-size: 13px; line-height: 1.6; text-align: center; box-shadow: var(--shadow); }
+  .share-button { position: fixed; right: 20px; bottom: 86px; z-index: 12; display: flex; align-items: center; justify-content: center; gap: 7px; min-width: 52px; min-height: 44px; padding: 10px 16px; border: 1px solid var(--line); border-radius: 26px; background: var(--paper-light); color: var(--ink-soft); box-shadow: var(--shadow); cursor: pointer; transition: transform .2s ease, color .2s ease, border-color .2s ease; }
+  .share-button:hover { color: var(--cinnabar); border-color: var(--cinnabar); transform: translateY(-2px); }
+  .share-button:active { transform: scale(.94); }
+  .share-icon { flex-shrink: 0; }
+  .share-label { font-size: 12px; letter-spacing: .14em; }
+  .share-toast { position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%); z-index: 16; max-width: min(86vw, 420px); padding: 12px 18px; background: var(--ink); color: var(--paper-light); font-size: 13px; line-height: 1.6; text-align: center; box-shadow: var(--shadow); }
   @media (max-width: 767px) {
-    .share-button { right: 14px; bottom: calc(146px + env(safe-area-inset-bottom)); padding: 9px 12px; }
-    .share-toast { bottom: 132px; }
+    .share-button { right: 15px; bottom: calc(150px + env(safe-area-inset-bottom)); width: 46px; height: 46px; min-width: 46px; min-height: 46px; padding: 0; border-radius: 50%; background: rgba(250, 247, 240, .96); }
+    .share-label { display: none; }
+    .share-toast { bottom: calc(210px + env(safe-area-inset-bottom)); }
   }
 </style>

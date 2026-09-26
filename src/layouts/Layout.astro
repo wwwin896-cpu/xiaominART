@@ -33,7 +33,7 @@ const isCurrent = (href: string) => { const normalized = href.replace(/\/$/, '')
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={new URL(image, Astro.site ?? Astro.url).href} />
     <meta name="theme-color" content="#f4efe5" />
-    <script type="application/ld+json" is:inline set:html={JSON.stringify({ '@context': 'https://schema.org', '@type': 'LocalBusiness', name: '小民艺术', alternateName: 'Xiaomin Art', description, url, email: 'hello@xiaominart.com', priceRange: '咨询制', areaServed: 'CN' })} />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify({ '@context': 'https://schema.org', '@type': 'LocalBusiness', name: '小民艺术', alternateName: 'Xiaomin Art', description, url, email: 'hi@xiaominart.com', priceRange: '咨询制', areaServed: 'CN' })} />
     <link rel="icon" href="/assets/brand/xiaominart-logo-icon.svg" />
     <title>{seoTitle}</title>
   </head>
@@ -41,28 +41,28 @@ const isCurrent = (href: string) => { const normalized = href.replace(/\/$/, '')
     <a class="skip-link" href="#main">跳到主要内容</a>
     <header class="site-header" data-component="site-header">
       <div class="container header-inner">
-        <a class="brand" href="/" aria-label="小民艺术｜日常之礼首页"><img class="brand-logo" src="/assets/brand/xiaominart-logo.svg" alt="小民艺术｜日常之礼 XIAOMINART" /></a>
+        <a class="brand" href="/" aria-label="小民艺术｜日常之礼首页"><img class="brand-logo" src="/assets/brand/xiaominart-logo.svg" width="270" height="51" alt="小民艺术 XIAOMINART｜方寸之境，也藏山河" /></a>
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">菜单 / Menu</button>
         <nav id="site-nav" aria-label="主导航">
           {navItems.map((item) => <div class="nav-item"><a href={item.href} class:list={{ current: isCurrent(item.href) }} aria-current={isCurrent(item.href) ? 'page' : undefined}><span>{item.zh}</span><small lang="en">{item.en}</small></a>{item.children?.length ? <div class="nav-dropdown">{item.children.map((child) => <a href={child.href}><span>{child.zh}</span><small lang="en">{child.en}</small></a>)}</div> : null}</div>)}
         </nav>
-        <a class="header-cta" href="/custom-commission/" data-event="commission_open">马上咨询 <span>→</span></a>
+        <a class="header-cta" href="/contact/" data-event="commission_open">与我们聊聊 <span>→</span></a>
       </div>
     </header>
     <main id="main"><slot /></main>
     <FloatingConsultation />
     <ShareButton />
-    <nav class="mobile-shopping-bar" aria-label="移动端快捷操作"><a href="/gifts/" aria-label="打开小民好礼">好礼</a><a href="/gift-guide/" aria-label="打开选礼指南">选礼</a><a href="/custom-commission/" aria-label="马上咨询">咨询</a></nav>
+    <nav class="mobile-shopping-bar" aria-label="移动端底部导航"><a href="/gifts/" aria-label="浏览小民好礼"><span class="bar-zh">礼物</span><small lang="en">Gifts</small></a><a href="/scenes/" aria-label="浏览生活场景"><span class="bar-zh">场景</span><small lang="en">Scenes</small></a><a href="/journal/" aria-label="阅读静气生活"><span class="bar-zh">故事</span><small lang="en">Stories</small></a><a href="/gift-guide/#wishlist" aria-label="我的心愿单"><span class="bar-zh">我的</span><small lang="en">Mine <span data-wishlist-count></span></small></a></nav>
     <footer class="site-footer" data-component="site-footer">
       <div class="container footer-grid">
-        <div><p class="eyebrow">XIAOMINART / 日常之礼</p><p class="footer-claim serif">见字如面，<br />郑重表达。</p><p class="muted">A thoughtful everyday gift, made with intention.</p></div>
+        <div><p class="eyebrow">XIAOMINART / 日常之礼</p><p class="footer-claim serif">愿你在这方寸之间，<br />找到属于自己的山河。</p><p class="muted">方寸之境，也藏山河。A quiet corner for what you want to say.</p></div>
         <div><p class="eyebrow">Explore</p>{navItems.slice(0, 5).map((item) => <a href={item.href}>{item.zh}<small lang="en">{item.en}</small></a>)}</div>
-        <div><p class="eyebrow">Connect</p><a href="/gifts/">小民好礼 / Xiaomin Gifts</a><a href="/gift-guide/">选礼指南 / Gift Guide</a><a href="/journal/">Journal / 创作笔记</a><a href="/pricing-guide/">定价参考 / Pricing</a><a href="/contact/">Contact / 联系</a><a href="/help/">Help / 帮助中心</a><a class="footer-cta" href="/custom-commission/">马上咨询 / Start a chat →</a></div>
+        <div><p class="eyebrow">Connect</p><a href="/gift-guide/">送礼指南 / Gift Guide</a><a href="/journal/">静气生活 / Quiet Living</a><a href="/business-gifts/">企业礼赠 / Business Gifts</a><a href="/about/">关于我们 / About</a><a href="/contact/">联系 / Contact</a><a href="/help/">FAQ / 常见问题</a><a class="footer-cta" href="/contact/">与我们聊聊 →</a></div>
         <div class="footer-contact"><p class="eyebrow">Contact / 联系</p><a href={`mailto:${siteContact.email}`}>{siteContact.email}</a>{siteContact.wechatId ? <p>微信 / 企业微信：<strong>{siteContact.wechatId}</strong>（备注来意，尽快回复）</p> : siteContact.wechatQr ? <p>微信 / 企业微信：扫码添加（备注来意，尽快回复）</p> : <p>微信 / 企业微信：提交<a href="/custom-commission/">定制咨询表单</a>并留下你的微信号，我们会主动添加你。</p>}{siteContact.wechatQr ? <a class="wechat-qr-link" href={siteContact.wechatQr} target="_blank" rel="noopener" title="点击查看大图，长按识别添加"><img class="wechat-qr" src={siteContact.wechatQr} width="112" height="112" alt="小民艺术微信二维码" loading="lazy" /></a> : null}<p>送礼问题可先从送礼指南开始；需要个性化建议，可提交咨询。</p></div>
       </div>
       <div class="container trust-signals" aria-label="信息边界 / Information boundaries"><div><span class="eyebrow">Artist / 艺术家</span><strong>由具体创作方向与沟通内容开始</strong></div><div><span class="eyebrow">Projects / 项目</span><strong>已确认内容才会公开呈现</strong></div><div><span class="eyebrow">Privacy / 隐私</span><strong>客户故事与图像获得授权后发布</strong></div><p>我们不使用未经核验的客户数量、媒体曝光或合作机构作为背书。</p></div>
       <div class="container"><Newsletter /></div>
-      <div class="container footer-bottom"><span>© {new Date().getFullYear()} XIAOMINART</span><span>案例仅作风格参考，不售卖同款 | For reference only, identical artwork is not for sale.</span></div>
+      <div class="container footer-bottom"><span>© {new Date().getFullYear()} XIAOMINART | 守艺 · 传情</span><span>世间无双，只此一幅 | Every piece is one of a kind, inspired by real stories.</span></div>
     </footer>
   </body>
 </html>
@@ -92,7 +92,7 @@ const isCurrent = (href: string) => { const normalized = href.replace(/\/$/, '')
 <style>
   .site-header { position: sticky; top: 0; z-index: 5; background: rgba(244, 239, 229, .96); border-bottom: 1px solid var(--line); backdrop-filter: blur(8px); }
   .header-inner { min-height: 80px; display: flex; align-items: center; gap: 26px; }
-  .brand { display: flex; align-items: center; min-width: 280px; }
+  .brand { display: flex; align-items: center; min-width: 280px; flex-shrink: 0; }
   .brand-logo { display: block; width: 270px; height: auto; }
   .brand-subtitle { color: var(--ink-soft); width: 280px; font-size: 12px; letter-spacing: .08em; line-height: 1.3; white-space: nowrap; text-align: left; }
   .mobile-shopping-bar { display: none; }
@@ -151,10 +151,12 @@ const isCurrent = (href: string) => { const normalized = href.replace(/\/$/, '')
     .footer-bottom { display: block; }
      .footer-bottom span { display: block; margin-top: 8px; }
      .site-footer { padding-top: 56px; padding-bottom: 92px; }
-     .mobile-shopping-bar { position: fixed; top: auto; display: grid; grid-template-columns: repeat(3, 1fr); left: 0; right: 0; bottom: 0; z-index: 8; background: rgba(250, 247, 240, .98); border-top: 1px solid var(--line); box-shadow: 0 -8px 24px rgba(77, 56, 34, .08); padding: 6px 8px calc(6px + env(safe-area-inset-bottom)); }
-     .mobile-shopping-bar a { min-height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--ink-soft); font-size: 12px; letter-spacing: .08em; }
-     .mobile-shopping-bar a:first-child { color: var(--cinnabar); }
-     .mobile-shopping-bar span { color: var(--cinnabar); font-family: var(--font-mono); }
+     .mobile-shopping-bar { position: fixed; top: auto; display: grid; grid-template-columns: repeat(4, 1fr); left: 0; right: 0; bottom: 0; z-index: 8; background: rgba(250, 247, 240, .98); border-top: 1px solid var(--line); box-shadow: 0 -8px 24px rgba(77, 56, 34, .08); padding: 7px 8px calc(7px + env(safe-area-inset-bottom)); }
+     .mobile-shopping-bar a { min-height: 50px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--ink-soft); }
+     .mobile-shopping-bar .bar-zh { font-size: 13px; letter-spacing: .12em; }
+     .mobile-shopping-bar small { font-size: 9px; color: var(--muted); font-family: var(--font-body-en), sans-serif; letter-spacing: .1em; text-transform: uppercase; }
+     .mobile-shopping-bar a:first-child .bar-zh { color: var(--cinnabar); }
+     .mobile-shopping-bar span[data-wishlist-count] { color: var(--cinnabar); font-family: var(--font-mono); }
    }
   }
 </style>

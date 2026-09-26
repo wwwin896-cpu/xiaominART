@@ -5,7 +5,7 @@
 // publishableKey 已收敛到服务端，不再进入前端打包产物。
 export type SubmitOutcome = { ok: boolean; message?: string };
 
-const FALLBACK_EMAIL = 'hello@xiaominart.com';
+const FALLBACK_EMAIL = 'hi@xiaominart.com';
 export const CONTACT_FALLBACK = `如持续失败，可直接邮件联系 ${FALLBACK_EMAIL}。`;
 
 const API_URL = '/api/lead/';

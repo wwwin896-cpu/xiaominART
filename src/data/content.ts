@@ -1,18 +1,15 @@
 export const navItems = [
   {
-    href: '/gifts/', zh: '小民好礼', en: 'Xiaomin Gifts', children: [
-      { href: '/gifts/', zh: '全部小民好礼', en: 'All Gifts' },
-      { href: '/gifts/?collection=seasonal', zh: '新品 / 节气系列', en: 'New / Seasonal' },
-    ],
-  },
-  {
-    href: '/gift-guide/', zh: '选礼指南', en: 'Gift Guide', children: [
+    href: '/gift-guide/', zh: '送礼指南', en: 'Gift Guide', children: [
       { href: '/gift-guide/by-occasion/', zh: '按场合选礼', en: 'By Occasion' },
       { href: '/gift-guide/by-recipient/', zh: '按对象选礼', en: 'By Recipient' },
+      { href: '/gifts/', zh: '小民好礼', en: 'Xiaomin Gifts' },
     ],
   },
-  { href: '/business-gifts/', zh: '企业礼赠', en: 'Corporate Gifting', children: [] },
-  { href: '/about/', zh: '品牌故事', en: 'Our Story', children: [] },
+  { href: '/scenes/', zh: '生活场景', en: 'Scenes', children: [] },
+  { href: '/artists/', zh: '艺术家', en: 'Artists', children: [] },
+  { href: '/business-gifts/', zh: '企业定制', en: 'Business', children: [] },
+  { href: '/about/', zh: '关于我们', en: 'About', children: [] },
 ];
 
 export const processSteps = [
