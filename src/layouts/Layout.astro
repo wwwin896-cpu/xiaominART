@@ -59,7 +59,7 @@ const isCurrent = (href: string) => { const normalized = href.replace(/\/$/, '')
         <div class="footer-contact"><p class="eyebrow">Contact / 联系</p><a href={`mailto:${siteContact.email}`}>{siteContact.email}</a>{siteContact.wechatId ? <p>微信 / 企业微信：<strong>{siteContact.wechatId}</strong>（备注来意，尽快回复）</p> : siteContact.wechatQr ? <p>微信 / 企业微信：扫码添加（备注来意，尽快回复）</p> : <p>微信 / 企业微信：提交<a href="/custom-commission/">定制咨询表单</a>并留下你的微信号，我们会主动添加你。</p>}{siteContact.wechatQr ? <a class="wechat-qr-link" href={siteContact.wechatQr} target="_blank" rel="noopener" title="点击查看大图，长按识别添加"><img class="wechat-qr" src={siteContact.wechatQr} width="112" height="112" alt="小民艺术微信二维码" loading="lazy" /></a> : null}<p>送礼问题可先从送礼指南开始；需要个性化建议，可提交咨询。</p></div>
       </div>
       <div class="container trust-signals" aria-label="信息边界 / Information boundaries"><div><span class="eyebrow">Artist / 艺术家</span><strong>由具体创作方向与沟通内容开始</strong></div><div><span class="eyebrow">Projects / 项目</span><strong>已确认内容才会公开呈现</strong></div><div><span class="eyebrow">Privacy / 隐私</span><strong>客户故事与图像获得授权后发布</strong></div><p>我们不使用未经核验的客户数量、媒体曝光或合作机构作为背书。</p></div>
-      <div class="container"><Newsletter /></div>
+      <div class="container footer-newsletter"><Newsletter /></div>
       <div class="container footer-bottom"><span>© {new Date().getFullYear()} XIAOMINART | 守艺 · 传情</span><span>世间无双，只此一幅 | Every piece is one of a kind, inspired by real stories.</span></div>
     </footer>
   </body>
@@ -143,9 +143,7 @@ const isCurrent = (href: string) => { const normalized = href.replace(/\/$/, '')
     nav a:last-child { border-bottom: 0; }
     .footer-grid { grid-template-columns: 1fr 1fr; }
     .footer-grid > div:first-child { grid-column: 1 / -1; }
-    .footer-contact { grid-column: 1 / -1; }
-    .trust-signals { grid-template-columns: 1fr; gap: 16px; margin-top: 36px; }
-    .trust-signals p { grid-column: auto; }
+    .footer-contact, .trust-signals, .footer-newsletter { display: none; }
     .footer-bottom { display: block; }
      .footer-bottom span { display: block; margin-top: 8px; }
      .site-footer { padding-top: 56px; padding-bottom: 92px; }
