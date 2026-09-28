@@ -23,6 +23,12 @@ const staticPaths = [
   'scenes/',
   'artists/',
   'business-gifts/',
+  // 机构合作（2026-09-28 新增一级导航）
+  'partners/',
+  'partners/publishing/',
+  'partners/museum-tourism/',
+  'partners/heritage/',
+  'partners/cases/',
   'about/',
   // 转化与信任
   'custom-commission/',

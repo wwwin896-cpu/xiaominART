@@ -1,0 +1,23 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ImageSlot from '../../components/ImageSlot.astro';
+---
+<Layout title="博物馆与文旅｜机构合作｜小民艺术" description="面向博物馆、景区与文化空间的文创衍生、空间视觉与活动伴手礼合作方向。">
+  <section class="container page-head"><span class="eyebrow">Museum & Tourism / 博物馆与文旅</span><h1 class="serif">让展览与旅程，<br />多一处可以停留的画面。</h1><p lang="en">Quiet companions for exhibitions and journeys.</p><p>面向博物馆、纪念馆、景区与文化空间，我们提供文创衍生设计、空间视觉、活动伴手礼与展陈题字等合作方向。所有画面都从馆藏与在地故事出发，不套模板，不追热闹。</p></section>
+  <section class="container direction-list">
+    <article><div class="direction-media"><ImageSlot label="文创衍生方向 · 图片预留" ratio="0.78" /></div><div class="direction-copy"><span class="eyebrow">01 / Cultural derivatives</span><h2 class="serif">文创衍生</h2><p>从馆藏元素或在地意象出发，开发书签、笺纸、卷轴小礼、印章卡片等轻量衍生品；支持从单品到系列的设计协作。</p></div></article>
+    <article><div class="direction-media"><ImageSlot label="空间视觉方向 · 图片预留" ratio="0.78" /></div><div class="direction-copy"><span class="eyebrow">02 / Spatial visuals</span><h2 class="serif">空间视觉</h2><p>为展厅、游客中心与文化空间提供题字、插画墙面与导览视觉方向，让空间有自己的安静识别。</p></div></article>
+    <article><div class="direction-media"><ImageSlot label="活动伴手礼方向 · 图片预留" ratio="0.78" /></div><div class="direction-copy"><span class="eyebrow">03 / Event keepsakes</span><h2 class="serif">活动伴手礼</h2><p>为特展开幕、文化活动与节庆定制伴手礼：从画面、包装到寄语卡片，按活动气质整体考虑。</p></div></article>
+  </section>
+  <section class="container section process-note"><span class="eyebrow">Process / 合作流程</span><h2 class="serif">从馆藏与在地故事开始聊。</h2><p>合作从资料沟通开始：馆藏或在地素材、受众与场景、时间与预算范围。我们会先给出方向判断与样稿建议，确认后再进入正式设计；涉及馆藏素材的使用授权，以机构的规定为准。</p><a class="btn btn-primary" href="/custom-commission/">聊聊你的空间 →</a></section>
+</Layout>
+<style>
+  .page-head { padding: 90px 0 66px; border-bottom: 1px solid var(--line); } .page-head h1 { font-size: clamp(40px, 5.4vw, 72px); line-height: 1.22; font-weight: 500; margin: 20px 0; } .page-head p { max-width: 720px; color: var(--ink-soft); font-size: 18px; } .page-head p[lang='en'] { font: 24px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); }
+  .direction-list { display: grid; gap: 0; padding: 26px 0 40px; }
+  .direction-list article { display: grid; grid-template-columns: 300px 1fr; gap: 30px; padding: 34px 0; border-bottom: 1px solid var(--line); align-items: start; }
+  .direction-media { max-width: 300px; }
+  .direction-copy h2 { font-size: 30px; font-weight: 500; margin: 8px 0 10px; }
+  .direction-copy p { color: var(--ink-soft); font-size: 14px; max-width: 640px; }
+  .process-note h2 { font-size: 34px; font-weight: 500; margin: 14px 0; } .process-note p { max-width: 720px; color: var(--ink-soft); } .process-note .btn { margin-top: 16px; }
+  @media (max-width: 767px) { .page-head { padding: 56px 0 42px; } .page-head h1 { font-size: 42px; } .page-head p { font-size: 16px; } .page-head p[lang='en'] { font-size: 20px; } .direction-list article { grid-template-columns: 1fr; gap: 16px; padding: 26px 0; } .direction-media { max-width: 260px; } .direction-copy h2 { font-size: 25px; } .process-note h2 { font-size: 29px; } }
+</style>

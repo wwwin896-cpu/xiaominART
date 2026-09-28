@@ -1,0 +1,23 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ImageSlot from '../../components/ImageSlot.astro';
+---
+<Layout title="非遗面塑活动｜机构合作｜小民艺术" description="面向校园、社区与机构的非遗面塑体验活动：从材料到故事，把一段有来处的时间交到手上。">
+  <section class="container page-head"><span class="eyebrow">Heritage Workshops / 非遗面塑活动</span><h1 class="serif">亲手捏一段，<br />有来处的时间。</h1><p lang="en">Dough figurines, made by hand, remembered by heart.</p><p>面塑是一项可以被亲手触碰的非遗。我们面向校园、社区、书店、博物馆与企业组织面塑体验活动：从一团面开始，跟着老师捏出节气、人物与小故事，让传统手艺落在参与者的掌心里。</p></section>
+  <section class="container direction-list">
+    <article><div class="direction-media"><ImageSlot label="校园课堂方向 · 图片预留" ratio="0.78" /></div><div class="direction-copy"><span class="eyebrow">01 / School sessions</span><h2 class="serif">校园课堂</h2><p>按年龄段设计的面塑体验课：认识材料、听一段来历、完成一件小作品。适合手工课、社团活动与文化主题周。</p></div></article>
+    <article><div class="direction-media"><ImageSlot label="社区与公开活动方向 · 图片预留" ratio="0.78" /></div><div class="direction-copy"><span class="eyebrow">02 / Community events</span><h2 class="serif">社区与公开活动</h2><p>节庆市集、社区文化与亲子活动中的面塑体验角：时长灵活、动手为主，适合人数较多的开放场景。</p></div></article>
+    <article><div class="direction-media"><ImageSlot label="机构定制专场方向 · 图片预留" ratio="0.78" /></div><div class="direction-copy"><span class="eyebrow">03 / Bespoke sessions</span><h2 class="serif">机构定制专场</h2><p>为博物馆、书店与企业定制的专场活动：可结合展览主题、节气与企业文化，安排作品主题与带走形式。</p></div></article>
+  </section>
+  <section class="container section process-note"><span class="eyebrow">Process / 活动流程</span><h2 class="serif">把材料、故事和老师一起带来。</h2><p>活动包含：面塑材料与工具、现场教学、作品带走。场次安排、人数与时长在沟通中确认；活动现场照片经参与者与机构授权后，才会用于公开呈现。</p><a class="btn btn-primary" href="/custom-commission/">预约一场活动 →</a></section>
+</Layout>
+<style>
+  .page-head { padding: 90px 0 66px; border-bottom: 1px solid var(--line); } .page-head h1 { font-size: clamp(40px, 5.4vw, 72px); line-height: 1.22; font-weight: 500; margin: 20px 0; } .page-head p { max-width: 720px; color: var(--ink-soft); font-size: 18px; } .page-head p[lang='en'] { font: 24px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); }
+  .direction-list { display: grid; gap: 0; padding: 26px 0 40px; }
+  .direction-list article { display: grid; grid-template-columns: 300px 1fr; gap: 30px; padding: 34px 0; border-bottom: 1px solid var(--line); align-items: start; }
+  .direction-media { max-width: 300px; }
+  .direction-copy h2 { font-size: 30px; font-weight: 500; margin: 8px 0 10px; }
+  .direction-copy p { color: var(--ink-soft); font-size: 14px; max-width: 640px; }
+  .process-note h2 { font-size: 34px; font-weight: 500; margin: 14px 0; } .process-note p { max-width: 720px; color: var(--ink-soft); } .process-note .btn { margin-top: 16px; }
+  @media (max-width: 767px) { .page-head { padding: 56px 0 42px; } .page-head h1 { font-size: 42px; } .page-head p { font-size: 16px; } .page-head p[lang='en'] { font-size: 20px; } .direction-list article { grid-template-columns: 1fr; gap: 16px; padding: 26px 0; } .direction-media { max-width: 260px; } .direction-copy h2 { font-size: 25px; } .process-note h2 { font-size: 29px; } }
+</style>

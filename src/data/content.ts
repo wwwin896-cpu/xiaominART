@@ -31,6 +31,14 @@ export const navItems = [
     ],
   },
   {
+    href: '/partners/', zh: '机构合作', en: 'Partnerships', children: [
+      { href: '/partners/publishing/', zh: '出版社插画', en: 'Publishing' },
+      { href: '/partners/museum-tourism/', zh: '博物馆与文旅', en: 'Museum & Tourism' },
+      { href: '/partners/heritage/', zh: '非遗面塑活动', en: 'Heritage Workshops' },
+      { href: '/partners/cases/', zh: '合作案例', en: 'Case Studies' },
+    ],
+  },
+  {
     href: '/about/', zh: '关于我们', en: 'About', children: [
       { href: '/artists/', zh: '小民其人', en: 'The Maker' },
       { href: '/journal/', zh: '静气生活', en: 'Journal' },

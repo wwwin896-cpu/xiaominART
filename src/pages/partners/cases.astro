@@ -1,0 +1,21 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ImageSlot from '../../components/ImageSlot.astro';
+---
+<Layout title="合作案例｜机构合作｜小民艺术" description="机构合作案例：经授权确认后公开的项目过程与结果记录，正在整理中。">
+  <section class="container page-head"><span class="eyebrow">Case Studies / 合作案例</span><h1 class="serif">已经发生的合作，<br />慢慢讲给你听。</h1><p lang="en">Projects, told only with permission.</p><p>这里的每一个案例，都会在取得机构与参与者授权后完整呈现：合作的起因、过程与最终结果。案例正在整理中，先留好位置——好故事值得被认真讲。</p></section>
+  <section class="container case-list">
+    <article><div class="case-media"><ImageSlot label="案例图 · 图片预留" ratio="1.5" /></div><div class="case-copy"><span class="eyebrow">Case 01 · 整理中</span><h2 class="serif">出版合作 · 待呈现</h2><p>项目背景、画面方向与授权说明，确认后补充。</p></div></article>
+    <article><div class="case-media"><ImageSlot label="案例图 · 图片预留" ratio="1.5" /></div><div class="case-copy"><span class="eyebrow">Case 02 · 整理中</span><h2 class="serif">文博文旅合作 · 待呈现</h2><p>项目背景、画面方向与授权说明，确认后补充。</p></div></article>
+    <article><div class="case-media"><ImageSlot label="案例图 · 图片预留" ratio="1.5" /></div><div class="case-copy"><span class="eyebrow">Case 03 · 整理中</span><h2 class="serif">非遗活动合作 · 待呈现</h2><p>项目背景、活动过程与现场记录，授权后补充。</p></div></article>
+  </section>
+  <section class="container section process-note"><span class="eyebrow">Next / 下一步</span><h2 class="serif">想成为下一个案例？</h2><p>如果你所在的组织正在考虑一次插画、文创或非遗体验合作，欢迎先从一次具体沟通开始。</p><a class="btn btn-primary" href="/custom-commission/">发起合作沟通 →</a></section>
+</Layout>
+<style>
+  .page-head { padding: 90px 0 66px; border-bottom: 1px solid var(--line); } .page-head h1 { font-size: clamp(40px, 5.4vw, 72px); line-height: 1.22; font-weight: 500; margin: 20px 0; } .page-head p { max-width: 720px; color: var(--ink-soft); font-size: 18px; } .page-head p[lang='en'] { font: 24px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); }
+  .case-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px; padding: 40px 0 44px; }
+  .case-copy h2 { font-size: 22px; font-weight: 500; margin: 8px 0 8px; }
+  .case-copy p { color: var(--ink-soft); font-size: 13px; }
+  .process-note { border-top: 1px solid var(--line); padding-top: 44px; } .process-note h2 { font-size: 34px; font-weight: 500; margin: 14px 0; } .process-note p { max-width: 720px; color: var(--ink-soft); } .process-note .btn { margin-top: 16px; }
+  @media (max-width: 767px) { .page-head { padding: 56px 0 42px; } .page-head h1 { font-size: 42px; } .page-head p { font-size: 16px; } .page-head p[lang='en'] { font-size: 20px; } .case-list { grid-template-columns: 1fr; gap: 30px; } .process-note h2 { font-size: 29px; } }
+</style>

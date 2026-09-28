@@ -1,0 +1,14 @@
+---
+// 图片预留占位：机构合作等板块内容扩充前，先占住版面位置。
+// 后续拿到真实图片后，把整个 <ImageSlot /> 替换成 <img src=... /> 即可（样式由外层容器接管）。
+const { label = '图片预留', ratio = '1.35' } = Astro.props;
+---
+<div class="img-slot" style={`aspect-ratio:${ratio}`} role="img" aria-label={label}>
+  <span class="slot-zh">{label}</span>
+  <small lang="en">Image to come</small>
+</div>
+<style>
+  .img-slot { display: grid; place-content: center; gap: 7px; width: 100%; background: var(--paper-deep); border: 1px dashed var(--line); color: var(--muted); text-align: center; }
+  .slot-zh { font-size: 13px; letter-spacing: .2em; color: var(--ink-soft); }
+  .img-slot small { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; font-family: var(--font-body-en), sans-serif; }
+</style>

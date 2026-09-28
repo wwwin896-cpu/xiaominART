@@ -1,0 +1,25 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ImageSlot from '../../components/ImageSlot.astro';
+---
+<Layout title="机构合作｜小民艺术" description="出版社插画、博物馆与文旅、非遗面塑活动——面向机构的插画与艺术合作方向说明。">
+  <section class="container page-head"><span class="eyebrow">Partnerships / 机构合作</span><h1 class="serif">把一份安静的日常，<br />带进更多机构。</h1><p lang="en">Quiet art, working with institutions.</p><p>小民艺术面向出版、文博、文旅与教育机构，提供插画创作、艺术衍生与非遗体验活动的合作方向。每个方向都以清晰的边界和确认节点开始，先聊清楚，再动手。</p><a class="btn btn-primary" href="/custom-commission/">发起合作沟通 →</a></section>
+  <section class="container partner-grid">
+    <a class="partner-card" href="/partners/publishing/"><ImageSlot label="出版社插画 · 图片预留" ratio="1.5" /><span class="eyebrow">Publishing / 出版社插画</span><h2 class="serif">为一本书找到合适的画面。</h2><p>书籍封面与内页插画、章节题图、装帧视觉方向。</p></a>
+    <a class="partner-card" href="/partners/museum-tourism/"><ImageSlot label="博物馆与文旅 · 图片预留" ratio="1.5" /><span class="eyebrow">Museum & Tourism / 博物馆与文旅</span><h2 class="serif">让展览与旅程多一处停留。</h2><p>文创衍生、空间视觉、活动伴手礼与展陈题字方向。</p></a>
+    <a class="partner-card" href="/partners/heritage/"><ImageSlot label="非遗面塑活动 · 图片预留" ratio="1.5" /><span class="eyebrow">Heritage Workshops / 非遗面塑活动</span><h2 class="serif">亲手捏一段有来处的时间。</h2><p>面向校园、社区与机构的面塑体验活动与非遗协作。</p></a>
+    <a class="partner-card" href="/partners/cases/"><ImageSlot label="合作案例 · 图片预留" ratio="1.5" /><span class="eyebrow">Case Studies / 合作案例</span><h2 class="serif">已经发生的合作，慢慢讲。</h2><p>经授权确认后公开的项目过程与结果记录。</p></a>
+  </section>
+  <section class="container section partner-note"><span class="eyebrow">How we work / 合作方式</span><h2 class="serif">先说清楚边界，再谈画面。</h2><p>机构合作从一次具体沟通开始：说明机构背景、想做的事、时间与预算范围，我们会先判断可行性与合适的方式，再给出方向建议。涉及授权、署名与使用范围的事项，会在项目确认时逐项写清楚。</p></section>
+</Layout>
+<style>
+  .page-head { padding: 90px 0 66px; } .page-head h1 { font-size: clamp(40px, 5.4vw, 72px); line-height: 1.22; font-weight: 500; margin: 20px 0; } .page-head p { max-width: 720px; color: var(--ink-soft); font-size: 18px; } .page-head p[lang='en'] { font: 24px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); } .page-head .btn { margin-top: 18px; }
+  .partner-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 34px 28px; margin-bottom: 46px; }
+  .partner-card { display: flex; flex-direction: column; gap: 4px; }
+  .partner-card :global(.img-slot) { margin-bottom: 14px; }
+  .partner-card h2 { font-size: 30px; font-weight: 500; line-height: 1.35; margin: 8px 0; transition: color .2s ease; }
+  .partner-card:hover h2 { color: var(--cinnabar); }
+  .partner-card p { color: var(--ink-soft); font-size: 14px; max-width: 520px; }
+  .partner-note { border-top: 1px solid var(--line); padding-top: 44px; } .partner-note h2 { font-size: 34px; font-weight: 500; margin: 14px 0; } .partner-note p { max-width: 720px; color: var(--ink-soft); }
+  @media (max-width: 767px) { .page-head { padding: 56px 0 42px; } .page-head h1 { font-size: 42px; } .page-head p { font-size: 16px; } .page-head p[lang='en'] { font-size: 20px; } .partner-grid { grid-template-columns: 1fr; gap: 30px; } .partner-card h2 { font-size: 26px; } .partner-note h2 { font-size: 29px; } }
+</style>

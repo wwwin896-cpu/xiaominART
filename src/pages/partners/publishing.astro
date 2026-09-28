@@ -1,0 +1,23 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ImageSlot from '../../components/ImageSlot.astro';
+---
+<Layout title="出版社插画｜机构合作｜小民艺术" description="为书籍提供封面与内页插画、章节题图与装帧视觉方向的合作说明。">
+  <section class="container page-head"><span class="eyebrow">Publishing / 出版社插画</span><h1 class="serif">为一本书，<br />找到合适的画面。</h1><p lang="en">Illustration for books that want a quieter voice.</p><p>插画在这里不是装饰，而是让书的气质先一步被看见。我们与出版社、独立出版团队和杂志合作的方向包括：封面插画、内页插画、章节题图与装帧视觉。画面会从书稿的气质出发——先读懂，再画。</p></section>
+  <section class="container direction-list">
+    <article><div class="direction-media"><ImageSlot label="封面插画方向 · 图片预留" ratio="0.78" /></div><div class="direction-copy"><span class="eyebrow">01 / Cover illustration</span><h2 class="serif">封面插画</h2><p>从书名、目录与样章中提炼画面方向，兼顾货架辨识度与翻阅时的安静气质。支持手绘与数字媒介，成稿提供可用于印刷的分层文件与色彩说明。</p></div></article>
+    <article><div class="direction-media"><ImageSlot label="内页与题图方向 · 图片预留" ratio="0.78" /></div><div class="direction-copy"><span class="eyebrow">02 / Interior & chapter art</span><h2 class="serif">内页插画与章节题图</h2><p>为章节节奏安排题图与点缀小图，控制疏密，不与正文争夺注意力。可按整本书统一委托，也可按单章灵活合作。</p></div></article>
+    <article><div class="direction-media"><ImageSlot label="装帧视觉方向 · 图片预留" ratio="0.78" /></div><div class="direction-copy"><span class="eyebrow">03 / Binding & visual direction</span><h2 class="serif">装帧视觉方向</h2><p>与设计师协作，为开本、纸张、工艺提供与插画配套的视觉建议；书法与题字元素也可按需融入。</p></div></article>
+  </section>
+  <section class="container section process-note"><span class="eyebrow">Process / 合作流程</span><h2 class="serif">样稿确认后，再进入正式创作。</h2><p>流程为：选题沟通 → 风格样稿 → 授权边界与费用确认 → 正式创作与修改节点 → 交付印刷文件。授权范围（印次、语种、衍生使用）会在确认时逐项写明。</p><a class="btn btn-primary" href="/custom-commission/">聊聊你的书 →</a></section>
+</Layout>
+<style>
+  .page-head { padding: 90px 0 66px; border-bottom: 1px solid var(--line); } .page-head h1 { font-size: clamp(40px, 5.4vw, 72px); line-height: 1.22; font-weight: 500; margin: 20px 0; } .page-head p { max-width: 720px; color: var(--ink-soft); font-size: 18px; } .page-head p[lang='en'] { font: 24px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); }
+  .direction-list { display: grid; gap: 0; padding: 26px 0 40px; }
+  .direction-list article { display: grid; grid-template-columns: 300px 1fr; gap: 30px; padding: 34px 0; border-bottom: 1px solid var(--line); align-items: start; }
+  .direction-media { max-width: 300px; }
+  .direction-copy h2 { font-size: 30px; font-weight: 500; margin: 8px 0 10px; }
+  .direction-copy p { color: var(--ink-soft); font-size: 14px; max-width: 640px; }
+  .process-note { border-top: 0; } .process-note h2 { font-size: 34px; font-weight: 500; margin: 14px 0; } .process-note p { max-width: 720px; color: var(--ink-soft); } .process-note .btn { margin-top: 16px; }
+  @media (max-width: 767px) { .page-head { padding: 56px 0 42px; } .page-head h1 { font-size: 42px; } .page-head p { font-size: 16px; } .page-head p[lang='en'] { font-size: 20px; } .direction-list article { grid-template-columns: 1fr; gap: 16px; padding: 26px 0; } .direction-media { max-width: 260px; } .direction-copy h2 { font-size: 25px; } .process-note h2 { font-size: 29px; } }
+</style>
