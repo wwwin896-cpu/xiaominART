@@ -152,36 +152,55 @@ Cloudflare 官方明确：**顶点域（`xiaominart.com`）必须先把域名添
 
 > 域名没有邮箱记录，这一步不会影响收发邮件。
 
-### 第 5 步 · 回 Cloudflare 绑定自定义域名
+### 第 5 步 · 在 Cloudflare 绑定自定义域名
 
-**等状态变成 Active 之后**再回来做：
+**等 zone 状态变成 Active 之后再回来做。**
 
 1. **Workers & Pages** → 点进 `xiaominart` 项目 → **Custom domains** → **Set up a domain**
-2. 输入 `www.xiaominart.com` → Continue（Cloudflare 会自动建好解析记录）
-3. 再点一次 **Set up a domain**，输入 `xiaominart.com`
+2. 依次添加 `xiaominart.com` 与 `www.xiaominart.com`
 
-> ⚠️ **顺序不能反**：必须先在 Pages 面板里加域名、让 Cloudflare 自动生成记录。
-> 如果自己跑去 DNS 页面手加记录，会报 **522** 错误。
+> ⚠️ **顺序很关键**：必须**先在 Pages 面板里加域名**，再让 Cloudflare 生成解析记录。
+> 自己先去 DNS 页面手加 CNAME 会报 **522**，而且这个失败状态会一直粘在该域名的验证上，
+> 反复重试也不一定能恢复。
 
-### 第 6 步 · 配顶点域跳转到 www
+**实际执行结果（2026-09-28）——两个域名表现不同：**
 
-`public/_redirects` 只能按路径匹配、**不能按域名匹配**，所以这条要在 Cloudflare 侧配：
+| 域名 | Pages 验证结果 |
+|---|---|
+| `xiaominart.com`（顶点域） | ✅ `active`，Pages 正常服务 |
+| `www.xiaominart.com` | ❌ 始终 `pending`，错误 `CNAME record not set` |
 
-1. Cloudflare 左侧切到 `xiaominart.com` 这个 zone → **Rules** → **Redirect Rules** → **Create rule**
-2. 名称：`apex-to-www`
-3. 条件：`Hostname` **equals** `xiaominart.com`
-4. **Then** 选 `Dynamic redirect`，表达式填：
-   `concat("https://www.xiaominart.com", http.request.uri.path)`
-5. Status code 选 **301**，勾选保留查询字符串 → **Deploy**
+www 的记录类型（CNAME）、内容（`xiaominart.pages.dev`）、代理状态（橙云）都正确，
+官方文档与社区都有同类案例，属 Cloudflare 侧的验证问题，长期重试也未必通过。
+
+**因此最终采用「顶点域为规范域名」**：`xiaominart.com` 直接由 Pages 服务，
+`www` 通过 301 跳过来。详见第十节。
+
+### 第 6 步 · 配 www 跳转到顶点域
+
+`public/_redirects` 只能按路径匹配、**不能按域名匹配**，所以这条要在 Cloudflare 侧配。
+本次用的是 **Page Rules**（因为手上的 API 令牌没有 Redirect Rules 权限，效果等价）：
+
+| 设置 | 值 |
+|---|---|
+| 匹配 | `www.xiaominart.com/*` |
+| 动作 | Forwarding URL |
+| 状态码 | 301 |
+| 目标 | `https://xiaominart.com/$1` |
+
+> 日后若想换成更现代的 Redirect Rules：在 **Rules → Redirect Rules** 建一条
+> `Hostname equals www.xiaominart.com` → 301 到 `concat("https://xiaominart.com", http.request.uri.path)`，
+> 然后删掉这条 Page Rule。
 
 ### 第 7 步 · 验证与收尾
 
-- [ ] `https://www.xiaominart.com` 正常打开，样式完整
-- [ ] `https://xiaominart.com` 自动 301 跳到 www
-- [ ] `http://` 自动升级为 `https://`
-- [ ] 再提交一条测试留言，确认云数据库里能看到记录
-- [ ] 老网址 301 生效（抽查 `/inspiration/`、`/faq/`、`/blog/`）
-- [ ] 全部确认无误后，回 **Vercel** 后台删除旧项目（避免两处同时服务）
+- [x] `https://xiaominart.com` 正常打开，样式完整
+- [x] `https://www.xiaominart.com` 自动 301 跳到 `https://xiaominart.com`
+- [x] `http://` 自动升级为 `https://`（两种域名形态均验证）
+- [x] 老网址 301 生效（`/inspiration/`、`/occasions/`、`/recipients/` 等 6 组）
+- [x] `/api/lead` 表单函数在线（OPTIONS 204 / 非法类型 400）
+- [ ] 提交一条测试留言，确认云数据库里能看到记录 ← **需要你自己做一次**
+- [ ] 回 **Vercel** 后台删除旧项目（避免两处同时服务）
 
 ### 出问题去哪看
 
@@ -305,16 +324,24 @@ git push
 | CNAME | `www.xiaominart.com` | `xiaominart.pages.dev` | 已开启 |
 | CNAME | `xiaominart.com` | `xiaominart.pages.dev` | 已开启 |
 
-**Pages 自定义域名**：`www.xiaominart.com`、`xiaominart.com`（NS 生效后自动签发证书）
+**Pages 自定义域名**
 
-**顶点域跳转**（这条走 Page Rules，不是 Redirect Rules）
+| 域名 | 验证状态 | 说明 |
+|---|---|---|
+| `xiaominart.com` | ✅ `active` | 由 Pages 直接服务，**规范域名** |
+| `www.xiaominart.com` | ❌ `pending` | 报 `CNAME record not set`，长期未通过 |
+
+**跳转规则**（走 Page Rules，不是 Redirect Rules）
 
 ```
-匹配  xiaominart.com/*
+匹配  www.xiaominart.com/*
 动作  Forwarding URL，301
-目标  https://www.xiaominart.com/$1
+目标  https://xiaominart.com/$1
 ```
 
+> 方向说明：**原计划是顶点域跳 www**，但 www 的 Pages 验证始终未通过（原因见第十节），
+> 故改为 **www 跳顶点域**，以验证通过的顶点域作为规范域名。
+>
 > 为什么用 Page Rules 而不是更现代的 Redirect Rules：配置时手上的 API 令牌没有
 > `Single Redirect` 权限，但 Page Rules 可用，效果等价。日后若要换成 Redirect Rules，
 > 在 Cloudflare 后台 Rules → Redirect Rules 里重建即可，记得同时删掉这条 Page Rule。
@@ -360,3 +387,79 @@ git push
 | Zone | Zone Settings | Edit |
 | Zone | Config Rules | Edit |
 | Zone | Page Rules | Edit |
+
+---
+
+## 十、域名切换与 www 验证问题（2026-09-28 14:00–14:45）
+
+### 时间线
+
+| 时间 | 事件 |
+|---|---|
+| 14:03 | 用户在阿里云把 NS 改为 Cloudflare 指定地址 |
+| 14:05 | 权威 DNS 已切换；zone 状态 `active` |
+| 14:10 | 顶点域 `xiaominart.com` 的 Pages 验证通过（`active`） |
+| 14:10–14:40 | `www` 反复报 `CNAME record not set`，多轮重试未通过 |
+| 14:12 | 出现 **522**（记录存在但 Pages 未认领该域名） |
+| 14:35 | 改用顶点域为规范域名，www 反向 301 |
+| 14:40 | 站点恢复：`https://xiaominart.com` 200 |
+| 14:42 | 站点配置同步改为 apex，重新构建部署完成 |
+
+### 根因与踩坑记录
+
+**坑 1 —— 手动建 DNS 记录**
+最初的 `www` / 顶点域 CNAME 是**在添加 Pages 自定义域之前手动建的**。
+Cloudflare 官方文档明确：手工加记录会导致域名无法在 CNAME 目标解析，并显示 **522**。
+
+**坑 2 —— 顺序要求**
+正确顺序是「先在 Pages 项目里添加自定义域 → 由 Cloudflare 生成解析记录」。
+即使后来改成正确顺序（先加域、后建记录、删掉重建、橙云/灰云都试过、触发多次
+重新验证），`www` 依然报 `CNAME record not set`，而顶点域在同样条件下能通过。
+
+**坑 3 —— 灰云无效**
+试过把 `www` 改成灰云（DNS only）让公网能查到 CNAME，Postman 级别的公网查询
+确实返回 `xiaominart.pages.dev.`，但 Pages 验证仍不通过，且灰云下 Cloudflare 的
+CDN/WAF/Page Rules 全部失效，反而更不可用。**结论：www 必须保持橙云。**
+
+**坑 4 —— 构建产物没更新**
+改完 `astro.config.mjs` 后直接 `npm run build`，`dist/` 未被覆盖（safe-delete 拦截 +
+增量缓存），部署上去的还是旧产物。**以后改配置后要先清 `dist` 再构建**：
+
+```bash
+CODEBUDDY_SAFE_DELETE_ENABLED=0 rm -rf dist .astro
+npm run build
+```
+
+### 结论：以顶点域为规范域名
+
+**现状（可用且一致）**
+
+| 请求 | 结果 |
+|---|---|
+| `https://xiaominart.com/` | 200（Pages 直接服务） |
+| `https://www.xiaominart.com/` | 301 → `https://xiaominart.com/` |
+| `http://xiaominart.com/` | 301 → `https://xiaominart.com/` |
+| `http://www.xiaominart.com/` | 301 → `https://xiaominart.com/` |
+
+canonical / og:url / robots.txt / sitemap.xml 全部输出 `https://xiaominart.com`。
+
+### 如果日后想改回 www 作为规范域名
+
+前提：先在 Cloudflare 后台确认 `www.xiaominart.com` 的 Pages 验证已变成 `active`
+（Pages 项目 → Custom domains 里看状态）。若仍是 `pending`，不要改，否则全站会 522。
+
+确认通过后，需要四处同步修改：
+
+1. `astro.config.mjs` → `site: 'https://www.xiaominart.com'`
+2. `public/robots.txt` → Sitemap 地址
+3. `src/pages/sitemap.xml.ts` → fallback base
+4. Cloudflare Page Rule 方向反过来：`xiaominart.com/*` → 301 → `https://www.xiaominart.com/$1`
+
+然后清 `dist` 重新构建、部署。
+
+### 已知遗留
+
+- `www` 的 Pages 验证仍是 `pending`。不影响使用（走 301），但**不要再动它的 DNS 记录**，
+  每次改动都会让验证状态重置。
+- 建议在 Google Search Console 里把站点属性设为 `https://xiaominart.com`
+  （若之前用的是 www 属性，建议重新提交新属性的 sitemap）。
