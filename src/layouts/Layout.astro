@@ -46,7 +46,6 @@ const isCurrent = (href: string) => { const normalized = href.replace(/\/$/, '')
         <nav id="site-nav" aria-label="主导航">
           {navItems.map((item) => <div class="nav-item"><a href={item.href} class:list={{ current: isCurrent(item.href) }} aria-current={isCurrent(item.href) ? 'page' : undefined}><span>{item.zh}</span><small lang="en">{item.en}</small></a>{item.children?.length ? <div class="nav-dropdown">{item.children.map((child) => <a href={child.href}><span>{child.zh}</span><small lang="en">{child.en}</small></a>)}</div> : null}</div>)}
         </nav>
-        <a class="header-cta" href="/contact/" data-event="commission_open">与我们聊聊</a>
       </div>
     </header>
     <main id="main"><slot /></main>
@@ -101,14 +100,12 @@ const isCurrent = (href: string) => { const normalized = href.replace(/\/$/, '')
   .nav-dropdown a { flex-direction: column; }
   nav a small { color: var(--ink-soft); font-size: 12px; letter-spacing: .02em; }
   .footer-grid a small { color: var(--ink-soft); font-size: 10px; letter-spacing: .02em; }
-  nav a:hover, nav a:hover small, nav a.current, nav a.current small, .header-cta:hover { color: var(--cinnabar); }
+  nav a:hover, nav a:hover small, nav a.current, nav a.current small { color: var(--cinnabar); }
   nav a.current { border-bottom: 1px solid var(--cinnabar); padding-bottom: 5px; }
   .nav-dropdown { position: absolute; top: calc(100% + 16px); left: -16px; min-width: 190px; padding: 12px 16px; background: rgba(250,247,240,.98); border: 1px solid var(--line); box-shadow: var(--shadow); opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity .25s ease, transform .25s ease, visibility .25s ease; }
   .nav-dropdown a { padding: 9px 0; border-bottom: 1px solid var(--line-soft); font-size: 13px; min-height: 44px; }
   .nav-dropdown a:last-child { border-bottom: 0; }
   .nav-item:hover .nav-dropdown, .nav-item:focus-within .nav-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
-  .header-cta { border-bottom: 1px solid var(--cinnabar); padding: 3px 0; color: var(--cinnabar); font-size: 13px; white-space: nowrap; }
-  .header-cta span { margin-left: 8px; }
   .menu-toggle { display: none; margin-left: auto; background: transparent; border: 1px solid var(--ink); padding: 9px 12px; min-height: 44px; }
   .site-footer { border-top: 1px solid var(--line); padding: 80px 0 24px; margin-top: 0; }
   .footer-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 36px; align-items: start; }
@@ -128,7 +125,7 @@ const isCurrent = (href: string) => { const normalized = href.replace(/\/$/, '')
   .footer-claim { font-size: 24px; line-height: 1.5; margin: 18px 0 0; }
   .muted { color: var(--ink-soft); }
   .footer-bottom { border-top: 1px solid var(--line); margin-top: 58px; padding-top: 16px; display: flex; justify-content: space-between; gap: 16px; color: var(--ink-soft); font-size: 11px; }
-  @media (max-width: 1100px) { .header-inner { gap: 16px; } nav { gap: 12px; font-size: 16px; } .header-cta { display: none; } }
+  @media (max-width: 1100px) { .header-inner { gap: 16px; } nav { gap: 12px; font-size: 16px; } }
   @media (max-width: 767px) {
     .header-inner { min-height: 72px; position: relative; }
     .brand { display: flex; min-width: 0; max-width: calc(100% - 118px); gap: 5px; align-items: center; }

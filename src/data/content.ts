@@ -7,16 +7,29 @@
 // 2026-09-28 下午二次调整（品牌亲民化）：
 //   · 「艺术家」不再作为一级导航独立出现，并入「关于我们」二级，改称「小民其人」，
 //     弱化「艺术」字眼，与品牌的亲民属性吻合。/artists/ 页面本身保留不变。
+// 2026-09-28 傍晚三次调整：
+//   · 顶部「与我们聊聊」CTA 移除（联系入口保留在页脚 / 寻墨 / 定制咨询表单）。
+//   · 「送礼指南」不再作为一级导航，其内容收进「小民好礼」的二级菜单。
+//   · 「生活场景」更名「灵感参考」，二级菜单按序 6 项：书、厅、茶、房、礼、企
+//     （书厅茶房对应 /scenes/ 页内卡片锚点；礼 → 送礼指南；企 → 企业定制）。
 export const navItems = [
-  { href: '/gifts/', zh: '小民好礼', en: 'Xiaomin Gifts', children: [] },
   {
-    href: '/gift-guide/', zh: '送礼指南', en: 'Gift Guide', children: [
+    href: '/gifts/', zh: '小民好礼', en: 'Xiaomin Gifts', children: [
+      { href: '/gift-guide/', zh: '送礼指南', en: 'Gift Guide' },
       { href: '/gift-guide/by-occasion/', zh: '按场合选礼', en: 'By Occasion' },
       { href: '/gift-guide/by-recipient/', zh: '按对象选礼', en: 'By Recipient' },
     ],
   },
-  { href: '/scenes/', zh: '生活场景', en: 'Scenes', children: [] },
-  { href: '/business-gifts/', zh: '企业定制', en: 'Business', children: [] },
+  {
+    href: '/scenes/', zh: '灵感参考', en: 'Inspiration', children: [
+      { href: '/scenes/#scene-study', zh: '书', en: 'Study' },
+      { href: '/scenes/#scene-living', zh: '厅', en: 'Living room' },
+      { href: '/scenes/#scene-tea', zh: '茶', en: 'Tea room' },
+      { href: '/scenes/#scene-bedroom', zh: '房', en: 'Bedroom' },
+      { href: '/gift-guide/', zh: '礼', en: 'Gifts' },
+      { href: '/business-gifts/', zh: '企', en: 'Business' },
+    ],
+  },
   {
     href: '/about/', zh: '关于我们', en: 'About', children: [
       { href: '/artists/', zh: '小民其人', en: 'The Maker' },
