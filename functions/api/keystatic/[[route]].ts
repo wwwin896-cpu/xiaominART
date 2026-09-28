@@ -30,6 +30,17 @@ export const onRequest = async (context: Ctx): Promise<Response> => {
     if (typeof value === 'string') g.process.env[key] = value;
   }
 
+  // 密钥未配置时返回友好提示页，避免 Cloudflare 1101（Worker threw exception）。
+  const missing = (['KEYSTATIC_GITHUB_CLIENT_ID', 'KEYSTATIC_GITHUB_CLIENT_SECRET', 'KEYSTATIC_SECRET'] as const).filter(
+    (k) => !env[k],
+  );
+  if (missing.length > 0) {
+    return new Response(
+      `<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>后台密钥待配置 · XIAOMINART</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#faf7f0;color:#4d3822;font-family:"Songti SC","STSong","SimSun",serif}main{max-width:560px;padding:40px 28px}h1{font-size:26px;font-weight:500;letter-spacing:.06em;margin:0 0 18px}p{font-size:15px;line-height:1.9;margin:0 0 12px;color:#6b5a44}code{font-family:Consolas,monospace;font-size:13px;background:#f0e9dc;padding:2px 8px;border-radius:4px}hr{border:0;border-top:1px solid #e5dcc9;margin:26px 0}small{color:#a5947a;letter-spacing:.14em;font-size:11px}</style></head><body><main><small>XIAOMINART · ADMIN</small><h1>后台密钥待配置</h1><p>在线后台的登录钥匙还没有写入服务器（缺少 ${missing.join('、')}），所以暂时无法登录。这不是网站故障——前台页面一切正常。</p><hr><p><b>你只需要做一步：</b>在项目文件夹运行 <code>npm run dev</code>，浏览器打开 <code>http://localhost:4321/keystatic</code>，点击「Log in with GitHub」，按向导创建应用（Deployed URL 填 <code>https://xiaominart.com</code>）。完成后告诉助手，剩下的配置由助手完成。</p></main></body></html>`,
+      { status: 503, headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' } },
+    );
+  }
+
   const handler = makeGenericAPIRouteHandler(
     {
       config: keystaticConfig,
