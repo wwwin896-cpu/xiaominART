@@ -4,6 +4,9 @@
 //     且与移动端底栏第一格重复。现提升为一级项，送礼指南的二级只保留两种找礼路径。
 //   · /gifts/ 与 /scenes/ 在桌面导航与移动底栏各出现一次，那是同一套导航的两种响应式形态，
 //     不是重复入口；真正的重复（同一内容两个 URL）已通过删除页面 + 301 消除。
+// 2026-09-28 下午二次调整（品牌亲民化）：
+//   · 「艺术家」不再作为一级导航独立出现，并入「关于我们」二级，改称「小民其人」，
+//     弱化「艺术」字眼，与品牌的亲民属性吻合。/artists/ 页面本身保留不变。
 export const navItems = [
   { href: '/gifts/', zh: '小民好礼', en: 'Xiaomin Gifts', children: [] },
   {
@@ -13,10 +16,10 @@ export const navItems = [
     ],
   },
   { href: '/scenes/', zh: '生活场景', en: 'Scenes', children: [] },
-  { href: '/artists/', zh: '艺术家', en: 'Artists', children: [] },
   { href: '/business-gifts/', zh: '企业定制', en: 'Business', children: [] },
   {
     href: '/about/', zh: '关于我们', en: 'About', children: [
+      { href: '/artists/', zh: '小民其人', en: 'The Maker' },
       { href: '/journal/', zh: '静气生活', en: 'Journal' },
     ],
   },

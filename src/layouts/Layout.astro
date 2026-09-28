@@ -46,13 +46,13 @@ const isCurrent = (href: string) => { const normalized = href.replace(/\/$/, '')
         <nav id="site-nav" aria-label="主导航">
           {navItems.map((item) => <div class="nav-item"><a href={item.href} class:list={{ current: isCurrent(item.href) }} aria-current={isCurrent(item.href) ? 'page' : undefined}><span>{item.zh}</span><small lang="en">{item.en}</small></a>{item.children?.length ? <div class="nav-dropdown">{item.children.map((child) => <a href={child.href}><span>{child.zh}</span><small lang="en">{child.en}</small></a>)}</div> : null}</div>)}
         </nav>
-        <a class="header-cta" href="/contact/" data-event="commission_open">与我们聊聊 <span>→</span></a>
+        <a class="header-cta" href="/contact/" data-event="commission_open">与我们聊聊</a>
       </div>
     </header>
     <main id="main"><slot /></main>
     <FloatingConsultation />
     <ShareButton />
-    <nav class="mobile-shopping-bar" aria-label="移动端底部导航"><a href="/gifts/" aria-label="浏览小民好礼"><span class="bar-zh">礼物</span><small lang="en">Gifts</small></a><a href="/scenes/" aria-label="浏览生活场景"><span class="bar-zh">场景</span><small lang="en">Scenes</small></a><a href="/journal/" aria-label="阅读静气生活"><span class="bar-zh">故事</span><small lang="en">Stories</small></a><a href="/gift-guide/#wishlist" aria-label="我的心愿单"><span class="bar-zh">我的</span><small lang="en">Mine <span data-wishlist-count></span></small></a></nav>
+    <nav class="mobile-shopping-bar" aria-label="移动端底部导航"><a href="/gifts/" aria-label="浏览小民好礼"><span class="bar-zh">礼物</span><small lang="en">Gifts</small></a><a href="/gift-guide/#wishlist" aria-label="我的心愿单"><span class="bar-zh">我的</span><small lang="en">Mine <span data-wishlist-count></span></small></a><button class="ink-seek" type="button" aria-controls="quick-message" aria-expanded="false" aria-label="寻墨 · 与我们留言"><span class="seal-text">寻墨</span></button><button class="bar-share" type="button" data-share-button data-event="share_click" aria-label="分享本页给微信好友或朋友圈"><span class="bar-zh">分享</span><small lang="en">Share</small></button></nav>
     <footer class="site-footer" data-component="site-footer">
       <div class="container footer-grid">
         <div><p class="eyebrow">XIAOMINART / 日常之礼</p><p class="footer-claim serif">愿你在这方寸之间，<br />找到属于自己的定制心意。</p></div>
@@ -148,11 +148,15 @@ const isCurrent = (href: string) => { const normalized = href.replace(/\/$/, '')
      .footer-bottom span { display: block; margin-top: 8px; }
      .site-footer { padding-top: 56px; padding-bottom: 92px; }
      .mobile-shopping-bar { position: fixed; top: auto; display: grid; grid-template-columns: repeat(4, 1fr); left: 0; right: 0; bottom: 0; z-index: 8; background: rgba(250, 247, 240, .98); border-top: 1px solid var(--line); box-shadow: 0 -8px 24px rgba(77, 56, 34, .08); padding: 7px 8px calc(7px + env(safe-area-inset-bottom)); }
-     .mobile-shopping-bar a { min-height: 50px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--ink-soft); }
+     .mobile-shopping-bar a, .mobile-shopping-bar button { min-height: 50px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--ink-soft); font: inherit; }
+     .mobile-shopping-bar button { background: transparent; border: 0; padding: 0; cursor: pointer; }
      .mobile-shopping-bar .bar-zh { font-size: 13px; letter-spacing: .12em; }
      .mobile-shopping-bar small { font-size: 9px; color: var(--muted); font-family: var(--font-body-en), sans-serif; letter-spacing: .1em; text-transform: uppercase; }
      .mobile-shopping-bar a:first-child .bar-zh { color: var(--cinnabar); }
      .mobile-shopping-bar span[data-wishlist-count] { color: var(--cinnabar); font-family: var(--font-mono); }
+     .mobile-shopping-bar .ink-seek { justify-self: center; width: 54px; height: 54px; min-height: 0; border: 4px solid rgba(250, 247, 240, .98); border-radius: 14px; background: var(--cinnabar); color: #fffaf1; box-shadow: 0 6px 20px rgba(116, 53, 46, .28); transform: translateY(-22px); transition: transform .2s ease, box-shadow .2s ease; }
+     .mobile-shopping-bar .ink-seek:active { transform: translateY(-22px) scale(.94); }
+     .mobile-shopping-bar .seal-text { display: block; writing-mode: vertical-rl; white-space: nowrap; font-family: var(--font-display-zh), serif; font-size: 15px; letter-spacing: .24em; line-height: 1; transform: translateX(.12em); }
    }
   }
 </style>
