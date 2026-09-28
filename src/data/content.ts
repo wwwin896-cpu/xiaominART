@@ -12,6 +12,10 @@
 //   · 「送礼指南」不再作为一级导航，其内容收进「小民好礼」的二级菜单。
 //   · 「生活场景」更名「灵感参考」，二级菜单按序 6 项：书、厅、茶、房、礼、企
 //     （书厅茶房对应 /scenes/ 页内卡片锚点；礼 → 送礼指南；企 → 企业定制）。
+// 2026-09-28 晚间调整：
+//   · 「关于我们」取消二级菜单（小民其人、静气生活），点开一级直达 /about/ 品牌介绍页，
+//     页内直接呈现创作者介绍（升斗小民 / 非遗小宁，详情页 /artists/{slug}/ 保留）。
+//   · 「静气生活」/journal/ 整体下线，_redirects 301 至 /about/。
 export const navItems = [
   {
     href: '/gifts/', zh: '小民好礼', en: 'Xiaomin Gifts', children: [
@@ -38,12 +42,7 @@ export const navItems = [
       { href: '/partners/cases/', zh: '合作案例', en: 'Case Studies' },
     ],
   },
-  {
-    href: '/about/', zh: '关于我们', en: 'About Us', children: [
-      { href: '/artists/', zh: '小民其人', en: 'The Maker' },
-      { href: '/journal/', zh: '静气生活', en: 'Journal' },
-    ],
-  },
+  { href: '/about/', zh: '关于我们', en: 'About Us', children: [] },
 ];
 
 export const processSteps = [

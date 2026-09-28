@@ -19,9 +19,12 @@
 /faq/ /help/ 301
 /art-gift /gift-guide/ 301
 /art-gift/ /gift-guide/ 301
-/blog /journal/ 301
-/blog/ /journal/ 301
-/blog/* /journal/ 301
+/blog /about/ 301
+/blog/ /about/ 301
+/blog/* /about/ 301
+/journal /about/ 301
+/journal/ /about/ 301
+/journal/* /about/ 301
 /business /business-gifts/ 301
 /business/ /business-gifts/ 301
 

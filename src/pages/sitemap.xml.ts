@@ -35,7 +35,6 @@ const staticPaths = [
   'contact/',
   'help/',
   // 内容与参考
-  'journal/',
   'art-direction/',
   'pricing-guide/',
   // 独立页面
