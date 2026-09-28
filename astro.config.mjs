@@ -29,4 +29,13 @@ export default defineConfig({
   output: withLocalCms ? 'server' : 'static',
   integrations: [react(), markdoc(), ...(withLocalCms ? [keystatic()] : [])],
   trailingSlash: 'always',
+  vite: {
+    resolve: {
+      alias: withLocalCms
+        ? []
+        : // 生产构建没有 Keystatic 集成（无 virtual 模块插件），把后台外壳引用的
+          // virtual:keystatic-config 别名到真实配置文件（dev 下集成插件的 resolveId 优先）。
+          [{ find: /^virtual:keystatic-config$/, replacement: new URL('./keystatic.config.ts', import.meta.url).href }],
+    },
+  },
 });

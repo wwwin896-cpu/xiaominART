@@ -1,10 +1,9 @@
 ---
 // 在线后台入口（静态外壳）：https://xiaominart.com/keystatic/
-// 界面是 client:only React SPA，运行时通过 /api/keystatic/*（Pages Function）
-// 读写 GitHub 仓库内容。与 @keystatic/astro 集成注入的开发版页面保持同构，
-// 故 dev 模式下本页与注入路由同路径共存（exact 路由优先，渲染结果一致）。
-import { Keystatic } from '@keystatic/core/ui';
-import keystaticConfig from '../../../keystatic.config';
+// 客户端组件见 shell-page.js：通过 makePage + virtual:keystatic-config 让浏览器
+// 直接 import 配置模块（函数/字段组件不丢失）。dev 下 @keystatic/astro 集成提供
+// virtual 模块；生产构建由 astro.config.mjs 的 vite alias 指向 keystatic.config.ts。
+import { Keystatic } from './shell-page.js';
 ---
 <html lang="zh-CN">
   <head>
@@ -15,6 +14,6 @@ import keystaticConfig from '../../../keystatic.config';
     <title>小民艺术 · 内容后台</title>
   </head>
   <body style="margin:0">
-    <Keystatic client:only="react" config={keystaticConfig} appSlug={{ envName: 'PUBLIC_KEYSTATIC_GITHUB_APP_SLUG', value: import.meta.env.PUBLIC_KEYSTATIC_GITHUB_APP_SLUG }} />
+    <Keystatic client:only="react" />
   </body>
 </html>
