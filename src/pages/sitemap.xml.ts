@@ -42,7 +42,7 @@ const staticPaths = [
 ];
 
 export const GET: APIRoute = ({ site }) => {
-  const base = (site ?? new URL('https://www.xiaominart.com')).toString().replace(/\/$/, '');
+  const base = (site ?? new URL('https://xiaominart.com')).toString().replace(/\/$/, '');
   // 商品只有一个陈列位置：/gifts/{slug}/
   const productPaths = getGiftCatalog().products.map((product) => `gifts/${product.slug}/`);
   const paths = [...staticPaths, ...productPaths];

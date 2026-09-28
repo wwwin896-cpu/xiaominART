@@ -15,12 +15,18 @@ import keystatic from '@keystatic/astro';
 //      （见根目录 functions/api/lead.ts），静态托管同样支持。
 //
 // 本地开后台：npm run dev  →  http://localhost:4321/keystatic
+//
+// 规范域名用不带 www 的 https://xiaominart.com
+//   原因：Cloudflare Pages 的 www 子域验证当时卡在 "CNAME record not set"，
+//   而顶点域验证通过、Pages 已认领。故以 apex 为规范域，www 由 Page Rule 301 过来。
+//   若日后 www 验证通过、要改回 www，需同步改回这里、public/robots.txt
+//   与 src/pages/sitemap.xml.ts 的 fallback。
 // ─────────────────────────────────────────────────────────────
 const withLocalCms =
   process.env.npm_lifecycle_event === 'dev' || process.argv.slice(2).includes('dev');
 
 export default defineConfig({
-  site: 'https://www.xiaominart.com',
+  site: 'https://xiaominart.com',
   // dev 用 server 让 Keystatic 的后台路由可用；build 恒定输出静态文件。
   output: withLocalCms ? 'server' : 'static',
   ...(withLocalCms ? { integrations: [react(), markdoc(), keystatic()] } : {}),
