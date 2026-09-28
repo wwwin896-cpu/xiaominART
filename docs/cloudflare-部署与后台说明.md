@@ -280,3 +280,83 @@ git push
 
 1. **`package.json` 里 astro 写的是 `latest`**。每次构建拉到的版本可能不同，建议改成固定版本（如 `^7.3.2`）以保证构建可复现。
 2. **Keystatic 仍是 0.x 版本**（当前 0.6.9），升级时请先看 release notes 再升。
+
+---
+
+## 九、迁移执行记录（2026-09-28 实际完成）
+
+### 已完成的事实（可用于日后核对）
+
+| 项目 | 值 |
+|---|---|
+| Cloudflare 账号 ID | `fc5bdc20f05edbbfa43081b6a8f6c672` |
+| 域名 Zone ID | `ec5edffa0f75fe19fbc66a771b34e485` |
+| Pages 项目名 | `xiaominart` |
+| 生产地址 | `https://xiaominart.pages.dev` |
+| 指定 nameserver | `harlan.ns.cloudflare.com` / `priscilla.ns.cloudflare.com` |
+| 原 nameserver | `dns1.hichina.com` / `dns2.hichina.com`（阿里云） |
+
+### 已配置的内容
+
+**DNS 记录（两条，均为代理开启）**
+
+| 类型 | 名称 | 指向 | 代理 |
+|---|---|---|---|
+| CNAME | `www.xiaominart.com` | `xiaominart.pages.dev` | 已开启 |
+| CNAME | `xiaominart.com` | `xiaominart.pages.dev` | 已开启 |
+
+**Pages 自定义域名**：`www.xiaominart.com`、`xiaominart.com`（NS 生效后自动签发证书）
+
+**顶点域跳转**（这条走 Page Rules，不是 Redirect Rules）
+
+```
+匹配  xiaominart.com/*
+动作  Forwarding URL，301
+目标  https://www.xiaominart.com/$1
+```
+
+> 为什么用 Page Rules 而不是更现代的 Redirect Rules：配置时手上的 API 令牌没有
+> `Single Redirect` 权限，但 Page Rules 可用，效果等价。日后若要换成 Redirect Rules，
+> 在 Cloudflare 后台 Rules → Redirect Rules 里重建即可，记得同时删掉这条 Page Rule。
+> 免费版 Page Rules 上限 3 条，目前用掉 1 条。
+
+**SSL 与 HTTPS**
+
+| 设置 | 值 |
+|---|---|
+| SSL/TLS 加密模式 | Full (strict) |
+| Always Use HTTPS | 开启 |
+
+### 首次部署的验收结果
+
+- 首页 + 6 个栏目页全部返回 200，无头浏览器截图确认渲染完整
+- `_redirects` 里 6 组去重 301 全部生效（实测 8 条）
+- `/api/lead` 表单函数在线：OPTIONS → 204，POST 无效类型 → 400，缺字段 → 400
+
+### 迁移过程中发现的一个线上问题（已在新站修复）
+
+`fde3c91` 删除重复页面时同时删掉了 `vercel.json`，改用了 Cloudflare/Netlify 才认的
+`public/_redirects`。**但 Vercel 不读 `_redirects`**，所以在迁移完成前，
+`/inspiration/`、`/occasions/`、`/recipients/` 等旧地址在正式站上返回的是 **404 而不是 301**。
+这类"页面消失"信号对 SEO 有害。切到 Cloudflare 后这批 301 立即恢复——这也是本次迁移的额外收益。
+
+### 两个 API 令牌的分工（日后维护参考）
+
+本次迁移用了两个权限互补的令牌，**迁移完成后建议都作废**：
+
+| 令牌 | 能做什么 | 缺什么 |
+|---|---|---|
+| 令牌 A | Cloudflare Pages、DNS、SSL/Zone Settings | 不能创建域名、不能用 Page Rules |
+| 令牌 B | 创建域名、Page Rules | 不能访问 Pages、不能改 SSL 设置 |
+
+**下次重新签发令牌时的完整权限清单**（合并两者，一次到位）：
+
+| 作用域 | 权限 | 级别 |
+|---|---|---|
+| Account | Cloudflare Pages | Edit |
+| Account | Account Settings | Read |
+| Account | Zone | Edit ← 创建域名必需，注意第一列是 Account |
+| Zone | DNS | Edit |
+| Zone | Zone Settings | Edit |
+| Zone | Config Rules | Edit |
+| Zone | Page Rules | Edit |
