@@ -48,45 +48,150 @@ Cloudflare Pages（免费档）
 
 ---
 
-## 三、一次性配置（约 15 分钟）
+## 三、上线操作手册（照着点，约 30 分钟）
 
-### 1. 在 Cloudflare 创建 Pages 项目
+### 开工前：三个后台各管什么
 
-1. 登录 [Cloudflare Dashboard](https://dash.cloudflare.com/) → 左侧 **Workers & Pages** → **Create** → **Pages** → **Connect to Git**
-2. 授权 GitHub，选择仓库 `wwwin896-cpu/xiaominART`
-3. 构建设置填写：
+这次会碰到三个网站，先说清楚各自负责什么，免得在错的地方找按钮：
 
-   | 项目 | 值 |
+| 后台 | 网址 | 它管什么 | 本次要动吗 |
+|---|---|---|---|
+| **GitHub** | github.com | 存放网站源码（仓库 `wwwin896-cpu/xiaominART`） | **几乎不用动**，只需授权一次 |
+| **Cloudflare** | dash.cloudflare.com | 建 Pages 项目、绑域名、配跳转规则 | 主要工作在这里 |
+| **阿里云** | 阿里云控制台 → 域名 | 域名注册与 DNS 解析 | 只需改一次 NS |
+
+### GitHub 到底要不要改设置？——结论：不用
+
+很多人第一反应是去 GitHub 的 Settings 里找，但这次**没有一个设置需要在那里改**：
+
+- ❌ **不用**去 `Settings → Pages`——那是 GitHub Pages 的功能，本方案不用它
+- ❌ **不用**把仓库改成公开——Cloudflare Pages 公开库、私有库都能读（官方原文：*Both private and public repositories are supported*）
+- ❌ **不用**配 Actions、不用加 Secrets
+- ✅ **唯一需要碰 GitHub 的**，是给「Cloudflare Pages」这个 GitHub 应用授权，让它能读你的仓库。两个入口，任选其一：
+
+  **入口 A（推荐，跟着流程走就行）**
+  在 Cloudflare 里点 Connect to Git 时会自动弹出 GitHub 授权页，授权完自动回到 Cloudflare。
+
+  **入口 B（想主动先进 GitHub）**
+  浏览器打开 `https://github.com/apps/cloudflare-pages`
+  → 点 **Install**
+  → 选 **Only select repositories**，只勾 `xiaominART`
+  → 点 **Install**
+
+  选「Only select repositories」很重要：这样 Cloudflare 只能看到这一个仓库，你账号里其他仓库它看不到。
+
+- **事后想查看或撤销授权**：GitHub 右上角头像 → **Settings** → 左侧边栏最下方 **Applications** → **Installed GitHub Apps** → 找到 Cloudflare Pages → **Configure**
+
+### 开工前的事实底座（2026-09-28 实测）
+
+- 域名 NS 当前在**阿里云**：`dns1.hichina.com` / `dns2.hichina.com`
+- 站点当前在 **Vercel**：`www` → `64.29.17.1`，顶点域 → `216.198.79.1`
+- 域名**没有 MX 记录、没有 TXT 记录**（未用于收发邮件）→ 改 NS **不会影响邮件**
+- 仓库默认分支 `main`，最新提交 `fde3c91`（已含 `_redirects` / `_headers` / `functions`）
+
+### ⚠️ 一条硬约束
+
+Cloudflare 官方明确：**顶点域（`xiaominart.com`）必须先把域名添加为 Cloudflare zone 并改 nameserver**，没有别的办法。
+（子域如 `www` 可以用外部 CNAME 指向 `pages.dev`，但顶点域不行。）所以第 4 步改 NS 是绕不开的。
+
+### ⚠️ 顺序：域名放在最后一步动
+
+**不要先改 NS。** 正确顺序是：先把新站建好、在临时网址上验收通过，最后才切换域名。
+这样切换前旧站一直正常服务，切换后若有问题也还能快速切回。
+
+---
+
+### 第 1 步 · Cloudflare 添加站点，拿到 NS
+
+1. 打开 https://dash.cloudflare.com/ 注册并登录（免费账号即可）
+2. 顶部 **+ Add a site** → 输入 `xiaominart.com` → 计划选 **Free** → Continue
+3. Cloudflare 会扫描现有解析记录并列出几条（A 记录，指向 Vercel）。先不用管，继续
+4. 页面给出**两个 nameserver**，形如 `xxxx.ns.cloudflare.com` 和 `yyyy.ns.cloudflare.com`
+   → **把这两个地址抄下来**，第 4 步要用
+
+### 第 2 步 · 建 Pages 项目，连上 GitHub 仓库
+
+1. 左侧 **Workers & Pages** → **Create application** → 切到 **Pages** 标签 → **Connect to Git**
+2. 点 GitHub 授权（就是上面说的入口 A）→ 在弹出的 GitHub 页面点 **Install & Authorize**
+   - 在授权页选 **Only select repositories** → 只勾 `xiaominART`
+3. 回到 Cloudflare，从仓库列表选中 `xiaominART` → **Begin setup**
+4. 构建设置照抄：
+
+   | 字段 | 填什么 |
    |---|---|
+   | Project name | `xiaominart` |
    | Production branch | `main` |
    | Framework preset | `Astro` |
    | Build command | `npm run build` |
    | Build output directory | `dist` |
 
-4. 点击 **Save and Deploy**
+5. **Environment variables 不用加**——仓库根目录已有 `.nvmrc`（内容 `22`），Cloudflare 会按 Node 22 构建
+6. 点 **Save and Deploy**，等 1–2 分钟
 
-> 仓库根目录已经放了 `.nvmrc`（内容为 `22`），Cloudflare 会按 Node 22 构建。
+构建成功后会得到一个临时网址，形如 `https://xiaominart.pages.dev`
 
-### 2. 绑定自定义域名
+### 第 3 步 · 在临时网址上验收（此时旧站仍在正常服务）
 
-1. Pages 项目 → **Custom domains** → **Set up a custom domain**
-2. 添加 `www.xiaominart.com`
-3. 再添加 `xiaominart.com`（顶点域）
+逐项检查 `https://xiaominart.pages.dev`：
 
-### 3. 配置顶点域跳转到 www（必须手动做）
+- [ ] 首页正常打开，**样式完整**（若是无样式的裸页面，说明 `_astro/` 资源没加载，去构建日志里查）
+- [ ] 导航能点：`/gifts/`、`/scenes/`、`/journal/`、`/business-gifts/` 都能打开
+- [ ] 抽查一个已下线的旧网址，如 `/inspiration/`，应 **301 跳转**到 `/gifts/`（能跳说明 `_redirects` 已被识别）
+- [ ] 提交一条测试留言（「与我们聊聊」表单），确认提交成功
+- [ ] 手机打开看一眼版式
 
-`public/_redirects` 只能按路径匹配，**不能按域名匹配**，所以这条规则要在 Cloudflare 后台配：
+> 这一步是关键闸门。任何一项不过，都先别往下走。
 
-1. 左侧 **Rules** → **Redirect Rules** → **Create rule**
+### 第 4 步 · 改 NS（唯一动域名的一步）
+
+1. 登录**阿里云** → 控制台 → **域名** → 找到 `xiaominart.com` → 点 **管理** → 左侧 **DNS 修改**（部分界面叫「DNS 服务器」）
+2. 把原来的 `dns1.hichina.com`、`dns2.hichina.com` 替换成第 1 步抄下的两个 Cloudflare 地址
+3. 保存
+
+生效时间通常 1–4 小时，最长 48 小时。在 Cloudflare 该域名的首页看状态：`Pending` → **`Active`** 就是生效了。
+
+> 域名没有邮箱记录，这一步不会影响收发邮件。
+
+### 第 5 步 · 回 Cloudflare 绑定自定义域名
+
+**等状态变成 Active 之后**再回来做：
+
+1. **Workers & Pages** → 点进 `xiaominart` 项目 → **Custom domains** → **Set up a domain**
+2. 输入 `www.xiaominart.com` → Continue（Cloudflare 会自动建好解析记录）
+3. 再点一次 **Set up a domain**，输入 `xiaominart.com`
+
+> ⚠️ **顺序不能反**：必须先在 Pages 面板里加域名、让 Cloudflare 自动生成记录。
+> 如果自己跑去 DNS 页面手加记录，会报 **522** 错误。
+
+### 第 6 步 · 配顶点域跳转到 www
+
+`public/_redirects` 只能按路径匹配、**不能按域名匹配**，所以这条要在 Cloudflare 侧配：
+
+1. Cloudflare 左侧切到 `xiaominart.com` 这个 zone → **Rules** → **Redirect Rules** → **Create rule**
 2. 名称：`apex-to-www`
-3. 匹配条件：`Hostname` 等于 `xiaominart.com`
-4. 目标：动态表达式 `concat("https://www.xiaominart.com", http.request.uri.path)`
-5. 状态码选 **301**，保留查询字符串，勾选"保留路径"
+3. 条件：`Hostname` **equals** `xiaominart.com`
+4. **Then** 选 `Dynamic redirect`，表达式填：
+   `concat("https://www.xiaominart.com", http.request.uri.path)`
+5. Status code 选 **301**，勾选保留查询字符串 → **Deploy**
 
-### 4. 换掉域名解析
+### 第 7 步 · 验证与收尾
 
-把 xiaominart.com 的 DNS 指向 Cloudflare（域名注册商处改 nameserver，或在 Cloudflare 里加站点并按提示操作）。
-确认新站可访问后，再回 Vercel 删除项目。
+- [ ] `https://www.xiaominart.com` 正常打开，样式完整
+- [ ] `https://xiaominart.com` 自动 301 跳到 www
+- [ ] `http://` 自动升级为 `https://`
+- [ ] 再提交一条测试留言，确认云数据库里能看到记录
+- [ ] 老网址 301 生效（抽查 `/inspiration/`、`/faq/`、`/blog/`）
+- [ ] 全部确认无误后，回 **Vercel** 后台删除旧项目（避免两处同时服务）
+
+### 出问题去哪看
+
+| 现象 | 排查入口 |
+|---|---|
+| 构建失败 | Cloudflare → Pages 项目 → **Deployments** → 点最新一条看构建日志 |
+| 页面样式丢失 | 构建日志搜 `_astro`；本地跑 `npm run build` 后确认 `dist/_astro/` 有文件 |
+| 表单提交失败 | 浏览器网络面板看 `/api/lead` 的状态码；若 404，在 `functions/api/lead/` 下补 `index.ts` |
+| 域名不生效 | Cloudflare 域名首页看是否仍是 Pending；用 `whatsmydns.net` 查 NS 是否已切换 |
+| 报 522 | 多半是自己手加了 DNS 记录。删掉，改走第 5 步的页面流程 |
 
 ---
 
