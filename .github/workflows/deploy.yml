@@ -1,0 +1,42 @@
+# ─────────────────────────────────────────────────────────────
+# 自动部署：main 分支有新提交（含后台保存的内容）→ 构建静态站 → 部署 Cloudflare Pages
+#
+# 首次启用前，需在 GitHub 仓库配置两个 Actions secret：
+#   （仓库页面 → Settings → Secrets and variables → Actions → New repository secret）
+#   CLOUDFLARE_API_TOKEN   Cloudflare API 令牌（Pages Edit 权限，与手动部署用同一个）
+#   CLOUDFLARE_ACCOUNT_ID  Cloudflare 账户 ID：fc5bdc20f05edbbfa43081b6a8f6c672
+# ─────────────────────────────────────────────────────────────
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+concurrency:
+  group: deploy-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=xiaominart --branch=main --commit-dirty=true

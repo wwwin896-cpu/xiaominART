@@ -18,13 +18,11 @@ const menuItem = fields.object({
 const contentBody = fields.mdx({ label: '正文内容', description: '支持 Markdown/MDX。' });
 
 export default config({
-  // local：后台直接读写本机 content/ 目录下的文件，无需 GitHub 登录、无需数据库。
-  // 用法：npm run dev → http://localhost:4321/keystatic
-  // 改完内容后，用 git 提交并推送，Cloudflare Pages 会自动重新构建上线。
-  //
-  // 将来若要改成「在线后台、多人协作」，换成下面这段（并给站点加回 SSR 适配器）：
-  //   storage: { kind: 'github', repo: { owner: 'wwwin896-cpu', name: 'xiaominART' } },
-  storage: { kind: 'local' },
+  // github：在线后台模式。访问 站点/keystatic → GitHub 登录 → 改动直接提交到仓库，
+  // 由 GitHub Action 自动构建部署上线（.github/workflows/deploy.yml）。
+  // 需要环境变量：KEYSTATIC_GITHUB_CLIENT_ID / KEYSTATIC_GITHUB_CLIENT_SECRET /
+  //   KEYSTATIC_SECRET / PUBLIC_KEYSTATIC_GITHUB_APP_SLUG（首次由 /keystatic 向导生成）。
+  storage: { kind: 'github', repo: 'wwwin896-cpu/xiaominART' },
   locale: 'zh-CN',
   ui: {
     brand: {

@@ -25,6 +25,9 @@
   },
   "devDependencies": {
     "@types/node": "^26.6.2",
-    "wrangler": "^4.142.0"
+    "wrangler": "4.143.0"
+  },
+  "overrides": {
+    "wrangler": "4.143.0"
   }
 }

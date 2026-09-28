@@ -28,6 +28,10 @@
 /business /business-gifts/ 301
 /business/ /business-gifts/ 301
 
+# ── 在线后台别名（2026-09-29）──
+/admin /keystatic/ 301
+/admin/ /keystatic/ 301
+
 # ── 二、去重 301（2026-09-28：同一内容只保留一个 URL）──
 # 2.1 灵感参考整体下线，内容与「小民好礼」重复（6 个方向中 5 个与商品一一对应）
 /inspiration /gifts/ 301
