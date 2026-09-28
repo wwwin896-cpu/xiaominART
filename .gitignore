@@ -1,4 +1,7 @@
 .vercel
+.astro
+.wrangler
+docs/.workbuddy/
 .env*
 node_modules/
 dist/

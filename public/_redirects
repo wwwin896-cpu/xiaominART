@@ -1,0 +1,73 @@
+# ─────────────────────────────────────────────────────────────
+# Cloudflare Pages 重定向规则
+# 文档：https://developers.cloudflare.com/pages/configuration/redirects/
+# 规则上限：静态规则 2000 条 + 动态（含 * 通配）100 条
+# 注意：_redirects 不能按域名匹配。顶点域 xiaominart.com → www 的跳转
+#       需在 Cloudflare 后台用 Redirect Rule 配置（见 docs/cloudflare-迁移说明.md）。
+# ─────────────────────────────────────────────────────────────
+
+# ── 一、旧地址 301（由原 vercel.json 迁移）──
+/custom /custom-commission/ 301
+/custom/ /custom-commission/ 301
+/commission /custom-commission/ 301
+/commission/ /custom-commission/ 301
+/en/custom /custom-commission/ 301
+/en/custom/ /custom-commission/ 301
+/en / 301
+/en/ / 301
+/faq /help/ 301
+/faq/ /help/ 301
+/art-gift /gift-guide/ 301
+/art-gift/ /gift-guide/ 301
+/blog /journal/ 301
+/blog/ /journal/ 301
+/blog/* /journal/ 301
+/business /business-gifts/ 301
+/business/ /business-gifts/ 301
+
+# ── 二、去重 301（2026-09-28：同一内容只保留一个 URL）──
+# 2.1 灵感参考整体下线，内容与「小民好礼」重复（6 个方向中 5 个与商品一一对应）
+/inspiration /gifts/ 301
+/inspiration/ /gifts/ 301
+/inspiration/quiet-entry /gifts/quiet-entry-gift/ 301
+/inspiration/quiet-entry/ /gifts/quiet-entry-gift/ 301
+/inspiration/red-seal /gifts/cinnabar-note-gift/ 301
+/inspiration/red-seal/ /gifts/cinnabar-note-gift/ 301
+/inspiration/desk-mountain /gifts/desk-mountain-keepsake/ 301
+/inspiration/desk-mountain/ /gifts/desk-mountain-keepsake/ 301
+/inspiration/ink-breath /gifts/ink-breath-teacher/ 301
+/inspiration/ink-breath/ /gifts/ink-breath-teacher/ 301
+/inspiration/seasonal-letter /gifts/seasonal-letter-gift/ 301
+/inspiration/seasonal-letter/ /gifts/seasonal-letter-gift/ 301
+# 「门槛的光」无对应商品，属空间定制方向，回企业定制
+/inspiration/threshold-light /business-gifts/ 301
+/inspiration/threshold-light/ /business-gifts/ 301
+
+# 2.2 商品详情页双 URL：/gift-guide/{slug}/ 与 /gifts/{slug}/ 是同一件作品
+#     保留 /gifts/{slug}/（导航正式入口），另一套 301 过去
+/gift-guide/quiet-entry-gift /gifts/quiet-entry-gift/ 301
+/gift-guide/quiet-entry-gift/ /gifts/quiet-entry-gift/ 301
+/gift-guide/cinnabar-note-gift /gifts/cinnabar-note-gift/ 301
+/gift-guide/cinnabar-note-gift/ /gifts/cinnabar-note-gift/ 301
+/gift-guide/seasonal-letter-gift /gifts/seasonal-letter-gift/ 301
+/gift-guide/seasonal-letter-gift/ /gifts/seasonal-letter-gift/ 301
+/gift-guide/desk-mountain-keepsake /gifts/desk-mountain-keepsake/ 301
+/gift-guide/desk-mountain-keepsake/ /gifts/desk-mountain-keepsake/ 301
+/gift-guide/ink-breath-teacher /gifts/ink-breath-teacher/ 301
+/gift-guide/ink-breath-teacher/ /gifts/ink-breath-teacher/ 301
+
+# 2.3 场合/对象索引页双 URL：保留 /gift-guide/ 下的版本
+/occasions /gift-guide/by-occasion/ 301
+/occasions/ /gift-guide/by-occasion/ 301
+/recipients /gift-guide/by-recipient/ 301
+/recipients/ /gift-guide/by-recipient/ 301
+
+# 2.4 企业页双 URL：/business-custom/ 与 /business-gifts/ 讲的是同一件事
+#     保留 /business-gifts/（主导航正式入口，内容更完整）
+/business-custom /business-gifts/ 301
+/business-custom/ /business-gifts/ 301
+
+# 2.5 /discover/ 原本是站内的 Astro 重定向页（meta refresh 属软跳转），
+#     改为真正的 301，对搜索引擎更清晰
+/discover /art-direction/ 301
+/discover/ /art-direction/ 301

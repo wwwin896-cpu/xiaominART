@@ -1,5 +1,5 @@
 // 表单提交模块（仅客户端使用）
-// 生产链路：浏览器 → 同源 /api/lead/（Vercel serverless 代理，见 src/pages/api/lead.ts）→ WorkBuddy 云数据库。
+// 生产链路：浏览器 → 同源 /api/lead（Cloudflare Pages Function，见 functions/api/lead.ts）→ WorkBuddy 云数据库。
 // 为什么不直连云端：云服务端强制精确 Origin 匹配，www.xiaominart.com 不在白名单，
 // 浏览器直连会在预检阶段被 403 拦截。同源代理请求无 CORS 限制。
 // publishableKey 已收敛到服务端，不再进入前端打包产物。
@@ -8,7 +8,8 @@ export type SubmitOutcome = { ok: boolean; message?: string };
 const FALLBACK_EMAIL = 'hi@xiaominart.com';
 export const CONTACT_FALLBACK = `如持续失败，可直接邮件联系 ${FALLBACK_EMAIL}。`;
 
-const API_URL = '/api/lead/';
+// 对应 Cloudflare Pages Function 的路由 /api/lead（不带尾斜杠）。
+const API_URL = '/api/lead';
 
 async function postToApi(body: Record<string, unknown>): Promise<SubmitOutcome> {
   try {

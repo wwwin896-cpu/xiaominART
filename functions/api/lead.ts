@@ -1,11 +1,15 @@
-// 表单提交服务端代理（Vercel serverless 函数，经 @astrojs/vercel 适配器部署）
-// 链路：浏览器 → 同源 /api/lead/ → WorkBuddy 云数据库 REST 端点。
+// ─────────────────────────────────────────────────────────────
+// 表单提交服务端代理（Cloudflare Pages Function）
+// 路由：POST /api/lead   （由本文件路径 functions/api/lead.ts 决定）
+//
+// 链路：浏览器 → 同源 /api/lead → WorkBuddy 云数据库 REST 端点。
 // 为什么需要代理：云服务端强制精确 Origin 匹配（仅允许发布预留域名），
 // 不含 www.xiaominart.com，浏览器直连预检即 403。服务端请求无 Origin 头，不受此限制。
-// publishableKey 属客户端公开凭据（数据安全由云端 RLS 保证），经此收敛到服务端仅是收紧，非安全依赖。
-import type { APIRoute } from 'astro';
-
-export const prerender = false;
+// publishableKey 属客户端公开凭据（数据安全由云端 RLS 保证），收敛到服务端仅是收紧。
+//
+// 迁移说明：原实现是 Vercel serverless 函数（src/pages/api/lead.ts），
+// 站点改为 Cloudflare Pages 静态托管后，同一份逻辑搬到这里，代码未改动。
+// ─────────────────────────────────────────────────────────────
 
 const CLOUD_REST_BASE = 'https://xiaominart-forms.app.workbuddy.host/.cloud/database/rest';
 const ACCESS_KEY = 'wbpk_F0w7EXBEJ6ijaciNTHWkaW_og4NwUbg9n03Ie90K1Yq4dBZCicDBh3U';
@@ -34,7 +38,11 @@ async function insertToCloud(table: 'leads' | 'subscribers', row: Record<string,
   });
 }
 
-export const POST: APIRoute = async ({ request }) => {
+async function handleLead(request: Request): Promise<Response> {
+  if (request.method !== 'POST') {
+    return jsonResponse({ ok: false, message: '仅支持 POST。' }, 405);
+  }
+
   const raw = await request.text();
   if (raw.length > MAX_BODY_BYTES) {
     return jsonResponse({ ok: false, message: '提交内容过长，请精简后重试。' }, 413);
@@ -88,4 +96,15 @@ export const POST: APIRoute = async ({ request }) => {
   }
   if (res.status === 201) return jsonResponse({ ok: true });
   return jsonResponse({ ok: false, message: '提交失败，请稍后再试。' }, 502);
-};
+}
+
+export const onRequestPost = async (context: { request: Request }): Promise<Response> =>
+  handleLead(context.request);
+
+export const onRequestOptions = async (): Promise<Response> =>
+  new Response(null, {
+    status: 204,
+    headers: {
+      Allow: 'POST, OPTIONS',
+    },
+  });

@@ -5,12 +5,12 @@ import { directionQuiz, artists, inspirations } from '../../data/content';
 <Layout title="3分钟理清你的送礼方向｜XIAOMINART" description="通过几个轻量问题梳理对象、风格、预算与时间，再带着透明的方向建议与我们聊聊。">
   <section class="container page-head"><span class="eyebrow">Direction finder / 送礼方向工具</span><h1 class="serif">3分钟理清你的送礼方向。</h1><p lang="en">A short way to name the direction you are looking for.</p><p>这不是自动匹配或报价工具。你的选择只帮助我们把第一次沟通说得更具体，结果会标注为方向建议。</p></section>
   <section class="container quiz-wrap"><form id="direction-quiz">{directionQuiz.map((question, index) => <fieldset data-question={question.id}><legend><span class="mono">0{index + 1}</span><strong>{question.question}</strong><small lang="en">{question.en}</small></legend><div class="quiz-options">{question.options.map((option) => <label><input type="radio" name={question.id} value={option} required /><span>{option}</span></label>)}</div></fieldset>)}<button class="btn btn-primary" type="submit">查看方向建议 <span>→</span></button></form></section>
-  <div id="direction-data" hidden data-artists={JSON.stringify(artists)} data-inspirations={JSON.stringify(inspirations)}></div><section class="container section result" hidden aria-live="polite"><span class="eyebrow">A transparent suggestion / 方向建议</span><h2 class="serif">你的选择，指向一条可以继续讨论的路。</h2><div class="result-copy"></div><div class="suggestion-grid"><div><span class="eyebrow">艺术家方向</span><a class="artist-suggestion" href="/artists/">查看艺术家档案 →</a></div><div><span class="eyebrow">灵感方向</span><a class="inspiration-suggestion" href="/inspiration/">浏览相关灵感 →</a></div></div><div class="result-actions"><a class="btn btn-primary result-cta" href="/custom-commission/">与我们聊聊 <span>→</span></a><button class="btn btn-secondary poster-cta" type="button">生成我的艺术方向海报 / Save direction</button></div><canvas class="direction-poster" width="1080" height="1080" aria-hidden="true"></canvas></section>
+  <div id="direction-data" hidden data-artists={JSON.stringify(artists)} data-inspirations={JSON.stringify(inspirations)}></div><section class="container section result" hidden aria-live="polite"><span class="eyebrow">A transparent suggestion / 方向建议</span><h2 class="serif">你的选择，指向一条可以继续讨论的路。</h2><div class="result-copy"></div><div class="suggestion-grid"><div><span class="eyebrow">艺术家方向</span><a class="artist-suggestion" href="/artists/">查看艺术家档案 →</a></div><div><span class="eyebrow">小民好礼</span><a class="inspiration-suggestion" href="/gifts/">看对应的小民好礼 →</a></div></div><div class="result-actions"><a class="btn btn-primary result-cta" href="/custom-commission/">与我们聊聊 <span>→</span></a><button class="btn btn-secondary poster-cta" type="button">生成我的艺术方向海报 / Save direction</button></div><canvas class="direction-poster" width="1080" height="1080" aria-hidden="true"></canvas></section>
 </Layout>
 <script>
   const dataNode = document.querySelector<HTMLElement>('#direction-data');
   const artists = JSON.parse(dataNode?.dataset.artists || '[]') as Array<{slug:string;name:string;en:string;styles:string[]}>;
-  const inspirations = JSON.parse(dataNode?.dataset.inspirations || '[]') as Array<{slug:string;title:string;en:string;spaces:string[];style:string[]}>;
+  const inspirations = JSON.parse(dataNode?.dataset.inspirations || '[]') as Array<{slug:string;title:string;en:string;spaces:string[];style:string[];productSlug?:string}>;
   const form = document.querySelector<HTMLFormElement>('#direction-quiz');
   const result = document.querySelector<HTMLElement>('.result');
   const copy = document.querySelector<HTMLElement>('.result-copy');
@@ -30,7 +30,7 @@ import { directionQuiz, artists, inspirations } from '../../data/content';
     if (result) result.hidden = false;
     if (copy) copy.innerHTML = `<p>空间：<b>${space}</b>　风格：<b>${style}</b></p><p>载体：<b>${medium}</b>　预算：<b>${budget}</b>　时间：<b>${timeline}</b></p><p class="pending-note">建议仅供沟通参考；艺术家、媒介、周期与最终预算仍需根据完整项目 brief 确认。</p>`;
     if (artistLink) { artistLink.textContent = `${artist.name} / ${artist.en} →`; artistLink.href = `/artists/${artist.slug}/`; }
-    if (inspirationLink) { inspirationLink.textContent = `${inspiration.title} / ${inspiration.en} →`; inspirationLink.href = `/inspiration/${inspiration.slug}/`; }
+    if (inspirationLink) { inspirationLink.textContent = `${inspiration.title} / ${inspiration.en} →`; inspirationLink.href = inspiration.productSlug ? `/gifts/${inspiration.productSlug}/` : '/business-gifts/'; }
     const params = new URLSearchParams({ space, style, medium, budget, timeline, direction: `${style} / ${space} / ${medium}`, inspiration: inspiration.title });
     if (cta) cta.href = `/custom-commission/?${params.toString()}`;
     result?.scrollIntoView({ behavior: 'smooth', block: 'start' });
