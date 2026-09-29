@@ -33,6 +33,10 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          # 后台界面把 App slug 内联进构建产物（import.meta.env.PUBLIC_*），
+          # GitHub 上没有 .env，需要在这里显式提供。此值公开，非密钥。
+          PUBLIC_KEYSTATIC_GITHUB_APP_SLUG: wwwin896-cpu-keystatic
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
