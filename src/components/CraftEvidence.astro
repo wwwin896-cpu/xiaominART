@@ -1,0 +1,74 @@
+---
+// 创作过程与品质证据：先讲怎么做出来的，再给可核验的东西。
+// 注意：页脚已声明「不使用未经核验的数字作为背书」，因此 stats 默认为空数组，
+// 拿到真实数据后再传入即可（例如 stats={[{ value: '12', label: '年创作与教学经验' }]}），不填就不会渲染。
+import { processSteps } from '../data/content';
+const { stats = [] } = Astro.props;
+const evidence = [
+  {
+    title: '创作者是真名实姓的',
+    body: '升斗小民（书写与东方日常）、非遗小宁（非遗面塑与手作体验），两位创作者的档案都可以点开细看。',
+  },
+  {
+    title: '材料看得见',
+    body: '纸、墨、装裱与包装的具体选择都会写清楚，不用「高级材料」四个字带过。',
+  },
+  {
+    title: '边界先说清楚',
+    body: '哪些可以定制、哪些暂不承接、定金与修改节点怎么约定，都在常见问题里提前写明。',
+  },
+];
+---
+<div class="evidence">
+  <div class="process-rail">
+    {processSteps.map((step) => (
+      <article class="process-card" data-reveal>
+        <span class="mono step-no">{step.no}</span>
+        <h3 class="serif">{step.zh}</h3>
+        <p>{step.body}</p>
+        <span class="step-en" lang="en">{step.en}</span>
+      </article>
+    ))}
+  </div>
+  <div class="evidence-band">
+    <span class="eyebrow">Evidence / 品质证据</span>
+    <div class="evidence-grid">
+      {evidence.map((item) => (
+        <div class="evidence-item">
+          <h3 class="serif">{item.title}</h3>
+          <p>{item.body}</p>
+        </div>
+      ))}
+    </div>
+    {stats.length > 0 && (
+      <div class="evidence-stats">
+        {stats.map((stat) => (
+          <div class="stat"><b class="mono">{stat.value}</b><span>{stat.label}</span></div>
+        ))}
+      </div>
+    )}
+  </div>
+</div>
+<style>
+  .process-rail { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px; }
+  .process-card { border-top: 1px solid var(--line); padding: 22px 18px 0 0; }
+  .step-no { color: var(--cinnabar); font-size: 13px; }
+  .process-card h3 { font-size: 21px; font-weight: 500; margin: 16px 0 10px; }
+  .process-card p { color: var(--ink-soft); font-size: 14px; line-height: 1.9; margin: 0 0 12px; }
+  .step-en { color: var(--meta); font: 11px / 1.5 var(--font-body-en), sans-serif; letter-spacing: .06em; }
+  .evidence-band { margin-top: 66px; padding: 34px 30px; background: var(--paper-light); border: 1px solid var(--border-soft); }
+  .evidence-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 22px; }
+  .evidence-item h3 { font-size: 16.5px; font-weight: 500; margin: 0 0 8px; }
+  .evidence-item p { margin: 0; color: var(--ink-soft); font-size: 13.5px; line-height: 1.9; }
+  .evidence-stats { display: flex; flex-wrap: wrap; gap: 46px; margin-top: 30px; padding-top: 24px; border-top: 1px solid var(--border-soft); }
+  .stat b { font-size: 32px; font-weight: 400; color: var(--cinnabar); }
+  .stat span { display: block; margin-top: 2px; color: var(--meta); font-size: 12.5px; }
+  @media (max-width: 960px) { .process-rail, .evidence-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 767px) {
+    .process-rail { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 16px; padding-bottom: 8px; margin: 0 -16px; padding-inline: 16px; }
+    .process-card { flex: 0 0 74%; scroll-snap-align: start; }
+    .evidence-band { margin-top: 44px; padding: 26px 20px; }
+    .evidence-grid { grid-template-columns: 1fr; gap: 22px; }
+    .evidence-stats { gap: 28px; }
+  }
+</style>

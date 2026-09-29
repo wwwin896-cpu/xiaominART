@@ -1,0 +1,69 @@
+---
+// 手写现货四主题：命名沿用品牌既有的四个方向，各自指向唯一有效的商品详情页。
+const themes = [
+  {
+    key: 'SEASONAL LETTER',
+    title: '四时一笺 · 节日问候',
+    body: '按节气写的一种问候。春写春生福，冬写冬安寿——节日不只是送礼的日子，也是把话认真说出口的日子。',
+    image: '/assets/scenes/tea-gold-calligraphy.jpg',
+    alt: '四时一笺 · 节气手写问候',
+    href: '/gifts/seasonal-letter-gift/',
+    event: 'theme_seasonal_click',
+  },
+  {
+    key: 'INK WITH BREATH',
+    title: '墨有呼吸 · 文房雅室',
+    body: '给书房与文房的一笔。墨色有浓淡、有速度、有停顿，所以每一件都不会完全相同。',
+    image: '/assets/scenes/tea-wall-scroll.jpg',
+    alt: '墨有呼吸 · 文房书法作品',
+    href: '/gifts/ink-breath-teacher/',
+    event: 'theme_ink_click',
+  },
+  {
+    key: 'A CINNABAR NOTE',
+    title: '一点朱砂 · 传情达意',
+    body: '整幅留白，只用一处朱砂把重心点亮。适合把「谢谢你」「我记得你」说得含蓄一点。',
+    image: '/assets/scenes/living-room-round-seal.jpg',
+    alt: '一点朱砂 · 朱砂印章书法',
+    href: '/gifts/cinnabar-note-gift/',
+    event: 'theme_cinnabar_click',
+  },
+  {
+    key: 'A MOUNTAIN ON THE DESK',
+    title: '案上有山 · 风生水起',
+    body: '把山水的起伏收进案头。开业、晋升、周年——送给正在做事的人。',
+    image: '/assets/scenes/study-round-calligraphy.jpg',
+    alt: '案上有山 · 案头山水书法',
+    href: '/gifts/desk-mountain-keepsake/',
+    event: 'theme_mountain_click',
+  },
+];
+---
+<div class="themes">
+  {themes.map((theme) => (
+    <a class="theme" href={theme.href} data-event={theme.event}>
+      <figure><img src={theme.image} alt={theme.alt} loading="lazy" decoding="async" /></figure>
+      <div class="theme-body">
+        <span class="mono theme-key">{theme.key}</span>
+        <h3 class="serif">{theme.title}</h3>
+        <p>{theme.body}</p>
+        <span class="theme-link">看看这一栏 →</span>
+      </div>
+    </a>
+  ))}
+</div>
+<style>
+  .themes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border-soft); border: 1px solid var(--border-soft); }
+  .theme { display: flex; background: var(--paper-light); min-height: 220px; transition: background-color .3s ease; }
+  .theme:hover { background: var(--paper); }
+  .theme figure { flex: 0 0 42%; margin: 0; overflow: hidden; background: var(--paper-deep); }
+  .theme img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s ease; }
+  .theme:hover img { transform: scale(1.03); }
+  .theme-body { padding: 26px 24px; display: flex; flex-direction: column; gap: 8px; }
+  .theme-key { color: var(--meta); font-size: 10.5px; letter-spacing: .1em; }
+  .theme-body h3 { font-size: 19px; font-weight: 500; margin: 0; line-height: 1.5; }
+  .theme-body p { margin: 0; flex: 1; color: var(--ink-soft); font-size: 13.5px; line-height: 1.9; }
+  .theme-link { color: var(--cinnabar); font-size: 12.5px; }
+  @media (max-width: 900px) { .themes { grid-template-columns: 1fr; } }
+  @media (max-width: 560px) { .theme { flex-direction: column; } .theme figure { flex: none; aspect-ratio: 16 / 10; } }
+</style>

@@ -1,0 +1,60 @@
+---
+// 动态镜头位：滚动进入视口才播放、划走即暂停（不预加载、不自动播声音）。
+// 素材未到位时不显示空白块，而是沿用站内既有的「预留占位」语言，保证版面完整。
+// 后续拿到真实素材：把 src 传进来即可，页面结构不用改。
+const {
+  src,
+  label = '影像待补',
+  meta,
+  ratio = '16 / 9',
+  poster,
+} = Astro.props;
+---
+<figure class="vshot" data-vshot style={`--vshot-ratio:${ratio}`}>
+  <div class="vshot-frame">
+    {src
+      ? <video class="vshot-media" src={src} poster={poster} muted loop playsinline preload="metadata" data-vshot-media aria-label={label}></video>
+      : <div class="vshot-empty" role="img" aria-label={label}><span class="slot-zh">{label}</span><small lang="en">Footage to come</small></div>}
+    {src && <button class="vshot-toggle" type="button" data-vshot-toggle>暂停</button>}
+  </div>
+  {meta && <figcaption class="vshot-meta mono">{meta}</figcaption>}
+</figure>
+<script>
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('[data-vshot]').forEach((figure) => {
+    const media = figure.querySelector('[data-vshot-media]');
+    if (!(media instanceof HTMLVideoElement)) return;
+    const toggle = figure.querySelector('[data-vshot-toggle]');
+    const sync = () => { if (toggle) toggle.textContent = media.paused ? '播放' : '暂停'; };
+    sync();
+    if (!reduceMotion && 'IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            media.play().then(sync).catch(sync);
+          } else {
+            media.pause();
+          }
+        });
+      }, { threshold: 0.5 });
+      observer.observe(media);
+    }
+    media.addEventListener('play', sync);
+    media.addEventListener('pause', sync);
+    toggle?.addEventListener('click', () => {
+      if (media.paused) media.play().catch(() => {}); else media.pause();
+      sync();
+    });
+  });
+</script>
+<style>
+  .vshot { margin: 0; }
+  .vshot-frame { position: relative; aspect-ratio: var(--vshot-ratio); background: var(--paper-deep); overflow: hidden; }
+  .vshot-media { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .vshot-empty { position: absolute; inset: 0; display: grid; place-content: center; gap: 7px; border: 1px dashed var(--line); color: var(--muted); text-align: center; }
+  .slot-zh { font-size: 13px; letter-spacing: .2em; color: var(--ink-soft); }
+  .vshot-empty small { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; font-family: var(--font-body-en), sans-serif; }
+  .vshot-toggle { position: absolute; right: 14px; bottom: 14px; appearance: none; border: 0; padding: 7px 15px; background: rgba(43, 41, 36, .74); color: #f0e9dc; font: 12px / 1.5 var(--font-body-en), var(--font-body-zh); cursor: pointer; }
+  .vshot-toggle:hover { background: var(--cinnabar); }
+  .vshot-meta { display: block; margin-top: 12px; color: var(--meta); font-size: 11px; letter-spacing: .08em; }
+</style>

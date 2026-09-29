@@ -1,0 +1,64 @@
+---
+// 「我们能为你做什么」：把品牌能力翻译成四件用户能判断的具体的事，每件带价锚与落地页。
+const services = [
+  {
+    no: '01',
+    title: '直接买一件手写作品',
+    body: '写好的小幅作品与手写小笺，按四个主题分：四时一笺、墨有呼吸、一点朱砂、案上有山。',
+    anchor: '心意起点约 ¥100',
+    href: '/gifts/',
+    link: '看小民好礼',
+    event: 'svc_gifts_click',
+  },
+  {
+    no: '02',
+    title: '定制一件只属于你的',
+    body: '从一个人、一处空间、一句话开始。不必先懂艺术，我们先聊方向，再谈价钱。',
+    anchor: '定制参考 ¥300 起',
+    href: '/custom-commission/',
+    link: '开始艺术共创',
+    event: 'svc_commission_click',
+  },
+  {
+    no: '03',
+    title: '挑一份送得出手的礼',
+    body: '按场合、按对象、按预算筛。从日常小礼到开业、谢师、周年这类需要郑重的时刻。',
+    anchor: '¥100–¥800 以上',
+    href: '/gift-guide/',
+    link: '进入选礼指南',
+    event: 'svc_gift_guide_click',
+  },
+  {
+    no: '04',
+    title: '机构、空间与活动合作',
+    body: '出版社插画、博物馆与文旅、非遗面塑体验活动、企业礼赠与空间艺术。',
+    anchor: '按项目评估',
+    href: '/partners/',
+    link: '看合作方式',
+    event: 'svc_partners_click',
+  },
+];
+---
+<div class="matrix">
+  {services.map((item) => (
+    <a class="matrix-card" href={item.href} data-event={item.event}>
+      <span class="mono matrix-no">{item.no}</span>
+      <h3 class="serif">{item.title}</h3>
+      <p>{item.body}</p>
+      <span class="matrix-anchor">{item.anchor}</span>
+      <span class="matrix-link">{item.link} →</span>
+    </a>
+  ))}
+</div>
+<style>
+  .matrix { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border-soft); border: 1px solid var(--border-soft); }
+  .matrix-card { display: flex; flex-direction: column; gap: 10px; padding: 30px 26px 28px; background: var(--paper-light); min-height: 260px; transition: background-color .3s ease; }
+  .matrix-card:hover { background: var(--paper); }
+  .matrix-no { color: var(--cinnabar); font-size: 12px; }
+  .matrix-card h3 { font-size: 18px; font-weight: 500; margin: 0; line-height: 1.5; }
+  .matrix-card p { margin: 0; color: var(--ink-soft); font-size: 13.5px; line-height: 1.9; flex: 1; }
+  .matrix-anchor { color: var(--cinnabar-deep); font-size: 12.5px; }
+  .matrix-link { color: var(--cinnabar); font-size: 12.5px; }
+  @media (max-width: 960px) { .matrix { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 620px) { .matrix { grid-template-columns: 1fr; } .matrix-card { min-height: 0; } }
+</style>

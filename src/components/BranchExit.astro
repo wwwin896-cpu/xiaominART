@@ -1,0 +1,44 @@
+---
+// 最终咨询入口：按人群分三条路，替代通用的「与我们聊聊」。
+const branches = [
+  {
+    title: '我要送人',
+    body: '先看写好的手写作品，或按场合、对象、预算筛出一份合适的礼。',
+    link: '进入小民好礼',
+    href: '/gifts/',
+    event: 'branch_gift_click',
+  },
+  {
+    title: '我要为自己定制',
+    body: '带来一个人、一处空间、一句话，我们先聊方向，不先谈价。',
+    link: '开始艺术共创',
+    href: '/custom-commission/',
+    event: 'branch_commission_click',
+  },
+  {
+    title: '我是机构',
+    body: '出版社、博物馆与文旅、非遗面塑体验活动、企业礼赠与空间艺术。',
+    link: '看合作方式',
+    href: '/partners/',
+    event: 'branch_partners_click',
+  },
+];
+---
+<div class="branches">
+  {branches.map((branch) => (
+    <a class="branch" href={branch.href} data-event={branch.event}>
+      <h3 class="serif">{branch.title}</h3>
+      <p>{branch.body}</p>
+      <span class="branch-link">{branch.link} →</span>
+    </a>
+  ))}
+</div>
+<style>
+  .branches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border-soft); border: 1px solid var(--border-soft); }
+  .branch { display: flex; flex-direction: column; gap: 10px; padding: 34px 28px; background: var(--paper-light); transition: background-color .3s ease; }
+  .branch:hover { background: var(--paper); }
+  .branch h3 { font-size: 19px; font-weight: 500; margin: 0; }
+  .branch p { margin: 0 0 8px; color: var(--ink-soft); font-size: 13.5px; line-height: 1.9; }
+  .branch-link { margin-top: auto; color: var(--cinnabar); font-size: 13px; }
+  @media (max-width: 860px) { .branches { grid-template-columns: 1fr; } }
+</style>

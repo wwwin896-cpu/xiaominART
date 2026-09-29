@@ -1,0 +1,77 @@
+---
+// 「给这份心意一句话」：主页的表达空间。
+// 不登录、不留手机号——用户在这里留下东西，才有情绪记忆；最后一跳直接把情绪接到定制。
+---
+<div class="wish" data-wish>
+  <div class="wish-form">
+    <label for="wish-to">你想对谁说</label>
+    <input id="wish-to" type="text" data-wish-to autocomplete="off" placeholder="例如：给我妈 / 给带了我三年的老师 / 给自己" />
+    <label for="wish-say">想说的那句话</label>
+    <textarea id="wish-say" rows="4" data-wish-say placeholder="例如：这些年辛苦你了，往后的日子轻一点。"></textarea>
+    <label for="wish-sign">落款（可留空）</label>
+    <input id="wish-sign" type="text" data-wish-sign autocomplete="off" placeholder="例如：女儿 敬上" />
+    <div class="wish-actions">
+      <button class="btn btn-primary" type="button" data-wish-copy>复制这句话</button>
+      <span class="wish-hint" data-wish-hint>当场可复制带走，不用注册</span>
+    </div>
+  </div>
+  <div class="wish-side">
+    <div class="wish-card" data-wish-card>
+      <span class="wish-card-to" data-wish-card-to>给重要的人</span>
+      <p class="wish-card-line" data-wish-card-line>写下那句话，这里就会浮现出来。</p>
+      <span class="wish-card-seal" data-wish-card-seal aria-hidden="true">民</span>
+    </div>
+    <div class="wish-exits">
+      <a class="btn btn-secondary" href="/stories/" data-event="wish_stories_click">看看相似的真实故事</a>
+      <a class="btn btn-primary" href="/custom-commission/?context=主页心意卡" data-event="wish_commission_click">让艺术家把它写出来 →</a>
+    </div>
+  </div>
+</div>
+<script>
+  const root = document.querySelector('[data-wish]');
+  if (root) {
+    const to = root.querySelector<HTMLInputElement>('[data-wish-to]');
+    const say = root.querySelector<HTMLTextAreaElement>('[data-wish-say]');
+    const sign = root.querySelector<HTMLInputElement>('[data-wish-sign]');
+    const cardTo = root.querySelector('[data-wish-card-to]');
+    const cardLine = root.querySelector('[data-wish-card-line]');
+    const cardSeal = root.querySelector('[data-wish-card-seal]');
+    const copyBtn = root.querySelector<HTMLButtonElement>('[data-wish-copy]');
+    const hint = root.querySelector('[data-wish-hint]');
+    const render = () => {
+      if (cardTo) cardTo.textContent = to?.value.trim() || '给重要的人';
+      const line = say?.value.trim();
+      if (cardLine) cardLine.textContent = line ? `「${line}」` : '写下那句话，这里就会浮现出来。';
+      const tail = sign?.value.trim();
+      if (cardSeal) cardSeal.textContent = tail ? tail.slice(-2) : '民';
+    };
+    [to, say, sign].forEach((field) => field?.addEventListener('input', render));
+    copyBtn?.addEventListener('click', async () => {
+      const target = to?.value.trim() || '重要的人';
+      const line = say?.value.trim();
+      const tail = sign?.value.trim();
+      if (!line) { if (hint) hint.textContent = '先写下那句话，再复制'; return; }
+      const text = `给${target}：${line}${tail ? `\n——${tail}` : ''}`;
+      try {
+        await navigator.clipboard.writeText(text);
+        if (hint) hint.textContent = '已复制，去粘贴到你想发的地方';
+      } catch {
+        if (hint) hint.textContent = '复制失败，请手动选中这段文字';
+      }
+    });
+  }
+</script>
+<style>
+  .wish { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: start; }
+  .wish-form label { display: block; color: var(--ink-soft); font-size: 12.5px; letter-spacing: .06em; margin-bottom: 7px; }
+  .wish-form input, .wish-form textarea { width: 100%; border: 1px solid var(--line); background: var(--paper-light); color: var(--ink); font-family: var(--font-body-zh); font-size: 15px; padding: 12px 14px; margin-bottom: 20px; resize: vertical; line-height: 1.7; }
+  .wish-form input:focus, .wish-form textarea:focus { outline: none; border-color: var(--cinnabar); }
+  .wish-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .wish-hint { color: var(--meta); font-size: 12.5px; }
+  .wish-card { position: relative; display: flex; flex-direction: column; justify-content: center; min-height: 330px; padding: 46px 40px; background: var(--paper-light); border: 1px solid var(--border-soft); box-shadow: var(--shadow); }
+  .wish-card-to { color: var(--meta); font-size: 12.5px; margin-bottom: 16px; }
+  .wish-card-line { margin: 0; font-family: var(--font-display-zh); font-size: clamp(19px, 2.2vw, 25px); line-height: 1.85; letter-spacing: .02em; }
+  .wish-card-seal { position: absolute; right: 34px; bottom: 34px; display: grid; place-content: center; width: 38px; height: 38px; background: var(--cinnabar); color: #fffaf1; font-size: 15px; line-height: 1; letter-spacing: .04em; }
+  .wish-exits { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+  @media (max-width: 900px) { .wish { grid-template-columns: 1fr; gap: 30px; } .wish-card { min-height: 260px; padding: 34px 26px; } }
+</style>

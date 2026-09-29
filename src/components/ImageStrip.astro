@@ -1,0 +1,35 @@
+---
+// 三格横向滚动图组：一屏只看三张，各承担一个"凭什么好"的问题。
+// item: { image?, slot?, tag, title, caption }
+const { items = [], label = '细节图组', ratio = '4 / 5' } = Astro.props;
+---
+<div class="strip" role="group" aria-label={label} style={`--strip-ratio:${ratio}`}>
+  {items.map((item) => (
+    <figure class="strip-item">
+      <div class="strip-pic">
+        {item.image
+          ? <img src={item.image} alt={item.alt ?? item.title} loading="lazy" decoding="async" />
+          : <div class="strip-slot" role="img" aria-label={item.slot ?? item.title}><span>{item.slot ?? '图片待补'}</span></div>}
+      </div>
+      <figcaption>
+        <span class="strip-tag">{item.tag}</span>
+        <strong class="serif">{item.title}</strong>
+        <em>{item.caption}</em>
+      </figcaption>
+    </figure>
+  ))}
+</div>
+<style>
+  .strip { display: flex; gap: 22px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; scrollbar-width: none; }
+  .strip::-webkit-scrollbar { display: none; }
+  .strip-item { flex: 0 0 calc((100% - 44px) / 3); min-width: 240px; scroll-snap-align: start; margin: 0; }
+  .strip-pic { aspect-ratio: var(--strip-ratio); background: var(--paper-deep); border: 1px solid var(--line-soft); overflow: hidden; }
+  .strip-pic img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s ease; }
+  .strip-item:hover .strip-pic img { transform: scale(1.03); }
+  .strip-slot { display: grid; place-content: center; width: 100%; height: 100%; border: 1px dashed var(--line); color: var(--muted); font-size: 12px; letter-spacing: .18em; text-align: center; }
+  figcaption { padding-top: 14px; }
+  .strip-tag { display: block; color: var(--cinnabar); font-size: 12px; letter-spacing: .22em; margin-bottom: 8px; }
+  figcaption strong { display: block; font-size: 16px; font-weight: 500; margin-bottom: 6px; }
+  figcaption em { display: block; color: var(--ink-soft); font-size: 13px; line-height: 1.85; font-style: normal; }
+  @media (max-width: 767px) { .strip-item { flex: 0 0 76%; } }
+</style>
