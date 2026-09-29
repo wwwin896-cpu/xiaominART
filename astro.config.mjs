@@ -28,7 +28,9 @@ export default defineConfig({
   // dev 用 server 让 Keystatic 集成注入的本地 API 路由可用；build 恒定输出静态文件。
   output: withLocalCms ? 'server' : 'static',
   integrations: [react(), markdoc(), ...(withLocalCms ? [keystatic()] : [])],
-  trailingSlash: 'always',
+  // dev 用 'ignore'：Keystatic 的 GitHub 登录/OAuth 接口（/api/keystatic/github/login 等）
+  // 固定生成无尾斜杠 URL，'always' 会让它们 404；生产保持 'always' 维持 URL 规范化。
+  trailingSlash: withLocalCms ? 'ignore' : 'always',
   vite: {
     resolve: {
       alias: withLocalCms
