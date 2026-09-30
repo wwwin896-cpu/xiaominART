@@ -17,5 +17,6 @@ resources/
 **/*_err.log
 **/*_out.log
 dist-new/
+dist-test/
 !src/data/*.ts
 dist-vercel-test/

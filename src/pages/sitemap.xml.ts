@@ -17,6 +17,7 @@ const staticPaths = [
   '',
   // 核心导航（对应 src/data/content.ts 的 navItems；artists/ 已并入「关于我们·小民其人」，页面保留）
   'gifts/',
+  'gifts/ready-made/',
   'gift-guide/',
   'scenes/',
   'artists/',
