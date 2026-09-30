@@ -20,8 +20,6 @@ export const navItems = [
   {
     href: '/gifts/', zh: '小民好礼', en: 'Xiaomin Gifts', children: [
       { href: '/gift-guide/', zh: '送礼指南', en: 'Gift Guide' },
-      { href: '/gift-guide/by-occasion/', zh: '按场合选礼', en: 'By Occasion' },
-      { href: '/gift-guide/by-recipient/', zh: '按对象选礼', en: 'By Recipient' },
     ],
   },
   {

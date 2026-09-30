@@ -63,11 +63,16 @@
 /gift-guide/ink-breath-teacher /gifts/ink-breath-teacher/ 301
 /gift-guide/ink-breath-teacher/ /gifts/ink-breath-teacher/ 301
 
-# 2.3 场合/对象索引页双 URL：保留 /gift-guide/ 下的版本
-/occasions /gift-guide/by-occasion/ 301
-/occasions/ /gift-guide/by-occasion/ 301
-/recipients /gift-guide/by-recipient/ 301
-/recipients/ /gift-guide/by-recipient/ 301
+# 2.3 场合/对象索引页已下线（2026-09-30：与选礼指南重复，导航与选礼指南内入口一并移除）
+#     场合/对象详情页 /occasions/{slug}/、/recipients/{slug}/ 保留为内容底稿
+/occasions /gifts/ 301
+/occasions/ /gifts/ 301
+/recipients /gifts/ 301
+/recipients/ /gifts/ 301
+/gift-guide/by-occasion /gift-guide/ 301
+/gift-guide/by-occasion/ /gift-guide/ 301
+/gift-guide/by-recipient /gift-guide/ 301
+/gift-guide/by-recipient/ /gift-guide/ 301
 
 # 2.4 企业页双 URL：/business-custom/ 与 /business-gifts/ 讲的是同一件事
 #     保留 /business-gifts/（主导航正式入口，内容更完整）
