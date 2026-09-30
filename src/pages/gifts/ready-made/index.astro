@@ -6,7 +6,7 @@ import { readyMadeWorks } from '../../../data/content';
   <section class="container page-head"><span class="eyebrow">Ready to Ship / 现货好礼</span><h1 class="serif">已经写好，<br />等一个懂它的人。</h1><p lang="en">Already written. Ready to go.</p><p>下面这些，是小民已经完成的小幅书法作品。每一幅都只有一件，装裱完成即可直接发货——你在页面上看到的这一幅，就是将来到家的那一幅。</p></section>
   <section class="container section works-section">
     <div class="works-grid">
-      {readyMadeWorks.map((work) => <article class="work-card reveal" data-reveal><figure><img src={work.image} alt={work.alt} loading="lazy" decoding="async" /></figure><div class="work-copy"><span class="work-badge">现货 · 可直接发货</span><h2 class="serif">{work.title}</h2><p lang="en">{work.en}</p><p class="work-note">{work.note}</p><a class="work-cta" href={`/custom-commission/?context=礼赠或纪念&inspiration=${encodeURIComponent(`现货咨询 · ${work.title}`)}`} data-event="ready_work_click">咨询这一幅 →</a></div></article>)}
+      {readyMadeWorks.map((work) => <article class="work-card reveal" data-reveal><figure><img src={work.sceneImage ?? work.image} alt={work.sceneAlt ?? work.alt} loading="lazy" decoding="async" />{work.sceneImage && <span class="scene-tag">空间示意</span>}</figure><div class="work-copy"><span class="work-badge">现货 · 可直接发货</span><h2 class="serif">{work.title}</h2><p lang="en">{work.en}</p><p class="work-note">{work.note}</p><a class="work-cta" href={`/custom-commission/?context=礼赠或纪念&inspiration=${encodeURIComponent(`现货咨询 · ${work.title}`)}`} data-event="ready_work_click">咨询这一幅 →</a></div></article>)}
     </div>
     <p class="works-fineprint">每幅作品均附唯一编号与藏品证书（一物一码）；尺寸、纸墨与价格随作品档案在咨询时提供，不做批发、不做复刻。</p>
   </section>
@@ -17,7 +17,8 @@ import { readyMadeWorks } from '../../../data/content';
   .works-section { border-top: 1px solid var(--line); }
   .works-grid { columns: 3; column-gap: 30px; }
   .work-card { break-inside: avoid; margin: 0 0 30px; border: 1px solid var(--line); background: var(--paper-light); }
-  .work-card figure { margin: 0; overflow: hidden; background: var(--paper-deep); }
+  .work-card figure { margin: 0; overflow: hidden; background: var(--paper-deep); position: relative; }
+  .scene-tag { position: absolute; top: 12px; left: 12px; padding: 3px 9px; background: rgba(250, 248, 243, .92); color: var(--ink-soft); font-size: 11px; letter-spacing: .14em; }
   .work-card img { width: 100%; display: block; transition: transform .6s ease; }
   .work-card:hover img { transform: scale(1.03); }
   .work-copy { padding: 20px 20px 24px; }
