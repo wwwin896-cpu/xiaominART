@@ -169,6 +169,8 @@ export type GiftProduct = {
     specsNote?: string;
     cards?: { name: string; text: string }[];
     cardColumns?: number;
+    image?: string;
+    imageAlt?: string;
   }[];
   miniProgramUrl?: string;
   miniProgramStatus?: 'unconfigured' | 'ready' | 'unavailable';
@@ -214,13 +216,13 @@ export const giftProducts: GiftProduct[] = [
           { name: '书房', text: '它的原生位置。置于案头正位或书架视线层，与砚台、笔山、镇纸成组，坐姿平视刚好。' },
           { name: '茶室', text: '长案横陈，与主泡器、茶则同轴摆放。朱红卡裱在深色茶席里是天然的重心，宾客落座第一眼即见。' },
           { name: '餐厅', text: '置于餐边柜台面，与陶罐干枝、烛台同高错落；字色呼应桌布与器物，饭桌边的四季从此有出处。' },
-          { name: '玄关', text: '进门视线的落点。配一盏低亮度台灯，归家开灯即见「春有百花」，一天的疲惫先被接住。' },
+          { name: '玄关', text: '进门视线的落点。配一盏低亮度台灯，归家开灯即见「春夏秋冬」，一天的疲惫先被接住。' },
           { name: '休息室', text: '沙发边几或矮柜之上，与落地灯、常读的书、香器成组。它是那个房间里最安静的一件。' } ], cardColumns: 2 },
       {
         eyebrow: 'Chapter 06 / 包装', heading: '高端礼品包装与开箱系统', intro: '从盒子打开的那一刻起，礼物就已经开始了。', paragraphs: [
-          '外盒采用硬质天地盖礼盒，盒内定制卡位固定框体，运输途中不晃动、不磕碰；盒面以品牌标识压印，收礼的人在看到字之前，先看到克制。',
-          '随附火漆印章收藏证书一页：以火漆封缄，注明作品编号、书体与释读，是这件手写作品唯一性的凭证。',
-          '伴手物料包含棉质白手套、专用擦拭布与作品说明折页。开箱次序我们也在折页里写好了：先核证书，再戴手套取框，摆位之后，包装纸留着——那也是设计的一部分。'] },
+          '外盒为硬质天地盖礼盒，深黑特种纸裱糊，盒面烫印 xiaominART 标识与朱红印鉴；盒内定制卡位固定框体，运输途中不晃动、不磕碰。',
+          '随附风琴折页藏品证书：一面为藏品登记页（作品编号、品名、艺术签名，钤朱红印鉴），一面为使用与养护说明；另配黑色信封一枚，以朱砂火漆封缄——写给收礼人的话，拆封前谁也没有读过。',
+          '棉绳手提袋、米白便签卡与棉质白手套一并提供。开箱次序我们在证书上写好了：先核证书，再戴手套取框，摆位之后，包装纸留着——那也是设计的一部分。'], image: '/assets/scenes/packaging-set.jpg', imageAlt: 'xiaominART 包装系统：黑色天地盖礼盒与烫印标识、棉绳手提袋、风琴折页藏品证书与使用说明、朱砂火漆封缄信封与便签卡' },
     ] },
   { slug: 'desk-mountain-keepsake', name: '案上有山 · 雅致贺礼', en: 'A Mountain on the Desk · Keepsake', scene: 'opening', sceneLabel: '开业贺礼', tier: 'keepsake', price: '¥800 以上', meaning: '一整面墙的开阔气象——把稳重、开阔与持续生长的祝愿，安放进日常的空间。', recipient: '适合开业、晋升、周年等需要郑重表达的时刻。', dispatch: '预计确认后 14–21 个工作日发出', packaging: '含珍藏礼盒、包装升级与贺卡文字预览', visual: '山', image: '/assets/scenes/theme-desk-mountain.jpg' },
   { slug: 'ink-breath-teacher', name: '墨有呼吸 · 谢师礼', en: 'Ink with Breath · Teacher Gift', scene: 'thanks', sceneLabel: '感谢恩师 / 朋友', tier: 'keepsake', price: '¥800 以上', meaning: '一笔一画的浓淡与停顿都看得见——以手写的呼吸感，表达长久的感谢与敬意。', recipient: '适合送给老师、 mentor 或在人生阶段给予帮助的人。', dispatch: '预计确认后 14–21 个工作日发出', packaging: '含珍藏礼盒、说明卡与手写贺卡选项', visual: '墨', image: '/assets/scenes/theme-ink-breath.jpg' }, 

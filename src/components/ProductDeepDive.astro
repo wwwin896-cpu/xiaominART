@@ -21,6 +21,7 @@ const hasContent = gallery.length > 0 || deepDive.length > 0;
     {sec.specs && <dl class="dd-specs">{sec.specs.map((row) => <div class="dd-spec-row"><dt>{row.label}</dt><dd>{row.value}</dd></div>)}</dl>}
     {sec.specsNote && <p class="dd-note">{sec.specsNote}</p>}
     {sec.cards && <div class="dd-cards" style={`--dd-cols:${sec.cardColumns ?? 1}`}>{sec.cards.map((card) => <div class="dd-card"><h3 class="serif">{card.name}</h3><p>{card.text}</p></div>)}</div>}
+    {sec.image && <figure class="dd-fig"><img src={sec.image} alt={sec.imageAlt ?? ''} loading="lazy" decoding="async" /></figure>}
   </article>)}
 </section>}
 <style>
@@ -42,6 +43,8 @@ const hasContent = gallery.length > 0 || deepDive.length > 0;
   .dd-spec-row dt { font-weight: 500; font-size: 14px; }
   .dd-spec-row dd { margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.8; }
   .dd-note { color: var(--muted); font-size: 12px; margin: 12px 0 0; }
+  .dd-fig { margin: 24px 0 0; }
+  .dd-fig img { width: 100%; display: block; background: var(--paper-deep); }
   .dd-cards { display: grid; grid-template-columns: repeat(var(--dd-cols, 1), 1fr); gap: 16px; margin-top: 8px; }
   .dd-card { border: 1px solid var(--line); background: var(--paper-light); padding: 22px 22px 20px; }
   .dd-card h3 { font-size: 17px; font-weight: 500; margin: 0 0 10px; }
