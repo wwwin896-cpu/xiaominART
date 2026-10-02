@@ -143,6 +143,21 @@ const steps = [
   .closing h2 { font-size: clamp(24px, 2.8vw, 36px); font-weight: 500; margin: 16px 0 12px; }
   .closing p { color: var(--ink-soft); margin: 0 0 28px; }
   @media (max-width: 900px) { .choice-grid { gap: 20px; } .story-grid { grid-auto-rows: auto; } .story-card { grid-template-columns: 1fr; } .story-card figure { aspect-ratio: 16 / 9; } }
+  /* Web 端（≥901px）：定制故事横向排开，作品按 3:2 完整呈现不裁切；移动端版式不受影响 */
+  @media (min-width: 1100px) {
+    .story-grid { grid-template-columns: repeat(4, 1fr); grid-auto-rows: auto; gap: 24px; }
+    .story-card { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+    .story-card figure { aspect-ratio: 3 / 2; background: var(--paper-deep); }
+    .story-copy { padding: 20px 20px 22px; gap: 10px; }
+    .story-copy h3 { font-size: 16px; line-height: 1.6; }
+    .story-copy blockquote { font-size: 13px; line-height: 1.85; }
+  }
+  @media (min-width: 901px) and (max-width: 1099px) {
+    .story-grid { grid-auto-rows: auto; gap: 24px; }
+    .story-card { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+    .story-card figure { aspect-ratio: 3 / 2; background: var(--paper-deep); }
+    .story-copy { padding: 22px; }
+  }
   @media (max-width: 767px) {
     .hero { min-height: 78vh; }
     .hero-inner { width: min(var(--container), calc(100% - 32px)); }
