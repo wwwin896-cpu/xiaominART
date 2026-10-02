@@ -157,6 +157,19 @@ export type GiftProduct = {
   packaging: string;
   visual: string;
   image?: string;
+  /** 详情页画廊：装裱形式与使用空间实拍 */
+  gallery?: { src: string; alt: string; caption: string }[];
+  /** 产品深度详解（试点：四时一笺） */
+  deepDive?: {
+    eyebrow: string;
+    heading: string;
+    intro?: string;
+    paragraphs?: string[];
+    specs?: { label: string; value: string }[];
+    specsNote?: string;
+    cards?: { name: string; text: string }[];
+    cardColumns?: number;
+  }[];
   miniProgramUrl?: string;
   miniProgramStatus?: 'unconfigured' | 'ready' | 'unavailable';
   published?: boolean;
@@ -165,7 +178,50 @@ export type GiftProduct = {
 export const giftProducts: GiftProduct[] = [
   { slug: 'quiet-entry-gift', name: '静入 · 书房小礼', en: 'A Quiet Entrance · Study Gift', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥100–300', meaning: '以一处留白，为新居留住第一份安静。', recipient: '适合送给刚搬入新家的朋友、同事或长辈。', dispatch: '预计确认后 7–10 个工作日发出', packaging: '含基础礼盒与手写贺卡选项', visual: '静入', image: '/assets/scenes/study-desk-scroll.jpg' },
   { slug: 'cinnabar-note-gift', name: '一点朱砂 · 生日心意', en: 'A Cinnabar Note · Birthday Gift', scene: 'birthday', sceneLabel: '生日心意', tier: 'thoughtful', price: '¥300–500', meaning: '朱砂作底，古字为凭——像那幅「欢喜」，把值得庆祝的事郑重地讲出来。', recipient: '适合送给朋友、伴侣或希望认真表达感谢的人。', dispatch: '预计确认后 7–10 个工作日发出', packaging: '含礼盒包装、祝福卡和贺卡文字预览', visual: '朱', image: '/assets/scenes/theme-cinnabar.jpg' },
-  { slug: 'seasonal-letter-gift', name: '四时一笺 · 节日问候', en: 'A Letter for the Season · Festival Gift', scene: 'festival', sceneLabel: '节日问候', tier: 'thoughtful', price: '¥300–500', meaning: '岁有寒暑，月有圆缺——从一个节气、一句问候开始，把四季的流转写成一幅字。', recipient: '适合节日送长辈、朋友或重要合作伙伴。', dispatch: '预计确认后 10–14 个工作日发出', packaging: '含节日主题包装与手写贺卡选项', visual: '笺', image: '/assets/scenes/theme-four-seasons.jpg' },
+  { slug: 'seasonal-letter-gift', name: '四时一笺 · 节日问候', en: 'A Letter for the Season · Festival Gift', scene: 'festival', sceneLabel: '节日问候', tier: 'thoughtful', price: '¥300–500', meaning: '岁有寒暑，月有圆缺——从一个节气、一句问候开始，把四季的流转写成一幅字。', recipient: '适合节日送长辈、朋友或重要合作伙伴。', dispatch: '预计确认后 10–14 个工作日发出', packaging: '含节日主题包装与手写贺卡选项', visual: '笺', image: '/assets/scenes/theme-four-seasons.jpg',
+    gallery: [
+      { src: '/assets/scenes/four-seasons-study.jpg', alt: '古文字「春夏秋冬」书法小品，极窄黑胡桃细框，摆在书房案头，旁有青苔盆景与砚台', caption: '装裱形式一 · 书房案头｜黑胡桃细框，与砚台笔山为伴' },
+      { src: '/assets/scenes/four-seasons-tea.jpg', alt: '古文字「春夏秋冬」书法小品，朱红卡纸装裱，陈设于茶室长案，旁有铁壶与炭炉', caption: '装裱形式二 · 茶室长案｜朱红卡裱，茶席视觉重心' },
+      { src: '/assets/scenes/four-seasons-cabinet.jpg', alt: '古文字「春夏秋冬」书法小品，朱砂红底装裱，陈设于玄关边柜，旁有干枝红果与灯', caption: '装裱形式三 · 玄关边柜｜朱砂红底，进门第一眼' },
+    ],
+    deepDive: [
+      {
+        eyebrow: 'Chapter 01 / 释读', heading: '书法文字提取与释读', intro: '每一幅作品出发前，先过文字这一关。', paragraphs: [
+          '主文以古文字书写「春夏秋冬」四字：春如草木初生、枝蔓低垂；夏取草木繁盛之形；秋从禾谷与时机中来；冬似丝缕收束、垂以记寒。四字依季节次序排开，字形皆有古文字出处，不做美术化的拼贴与变形。',
+          '跋文以行书小字录宋代无门慧开禅师诗偈：「春有百花秋有月，夏有凉风冬有雪；若无闲事挂心头，便是人间好时节。」主文写四季之形，跋文写四季之心，一件作品，两层意思。',
+          '落款纪年，钤名章一方。每件作品随附释读说明一页，逐字注明字形来源与跋文出处——收礼的人不需要懂古文字，也能看明白它写了什么、从哪里来。'] },
+      {
+        eyebrow: 'Chapter 02 / 理念', heading: '设计理念与品牌定位', intro: '让书画从墙上走下来，回到手边的日常。', paragraphs: [
+          '我们的「器物哲学」很简单：书画不该只在展厅里被仰视。把它装进可以随手挪动、轻易擦拭、日日相对的尺寸，它就从「作品」变成「器物」——像一只常用的茶杯，因为天天见面而愈看愈亲。',
+          '「横幅案头」是我们为这类作品确立的美学定位：横向构图、低重心、与人坐姿视线齐平。它不要求一整面墙，一个书案、一组边柜、一方茶席就是它的展厅，与台灯、砚台、茶器天然同框。',
+          '作为小民艺术的书画礼品线，「四时一笺」承担的任务是：让没有书画收藏经验的人，也能轻松地把一件手写作品放进生活，并且经得起每天看。'] },
+      {
+        eyebrow: 'Chapter 03 / 规格', heading: '产品规格说明书', intro: '以下是本件作品的参考规格，最终以随附作品档案为准。', specs: [
+          { label: '装裱外框', value: '约 42 × 22 cm（横幅），对角线误差 ≤ 1 mm' },
+          { label: '画芯尺寸', value: '约 30 × 12 cm，四边留白各约 4 cm' },
+          { label: '框体厚度', value: '约 3 cm，内置桌面支架，亦可挂墙两用' },
+          { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，手工书写装裱，以实物为准' },
+          { label: '选材标准', value: '黑胡桃实木框条（含水率 8%–12%）、450g/m² 棉麻卡纸、光学级玻璃面板' },
+          { label: '装配结构', value: '45° 精拼角框体 + 硬质背板，S 形金属挂钩与桌面支架一体' },
+          { label: '耐候性指标', value: '适用温度 -10 ℃ 至 40 ℃、湿度 40%–70% RH；应避免长时间阳光直射与潮墙贴挂' } ] },
+      {
+        eyebrow: 'Chapter 04 / 工艺', heading: '装裱与材质工艺解析', intro: '三处细节，决定了它经不经得起细看。', cards: [
+          { name: '极窄圆角黑胡桃木', text: '约 8mm 极窄框边，把存在感让给字。四角做 R 形圆角处理，搬运不磕手，视觉上收掉木框的笨重；表面以哑光木蜡油收面，保留木材纹理与触感。' },
+          { name: '450g 棉麻卡纸立体斜切', text: '高克重棉麻卡纸提供足够的挺括度，四边 45° 立体斜切，让留白有真实的空间纵深——墨迹浮于纸面之上，灯光下层次分明。' },
+          { name: '光学玻璃防眩', text: '高透光、低反射的光学级玻璃，在台灯与窗景并存的环境里不易映出倒影；同时隔绝大部分紫外线，延缓纸张与墨色老化。' } ], cardColumns: 3 },
+      {
+        eyebrow: 'Chapter 05 / 陈设', heading: '全场景陈设搭配指南', intro: '五个位置，五种与它相处的方式。', cards: [
+          { name: '书房', text: '它的原生位置。置于案头正位或书架视线层，与砚台、笔山、镇纸成组，坐姿平视刚好。' },
+          { name: '茶室', text: '长案横陈，与主泡器、茶则同轴摆放。朱红卡裱在深色茶席里是天然的重心，宾客落座第一眼即见。' },
+          { name: '餐厅', text: '置于餐边柜台面，与陶罐干枝、烛台同高错落；字色呼应桌布与器物，饭桌边的四季从此有出处。' },
+          { name: '玄关', text: '进门视线的落点。配一盏低亮度台灯，归家开灯即见「春有百花」，一天的疲惫先被接住。' },
+          { name: '休息室', text: '沙发边几或矮柜之上，与落地灯、常读的书、香器成组。它是那个房间里最安静的一件。' } ], cardColumns: 2 },
+      {
+        eyebrow: 'Chapter 06 / 包装', heading: '高端礼品包装与开箱系统', intro: '从盒子打开的那一刻起，礼物就已经开始了。', paragraphs: [
+          '外盒采用硬质天地盖礼盒，盒内定制卡位固定框体，运输途中不晃动、不磕碰；盒面以品牌标识压印，收礼的人在看到字之前，先看到克制。',
+          '随附火漆印章收藏证书一页：以火漆封缄，注明作品编号、书体与释读，是这件手写作品唯一性的凭证。',
+          '伴手物料包含棉质白手套、专用擦拭布与作品说明折页。开箱次序我们也在折页里写好了：先核证书，再戴手套取框，摆位之后，包装纸留着——那也是设计的一部分。'] },
+    ] },
   { slug: 'desk-mountain-keepsake', name: '案上有山 · 雅致贺礼', en: 'A Mountain on the Desk · Keepsake', scene: 'opening', sceneLabel: '开业贺礼', tier: 'keepsake', price: '¥800 以上', meaning: '一整面墙的开阔气象——把稳重、开阔与持续生长的祝愿，安放进日常的空间。', recipient: '适合开业、晋升、周年等需要郑重表达的时刻。', dispatch: '预计确认后 14–21 个工作日发出', packaging: '含珍藏礼盒、包装升级与贺卡文字预览', visual: '山', image: '/assets/scenes/theme-desk-mountain.jpg' },
   { slug: 'ink-breath-teacher', name: '墨有呼吸 · 谢师礼', en: 'Ink with Breath · Teacher Gift', scene: 'thanks', sceneLabel: '感谢恩师 / 朋友', tier: 'keepsake', price: '¥800 以上', meaning: '一笔一画的浓淡与停顿都看得见——以手写的呼吸感，表达长久的感谢与敬意。', recipient: '适合送给老师、 mentor 或在人生阶段给予帮助的人。', dispatch: '预计确认后 14–21 个工作日发出', packaging: '含珍藏礼盒、说明卡与手写贺卡选项', visual: '墨', image: '/assets/scenes/theme-ink-breath.jpg' }, 
 ];

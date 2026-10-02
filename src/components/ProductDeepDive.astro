@@ -1,0 +1,57 @@
+---
+import type { GiftProduct } from '../data/content';
+const { product } = Astro.props as { product: GiftProduct };
+const gallery = product.gallery ?? [];
+const deepDive = product.deepDive ?? [];
+const hasContent = gallery.length > 0 || deepDive.length > 0;
+---
+{hasContent && <section class="container dd-gallery" aria-label="装裱形式与使用空间">
+  <span class="eyebrow">Mounting & Spaces / 装裱形式 · 使用空间</span>
+  <h2 class="serif">同一幅字，三种与生活相处的方式。</h2>
+  <div class="dd-gallery-grid">
+    {gallery.map((item) => <figure><img src={item.src} alt={item.alt} loading="lazy" decoding="async" /><figcaption>{item.caption}</figcaption></figure>)}
+  </div>
+</section>}
+{deepDive.length > 0 && <section class="container dd-sections" aria-label="产品详细介绍">
+  {deepDive.map((sec, i) => <article class={`dd-sec dd-sec-${i % 2 === 0 ? 'a' : 'b'}`}>
+    <span class="eyebrow">{sec.eyebrow}</span>
+    <h2 class="serif">{sec.heading}</h2>
+    {sec.intro && <p class="dd-intro">{sec.intro}</p>}
+    {sec.paragraphs && <div class="dd-paras">{sec.paragraphs.map((p) => <p>{p}</p>)}</div>}
+    {sec.specs && <dl class="dd-specs">{sec.specs.map((row) => <div class="dd-spec-row"><dt>{row.label}</dt><dd>{row.value}</dd></div>)}</dl>}
+    {sec.specsNote && <p class="dd-note">{sec.specsNote}</p>}
+    {sec.cards && <div class="dd-cards" style={`--dd-cols:${sec.cardColumns ?? 1}`}>{sec.cards.map((card) => <div class="dd-card"><h3 class="serif">{card.name}</h3><p>{card.text}</p></div>)}</div>}
+  </article>)}
+</section>}
+<style>
+  .dd-gallery { padding: 10px 0 66px; }
+  .dd-gallery h2 { font-size: clamp(24px, 2.8vw, 38px); font-weight: 500; margin: 14px 0 30px; }
+  .dd-gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+  .dd-gallery-grid figure { margin: 0; }
+  .dd-gallery-grid img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; display: block; background: var(--paper-deep); transition: transform .5s ease, filter .5s ease; }
+  .dd-gallery-grid figure:hover img { transform: scale(1.02); filter: brightness(1.04); }
+  .dd-gallery-grid figcaption { padding-top: 12px; color: var(--ink-soft); font-size: 13px; line-height: 1.7; }
+  .dd-sections { padding: 0 0 80px; }
+  .dd-sec { max-width: 860px; padding: 44px 0; border-top: 1px solid var(--line-soft); }
+  .dd-sec h2 { font-size: clamp(24px, 2.6vw, 34px); font-weight: 500; margin: 14px 0 10px; }
+  .dd-intro { color: var(--cinnabar-deep); font-size: 16px; margin: 0 0 18px; }
+  .dd-paras p { color: var(--ink-soft); font-size: 15px; line-height: 2.05; margin: 0 0 14px; }
+  .dd-paras p:last-child { margin-bottom: 0; }
+  .dd-specs { margin: 8px 0 0; border-top: 1px solid var(--line); }
+  .dd-spec-row { display: grid; grid-template-columns: 160px 1fr; gap: 20px; padding: 13px 0; border-bottom: 1px solid var(--line); }
+  .dd-spec-row dt { font-weight: 500; font-size: 14px; }
+  .dd-spec-row dd { margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.8; }
+  .dd-note { color: var(--muted); font-size: 12px; margin: 12px 0 0; }
+  .dd-cards { display: grid; grid-template-columns: repeat(var(--dd-cols, 1), 1fr); gap: 16px; margin-top: 8px; }
+  .dd-card { border: 1px solid var(--line); background: var(--paper-light); padding: 22px 22px 20px; }
+  .dd-card h3 { font-size: 17px; font-weight: 500; margin: 0 0 10px; }
+  .dd-card p { color: var(--ink-soft); font-size: 13.5px; line-height: 1.9; margin: 0; }
+  @media (max-width: 900px) { .dd-gallery-grid { grid-template-columns: 1fr; gap: 30px; } }
+  @media (max-width: 767px) {
+    .dd-gallery { padding-bottom: 40px; }
+    .dd-sections { padding-bottom: 56px; }
+    .dd-sec { padding: 30px 0; }
+    .dd-cards { grid-template-columns: 1fr !important; }
+    .dd-spec-row { grid-template-columns: 1fr; gap: 4px; }
+  }
+</style>
