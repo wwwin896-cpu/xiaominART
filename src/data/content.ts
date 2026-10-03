@@ -412,23 +412,22 @@ export type ReadyMadeWork = {
 };
 
 /**
- * 现货好礼 · 书法小品（2026-09-30 新增）
+ * 现货好礼 · 书法小品（2026-10-03 全量换新）
  * 已写完、装裱完成、可直接发货的在册作品，每幅世间唯一。
- * image 为作品实拍（public/assets/works/work-*.jpg）；sceneImage 为空间场景演绎（scene-*.jpg，与实拍逐字核对过）。
- * 题字为从实拍辨认，上线前请主人复核一遍。
+ * image 为作品场景图（public/assets/works/work-*.jpg，与桌面素材夹原图逐一对应）。
+ * 题字为从图辨认并经素材夹归属核对，上线前请主人复核一遍。
  * 尺寸、纸墨与价格不写在页面上，随作品档案在咨询时提供。
  */
 export const readyMadeWorks: ReadyMadeWork[] = [
-  { slug: 'ri-you-xi', title: '日有喜 · 宜酒食', en: 'A Good Day, Good Food', note: '古人把「日日有喜、宜酒宜食」当作好日子的标准——这句话，今天依然成立。', image: '/assets/works/work-ri-you-xi.jpg', alt: '装裱完成的书法小品《日有喜·宜酒食》实拍', sceneImage: '/assets/works/scene-ri-you-xi.jpg', sceneAlt: '书法小品《日有喜·宜酒食》挂在木质边柜上，与陶罐绿枝和灯笼相映' },
-  { slug: 'wan-shi-sui-yuan', title: '万事随缘', en: 'Go with Grace', note: '随缘不是随便，是把用力过猛的日子，轻轻松一松。', image: '/assets/works/work-wan-shi-sui-yuan.jpg', alt: '装裱完成的书法小品《万事随缘》实拍', sceneImage: '/assets/works/scene-wan-shi-sui-yuan.jpg', sceneAlt: '书法横批《万事随缘》挂在开放式厨房与客厅之间' },
-  { slug: 'qing-huan', title: '清欢', en: 'Quiet Joy', note: '人间有味是清欢。不浓烈，却留得住。', image: '/assets/works/work-qing-huan.jpg', alt: '装裱完成的书法小品《清欢》实拍', sceneImage: '/assets/works/scene-qing-huan.jpg', sceneAlt: '木框书法小品《清欢》立在案头，旁边是台灯、书页与一杯茶' },
-  { slug: 'que-bao-yan-qian-xi', title: '鹊报檐前喜', en: 'Good News at the Eaves', note: '喜鹊落在檐前，好事正在路上。适合乔迁与新阶段的开始。', image: '/assets/works/work-que-bao-yan-qian-xi.jpg', alt: '装裱完成的书法小品《鹊报檐前喜》实拍', sceneImage: '/assets/works/scene-que-bao-yan-qian-xi.jpg', sceneAlt: '书法立轴《鹊报檐前喜》挂在玄关，玉兰枝与球形壁灯相伴' },
-  { slug: 'duan-she-li', title: '断舍离', en: 'Less, Then Light', note: '三个字，写给正在做减法的人与家。', image: '/assets/works/work-duan-she-li.jpg', alt: '装裱完成的书法小品《断舍离》实拍' },
-  { slug: 'ming-pin-gong-shang', title: '茗品共赏', en: 'Tea & Words', note: '茶席之上，字与茶同席。适合茶室，也适合爱茶的人。', image: '/assets/works/work-ming-pin-gong-shang.jpg', alt: '装裱完成的书法横批《茗品共赏》实拍' },
-  { slug: 'ran-xiang-ye-du-shu', title: '燃香夜读书', en: 'Incense & Night Reading', note: '一炉香，一盏灯，把夜晚还给读书的人。', image: '/assets/works/work-ran-xiang-ye-du-shu.jpg', alt: '装裱完成的书法小品《燃香夜读书》实拍', sceneImage: '/assets/works/scene-ran-xiang-ye-du-shu.jpg', sceneAlt: '书法立轴《燃香夜读书》挂在灰墙长案上方，香炉青烟与瓶花相伴' },
-  { slug: 'fu-ru-dong-hai', title: '福如东海 · 寿比南山', en: 'Blessings Deep as the Sea', note: '最经典的祝福，值得用最郑重的笔写。适合长辈寿诞与重要纪念。', image: '/assets/works/work-fu-ru-dong-hai.jpg', alt: '装裱完成的鸟虫篆书法立轴《福如东海·寿比南山》实拍', sceneImage: '/assets/works/scene-fu-ru-dong-hai.jpg', sceneAlt: '鸟虫篆书法《福如东海·寿比南山》黄纸小品摆在书桌台灯下，旁有毛笔与放大镜' },
-  { slug: 'huan-xi', title: '欢喜', en: 'Delight', note: '两个字，够了。看见它的人，会先笑一下。', image: '/assets/works/work-huan-xi.jpg', alt: '装裱完成的书法小品《欢喜》实拍' },
-  { slug: 'he-qi', title: '和气', en: 'Warmth Within', note: '一门和气，是一个家最安静的底气。', image: '/assets/works/work-he-qi.jpg', alt: '装裱完成的书法小品《和气》实拍' },
+  { slug: 'qing-huan', title: '清欢', en: 'Quiet Joy', note: '人间有味是清欢。不浓烈，却留得住。', image: '/assets/works/work-qing-huan.jpg', alt: '赭底白卡柚木框书法小品《清欢》挂在墙上的空间实景' },
+  { slug: 'ming-pin-gong-shang', title: '茗品共赏', en: 'Tea & Words', note: '茶席之上，字与茶同席。适合茶室，也适合爱茶的人。', image: '/assets/works/work-ming-pin-gong-shang.jpg', alt: '书法横批《茗品共赏》立在木质茶席边柜上，旁有盖碗与提梁壶' },
+  { slug: 'chan', title: '禅', en: 'Zen', note: '菩提本无树。一方圆光小品，适合玄关，也适合家里最安静的那个角落。', image: '/assets/works/work-chan.jpg', alt: '圆光书法小品《禅》立在玄关石面上，旁有玉兰花枝与暖灯' },
+  { slug: 'yi-hu-yi-xi', title: '一呼一吸', en: 'One Breath, Then Another', note: '一呼一吸之间，日子便有了节奏。适合卧室，也适合每一个想慢下来的角落。', image: '/assets/works/work-yi-hu-yi-xi.jpg', alt: '书法小品《一呼一吸》立在卧室边柜上，旁有台灯与柿子果盘' },
+  { slug: 'guan-zi-zai', title: '观自在', en: 'At Ease, As You Are', note: '《心经》起首三个字。自在不在远处，就在抬眼可见的地方。适合书房与玄关。', image: '/assets/works/work-guan-zi-zai.jpg', alt: '书法横批《观自在》摆在中式木案上，旁有石盆与瘦枝' },
+  { slug: 'chang-le', title: '长乐', en: 'Everlasting Joy', note: '取意汉瓦「长乐未央」。两个字，是古人最绵长的祝愿，适合书房与日常看得见的地方。', image: '/assets/works/work-chang-le.jpg', alt: '书法立轴《长乐》挂在深木色书房书架间，案上有绿植与台灯' },
+  { slug: 'duan-she-li', title: '断舍离', en: 'Less, Then Light', note: '三个字，写给正在做减法的人与家。', image: '/assets/works/work-duan-she-li.jpg', alt: '书法小品《断舍离》立在卧室柜上，旁有台灯、书册与瓶枝' },
+  { slug: 'mao-fei-jia-run', title: '猫肥家润', en: 'Fat Cat, Flourishing Home', note: '猫肥家润，花繁人安。把有烟火气的幸福写进家里，适合客厅，也适合养猫的人。', image: '/assets/works/work-mao-fei-jia-run.jpg', alt: '书法横批《猫肥家润》摆在客厅木几上，背景是沙发与绿植' },
+  { slug: 'xiang-jian-yi-wu-shi', title: '相见亦无事', en: 'Nothing Much, Just to See You', note: '相见亦无事，不来忽忆君。写给不必寒暄的老朋友，适合客厅与茶席。', image: '/assets/works/work-xiang-jian-yi-wu-shi.jpg', alt: '白底红卡黑框书法小品《相见亦无事》立在暖光卧室的木柜上，旁有台灯与书册' },
 ];
 
 export const channelPages = [
