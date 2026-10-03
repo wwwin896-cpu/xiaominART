@@ -421,6 +421,7 @@ export type ReadyMadeWork = {
 export const readyMadeWorks: ReadyMadeWork[] = [
   { slug: 'qing-huan', title: '清欢', en: 'Quiet Joy', note: '「人间有味是清欢」，苏轼写给寻常日子的七个字。不浓烈，却留得住——适合茶席、餐桌旁，或任何一个想慢下来的墙角。', image: '/assets/works/work-qing-huan.jpg', alt: '赭底白卡柚木框书法小品《清欢》挂在墙上的空间实景，旁有青瓷瓶、座钟与书册' },
   { slug: 'ming-pin-gong-shang', title: '茗品共赏', en: 'Tea & Words', note: '茶席之上，字与茶同席。适合茶室与餐边柜，也适合把一杯茶喝得认真的人。', image: '/assets/works/work-ming-pin-gong-shang.jpg', alt: '书法横批《茗品共赏》立在木质茶席边柜上，旁有盖碗、提梁壶与瓶花' },
+  { slug: 'nan-xi-xin-ji', title: '南谿新霁', en: 'Clearing Over the South Stream', note: '「南谿新霁」——雨过天晴，山清水净。四个字落在洒金扇面上，把雨停之后那一刻的清朗留在案头，适合茶席与书房。', image: '/assets/works/work-fan.jpg', alt: '胡桃木框洒金扇面书法小品《南谿新霁》立在抹茶茶席上，旁有茶碗、茶筅与和果子' },
   { slug: 'chan', title: '禅', en: 'Zen', note: '「菩提本无树」，六祖慧能的偈语。一方圆光小品，进门第一眼、家里最安静的那个角落，都合适。', image: '/assets/works/work-chan.jpg', alt: '圆光书法小品《禅》立在玄关石面上，旁有玉兰花枝与暖灯' },
   { slug: 'yi-hu-yi-xi', title: '一呼一吸', en: 'One Breath, Then Another', note: '一呼一吸之间，日子有了自己的节奏。适合卧室床头、书桌旁，也适合送给总在赶时间的人。', image: '/assets/works/work-yi-hu-yi-xi.jpg', alt: '书法小品《一呼一吸》立在卧室边柜上，旁有台灯与柿子果盘' },
   { slug: 'guan-zi-zai', title: '观自在', en: 'At Ease, As You Are', note: '「观自在菩萨」，心经开篇三字。自在不在远处，就在抬眼可见的地方——适合书房与玄关。', image: '/assets/works/work-guan-zi-zai.jpg', alt: '书法横批《观自在》摆在中式木案上，旁有石盆、瘦枝与笔架' },
