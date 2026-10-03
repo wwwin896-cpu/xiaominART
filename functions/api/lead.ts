@@ -14,7 +14,7 @@
 const CLOUD_REST_BASE = 'https://xiaominart-forms.app.workbuddy.host/.cloud/database/rest';
 const ACCESS_KEY = 'wbpk_F0w7EXBEJ6ijaciNTHWkaW_og4NwUbg9n03Ie90K1Yq4dBZCicDBh3U';
 const MAX_BODY_BYTES = 16 * 1024;
-const ALLOWED_FORM_TYPES = new Set(['quick_message', 'commission']);
+const ALLOWED_FORM_TYPES = new Set(['quick_message', 'commission', 'business_gift']);
 
 function jsonResponse(body: Record<string, unknown>, status: number): Response {
   return new Response(JSON.stringify(body), {

@@ -27,6 +27,12 @@
 /journal/* /about/ 301
 /business /business-gifts/ 301
 /business/ /business-gifts/ 301
+# 2026-10-03：外部旧链接与习惯性地址 /shop 指向「小民好礼」总入口（站内无该入口，仅兜住外链）
+/shop /gifts/ 301
+/shop/ /gifts/ 301
+/shop/* /gifts/ 301
+/store /gifts/ 301
+/store/ /gifts/ 301
 
 # ── 在线后台别名（2026-09-29）──
 /admin /keystatic/ 301

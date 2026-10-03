@@ -58,7 +58,7 @@ const isCurrent = (href: string) => { const normalized = href.replace(/\/$/, '')
     <main id="main"><slot /></main>
     <FloatingConsultation />
     <ShareButton />
-    <nav class="mobile-shopping-bar" aria-label="移动端底部导航"><a href="/gifts/" aria-label="浏览小民好礼"><span class="bar-zh">礼物</span><small lang="en">Gifts</small></a><a href="/gifts/" aria-label="我的心愿单"><span class="bar-zh">我的</span><small lang="en">Mine <span data-wishlist-count></span></small></a><button class="ink-seek" type="button" aria-controls="quick-message" aria-expanded="false" aria-label="寻墨 · 与我们留言"><span class="bar-zh">寻墨</span><small lang="en">Ink</small></button><button class="bar-share" type="button" data-share-button data-event="share_click" aria-label="分享本页给微信好友或朋友圈"><span class="bar-zh">分享</span><small lang="en">Share</small></button></nav>
+    <nav class="mobile-shopping-bar" aria-label="移动端底部导航"><a href="/gifts/" aria-label="浏览小民好礼"><span class="bar-zh">礼物</span><small lang="en">Gifts</small></a><a href="/wishlist/" aria-label="查看我的心愿单"><span class="bar-zh">心愿单</span><small lang="en">Saved <span data-wishlist-count></span></small></a><button class="ink-seek" type="button" aria-controls="quick-message" aria-expanded="false" aria-label="寻墨 · 与我们留言"><span class="bar-zh">寻墨</span><small lang="en">Ink</small></button><button class="bar-share" type="button" data-share-button data-event="share_click" aria-label="分享本页给微信好友或朋友圈"><span class="bar-zh">分享</span><small lang="en">Share</small></button></nav>
     <footer class="site-footer" data-component="site-footer">
       <div class="container footer-grid">
         <div><p class="eyebrow">XIAOMINART / 日常之礼</p><p class="footer-claim serif">愿你在这方寸之间，<br />找到属于自己的定制心意。</p></div>
@@ -66,11 +66,12 @@ const isCurrent = (href: string) => { const normalized = href.replace(/\/$/, '')
       </div>
       <div class="container trust-signals" aria-label="信息边界 / Information boundaries"><div><span class="eyebrow">Artist / 艺术家</span><strong>由具体创作方向与沟通内容开始</strong></div><div><span class="eyebrow">Projects / 项目</span><strong>已确认内容才会公开呈现</strong></div><div><span class="eyebrow">Privacy / 隐私</span><strong>客户故事与图像获得授权后发布</strong></div><p>我们不使用未经核验的客户数量、媒体曝光或合作机构作为背书。</p></div>
       <div class="container footer-newsletter"><Newsletter /></div>
-      <div class="container footer-bottom"><span>© {new Date().getFullYear()} XIAOMINART | 守艺 · 传情</span><span>世间无双，只此一幅 | Every piece is one of a kind, inspired by real stories.</span></div>
+      <div class="container footer-bottom"><span>© {new Date().getFullYear()} XIAOMINART | 守艺 · 传情</span><span>世间无双，只此一幅 | Every piece is one of a kind.</span></div>
     </footer>
   </body>
 </html>
 <script>
+  import { trackEvent } from '../scripts/cloud-forms';
   const toggle = document.querySelector('.menu-toggle');
   const nav = document.querySelector('#site-nav');
   const closeMenu = () => { if (!toggle || !nav) return; toggle.setAttribute('aria-expanded', 'false'); nav.classList.remove('open'); document.body.classList.remove('menu-open'); };
@@ -85,8 +86,17 @@ const isCurrent = (href: string) => { const normalized = href.replace(/\/$/, '')
   document.querySelectorAll<HTMLElement>('[data-event]').forEach((element) => element.addEventListener('click', () => {
     const eventName = element.dataset.event;
     if (!eventName) return;
-    window.dispatchEvent(new CustomEvent('xiaominart:event', { detail: { name: eventName, path: window.location.pathname } }));
+    window.dispatchEvent(new CustomEvent('xiaominart:event', { detail: { name: eventName, path: window.location.pathname, slot: element.dataset.slot, channel: element.dataset.channel } }));
   }));
+  // 站内所有交互事件统一在这里汇入上报（只上报核心漏斗的 6 个，服务端另有白名单）
+  window.addEventListener('xiaominart:event', (event) => {
+    const detail = ((event as CustomEvent).detail || {}) as Record<string, unknown>;
+    const name = typeof detail.name === 'string' ? detail.name : '';
+    if (!name) return;
+    const data: Record<string, unknown> = {};
+    Object.entries(detail).forEach(([key, value]) => { if (key !== 'name' && value) data[key] = value; });
+    trackEvent(name, data);
+  });
   const wishlistKey = 'xiaominart-wishlist';
   const readWishlist = (): string[] => { try { return JSON.parse(localStorage.getItem(wishlistKey) || '[]'); } catch { return []; } };
   const updateWishlistCount = () => document.querySelectorAll<HTMLElement>('[data-wishlist-count]').forEach((node) => { node.textContent = String(readWishlist().length); });
@@ -147,9 +157,12 @@ const isCurrent = (href: string) => { const normalized = href.replace(/\/$/, '')
     .nav-dropdown { position: static; display: flex; flex-wrap: wrap; column-gap: 24px; opacity: 1; visibility: visible; transform: none; padding: 0 0 4px; border: 0; box-shadow: none; background: transparent; min-width: 0; }
     .nav-dropdown a { font-size: 13px; padding: 7px 0; border: 0; min-height: 0; color: var(--ink-soft); }
     nav a:last-child { border-bottom: 0; }
-    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
     .footer-grid > div:first-child { grid-column: 1 / -1; }
-    .footer-contact, .trust-signals, .footer-newsletter { display: none; }
+    .trust-signals, .footer-newsletter { display: none; }
+    .footer-contact { border-top: 1px solid var(--line-soft); padding-top: 16px; }
+    .footer-contact .wechat-qr-link { min-height: 0; }
+    .footer-contact .wechat-qr { width: 132px; height: 132px; }
     .footer-bottom { display: block; }
      .footer-bottom span { display: block; margin-top: 8px; }
      .site-footer { padding-top: 56px; padding-bottom: 92px; }
@@ -162,6 +175,5 @@ const isCurrent = (href: string) => { const normalized = href.replace(/\/$/, '')
      .mobile-shopping-bar span[data-wishlist-count] { color: var(--cinnabar); font-family: var(--font-mono); }
      .mobile-shopping-bar .ink-seek { justify-self: center; }
      .mobile-shopping-bar .ink-seek:active .bar-zh, .mobile-shopping-bar .ink-seek[aria-expanded="true"] .bar-zh { color: var(--cinnabar); }
-   }
   }
 </style>

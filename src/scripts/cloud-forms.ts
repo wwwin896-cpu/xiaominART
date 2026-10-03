@@ -28,14 +28,18 @@ async function postToApi(body: Record<string, unknown>): Promise<SubmitOutcome> 
   }
 }
 
-/** 提交线索到 leads 表（formType: quick_message / commission） */
+/** 提交线索到 leads 表（formType: quick_message / commission / business_gift） */
 export async function submitLead(
   formType: string,
   name: string,
   contact: string,
   payload: Record<string, unknown> = {},
 ): Promise<SubmitOutcome> {
-  return postToApi({ kind: 'lead', formType, name, contact, payload });
+  const result = await postToApi({ kind: 'lead', formType, name, contact, payload });
+  // 表单是否成功，本身就是最重要的一类转化事件（失败会吃掉线索）
+  if (formType === 'commission') trackEvent('consultation_submit', { status: result.ok ? 'success' : 'error' });
+  if (formType === 'business_gift') trackEvent('business_brief_submit', { status: result.ok ? 'success' : 'error' });
+  return result;
 }
 
 /** 提交订阅邮箱到 subscribers 表（email 唯一，重复时视为成功并提示） */
@@ -47,4 +51,35 @@ export async function subscribeEmail(email: string, source: string): Promise<Sub
 export function isHoneypotFilled(form: HTMLFormElement): boolean {
   const honeypot = form.querySelector<HTMLInputElement>('input[name="website"][tabindex="-1"]');
   return Boolean(honeypot && honeypot.value.trim());
+}
+
+// ── 转化事件（第一版最小集）────────────────────────────────────
+// 只上报 6 个核心事件，服务端还有一层白名单校验；失败静默，绝不阻断用户操作。
+const EVENT_URL = '/api/event';
+const TRACKED_EVENTS = new Set([
+  'hero_cta_click',
+  'gift_guide_select',
+  'consultation_start',
+  'consultation_submit',
+  'business_brief_submit',
+  'contact_channel_click',
+]);
+
+/** 上报一个转化事件；同一事件在同一会话内只发一次，避免重复计数 */
+const sent = new Set<string>();
+export function trackEvent(name: string, data: Record<string, unknown> = {}): void {
+  if (!TRACKED_EVENTS.has(name)) return;
+  const key = `${name}:${JSON.stringify(data)}`;
+  if (sent.has(key)) return;
+  sent.add(key);
+  try {
+    void fetch(EVENT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      keepalive: true,
+      body: JSON.stringify({ name, page: window.location.pathname, data }),
+    }).catch(() => undefined);
+  } catch {
+    // 忽略：统计不影响任何业务操作
+  }
 }

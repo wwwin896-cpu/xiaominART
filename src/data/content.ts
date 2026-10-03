@@ -85,8 +85,18 @@ export const inspirations: Inspiration[] = [
 ];
 
 export const artists = [
-  { slug: 'xiaomin', name: '升斗小民', en: 'Dou Sheng Xiaomin', discipline: '书写与东方日常 / Calligraphy & everyday rituals', bio: '以书写为入口，关注人与人之间那些需要被郑重说出的时刻。字既是礼物，也是日常的注脚——从一句心事出发，落成可以留住的纸本。', philosophy: '让一句话先被听见，再寻找适合它的笔墨、尺度与停顿。', styles: ['留白', '墨色'], media: ['书写', '纸本'], projectTypes: ['小幅礼赠', '居家墙面'], portfolio: ['静入', '一点朱砂', '四时一笺'], experience: '经历与展览信息将随创作笔记持续呈现。', siteNote: '落地实景图与公开案例将随授权故事持续呈现。', quote: '参考报价需结合尺寸、媒介、创作复杂度与交付边界沟通确认。' },
-  { slug: 'xiaoning', name: '非遗小宁', en: 'Xiao Ning', discipline: '非遗面塑与手作体验 / Dough figurine & workshops', bio: '以面塑为手上功夫，关注传统手艺如何走进现代日常。主持校园、社区与机构的面塑体验活动，把材料、故事和一段有来处的时间，一起交到参与者手上。', philosophy: '让每个人亲手捏出属于自己的那一段记忆。', styles: ['面塑', '节气'], media: ['面塑', '手作'], projectTypes: ['非遗体验活动', '机构专场'], portfolio: ['节气面塑', '亲子手作课'], experience: '活动经历与现场记录将随授权整理持续呈现。', siteNote: '活动现场照片与案例将随授权整理持续呈现。', quote: '活动费用按人数、时长与材料配置沟通确认。' },
+  { slug: 'xiaomin', name: '升斗小民', en: 'Dou Sheng Xiaomin', discipline: '书写与东方日常 / Calligraphy & everyday rituals', bio: '以书写为入口，关注人与人之间那些需要被郑重说出的时刻。字既是礼物，也是日常的注脚——从一句心事出发，落成可以留住的纸本。', philosophy: '让一句话先被听见，再寻找适合它的笔墨、尺度与停顿。', styles: ['留白', '墨色'], media: ['书写', '纸本'], projectTypes: ['小幅礼赠', '居家墙面'], portfolio: ['静入', '一点朱砂', '四时一笺'], experience: '经历与展览信息将随创作笔记持续呈现。', siteNote: '落地实景图与公开案例将随授权故事持续呈现。', quote: '参考报价需结合尺寸、媒介、创作复杂度与交付边界沟通确认。',
+    services: [
+      { zh: '礼赠定制', en: 'Gift commission', body: '生日、乔迁、谢师、开业与周年：从送谁、为什么送开始，落成一幅可以送出的作品。', href: '/custom-commission/?context=礼赠或纪念' },
+      { zh: '居家空间陈设', en: 'Space piece', body: '按墙面、光线与观看距离讨论尺幅与装裱，让作品属于那个房间，而不是属于货架。', href: '/custom-commission/?context=家居空间' },
+      { zh: '企业礼赠与空间', en: 'Corporate', body: '批量礼赠、会客空间与品牌活动；可从企业想说的那句话开始。', href: '/business-gifts/' },
+    ] },
+  { slug: 'xiaoning', name: '非遗小宁', en: 'Xiao Ning', discipline: '非遗面塑与手作体验 / Dough figurine & workshops', bio: '以面塑为手上功夫，关注传统手艺如何走进现代日常。主持校园、社区与机构的面塑体验活动，把材料、故事和一段有来处的时间，一起交到参与者手上。', philosophy: '让每个人亲手捏出属于自己的那一段记忆。', styles: ['面塑', '节气'], media: ['面塑', '手作'], projectTypes: ['非遗体验活动', '机构专场'], portfolio: ['节气面塑', '亲子手作课'], experience: '活动经历与现场记录将随授权整理持续呈现。', siteNote: '活动现场照片与案例将随授权整理持续呈现。', quote: '活动费用按人数、时长与材料配置沟通确认。',
+    services: [
+      { zh: '学校与亲子手作课', en: 'Schools & families', body: '按人数与时长设计可上手的面塑体验，材料、步骤与成品带走，适合校园与亲子活动。', href: '/partners/heritage/' },
+      { zh: '博物馆与机构专场', en: 'Museum & institution', body: '围绕展览主题或节气设计专场体验，配合机构的时间、场地与人流安排。', href: '/partners/museum-tourism/' },
+      { zh: '活动合作洽谈', en: 'Event collaboration', body: '说明人数、时间与场地条件，我们回复可行性与材料配置方案。', href: '/partners/' },
+    ] },
 
 ];
 

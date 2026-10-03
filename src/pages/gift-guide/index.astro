@@ -1,21 +1,161 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { giftProducts, giftRecipients, giftOccasions, giftTierLabels } from '../../data/content';
+
+// 场景 → 产品 slug 的对应关系直接由产品数据推导，避免两处维护
+const products = giftProducts.map((product) => ({
+  slug: product.slug,
+  name: product.name,
+  en: product.en,
+  scene: product.scene,
+  sceneLabel: product.sceneLabel,
+  tier: giftTierLabels[product.tier].name,
+  price: product.price,
+  dispatch: product.dispatch,
+  packaging: product.packaging,
+  meaning: product.meaning,
+  href: `/gifts/${product.slug}/`,
+  adviceHref: `/custom-commission/?context=送礼建议&inspiration=${encodeURIComponent(product.name)}`,
+}));
+
+const recipientOptions = giftRecipients.map((item) => ({ slug: item.slug, title: item.title, en: item.en, scenes: item.scenes }));
+const occasionOptions = giftOccasions.map((item) => ({ slug: item.slug, title: item.title, en: item.en, scenes: item.scenes }));
+const decisionData = { products, recipients: recipientOptions, occasions: occasionOptions };
 ---
-<Layout title="选礼指南｜小民艺术" description="按送礼场合、对象和预算，找到一份带着书香静气的小民好礼。">
-  <section class="container page-head"><span class="eyebrow">Gift Guide / 选礼指南</span><h1 class="serif">从场合与对象开始，<br />找到一份合适的心意。</h1><p lang="en">Start with who it is for, not with a shelf.</p><p>不用先做功课。先想清楚送给谁、为哪一件事，再考虑预算与形式；寓意、包装方式与预计发货时间，我们会在确认前逐条说明。</p></section>
+<Layout title="选礼指南｜小民艺术" description="按送礼对象与场合筛出 2–3 个方向，标明价格起点、形式与时间参考，再决定要不要咨询。">
+  <section class="container page-head"><span class="eyebrow">Gift Guide / 选礼指南</span><h1 class="serif">先想送给谁，<br />再想知道要说什么。</h1><p lang="en">Start with who it is for, not with a shelf.</p><p>不用先做功课。下面两个问题选完，会直接给出 2–3 个合适的方向，并标明价格起点、形式与时间参考——不满意再回头换条件，不必留下联系方式。</p></section>
+
+  <section class="container section decision" data-decision-tool>
+    <div class="decision-step">
+      <div class="step-head"><span class="mono">01</span><h2 class="serif">这份礼送给谁？</h2><span class="step-hint">选一个</span></div>
+      <div class="chip-row" data-chip-group="recipient">
+        {recipientOptions.map((item) => <button class="chip" type="button" data-chip={item.slug} data-chip-type="recipient" data-label={item.title} data-scenes={item.scenes.join(',')} aria-pressed="false">{item.title}<small lang="en">{item.en}</small></button>)}
+      </div>
+    </div>
+    <div class="decision-step">
+      <div class="step-head"><span class="mono">02</span><h2 class="serif">为了哪一件事？</h2><span class="step-hint">可选，选完结果更准</span></div>
+      <div class="chip-row" data-chip-group="occasion">
+        {occasionOptions.map((item) => <button class="chip" type="button" data-chip={item.slug} data-chip-type="occasion" data-label={item.title} data-scenes={item.scenes.join(',')} aria-pressed="false">{item.title}<small lang="en">{item.en}</small></button>)}
+      </div>
+    </div>
+
+    <div class="decision-result" data-decision-result aria-live="polite">
+      <p class="result-placeholder" data-result-placeholder>先选「送给谁」，这里会出现 2–3 个合适的方向。</p>
+      <div class="result-list" data-result-list hidden></div>
+      <p class="result-empty" data-result-empty hidden>这两个条件交叉后暂时没有完全贴合的方向。<a href="/custom-commission/?context=送礼建议">直接说一句你的情况</a>，我们会给出更合适的建议；也可以先看<a href="/gifts/ready-made/">已经写好的现货小品</a>。</p>
+      <div class="result-actions" data-result-actions hidden>
+        <button class="btn btn-secondary" type="button" data-result-reset>重新选一次</button>
+        <a class="btn btn-link" href="/gifts/ready-made/" data-event="gift_guide_ready_made">想更快送出？看已经写好的现货 →</a>
+      </div>
+    </div>
+  </section>
+
   <section class="container section gift-faq"><span class="eyebrow">Gift FAQ / 送礼常见问题</span><h2 class="serif">包装、时效和心意，提前说清楚。</h2><div class="faq-grid"><details><summary>可以写手写贺卡吗？</summary><p>当前礼物方向均保留手写贺卡选项。正式下单或确认前，我们会再次确认贺卡文字和包装方案。</p></details><details><summary>可以直接寄给收礼人吗？</summary><p>送礼咨询时可以备注直寄需求。是否支持去除价格信息、配送地址和时效，需要结合具体礼物方向确认。</p></details><details><summary>多久可以发货？</summary><p>页面展示的是当前参考时间，最终以礼物方向、包装方式和确认时间为准；急件请先提交咨询，不把未确认的时间当作承诺。</p></details><details><summary>可以退换吗？</summary><p>不同礼物方向和个性化程度的售后边界不同。确认前我们会说明退换范围，定制内容请先沟通后再决定。</p></details></div></section>
 </Layout>
+<script type="application/json" data-decision-data set:html={JSON.stringify(decisionData)}></script>
+<script>
+  type DecisionProduct = { slug: string; name: string; en: string; scene: string; sceneLabel: string; tier: string; price: string; dispatch: string; packaging: string; meaning: string; href: string; adviceHref: string };
+  type DecisionOption = { slug: string; title: string; en: string; scenes: string[] };
+  const raw = document.querySelector<HTMLScriptElement>('[data-decision-data]')?.textContent || '{}';
+  const data = JSON.parse(raw) as { products: DecisionProduct[]; recipients: DecisionOption[]; occasions: DecisionOption[] };
+  const tool = document.querySelector<HTMLElement>('[data-decision-tool]');
+  const resultList = document.querySelector<HTMLElement>('[data-result-list]');
+  const placeholder = document.querySelector<HTMLElement>('[data-result-placeholder]');
+  const emptyNote = document.querySelector<HTMLElement>('[data-result-empty]');
+  const resultActions = document.querySelector<HTMLElement>('[data-result-actions]');
+  const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-chip]'));
+  const state: { recipient?: DecisionOption; occasion?: DecisionOption } = {};
+
+  const render = () => {
+    if (!tool || !resultList) return;
+    const hasRecipient = Boolean(state.recipient);
+    placeholder && (placeholder.hidden = hasRecipient);
+    resultActions && (resultActions.hidden = !hasRecipient);
+    if (!hasRecipient) { resultList.hidden = true; resultList.innerHTML = ''; emptyNote && (emptyNote.hidden = true); return; }
+    const recipientScenes = state.recipient?.scenes ?? [];
+    const occasionScenes = state.occasion?.scenes ?? [];
+    // 对象场景必选其一；若已选场合，则取两者交集，交集为空时退回对象场景
+    let pool = data.products.filter((product) => recipientScenes.includes(product.scene));
+    if (state.occasion) {
+      const narrowed = pool.filter((product) => occasionScenes.includes(product.scene));
+      if (narrowed.length) pool = narrowed;
+    }
+    const picks = pool.slice(0, 3);
+    resultList.innerHTML = picks.map((product) => `
+      <article class="result-card">
+        <span class="eyebrow">${product.sceneLabel} · ${product.tier}</span>
+        <h3 class="serif"><a href="${product.href}">${product.name}</a></h3>
+        <p class="result-meaning">${product.meaning}</p>
+        <dl>
+          <div><dt>价格起点</dt><dd>${product.price}</dd></div>
+          <div><dt>形式</dt><dd>定制手写（另有可直接寄出的现货小品）</dd></div>
+          <div><dt>时间参考</dt><dd>${product.dispatch}</dd></div>
+          <div><dt>包装</dt><dd>${product.packaging}</dd></div>
+        </dl>
+        <div class="result-cta"><a class="btn btn-primary" href="${product.adviceHref}" data-event="gift_guide_to_advice">就这个方向，获取送礼建议 →</a><a class="btn btn-link" href="${product.href}" data-event="gift_guide_to_detail">先看详情 →</a></div>
+      </article>`).join('');
+    resultList.hidden = picks.length === 0;
+    emptyNote && (emptyNote.hidden = picks.length > 0);
+  };
+
+  chips.forEach((chip) => chip.addEventListener('click', () => {
+    const type = chip.dataset.chipType as 'recipient' | 'occasion';
+    const option = (type === 'recipient' ? data.recipients : data.occasions).find((item) => item.slug === chip.dataset.chip);
+    if (!option) return;
+    const alreadyOn = chip.getAttribute('aria-pressed') === 'true';
+    chips.filter((item) => item.dataset.chipType === type).forEach((item) => item.setAttribute('aria-pressed', 'false'));
+    if (alreadyOn) { state[type] = undefined; }
+    else { chip.setAttribute('aria-pressed', 'true'); state[type] = option; }
+    window.dispatchEvent(new CustomEvent('xiaominart:event', { detail: { name: 'gift_guide_select', path: window.location.pathname, type, value: alreadyOn ? '' : option.slug, label: option.title } }));
+    render();
+  }));
+
+  document.querySelector('[data-result-reset]')?.addEventListener('click', () => {
+    state.recipient = undefined; state.occasion = undefined;
+    chips.forEach((chip) => chip.setAttribute('aria-pressed', 'false'));
+    render();
+  });
+  render();
+</script>
 <style>
   .page-head { padding: 90px 0 58px; }
-  .page-head h1 { font-size: clamp(30px, 4vw, 52px); line-height: 1.3; font-weight: 500; margin: 20px 0; }
+  .page-head h1 { font-size: clamp(30px, 4vw, 52px); line-height: 1.3; font-weight: 400; margin: 20px 0; }
   .page-head p { max-width: 700px; color: var(--ink-soft); font-size: 18px; }
   .page-head p[lang='en'] { font: 24px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); }
+  .decision { border-top: 1px solid var(--line); }
+  .decision-step { padding-bottom: 30px; }
+  .step-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; }
+  .step-head .mono { color: var(--cinnabar); font-size: 13px; }
+  .step-head h2 { font-size: clamp(20px, 2.2vw, 28px); font-weight: 400; margin: 0; }
+  .step-hint { color: var(--muted); font-size: 12px; }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip { display: flex; flex-direction: column; gap: 2px; min-height: 56px; padding: 10px 16px; border: 1px solid var(--line); background: var(--paper-light); color: var(--ink); font: inherit; font-size: 15px; text-align: left; cursor: pointer; transition: border-color .2s ease, background .2s ease, color .2s ease; }
+  .chip small { color: var(--muted); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+  .chip:hover { border-color: var(--cinnabar); }
+  .chip[aria-pressed='true'] { background: var(--cinnabar); border-color: var(--cinnabar); color: var(--paper-light); }
+  .chip[aria-pressed='true'] small { color: rgba(250, 247, 240, .78); }
+  .decision-result { border-top: 1px solid var(--line); padding-top: 26px; }
+  .result-placeholder { margin: 0; color: var(--ink-soft); font-size: 15px; }
+  .result-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px; }
+  .result-card { display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--line); padding-top: 16px; }
+  .result-card h3 { font-size: 23px; font-weight: 400; margin: 0; }
+  .result-card h3 a:hover { color: var(--cinnabar); }
+  .result-meaning { margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.8; }
+  .result-card dl { margin: 6px 0 0; }
+  .result-card dl > div { display: grid; grid-template-columns: 76px 1fr; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--line-soft); }
+  .result-card dt { color: var(--muted); font-size: 11px; letter-spacing: .08em; }
+  .result-card dd { margin: 0; color: var(--ink-soft); font-size: 13px; line-height: 1.7; }
+  .result-cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; padding-top: 16px; }
+  .result-empty { color: var(--ink-soft); font-size: 15px; line-height: 1.9; }
+  .result-empty a { color: var(--cinnabar); border-bottom: 1px solid var(--cinnabar); }
+  .result-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--line); }
   .gift-faq { border-top: 1px solid var(--line); }
-  .gift-faq h2 { font-size: 30px; font-weight: 500; margin: 12px 0 20px; }
+  .gift-faq h2 { font-size: 30px; font-weight: 400; margin: 12px 0 20px; }
   .faq-grid { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid var(--line); }
   .faq-grid details { border-bottom: 1px solid var(--line); padding: 18px 20px 18px 0; }
   .faq-grid details:nth-child(even) { padding-left: 20px; border-left: 1px solid var(--line); }
   .faq-grid summary { cursor: pointer; font-weight: 500; min-height: 44px; }
   .faq-grid p { color: var(--ink-soft); font-size: 14px; margin: 12px 0 0; }
-  @media (max-width: 767px) { .page-head { padding: 56px 0 42px; } .page-head h1 { font-size: 30px; } .page-head p { font-size: 16px; } .page-head p[lang='en'] { font-size: 20px; } .gift-faq h2 { font-size: 24px; } .faq-grid { grid-template-columns: 1fr; } .faq-grid details, .faq-grid details:nth-child(even) { padding: 16px 0; border-left: 0; } }
+  @media (max-width: 900px) { .result-list { grid-template-columns: 1fr; gap: 24px; } }
+  @media (max-width: 767px) { .page-head { padding: 56px 0 42px; } .page-head h1 { font-size: 30px; } .page-head p { font-size: 16px; } .page-head p[lang='en'] { font-size: 20px; } .chip-row { display: grid; grid-template-columns: 1fr 1fr; } .chip { width: 100%; } .gift-faq h2 { font-size: 24px; } .faq-grid { grid-template-columns: 1fr; } .faq-grid details, .faq-grid details:nth-child(even) { padding: 16px 0; border-left: 0; } }
 </style>

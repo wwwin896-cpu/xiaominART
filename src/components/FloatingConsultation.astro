@@ -6,12 +6,12 @@
   <div class="quick-message-card"><button class="quick-message-close" type="button" aria-label="关闭留言 / Close">×</button><span class="eyebrow">Say hello / 与我们聊聊</span><h2 id="quick-message-title" class="serif">先说一句想说的话。</h2><p>留下称呼、联系方式和想表达的心意即可。工作日我们会尽快回复；急事也可以扫描页脚微信。</p><form class="quick-message-form" data-quick-form><label for="quick-name">怎么称呼你？<input id="quick-name" name="name" autocomplete="name" required /></label><label for="quick-contact">联系方式<input id="quick-contact" name="contact" autocomplete="email" placeholder="微信或邮箱" required /></label><label for="quick-question">你想说的话<textarea id="quick-question" name="question" rows="4" required></textarea></label><input type="text" name="website" value="" tabindex="-1" autocomplete="off" aria-hidden="true" class="honeypot" /><button class="btn btn-primary" type="submit">发送 / Send</button><p class="quick-message-note" aria-live="polite">提交后我们会尽快回复你。</p></form></div>
 </div>
 <script>
-  import { submitLead, isHoneypotFilled, CONTACT_FALLBACK } from '../scripts/cloud-forms';
+  import { submitLead, isHoneypotFilled, CONTACT_FALLBACK, trackEvent } from '../scripts/cloud-forms';
   const quickTrigger = document.querySelector<HTMLButtonElement>('.ink-seek');
   const quickDialog = document.querySelector<HTMLElement>('#quick-message');
   const quickClose = document.querySelector<HTMLButtonElement>('.quick-message-close');
   const closeQuick = () => { if (!quickDialog || !quickTrigger) return; quickDialog.hidden = true; quickTrigger.setAttribute('aria-expanded','false'); };
-  quickTrigger?.addEventListener('click', () => { if (!quickDialog) return; quickDialog.hidden = false; quickTrigger.setAttribute('aria-expanded','true'); quickDialog.querySelector<HTMLInputElement>('input')?.focus(); });
+  quickTrigger?.addEventListener('click', () => { if (!quickDialog) return; quickDialog.hidden = false; quickTrigger.setAttribute('aria-expanded','true'); trackEvent('consultation_start', { source: 'floating_quick_message', page: window.location.pathname }); quickDialog.querySelector<HTMLInputElement>('input')?.focus(); });
   quickClose?.addEventListener('click', closeQuick);
   quickDialog?.addEventListener('click', (event) => { if (event.target === quickDialog) closeQuick(); });
   document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeQuick(); });
