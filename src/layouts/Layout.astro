@@ -48,7 +48,7 @@ const isCurrent = (href: string) => { const normalized = href.replace(/\/$/, '')
     <a class="skip-link" href="#main">跳到主要内容</a>
     <header class="site-header" data-component="site-header">
       <div class="container header-inner">
-        <a class="brand" href="/" aria-label="小民艺术｜日常之礼首页"><img class="brand-logo" src="/assets/brand/xiaominart-logo.svg" width="270" height="51" alt="小民艺术 XIAOMINART｜方寸之境，也藏山河" /></a>
+        <a class="brand" href="/" aria-label="小民艺术｜日常之礼首页"><img class="brand-logo" src="/assets/brand/xiaominart-logo.png" width="270" height="51" alt="小民艺术 XIAOMINART｜方寸之境，也藏山河" /></a>
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">菜单 / Menu</button>
         <nav id="site-nav" aria-label="主导航">
           {navItems.map((item) => <div class="nav-item"><a href={item.href} class:list={{ current: isCurrent(item.href) }} aria-current={isCurrent(item.href) ? 'page' : undefined}><span>{item.zh}</span><small lang="en">{item.en}</small></a>{item.children?.length ? <div class="nav-dropdown">{item.children.map((child) => <a href={child.href}><span>{child.zh}</span><small lang="en">{child.en}</small></a>)}</div> : null}</div>)}
@@ -113,7 +113,7 @@ const isCurrent = (href: string) => { const normalized = href.replace(/\/$/, '')
   .nav-dropdown a { padding: 9px 0; border-bottom: 1px solid var(--line-soft); font-size: 13px; min-height: 44px; }
   .nav-dropdown a:last-child { border-bottom: 0; }
   .nav-item:hover .nav-dropdown, .nav-item:focus-within .nav-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
-  .menu-toggle { display: none; margin-left: auto; background: transparent; border: 1px solid var(--ink); padding: 9px 12px; min-height: 44px; }
+  .menu-toggle { display: none; margin-left: auto; background: transparent; border: 1px solid var(--ink); color: var(--ink); padding: 9px 12px; min-height: 44px; }
   .site-footer { border-top: 1px solid var(--line); padding: 80px 0 24px; margin-top: 0; }
   .footer-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 36px; align-items: start; }
   .footer-grid a { display: flex; flex-direction: column; gap: 2px; margin: 10px 0; color: var(--ink-soft); min-height: 44px; justify-content: center; }
