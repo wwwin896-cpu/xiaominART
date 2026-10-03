@@ -21,12 +21,12 @@ const steps = [
 ---
 <Layout title="小民艺术 XIAOMINART｜方寸之境，也藏山河" description="书画礼品定制平台。在喧嚣之外，寻一处安放身心的角落。这里的每一笔墨痕，都是对生活的另一种回答。">
   <section class="hero" aria-label="品牌横幅">
-    <div class="hero-slide is-active" data-hero-slide>
-      <div class="hero-media" aria-hidden="true"><img src="/assets/scenes/tea-gold-calligraphy.jpg" alt="" loading="eager" fetchpriority="high" /></div>
+    <div class="hero-slide is-active hero-slide--dark" data-hero-slide>
+      <div class="hero-media" aria-hidden="true"><img src="/assets/scenes/hero-shiguwen.jpg" alt="" loading="eager" fetchpriority="high" /></div>
       <div class="container hero-inner">
         <span class="eyebrow">XIAOMINART / 书画礼品定制</span>
         <h1 class="serif">方寸之境，<br />也藏山河。</h1>
-        <p class="hero-sub">在喧嚣之外，寻一处安放身心的角落。<br />这里的每一笔墨痕，都是对生活的另一种回答。</p>
+        <p class="hero-sub">取自秦王猎碣——「吾车既工，吾马既同；<br />吾车既好，吾马既阜。」最古老的石刻文字，就悬在这方寸之间。</p>
       </div>
     </div>
     <div class="hero-slide" data-hero-slide aria-hidden="true">
@@ -105,6 +105,11 @@ const steps = [
   .hero-media { position: absolute; inset: 0; }
   .hero-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .hero-media::after { content: ''; position: absolute; inset: 0; background: linear-gradient(100deg, rgba(244, 239, 229, .96) 0%, rgba(244, 239, 229, .84) 42%, rgba(244, 239, 229, .38) 100%); }
+  .hero-slide--dark .hero-media::after { background: linear-gradient(100deg, rgba(23, 18, 13, .93) 0%, rgba(23, 18, 13, .72) 42%, rgba(23, 18, 13, .28) 100%); }
+  .hero-slide--dark .hero-inner h1, .hero-slide--dark .hero-inner .hero-sub { color: #F4EFE5; }
+  .hero-slide--dark .hero-inner .hero-sub { opacity: .85; }
+  .hero-slide--dark .hero-inner .eyebrow { color: #D9B57C; }
+  .hero-slide--dark ~ .hero-dots .hero-dot { background: rgba(244, 239, 229, .35); }
   .hero-inner { position: relative; z-index: 1; width: min(var(--container), calc(100% - 48px)); margin: 0 auto; padding: 96px 0; text-align: left; }
   .hero h1 { font-size: clamp(38px, 5.6vw, 72px); line-height: 1.25; font-weight: 400; letter-spacing: .06em; margin: 22px 0 26px; }
   .hero-sub { max-width: 560px; color: var(--ink-soft); font-size: 17px; line-height: 2; margin: 0 0 34px; }
