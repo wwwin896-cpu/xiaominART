@@ -415,6 +415,8 @@ export type ReadyMadeWork = {
   form: '摆件' | '挂墙';
   /** 人民币价格（元），含装裱。摆件统一 199（禅 299），挂墙 399。 */
   price: number;
+  /** 材质与装裱描述（可选覆盖默认文案），如「赭底宣纸 · 白色卡衬 · 柚木实木框」。 */
+  material?: string;
   /** 装饰场景图：作品挂进真实空间的样子。优先于实拍图展示。 */
   sceneImage?: string;
   sceneAlt?: string;
@@ -429,7 +431,7 @@ export type ReadyMadeWork = {
  * 尺寸与纸墨细节不写在页面上，随作品档案在咨询时提供；价格已公开（form/price 字段）。
  */
 export const readyMadeWorks: ReadyMadeWork[] = [
-  { slug: 'qing-huan', title: '清欢', en: 'Quiet Joy', note: '「人间有味是清欢」，苏轼写给寻常日子的七个字。不浓烈，却留得住——适合茶席、餐桌旁，或任何一个想慢下来的墙角。', form: '挂墙', price: 399, image: '/assets/works/work-qing-huan-2.jpg', alt: '赭底白卡柚木框书法小品《清欢》挂在墙上的空间实景，旁有青瓷瓶、座钟与书册' },
+  { slug: 'qing-huan', title: '清欢', en: 'Quiet Joy', note: '「人间有味是清欢」，苏轼写给寻常日子的七个字。不浓烈，却留得住——适合茶席、餐桌旁，或任何一个想慢下来的墙角。', material: '赭底宣纸 · 白色卡衬 · 柚木实木框', form: '挂墙', price: 399, image: '/assets/works/work-qing-huan-2.jpg', alt: '赭底白卡柚木框书法小品《清欢》挂在墙上的空间实景，旁有青瓷瓶、座钟与书册' },
   { slug: 'de-xin-ya-ju', title: '德馨雅居', en: 'Virtue Graces the Home', note: '「斯是陋室，惟吾德馨」——屋子不在大小，住的人自有雅气。适合客厅大墙，也适合乔迁与开业。', form: '挂墙', price: 399, image: '/assets/works/work-de-xin-ya-ju.jpg', alt: '书法横批《德馨雅居》挂在客厅大墙上，下方是茶台、皮沙发与圆几' },
   { slug: 'shang-hua-pin-ming', title: '赏花品茗', en: 'Flowers & Tea', note: '赏花品茗，四时清课。瓶花与茶席之间，把日子过成自己的样子。适合茶室与餐边柜，也适合爱花爱茶的人。', form: '摆件', price: 199, image: '/assets/works/work-shang-hua-pin-ming.jpg', alt: '书法横批《赏花品茗》立在木质边柜上，旁有瓶花与盖碗茶席' },
   { slug: 'nan-xi-xin-ji', title: '南谿新霁', en: 'Clearing Over the South Stream', note: '「南谿新霁」——雨过天晴，山清水净。四个字落在洒金扇面上，把雨停之后那一刻的清朗留在案头，适合茶席与书房。', form: '摆件', price: 199, image: '/assets/works/work-fan.jpg', alt: '胡桃木框洒金扇面书法小品《南谿新霁》立在抹茶茶席上，旁有茶碗、茶筅与和果子' },
@@ -440,7 +442,7 @@ export const readyMadeWorks: ReadyMadeWork[] = [
   { slug: 'chang-le', title: '长乐', en: 'Everlasting Joy', note: '取意汉瓦「长乐未央」，两个字，是古人最绵长的祝愿。适合书房与日常抬眼可见的地方。', form: '挂墙', price: 399, image: '/assets/works/work-chang-le.jpg', alt: '书法立轴《长乐》挂在深木色书房书架间，案上有绿植、笔砚与台灯' },
   { slug: 'duan-she-li', title: '断舍离', en: 'Less, Then Light', note: '三个字，写给正在做减法的人与家。适合卧室、玄关，也适合送给刚刚搬完家的朋友。', form: '摆件', price: 199, image: '/assets/works/work-duan-she-li-2.jpg', alt: '书法小品《断舍离》立在卧室柜上，旁有台灯、书册与瓶枝' },
   { slug: 'mao-fei-jia-run', title: '猫肥家润', en: 'Fat Cat, Flourishing Home', note: '猫肥家润，花繁人安。把最有烟火气的幸福写进家里——适合客厅，也适合养猫的人家。', form: '摆件', price: 199, image: '/assets/works/work-mao-fei-jia-run.jpg', alt: '书法横批《猫肥家润》摆在客厅木几上，背景是沙发、抱枕与绿植' },
-  { slug: 'xiang-jian-yi-wu-shi', title: '相见亦无事', en: 'Nothing Much, Just to See You', note: '「相见亦无事，不来忽忆君」，写给不必寒暄的老朋友。适合客厅与茶席，也适合做乔迁与重逢的礼。', form: '摆件', price: 199, image: '/assets/works/work-xiang-jian-yi-wu-shi.jpg', alt: '白底红卡黑框书法小品《相见亦无事》立在暖光卧室的木柜上，旁有台灯与书册' },
+  { slug: 'xiang-jian-yi-wu-shi', title: '相见亦无事', en: 'Nothing Much, Just to See You', note: '「相见亦无事，不来忽忆君」，写给不必寒暄的老朋友。适合客厅与茶席，也适合做乔迁与重逢的礼。', material: '白底红卡 · 黑色实木框', form: '摆件', price: 199, image: '/assets/works/work-xiang-jian-yi-wu-shi.jpg', alt: '白底红卡黑框书法小品《相见亦无事》立在暖光卧室的木柜上，旁有台灯与书册' },
 ];
 
 export const channelPages = [

@@ -1,6 +1,7 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import { readyMadeWorks } from '../../../data/content';
+import { siteContact } from '../../../data/site';
 
 export function getStaticPaths() {
   return readyMadeWorks.map((work) => ({ params: { slug: work.slug }, props: { work } }));
@@ -8,10 +9,14 @@ export function getStaticPaths() {
 
 const { work } = Astro.props;
 const others = readyMadeWorks.filter((item) => item.slug !== work.slug).slice(0, 3);
-const formNote = work.form === '挂墙'
-  ? '已装框完成，随作品附挂点与安装说明，可直接上墙。'
-  : '已装框完成，可直接立于案头、边柜或博古架，无需二次装裱。';
-const ctaHref = `/custom-commission/?context=礼赠或纪念&inspiration=${encodeURIComponent(`现货咨询 · ${work.title}`)}`;
+const isWall = work.form === '挂墙';
+const sizeNote = isWall ? '装框后约 40 × 55 cm' : '装框后约 30 × 40 cm';
+const material = work.material ?? '手写书法原作（非印刷）：宣纸或高阶卡纸书写，实木框装裱，纸墨细节以随附作品档案为准。';
+const mountNote = isWall
+  ? '出厂即装框完成：卡纸留白衬裱，背部预装挂点，随附安装说明，可直接上墙，无需二次装裱。'
+  : '出厂即装框完成：可直接立于案头、边柜或博古架，无需二次装裱；如需配支架或挂用配件，咨询时说明即可。';
+const packNote = '装框成品以护角与缓冲材料整体包裹，外加加固纸箱寄出；随附唯一编号与藏品证书（一物一码），礼盒包装需求可在咨询时提出。';
+const deliverNote = '现货唯一一件，在册可直接发货；确认后安排寄出，不做复刻、不做批发。';
 const productSchema = {
   '@context': 'https://schema.org',
   '@type': 'Product',
@@ -37,20 +42,26 @@ const productSchema = {
       <span class="eyebrow">Ready to Ship / 现货唯一一件</span>
       <h1 class="serif">{work.title}</h1>
       <p class="en" lang="en">{work.en}</p>
-      <p class="price"><span class="price-num">¥{work.price}</span><span class="price-meta">RMB · 含装裱 / {work.form === '挂墙' ? '墙面悬挂' : '案头摆件'}</span></p>
+      <p class="price"><span class="price-num">¥{work.price}</span><span class="price-meta">RMB · 含装裱 / {isWall ? '墙面悬挂' : '案头摆件'}</span></p>
       <p class="note">{work.note}</p>
-      <dl class="specs">
-        <div><dt>题字</dt><dd>{work.title}</dd></div>
-        <div><dt>形式</dt><dd>{work.form === '挂墙' ? '挂墙（含框，可直接上墙）' : '摆件（含框，可立于案头）'}</dd></div>
-        <div><dt>价格</dt><dd>¥{work.price} RMB（{work.form === '挂墙' ? '挂墙档' : work.title === '禅' ? '圆光摆件档' : '摆件档统一价'}）</dd></div>
-        <div><dt>装裱</dt><dd>{formNote}</dd></div>
-        <div><dt>藏品档案</dt><dd>唯一编号 + 藏品证书（一物一码），随作品一并寄出</dd></div>
-        <div><dt>交付</dt><dd>现货在册，确认后安排寄出，不做复刻、不做批发</dd></div>
-      </dl>
-      <div class="detail-actions"><a class="btn btn-primary" href={ctaHref} data-event="ready_work_click" data-slot={work.slug}>咨询这一幅 / Enquire →</a><a class="btn btn-secondary" href="/contact/">先问问细节 →</a></div>
-      <p class="detail-fineprint">尺寸与纸墨细节随作品档案在咨询时一并提供；如你已有摆放位置，可把空间照片发给我们，一起看看合不合适。</p>
+      <div class="detail-actions"><button class="btn btn-primary" type="button" data-wx-open data-event="ready_work_click" data-slot={work.slug}>咨询这一幅 / 微信直聊 →</button><a class="btn btn-secondary" href="/custom-commission/?context=礼赠或纪念&inspiration={encodeURIComponent(`现货定制 · 类似「${work.title}」`)}">定制类似的 →</a></div>
+      <p class="detail-fineprint">点「咨询这一幅」弹出微信二维码，扫码即可与我们直接沟通；尺寸与纸墨细节也以随附作品档案为准。</p>
     </div>
   </section>
+
+  <section class="container section work-facts" aria-labelledby="facts-title">
+    <div class="section-lead"><span class="eyebrow">Work Details / 作品详情</span><h2 id="facts-title" class="serif">关于这一幅，你想知道的都在这里。</h2></div>
+    <dl class="facts-grid">
+      <div class="fact"><dt><span class="mono">01</span>材质</dt><dd>{material}<em>题字：{work.title}｜手写原作，墨迹有细微浓淡变化，是手写与印刷最大的分别。</em></dd></div>
+      <div class="fact"><dt><span class="mono">02</span>尺寸</dt><dd>{sizeNote}<em>标注为近似值，具体以随附作品档案为准；如需精确尺寸，咨询时我们会发给你。</em></dd></div>
+      <div class="fact"><dt><span class="mono">03</span>装裱与装帧</dt><dd>{mountNote}</dd></div>
+      <div class="fact"><dt><span class="mono">04</span>包装</dt><dd>{packNote}</dd></div>
+      <div class="fact"><dt><span class="mono">05</span>价格</dt><dd>¥{work.price} RMB（{isWall ? '挂墙档' : work.title === '禅' ? '圆光摆件档' : '摆件档统一价'}），含装裱，不含运费。</dd></div>
+      <div class="fact"><dt><span class="mono">06</span>交付</dt><dd>{deliverNote}</dd></div>
+    </dl>
+    <div class="facts-cta"><button class="btn btn-primary" type="button" data-wx-open data-event="ready_work_click" data-slot={`${work.slug}_facts`}>有其他问题？微信问我们 →</button></div>
+  </section>
+
   <section class="container section others" aria-labelledby="others-title">
     <div class="section-lead"><span class="eyebrow">More / 还有这些现货</span><h2 id="others-title" class="serif">同批现货，也可一并看看。</h2></div>
     <div class="others-grid">
@@ -58,6 +69,23 @@ const productSchema = {
     </div>
     <a class="btn btn-link others-back" href="/gifts/ready-made/">看全部现货 →</a>
   </section>
+
+  <dialog class="wx-dialog" data-wx-dialog aria-label="微信咨询">
+    <div class="wx-panel">
+      <button class="wx-close" type="button" data-wx-close aria-label="关闭">×</button>
+      <span class="eyebrow">WeChat / 微信咨询（最快）</span>
+      <h2 class="serif">扫码，直接和我们聊。</h2>
+      <a class="wx-qr-link" href={siteContact.wechatQr} target="_blank" rel="noopener" title="点击查看大图，长按识别添加"><img class="wx-qr" src={siteContact.wechatQr} width="200" height="200" alt="小民艺术微信二维码" /></a>
+      <p class="wx-tip"><strong>微信扫一扫</strong>，或在手机上<strong>长按二维码识别</strong>添加。添加时请备注来意：<em>咨询现货 · {work.title}</em>，工作日通常当天回复。</p>
+      <p class="wx-alt">不方便加微信？<a href="/contact/">用邮件或表单联系我们 →</a></p>
+    </div>
+  </dialog>
+  <script>
+    const dialog = document.querySelector('[data-wx-dialog]') as HTMLDialogElement | null;
+    document.querySelectorAll('[data-wx-open]').forEach((btn) => btn.addEventListener('click', () => dialog?.showModal()));
+    dialog?.querySelector('[data-wx-close]')?.addEventListener('click', () => dialog?.close());
+    dialog?.addEventListener('click', (e) => { if (e.target === dialog) dialog?.close(); });
+  </script>
 </Layout>
 <style>
   .crumb { display: flex; flex-wrap: wrap; gap: 8px; padding: 28px 0 0; color: var(--muted); font-size: 13px; }
@@ -73,12 +101,16 @@ const productSchema = {
   .price-num { font: 500 34px var(--font-display-en), var(--font-body-zh); color: var(--cinnabar); letter-spacing: .01em; }
   .price-meta { color: var(--ink-soft); font-size: 13px; }
   .note { color: var(--ink-soft); font-size: 16px; line-height: 1.95; margin: 0 0 26px; }
-  .specs { margin: 0 0 26px; border-top: 1px solid var(--line-soft); }
-  .specs > div { display: grid; grid-template-columns: 92px 1fr; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line-soft); }
-  .specs dt { color: var(--muted); font-size: 12px; letter-spacing: .1em; }
-  .specs dd { margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.8; }
   .detail-actions { display: flex; flex-wrap: wrap; gap: 12px; }
   .detail-fineprint { margin: 18px 0 0; padding: 14px 16px; border-left: 2px solid var(--cinnabar); background: var(--paper-light); color: var(--ink-soft); font-size: 13px; line-height: 1.8; }
+  .work-facts { border-top: 1px solid var(--line); }
+  .facts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin: 0; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+  .fact { padding: 22px 22px 26px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .fact dt { font-size: 16px; font-weight: 500; margin-bottom: 10px; }
+  .fact dt .mono { color: var(--cinnabar); font-size: 12px; margin-right: 8px; }
+  .fact dd { margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.9; }
+  .fact dd em { display: block; font-style: normal; color: var(--muted); font-size: 13px; margin-top: 8px; }
+  .facts-cta { margin-top: 26px; }
   .others { border-top: 1px solid var(--line); }
   .others-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
   .other-card { border: 1px solid var(--line); background: var(--paper-light); display: flex; flex-direction: column; }
@@ -90,6 +122,18 @@ const productSchema = {
   .other-card p[lang='en'] { font: 14px var(--font-display-en), Georgia, serif; color: var(--ink-soft); margin: 0 0 8px; }
   .other-meta { color: var(--cinnabar); font-size: 13px; }
   .others-back { margin-top: 22px; }
-  @media (max-width: 1023px) { .work-detail { grid-template-columns: 1fr; gap: 34px; } .others-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 767px) { .crumb { padding-top: 20px; } .detail-copy h1 { font-size: 32px; } .price-num { font-size: 28px; } .specs > div { grid-template-columns: 78px 1fr; } .detail-actions { display: grid; } .detail-actions .btn { width: 100%; } .others-grid { grid-template-columns: 1fr; gap: 20px; } }
+  .wx-dialog { border: 0; padding: 0; background: transparent; max-width: 92vw; }
+  .wx-dialog::backdrop { background: rgba(28, 24, 18, .55); }
+  .wx-panel { position: relative; width: min(360px, 88vw); padding: 34px 30px 28px; background: var(--paper-light); border: 1px solid var(--line); text-align: center; }
+  .wx-panel h2 { font-size: 24px; font-weight: 500; margin: 12px 0 20px; }
+  .wx-close { position: absolute; top: 10px; right: 12px; border: 0; background: none; font-size: 26px; line-height: 1; color: var(--muted); cursor: pointer; min-height: 44px; min-width: 44px; }
+  .wx-close:hover { color: var(--cinnabar); }
+  .wx-qr-link { display: inline-block; border: 1px solid var(--line); padding: 8px; background: #fff; }
+  .wx-qr { display: block; }
+  .wx-tip { color: var(--ink-soft); font-size: 14px; line-height: 1.9; margin: 18px 0 10px; text-align: left; }
+  .wx-tip em { font-style: normal; color: var(--cinnabar-deep); }
+  .wx-alt { color: var(--muted); font-size: 13px; margin: 0; }
+  .wx-alt a { color: var(--cinnabar); }
+  @media (max-width: 1023px) { .work-detail { grid-template-columns: 1fr; gap: 34px; } .others-grid { grid-template-columns: repeat(2, 1fr); } .facts-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 767px) { .crumb { padding-top: 20px; } .detail-copy h1 { font-size: 32px; } .price-num { font-size: 28px; } .detail-actions { display: grid; } .detail-actions .btn { width: 100%; } .facts-grid { grid-template-columns: 1fr; } .others-grid { grid-template-columns: 1fr; gap: 20px; } }
 </style>
