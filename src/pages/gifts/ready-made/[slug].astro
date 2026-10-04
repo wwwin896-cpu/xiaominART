@@ -1,0 +1,95 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { readyMadeWorks } from '../../../data/content';
+
+export function getStaticPaths() {
+  return readyMadeWorks.map((work) => ({ params: { slug: work.slug }, props: { work } }));
+}
+
+const { work } = Astro.props;
+const others = readyMadeWorks.filter((item) => item.slug !== work.slug).slice(0, 3);
+const formNote = work.form === '挂墙'
+  ? '已装框完成，随作品附挂点与安装说明，可直接上墙。'
+  : '已装框完成，可直接立于案头、边柜或博古架，无需二次装裱。';
+const ctaHref = `/custom-commission/?context=礼赠或纪念&inspiration=${encodeURIComponent(`现货咨询 · ${work.title}`)}`;
+const productSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: `${work.title}｜手写书法小品`,
+  description: work.note,
+  image: [new URL(work.image, Astro.site ?? 'https://xiaominart.com').href],
+  brand: { '@type': 'Brand', name: 'XIAOMINART 小民艺术' },
+  offers: {
+    '@type': 'Offer',
+    price: work.price,
+    priceCurrency: 'CNY',
+    availability: 'https://schema.org/InStock',
+    itemCondition: 'https://schema.org/NewCondition',
+  },
+};
+---
+<Layout title={`${work.title}｜手写书法小品｜现货好礼｜小民艺术`} description={`${work.title}（${work.en}）：${work.note} 现货唯一一件，装裱完成可直接发货，¥${work.price}。`}>
+  <script type="application/ld+json" set:html={JSON.stringify(productSchema)} />
+  <nav class="container crumb" aria-label="面包屑"><a href="/gifts/">小民好礼</a><span>/</span><a href="/gifts/ready-made/">现货好礼</a><span>/</span><span aria-current="page">{work.title}</span></nav>
+  <section class="container work-detail">
+    <figure class="detail-figure"><img src={work.image} alt={work.alt} loading="eager" fetchpriority="high" decoding="async" /><figcaption>作品实拍 · 装裱完成</figcaption></figure>
+    <div class="detail-copy">
+      <span class="eyebrow">Ready to Ship / 现货唯一一件</span>
+      <h1 class="serif">{work.title}</h1>
+      <p class="en" lang="en">{work.en}</p>
+      <p class="price"><span class="price-num">¥{work.price}</span><span class="price-meta">RMB · 含装裱 / {work.form === '挂墙' ? '墙面悬挂' : '案头摆件'}</span></p>
+      <p class="note">{work.note}</p>
+      <dl class="specs">
+        <div><dt>题字</dt><dd>{work.title}</dd></div>
+        <div><dt>形式</dt><dd>{work.form === '挂墙' ? '挂墙（含框，可直接上墙）' : '摆件（含框，可立于案头）'}</dd></div>
+        <div><dt>价格</dt><dd>¥{work.price} RMB（{work.form === '挂墙' ? '挂墙档' : work.title === '禅' ? '圆光摆件档' : '摆件档统一价'}）</dd></div>
+        <div><dt>装裱</dt><dd>{formNote}</dd></div>
+        <div><dt>藏品档案</dt><dd>唯一编号 + 藏品证书（一物一码），随作品一并寄出</dd></div>
+        <div><dt>交付</dt><dd>现货在册，确认后安排寄出，不做复刻、不做批发</dd></div>
+      </dl>
+      <div class="detail-actions"><a class="btn btn-primary" href={ctaHref} data-event="ready_work_click" data-slot={work.slug}>咨询这一幅 / Enquire →</a><a class="btn btn-secondary" href="/contact/">先问问细节 →</a></div>
+      <p class="detail-fineprint">尺寸与纸墨细节随作品档案在咨询时一并提供；如你已有摆放位置，可把空间照片发给我们，一起看看合不合适。</p>
+    </div>
+  </section>
+  <section class="container section others" aria-labelledby="others-title">
+    <div class="section-lead"><span class="eyebrow">More / 还有这些现货</span><h2 id="others-title" class="serif">同批现货，也可一并看看。</h2></div>
+    <div class="others-grid">
+      {others.map((item) => <a class="other-card" href={`/gifts/ready-made/${item.slug}/`}><figure><img src={item.image} alt={item.alt} loading="lazy" decoding="async" /></figure><div><h3 class="serif">{item.title}</h3><p lang="en">{item.en}</p><span class="other-meta">¥{item.price} · {item.form === '挂墙' ? '挂墙' : '摆件'}</span></div></a>)}
+    </div>
+    <a class="btn btn-link others-back" href="/gifts/ready-made/">看全部现货 →</a>
+  </section>
+</Layout>
+<style>
+  .crumb { display: flex; flex-wrap: wrap; gap: 8px; padding: 28px 0 0; color: var(--muted); font-size: 13px; }
+  .crumb a { color: var(--ink-soft); }
+  .crumb a:hover { color: var(--cinnabar); }
+  .work-detail { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 60px; padding: 34px 0 20px; align-items: start; }
+  .detail-figure { margin: 0; border: 1px solid var(--line); background: var(--paper-deep); position: relative; }
+  .detail-figure img { width: 100%; display: block; }
+  .detail-figure figcaption { padding: 10px 14px; border-top: 1px solid var(--line); background: var(--paper-light); color: var(--muted); font-size: 12px; letter-spacing: .08em; }
+  .detail-copy h1 { font-size: clamp(34px, 4.4vw, 56px); font-weight: 500; line-height: 1.25; margin: 16px 0 4px; }
+  .detail-copy .en { font: 20px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); margin: 0 0 20px; }
+  .price { display: flex; align-items: baseline; flex-wrap: wrap; gap: 12px; margin: 0 0 20px; padding: 16px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .price-num { font: 500 34px var(--font-display-en), var(--font-body-zh); color: var(--cinnabar); letter-spacing: .01em; }
+  .price-meta { color: var(--ink-soft); font-size: 13px; }
+  .note { color: var(--ink-soft); font-size: 16px; line-height: 1.95; margin: 0 0 26px; }
+  .specs { margin: 0 0 26px; border-top: 1px solid var(--line-soft); }
+  .specs > div { display: grid; grid-template-columns: 92px 1fr; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line-soft); }
+  .specs dt { color: var(--muted); font-size: 12px; letter-spacing: .1em; }
+  .specs dd { margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.8; }
+  .detail-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  .detail-fineprint { margin: 18px 0 0; padding: 14px 16px; border-left: 2px solid var(--cinnabar); background: var(--paper-light); color: var(--ink-soft); font-size: 13px; line-height: 1.8; }
+  .others { border-top: 1px solid var(--line); }
+  .others-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+  .other-card { border: 1px solid var(--line); background: var(--paper-light); display: flex; flex-direction: column; }
+  .other-card figure { margin: 0; overflow: hidden; background: var(--paper-deep); }
+  .other-card img { width: 100%; display: block; transition: transform .6s ease; }
+  .other-card:hover img { transform: scale(1.03); }
+  .other-card > div { padding: 16px 18px 20px; }
+  .other-card h3 { font-size: 21px; font-weight: 500; margin: 0 0 2px; }
+  .other-card p[lang='en'] { font: 14px var(--font-display-en), Georgia, serif; color: var(--ink-soft); margin: 0 0 8px; }
+  .other-meta { color: var(--cinnabar); font-size: 13px; }
+  .others-back { margin-top: 22px; }
+  @media (max-width: 1023px) { .work-detail { grid-template-columns: 1fr; gap: 34px; } .others-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 767px) { .crumb { padding-top: 20px; } .detail-copy h1 { font-size: 32px; } .price-num { font-size: 28px; } .specs > div { grid-template-columns: 78px 1fr; } .detail-actions { display: grid; } .detail-actions .btn { width: 100%; } .others-grid { grid-template-columns: 1fr; gap: 20px; } }
+</style>

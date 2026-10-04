@@ -6,11 +6,11 @@ import { readyMadeWorks } from '../../../data/content';
   <section class="container page-head"><span class="eyebrow">Ready to Ship / 现货好礼</span><h1 class="serif">已经写好，<br />等一个懂它的人。</h1><p lang="en">Already written. Ready to go.</p><p>下面这些，是小民已经完成的小幅书法作品。每一幅都只有一件，装裱完成即可直接发货——你在页面上看到的这一幅，就是将来到家的那一幅。</p></section>
   <section class="container section works-section">
     <div class="works-grid">
-      {readyMadeWorks.map((work) => <article class="work-card reveal" data-reveal><figure><img src={work.sceneImage ?? work.image} alt={work.sceneAlt ?? work.alt} loading="lazy" decoding="async" />{work.sceneImage && <span class="scene-tag">空间示意</span>}</figure><div class="work-copy"><span class="work-badge">现货 · 可直接发货</span><h2 class="serif">{work.title}</h2><p lang="en">{work.en}</p><p class="work-note">{work.note}</p><a class="work-cta" href={`/custom-commission/?context=礼赠或纪念&inspiration=${encodeURIComponent(`现货咨询 · ${work.title}`)}`} data-event="ready_work_click">咨询这一幅 →</a></div></article>)}
+      {readyMadeWorks.map((work) => <article class="work-card reveal" data-reveal><figure><img src={work.sceneImage ?? work.image} alt={work.sceneAlt ?? work.alt} loading="lazy" decoding="async" />{work.sceneImage && <span class="scene-tag">空间示意</span>}</figure><div class="work-copy"><span class="work-badge">现货 · 可直接发货</span><h2 class="serif"><a href={`/gifts/ready-made/${work.slug}/`}>{work.title}</a></h2><p lang="en">{work.en}</p><p class="work-price">¥{work.price} <span>RMB · {work.form === '挂墙' ? '挂墙' : '摆件'}</span></p><p class="work-note">{work.note}</p><a class="work-cta" href={`/gifts/ready-made/${work.slug}/`} data-event="ready_work_click" data-slot={work.slug}>查看详情与价格 →</a></div></article>)}
     </div>
-    <p class="works-fineprint">每幅作品均附唯一编号与藏品证书（一物一码）；尺寸、纸墨与价格随作品档案在咨询时提供，不做批发、不做复刻。</p>
+    <p class="works-fineprint">每幅作品均附唯一编号与藏品证书（一物一码）。页面标价为人民币含装裱价：案头摆件统一 ¥199（圆光小品《禅》为 ¥299），墙面悬挂 ¥399；不含运费，尺寸与纸墨细节随作品档案在咨询时提供。不做批发、不做复刻。</p>
   </section>
-  <section class="container section not-sure"><span class="eyebrow">Not found / 没有挑到合适的</span><h2 class="serif">现货之外，还可以从一句话开始，<br />定制一幅只属于你们的。</h2><div class="not-sure-actions"><a class="btn btn-primary" href="/custom-commission/" data-event="custom_entry">进入定制环节 →</a><a class="btn btn-secondary" href="/gift-guide/" data-event="gift_guide_view">先看选礼指南 →</a></div></section>
+  <section class="container section not-sure"><span class="eyebrow">Not found / 没有挑到合适的</span><h2 class="serif">现货之外，还可以从一句话开始，<br />定制一幅只属于你们的。</h2><div class="not-sure-actions"><a class="btn btn-primary" href="/custom-commission/" data-event="custom_entry">进入定制环节 →</a></div></section>
 </Layout>
 <style>
   .page-head { padding: 90px 0 58px; } .page-head h1 { font-size: clamp(30px, 4vw, 52px); line-height: 1.3; font-weight: 500; margin: 20px 0; } .page-head p { max-width: 700px; color: var(--ink-soft); font-size: 18px; } .page-head p[lang='en'] { font: 24px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); }
@@ -24,7 +24,11 @@ import { readyMadeWorks } from '../../../data/content';
   .work-copy { padding: 20px 20px 24px; flex: 1; display: flex; flex-direction: column; }
   .work-badge { display: inline-block; padding: 4px 10px; border: 1px solid var(--cinnabar); color: var(--cinnabar-deep); font-size: 11px; letter-spacing: .12em; }
   .work-copy h2 { font-size: 26px; font-weight: 500; line-height: 1.4; margin: 14px 0 2px; }
-  .work-copy p[lang='en'] { font: 15px var(--font-display-en), Georgia, serif; color: var(--ink-soft); margin: 0 0 10px; }
+  .work-copy h2 a { color: inherit; }
+  .work-copy h2 a:hover { color: var(--cinnabar); }
+  .work-copy p[lang='en'] { font: 15px var(--font-display-en), Georgia, serif; color: var(--ink-soft); margin: 0 0 8px; }
+  .work-price { margin: 0 0 12px; color: var(--cinnabar); font: 500 20px var(--font-display-en), var(--font-body-zh); }
+  .work-price span { color: var(--ink-soft); font: 12px var(--font-body-zh); letter-spacing: .04em; }
   .work-note { color: var(--ink-soft); font-size: 14px; line-height: 1.85; margin: 0 0 16px; }
   .work-cta { display: inline-block; align-self: flex-start; margin-top: auto; color: var(--cinnabar); font-size: 14px; border-bottom: 1px solid var(--cinnabar); padding-bottom: 3px; }
   .works-fineprint { margin: 26px 0 0; padding: 14px 16px; border-left: 2px solid var(--cinnabar); background: var(--paper-light); color: var(--ink-soft); font-size: 13px; line-height: 1.8; }
