@@ -42,7 +42,12 @@ export const navItems = [
       { href: '/partners/cases/', zh: '合作案例', en: 'Case Studies' },
     ],
   },
-  { href: '/about/', zh: '关于我们', en: 'About Us', children: [] },
+  {
+    href: '/about/', zh: '关于我们', en: 'About Us', children: [
+      { href: '/about/#capability', zh: '谁来写', en: 'Who We Are' },
+      { href: '/artists/', zh: '艺术家介绍', en: 'Artists' },
+    ],
+  },
 ];
 
 export const processSteps = [

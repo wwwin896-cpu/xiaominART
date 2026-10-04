@@ -18,19 +18,6 @@ const steps = [
   { no: '叁', title: '创作', body: '匹配的艺术家为你专属创作，过程中保留必要的确认节点。' },
   { no: '肆', title: '抵达', body: '作品以适合你的方式，带着温度抵达。' },
 ];
-// 首屏三个固定行动入口：不随轮播帧变化，语义与落点始终一致
-const heroCtas = [
-  { href: '/gifts/ready-made/', label: '看手写现货方向', slot: 'ready_made', variant: 'btn-secondary' },
-  { href: '/gift-guide/', label: '获取送礼建议', slot: 'guide', variant: 'btn-secondary' },
-  { href: '/custom-commission/', label: '发起定制咨询', slot: 'commission', variant: 'btn-primary' },
-];
-// 首屏之后的事实说明与四项能力（每项：适合谁 / 得到什么 / 点哪里）
-const capabilities = [
-  { tag: 'Ready to ship / 手写现货', title: '已经写好的小品', fit: '想尽快送出、不想等创作周期', gain: '装裱完成的手写小品，一物一码，看中即可直接发货', href: '/gifts/ready-made/', cta: '看现货方向' },
-  { tag: 'Made to order / 定制手写', title: '从一句话开始写', fit: '有具体的人、场合或房间需要照看', gain: '专属创作、装裱与礼盒，附藏品证书', href: '/custom-commission/', cta: '发起定制咨询' },
-  { tag: 'Craft / 非遗面塑与插画', title: '手上的另一门功夫', fit: '学校、社区、机构需要可参与的活动', gain: '面塑体验活动与出版插画方向的合作', href: '/partners/heritage/', cta: '看机构合作' },
-  { tag: 'Business / 机构合作', title: '一群人的礼与空间', fit: '企业答谢、员工福利、会客空间陈设', gain: '从批量礼赠到空间定制的方案沟通', href: '/business-gifts/', cta: '提交企业需求' },
-];
 ---
 <Layout title="小民艺术 XIAOMINART｜方寸之境，也藏山河" description="书画礼品定制平台。在喧嚣之外，寻一处安放身心的角落。这里的每一笔墨痕，都是对生活的另一种回答。">
   <section class="hero" aria-label="品牌横幅">
@@ -40,7 +27,6 @@ const capabilities = [
         <span class="eyebrow">XIAOMINART / 书画礼品定制</span>
         <h1 class="serif">方寸之境，<br />也藏山河。</h1>
         <p class="hero-sub">取自秦王猎碣——「吾车既工，吾马既同；<br />吾车既好，吾马既阜。」最古老的石刻文字，就悬在这方寸之间。</p>
-        <div class="hero-cta">{heroCtas.map((cta) => <a class={cta.variant} href={cta.href} data-event="hero_cta_click" data-slot={cta.slot}>{cta.label} →</a>)}</div>
       </div>
     </div>
     <div class="hero-slide" data-hero-slide aria-hidden="true">
@@ -49,7 +35,6 @@ const capabilities = [
         <span class="eyebrow">XIAOMINART / 书画礼品定制</span>
         <h1 class="serif">它不完美，<br />却很真实。</h1>
         <p class="hero-sub">手写的墨痕、粗陶的窑变与麻纸的毛边，<br />都是生活本来的样子。</p>
-        <div class="hero-cta">{heroCtas.map((cta) => <a class={cta.variant} href={cta.href} data-event="hero_cta_click" data-slot={cta.slot}>{cta.label} →</a>)}</div>
       </div>
     </div>
     <div class="hero-slide" data-hero-slide aria-hidden="true">
@@ -58,7 +43,6 @@ const capabilities = [
         <span class="eyebrow">XIAOMINART / 书画礼品定制</span>
         <h1 class="serif">看似条条框框，<br />实则分寸有序。</h1>
         <p class="hero-sub">融古老鸟虫篆意趣，字如游鱼，昂首摆尾，穿梭自如。<br />在生活的洪流里，愿你也能找到自己的节奏，游刃有余。</p>
-        <div class="hero-cta">{heroCtas.map((cta) => <a class={cta.variant} href={cta.href} data-event="hero_cta_click" data-slot={cta.slot}>{cta.label} →</a>)}</div>
       </div>
     </div>
     <div class="hero-dots" aria-label="横幅切换">
@@ -96,17 +80,6 @@ const capabilities = [
     }
   </script>
 
-  <section class="container section capability" aria-labelledby="capability-title">
-    <div class="capability-lead">
-      <span class="eyebrow">Who we work with / 谁来写</span>
-      <h2 id="capability-title" class="serif">两个人，四条路。</h2>
-      <p>小民艺术目前的创作与承接范围：一位以书写为入口，一位以面塑和手作为功夫。四条路的适合人群、你能得到什么、从哪里开始，都写在下面——看清再选，比直接下单省事。</p>
-    </div>
-    <div class="capability-grid">
-      {capabilities.map((item) => <article class="cap-card"><span class="eyebrow">{item.tag}</span><h3 class="serif">{item.title}</h3><dl><dt>适合谁</dt><dd>{item.fit}</dd><dt>得到什么</dt><dd>{item.gain}</dd></dl><a class="btn btn-link" href={item.href}>{item.cta} →</a></article>)}
-    </div>
-    <p class="capability-note">两位创作者：升斗小民（书写与东方日常）、非遗小宁（面塑与手作体验）。<a href="/artists/">看艺术家介绍 →</a></p>
-  </section>
 
   <section class="container section choices" aria-labelledby="choices-title">
     <div class="section-lead"><span class="eyebrow">01 / 心意之选</span><h2 id="choices-title" class="serif">为生活添一份心意。</h2><p>不是冰冷的印刷品，而是带着温度的手泽。或是案头的一抹清欢，或是心头的一声叹息。</p></div>
@@ -151,22 +124,6 @@ const capabilities = [
   .hero-inner { position: relative; z-index: 1; width: min(var(--container), calc(100% - 48px)); margin: 0 auto; padding: 96px 0; text-align: left; }
   .hero h1 { font-size: clamp(38px, 5.6vw, 72px); line-height: 1.25; font-weight: 400; letter-spacing: .06em; margin: 22px 0 26px; }
   .hero-sub { max-width: 560px; color: var(--ink-soft); font-size: 17px; line-height: 2; margin: 0 0 34px; }
-  .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; }
-  .hero-cta a { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; }
-  .capability { border-top: 1px solid var(--line); }
-  .capability-lead { max-width: 660px; margin-bottom: 36px; }
-  .capability-lead h2 { font-size: clamp(24px, 2.8vw, 38px); font-weight: 400; line-height: 1.4; margin: 14px 0 12px; }
-  .capability-lead p { margin: 0; color: var(--ink-soft); line-height: 1.9; }
-  .capability-grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); }
-  .cap-card { display: flex; flex-direction: column; padding: 24px 22px 28px 0; border-bottom: 1px solid var(--line); }
-  .cap-card + .cap-card { padding-left: 22px; border-left: 1px solid var(--line); }
-  .cap-card h3 { font-size: 23px; font-weight: 400; line-height: 1.45; margin: 12px 0 16px; }
-  .cap-card dl { margin: 0 0 14px; }
-  .cap-card dt { color: var(--muted); font-size: 11px; letter-spacing: .12em; }
-  .cap-card dd { margin: 5px 0 13px; color: var(--ink-soft); font-size: 14px; line-height: 1.8; }
-  .cap-card .btn { margin-top: auto; align-self: flex-start; }
-  .capability-note { margin: 18px 0 0; color: var(--muted); font-size: 12px; }
-  .capability-note a { color: var(--cinnabar); }
   .choices, .stories, .process, .closing { border-top: 1px solid var(--line-soft); }
   .section-lead { max-width: 560px; margin-bottom: 44px; }
   .section-lead h2 { font-size: clamp(24px, 2.8vw, 38px); font-weight: 500; line-height: 1.4; margin: 14px 0 12px; letter-spacing: .02em; }
@@ -225,12 +182,6 @@ const capabilities = [
     .hero-inner { padding: 72px 0 112px; }
     .hero h1 { font-size: clamp(34px, 10vw, 46px); }
     .hero-sub { font-size: 15px; }
-    .hero-cta { display: grid; grid-template-columns: 1fr; gap: 10px; }
-    .hero-cta a { width: 100%; }
-    .capability-grid { grid-template-columns: 1fr; }
-    .cap-card, .cap-card + .cap-card { padding: 22px 0; border-left: 0; }
-    .cap-card:last-child { border-bottom: 0; }
-    .cap-card .btn { align-self: stretch; }
     .section { padding: 56px 0; }
     .section-lead { margin-bottom: 30px; }
     .choice-grid { grid-template-columns: 1fr; gap: 34px; }
