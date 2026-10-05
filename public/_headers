@@ -10,3 +10,9 @@
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
+
+# ── 安全基线（2026-10-06）──
+# 防止页面被第三方 iframe 嵌套（点击劫持）；CSP 先以 Report-Only 观察后再启用，见 docs 运营方案
+/*
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), interest-cohort=()

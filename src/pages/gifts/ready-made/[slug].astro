@@ -33,7 +33,7 @@ const productSchema = {
   },
 };
 ---
-<Layout title={`${work.title}｜手写书法小品｜现货好礼｜小民艺术`} description={`${work.title}（${work.en}）：${work.note} 现货唯一一件，装裱完成可直接发货，¥${work.price}。`}>
+<Layout title={`${work.title}｜手写书法小品｜现货好礼｜小民艺术`} description={`${work.title}（${work.en}）：${work.note} 现货唯一一件，装裱完成可直接发货，¥${work.price}。`} breadcrumbs={[{ name: '首页', href: '/' }, { name: '小民好礼', href: '/gifts/' }, { name: '现货好礼', href: '/gifts/ready-made/' }, { name: work.title, href: `/gifts/ready-made/${work.slug}/` }]}>
   <script type="application/ld+json" set:html={JSON.stringify(productSchema)} />
   <nav class="container crumb" aria-label="面包屑"><a href="/gifts/">小民好礼</a><span>/</span><a href="/gifts/ready-made/">现货好礼</a><span>/</span><span aria-current="page">{work.title}</span></nav>
   <section class="container work-detail">

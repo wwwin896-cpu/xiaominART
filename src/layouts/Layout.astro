@@ -12,7 +12,7 @@ import { siteContact } from '../data/site';
 import Newsletter from '../components/Newsletter.astro';
 import FloatingConsultation from '../components/FloatingConsultation.astro';
 import ShareButton from '../components/ShareButton.astro';
-const { title = '小民艺术｜日常之礼', description = '小民艺术，以亲笔书写为起点的东方日常之礼。见字如面，心意表达。', canonical, image = '/assets/images/og-image.png', noindex = false } = Astro.props;
+const { title = '小民艺术｜日常之礼', description = '小民艺术，以亲笔书写为起点的东方日常之礼。见字如面，心意表达。', canonical, image = '/assets/images/og-image.png', noindex = false, breadcrumbs = [] } = Astro.props;
 const seoTitle = title.replace(/xiaominart/gi, 'XIAOMINART');
 const url = canonical ?? Astro.url.href;
 const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
@@ -40,7 +40,8 @@ const isCurrent = (href: string) => { const normalized = href.replace(/\/$/, '')
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={new URL(image, Astro.site ?? Astro.url).href} />
     <meta name="theme-color" content="#f4efe5" />
-    <script type="application/ld+json" is:inline set:html={JSON.stringify({ '@context': 'https://schema.org', '@type': 'LocalBusiness', name: '小民艺术', alternateName: 'Xiaomin Art', description, url, email: 'hi@xiaominart.com', priceRange: '咨询制', areaServed: 'CN' })} />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify({ '@context': 'https://schema.org', '@graph': [ { '@type': 'LocalBusiness', name: '小民艺术', alternateName: 'Xiaomin Art', description, url: new URL('/', Astro.site ?? Astro.url).href, email: 'hi@xiaominart.com', priceRange: '咨询制', areaServed: 'CN' }, { '@type': 'WebSite', name: '小民艺术 XIAOMINART', alternateName: 'XIAOMINART', url: new URL('/', Astro.site ?? Astro.url).href, inLanguage: 'zh-CN' } ] })} />
+    {breadcrumbs.length > 0 && <script type="application/ld+json" is:inline set:html={JSON.stringify({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: breadcrumbs.map((item: { name: string; href: string }, i: number) => ({ '@type': 'ListItem', position: i + 1, name: item.name, item: new URL(item.href, Astro.site ?? Astro.url).href })) })} />}
     <link rel="icon" href="/assets/brand/xiaominart-logo-icon.svg" />
     <title>{seoTitle}</title>
   </head>
