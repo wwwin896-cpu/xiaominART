@@ -16,6 +16,10 @@
 //   · 「关于我们」取消二级菜单（小民其人、静气生活），点开一级直达 /about/ 品牌介绍页，
 //     页内直接呈现创作者介绍（升斗小民 / 非遗小宁，详情页 /artists/{slug}/ 保留）。
 //   · 「静气生活」/journal/ 整体下线，_redirects 301 至 /about/。
+// 2026-10-06 调整：
+//   · 企业礼赠下拉从五个方向锚点精简为三类：送出去的心意 / 留得住的纪念 / 挂进空间的话（对应内页 #gifts #keep #space）。
+// 2026-10-06 调整：
+//   · 企业礼赠下拉从五个方向锚点精简为三类：送出去的心意 / 留得住的纪念 / 挂进空间的话（对应内页 #gifts #keep #space）。
 // 2026-10-05 调整：
 //   · 「送礼指南」从「小民好礼」二级菜单移除，该下拉只留 现货好礼 / 定制好礼 两条找礼路径。
 //     /gift-guide/ 页面仍保留（页脚、/scenes/ 的「礼」、心愿单等入口可进入），不再出现在主导航。
@@ -28,11 +32,9 @@ export const navItems = [
   },
   {
     href: '/business-gifts/', zh: '企业礼赠', en: 'Corporate Gifts', children: [
-      { href: '/business-gifts/#dir-client', zh: '客户答谢伴手礼', en: 'Client Appreciation' },
-      { href: '/business-gifts/#dir-commemorative', zh: '企业纪念定制书法', en: 'Commemorative Works' },
-      { href: '/business-gifts/#dir-festival', zh: '节日限定书法礼套装', en: 'Festival Gift Sets' },
-      { href: '/business-gifts/#dir-checkin', zh: '活动签到伴手礼', en: 'Check-in Gifts' },
-      { href: '/business-gifts/#dir-space', zh: '企业空间书法软装', en: 'Space Styling' },
+      { href: '/business-gifts/#gifts', zh: '送出去的心意', en: 'For Giving' },
+      { href: '/business-gifts/#keep', zh: '留得住的纪念', en: 'For Keeping' },
+      { href: '/business-gifts/#space', zh: '挂进空间的话', en: 'For Spaces' },
     ],
   },
   {
