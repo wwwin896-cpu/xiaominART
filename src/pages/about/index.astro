@@ -1,7 +1,66 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import ArtistCard from '../../components/ArtistCard.astro';
-import { artists } from '../../data/content';
+
+// 品牌名的来处：「小」是细节，「民」是看见
+const nameMeaning = [
+  {
+    char: '小',
+    roman: 'xiǎo / small',
+    lead: '我们做的事情，是细节。',
+    body: '它不追求宏大的复刻，而是一种微式的传承——把一件事做小、做细，细到可以被反复看见，细到能够日日相见。传统不是被搬来的，是被一点点重新使用起来的。',
+  },
+  {
+    char: '民',
+    roman: 'mín / to see',
+    lead: '古人造字时，它是一只眼睛看见。',
+    body: '我们愿意从细微处去看见事物的过去与现在——看见一件器物如何被使用，看见一句话如何被安放，看见一门手艺如何一路走到今天。看见，然后致敬，然后表达。',
+  },
+];
+
+// 品牌理念三条
+const philosophy = [
+  {
+    no: '01',
+    title: '从东方文化开始',
+    en: 'Eastern roots',
+    body: '不是复刻古人的形制，而是理解它背后的判断力：什么值得留下，什么需要留白，什么应该被亲手完成。',
+  },
+  {
+    no: '02',
+    title: '以现代人的视觉，融入现代生活',
+    en: 'Contemporary eye',
+    body: '让东方艺术回到今天的人、房间与场合里，可以被使用、被日日看见，而不是被供在远处。',
+  },
+  {
+    no: '03',
+    title: '传递知识，传递美学，致敬历史',
+    en: 'Knowledge & beauty',
+    body: '每件作品都带着可被讲述的来处。我们只是这条长线上的一段，愿意把知道的讲清楚，也把敬意留在里面。',
+  },
+];
+
+// 品牌主理人（同时是两位创作者）
+const founders = [
+  {
+    slug: 'xiaomin',
+    name: '升斗小民',
+    en: 'Shengdou Xiaomin',
+    role: '品牌主理人 · 书者',
+    discipline: '书写与东方日常 / Calligraphy',
+    line: '一个致力于用书法解读历史的书者。',
+    body: '她以书写为入口，把字看作一段可被重读的历史。写下的不只是吉语与心事，也是一个人在某个时刻对世界的判断：什么该说，什么该停，什么值得留在纸上。',
+  },
+  {
+    slug: 'xiaoning',
+    name: '非遗小宁',
+    en: 'Xiao Ning',
+    role: '品牌主理人 · 传承人',
+    discipline: '非遗面塑与手作体验 / Dough figurine',
+    line: '一个致力于非遗面塑的传承人。',
+    body: '她以面塑为手上的功夫，把这门有来处的手艺带进校园、社区与机构。材料、步骤与时间一起交到参与者手上——传承于是不只是被讲述，而是被亲手做过一次。',
+  },
+];
+
 // 四条创作与承接路径（每项：适合谁 / 得到什么 / 点哪里），自首页「谁来写」迁入
 const capabilities = [
   { tag: 'Ready to ship / 手写现货', title: '已经写好的小品', fit: '想尽快送出、不想等创作周期', gain: '装裱完成的手写小品，一物一码，看中即可直接发货', href: '/gifts/ready-made/', cta: '看现货方向' },
@@ -10,6 +69,148 @@ const capabilities = [
   { tag: 'Business / 机构合作', title: '一群人的礼与空间', fit: '企业答谢、员工福利、会客空间陈设', gain: '从批量礼赠到空间定制的方案沟通', href: '/business-gifts/', cta: '提交企业需求' },
 ];
 ---
-<Layout title="品牌介绍｜About XIAOMINART" description="了解 XIAOMINART 的东方艺术定制方法、共同创作理念与创作者介绍。"><section class="page-head container"><span class="eyebrow">About / 品牌介绍</span><h1 class="serif">把东方艺术，<br />带回具体的生活。</h1><p lang="en">Translating the sensibility of Eastern art into contemporary, personal works.</p><p>我们相信，艺术不必先被放进一个遥远的殿堂。它可以从一个人的故事、一处空间的气息和一件礼物的分量开始。</p></section><section class="container section about-block"><div><span class="eyebrow">Why XIAOMINART / 为什么存在</span><h2 class="serif">不是复制传统，<br />而是重新找到它与今天的关系。</h2></div><div><p>书写、器物、空间与礼赠，并不是彼此孤立的类别。它们共享一种被认真对待的判断力：什么值得留下，什么需要留白，什么应该被亲手完成。</p><p>因此 XIAOMINART 保留一组已经写好、装裱完成的小幅手写现货，看中即可直接寄出；也为需要郑重表达的时刻，保留一条从意图到作品的定制路径。</p></div></section><section class="container section values"><div><span class="mono">01</span><h2 class="serif">现货与定制并行</h2><p>小幅现货可直接寄出；重要时刻一人一作。</p></div><div><span class="mono">02</span><h2 class="serif">一人一作</h2><p>你的字句，你的心境，独一无二。</p></div><div><span class="mono">03</span><h2 class="serif">东方美学</h2><p>以升斗小民的视角，让书法回归日常。</p></div><div><span class="mono">04</span><h2 class="serif">长期关系</h2><p>不止于一件作品，更是一段关系的开始。</p></div></section><section class="container section capability" id="capability" aria-labelledby="capability-title"><div class="capability-lead"><span class="eyebrow">Who we work with / 谁来写</span><h2 id="capability-title" class="serif">两个人，四条路。</h2><p>小民艺术目前的创作与承接范围：一位以书写为入口，一位以面塑和手作为功夫。四条路的适合人群、你能得到什么、从哪里开始，都写在下面——看清再选，比直接下单省事。</p></div><div class="capability-grid">{capabilities.map((item) => <article class="cap-card"><span class="eyebrow">{item.tag}</span><h3 class="serif">{item.title}</h3><dl><dt>适合谁</dt><dd>{item.fit}</dd><dt>得到什么</dt><dd>{item.gain}</dd></dl><a class="btn btn-link" href={item.href}>{item.cta} →</a></article>)}</div><p class="capability-note">两位创作者：升斗小民（书写与东方日常）、非遗小宁（面塑与手作体验）。<a href="/artists/">看艺术家介绍 →</a></p></section><section class="container section makers"><div class="section-lead"><span class="eyebrow">Makers / 创作者介绍</span><h2 class="serif">每一种意图，都值得找到合适的手。</h2><p>小民艺术背后的两位创作者：一位以书写安放心意，一位以面塑传递手艺。</p></div><div class="makers-grid">{artists.map((artist) => <ArtistCard artist={artist} />)}</div></section><section class="container section about-cta"><h2 class="serif">如果你有一个还没成形的想法，<br />可以从定制表单开始。</h2><a class="btn btn-primary" href="/custom-commission/">开始定制 / Start a commission →</a></section></Layout>
-<style>.page-head{padding:94px 0 72px}.page-head h1{font-size:clamp(52px,7vw,90px);font-weight:500;line-height:1.16;margin:22px 0}.page-head p{max-width:680px;color:var(--ink-soft);font-size:18px}.page-head p[lang=en]{font:24px var(--font-display-en),Georgia,serif;color:var(--cinnabar-deep)}.capability{border-top:1px solid var(--line)}.capability-lead{max-width:660px;margin-bottom:36px}.capability-lead h2{font-size:clamp(24px,2.8vw,38px);font-weight:400;line-height:1.4;margin:14px 0 12px}.capability-lead p{margin:0;color:var(--ink-soft);line-height:1.9}.capability-grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line)}.cap-card{display:flex;flex-direction:column;padding:24px 22px 28px 0;border-bottom:1px solid var(--line)}.cap-card+.cap-card{padding-left:22px;border-left:1px solid var(--line)}.cap-card h3{font-size:23px;font-weight:400;line-height:1.45;margin:12px 0 16px}.cap-card dl{margin:0 0 14px}.cap-card dt{color:var(--muted);font-size:11px;letter-spacing:.12em}.cap-card dd{margin:5px 0 13px;color:var(--ink-soft);font-size:14px;line-height:1.8}.cap-card .btn{margin-top:auto;align-self:flex-start}.capability-note{margin:18px 0 0;color:var(--muted);font-size:12px}.capability-note a{color:var(--cinnabar)}.about-block{display:grid;grid-template-columns:1fr 1fr;gap:80px;border-top:1px solid var(--line)}.about-block h2{font-size:clamp(38px,5vw,64px);font-weight:500;line-height:1.3}.about-block p{max-width:600px;color:var(--ink-soft);font-size:17px}.values{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.values>div{padding:22px 20px 28px 0}.values>div+div{border-left:1px solid var(--line);padding-left:20px}.values>div:last-child{border-right:0}.values .mono{color:var(--cinnabar)}.values h2{font-size:38px;font-weight:500;margin:30px 0 8px}.values p{color:var(--ink-soft);font-size:14px}.about-cta{border-bottom:1px solid var(--line)}.about-cta h2{font-size:clamp(38px,5vw,64px);font-weight:500;line-height:1.3;margin-top:0}.makers-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:34px 28px}.makers .section-lead h2{font-size:clamp(36px,5vw,58px);font-weight:500;line-height:1.3;margin:18px 0}.makers .section-lead p{color:var(--ink-soft);max-width:620px}@media(max-width:767px){.page-head{padding:58px 0 48px}.page-head h1{font-size:53px}.page-head p[lang=en]{font-size:20px}.about-block,.values{grid-template-columns:1fr;gap:22px}.makers-grid{grid-template-columns:1fr;gap:26px}.about-block h2{font-size:38px}.values>div,.values>div+div{padding:20px 0;border-left:0;border-bottom:1px solid var(--line)}.values>div:last-child{border-bottom:0}.capability-grid{grid-template-columns:1fr}.cap-card,.cap-card+.cap-card{padding:22px 0;border-left:0}.cap-card:last-child{border-bottom:0}.cap-card .btn{align-self:stretch}}
+<Layout title="关于我们｜品牌故事与主理人｜XIAOMINART" description="小民艺术 XIAOMINART：从「小」的细节与「民」的看见出发，把东方艺术融入现代人的生活方式。了解品牌故事、品牌理念与两位主理人——升斗小民与非遗小宁。">
+  <section class="page-head container"><span class="eyebrow">About us / 关于我们</span><h1 class="serif">把东方艺术，<br />带回具体的生活。</h1><p lang="en">Translating the sensibility of Eastern art into contemporary, personal works.</p><p>小民艺术 XIAOMINART 是一个从东方文化出发的品牌。我们相信，艺术不必先被放进一个遥远的殿堂——它可以从一个人的故事、一处空间的气息，和一件礼物的分量开始。</p></section>
+
+  <section class="container section name-meaning" id="name">
+    <div class="section-lead"><span class="eyebrow">The name / 品牌名的来处</span><h2 class="serif">「小」是细节，<br />「民」是看见。</h2></div>
+    <div class="name-grid">
+      {nameMeaning.map((item) => <article class="name-card"><div class="name-char" aria-hidden="true"><span class="serif">{item.char}</span><small>{item.roman}</small></div><div><h3 class="serif">{item.lead}</h3><p>{item.body}</p></div></article>)}
+    </div>
+    <p class="name-note">两个字合在一起，就是我们的出发点：<strong>愿意从细微处，看见事物的过去与现在，并向它致敬。</strong></p>
+  </section>
+
+  <section class="container section story" id="story">
+    <div><span class="eyebrow">Brand story / 品牌故事</span><h2 class="serif">两个人，<br />两门手艺，<br />一个品牌。</h2></div>
+    <div>
+      <p>小民艺术由两位创作者共同创建。她们也是这里所有作品的主理人：一位是升斗小民，致力于用书法解读历史的书者；一位是非遗小宁，致力于非遗面塑的传承人。</p>
+      <p>她们的专业并不相同，目光却落在同一件事上——那些正在被日常生活忽略的细节。一个人从纸本上解读历史，一个人从材料里传下手艺；一个让字成为可以留下的表达，一个让手艺成为可以被做过一次的记忆。</p>
+      <p>于是她们一起创建了 XIAOMINART。没有宏大的叙事，只有各自手上那一点确定的功夫：用自己的专业知识和技艺，用力所能及的方式对外表达；也用这样一种方式，去探索一个更大的美学空间。所以品牌不只是一个名字，而是一场还在继续的共同创作。</p>
+    </div>
+  </section>
+
+  <section class="container section philosophy" id="philosophy">
+    <div class="section-lead"><span class="eyebrow">Philosophy / 品牌理念</span><h2 class="serif">从东方文化开始，<br />以现代人的视觉。</h2><p>我们做的事情，可以归结为三句话。它决定了我们挑选什么、保留什么，以及为什么愿意把一件事做得慢一点。</p></div>
+    <div class="philosophy-grid">{philosophy.map((item) => <article class="philo-card"><span class="mono">{item.no}</span><h3 class="serif">{item.title}</h3><p lang="en">{item.en}</p><p>{item.body}</p></article>)}</div>
+  </section>
+
+  <section class="container section founders" id="founders">
+    <div class="section-lead"><span class="eyebrow">Founders / 品牌主理人</span><h2 class="serif">两位主理人，<br />也是两位创作者。</h2><p>她们同时是品牌的主理人与作品的创作者——从一句想要表达的话开始，到纸本、材料与交付，都由她们自己完成判断。</p></div>
+    <div class="founders-grid">
+      {founders.map((person) => <article class="founder-card">
+        <div class="founder-mark" aria-hidden="true"><span class="serif">{person.name.slice(-1)}</span><small>FOUNDER</small></div>
+        <div class="founder-body">
+          <span class="eyebrow">{person.role}</span>
+          <h3 class="serif">{person.name}</h3>
+          <p lang="en">{person.en}</p>
+          <p class="founder-line">{person.line}</p>
+          <p>{person.body}</p>
+          <div class="founder-tags"><span>{person.discipline}</span></div>
+          <a class="btn btn-link" href={`/artists/${person.slug}/`}>看艺术家详情 / View profile →</a>
+        </div>
+      </article>)}
+    </div>
+    <p class="founders-note">想直接了解她们的创作方向与媒介倾向？<a href="/artists/">进入艺术家页面 →</a>　·　两位创作者的作品与经历会随创作笔记持续补充。</p>
+  </section>
+
+  <section class="container section values"><div><span class="mono">01</span><h2 class="serif">现货与定制并行</h2><p>小幅现货可直接寄出；重要时刻一人一作。</p></div><div><span class="mono">02</span><h2 class="serif">一人一作</h2><p>你的字句，你的心境，独一无二。</p></div><div><span class="mono">03</span><h2 class="serif">东方美学</h2><p>以升斗小民的视角，让书法回归日常。</p></div><div><span class="mono">04</span><h2 class="serif">长期关系</h2><p>不止于一件作品，更是一段关系的开始。</p></div></section>
+
+  <section class="container section capability" id="capability" aria-labelledby="capability-title"><div class="capability-lead"><span class="eyebrow">Who we work with / 谁来写</span><h2 id="capability-title" class="serif">两个人，四条路。</h2><p>小民艺术目前的创作与承接范围：一位以书写为入口，一位以面塑和手作为功夫。四条路的适合人群、你能得到什么、从哪里开始，都写在下面——看清再选，比直接下单省事。</p></div><div class="capability-grid">{capabilities.map((item) => <article class="cap-card"><span class="eyebrow">{item.tag}</span><h3 class="serif">{item.title}</h3><dl><dt>适合谁</dt><dd>{item.fit}</dd><dt>得到什么</dt><dd>{item.gain}</dd></dl><a class="btn btn-link" href={item.href}>{item.cta} →</a></article>)}</div><p class="capability-note">两位创作者：升斗小民（书写与东方日常）、非遗小宁（面塑与手作体验）。<a href="/artists/">看艺术家介绍 →</a></p></section>
+
+  <section class="container section about-cta"><h2 class="serif">如果你有一个还没成形的想法，<br />可以从定制表单开始。</h2><a class="btn btn-primary" href="/custom-commission/">开始定制 / Start a commission →</a></section>
+</Layout>
+<style>
+.page-head{padding:94px 0 72px}
+.page-head h1{font-size:clamp(52px,7vw,90px);font-weight:500;line-height:1.16;margin:22px 0}
+.page-head p{max-width:680px;color:var(--ink-soft);font-size:18px}
+.page-head p[lang=en]{font:24px var(--font-display-en),Georgia,serif;color:var(--cinnabar-deep)}
+.section-lead{max-width:660px;margin-bottom:34px}
+.section-lead h2{font-size:clamp(30px,4vw,50px);font-weight:500;line-height:1.3;margin:16px 0 14px}
+.section-lead p{color:var(--ink-soft);font-size:16px;line-height:1.9;margin:0}
+.capability{border-top:1px solid var(--line)}
+.capability-lead{max-width:660px;margin-bottom:36px}
+.capability-lead h2{font-size:clamp(24px,2.8vw,38px);font-weight:400;line-height:1.4;margin:14px 0 12px}
+.capability-lead p{margin:0;color:var(--ink-soft);line-height:1.9}
+.capability-grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line)}
+.cap-card{display:flex;flex-direction:column;padding:24px 22px 28px 0;border-bottom:1px solid var(--line)}
+.cap-card+.cap-card{padding-left:22px;border-left:1px solid var(--line)}
+.cap-card h3{font-size:23px;font-weight:400;line-height:1.45;margin:12px 0 16px}
+.cap-card dl{margin:0 0 14px}
+.cap-card dt{color:var(--muted);font-size:11px;letter-spacing:.12em}
+.cap-card dd{margin:5px 0 13px;color:var(--ink-soft);font-size:14px;line-height:1.8}
+.cap-card .btn{margin-top:auto;align-self:flex-start}
+.capability-note{margin:18px 0 0;color:var(--muted);font-size:12px}
+.capability-note a{color:var(--cinnabar)}
+/* 品牌名的来处 */
+.name-meaning{border-top:1px solid var(--line)}
+.name-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}
+.name-card{display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr);gap:26px;align-items:start;border-top:2px solid var(--ink);padding-top:22px}
+.name-char{display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--paper-deep);padding:22px 10px}
+.name-char span{font-size:clamp(64px,8vw,104px);line-height:1;color:var(--cinnabar)}
+.name-char small{font:10px var(--font-mono);color:var(--muted);letter-spacing:.08em;margin-top:12px;text-align:center}
+.name-card h3{font-size:clamp(20px,2.2vw,26px);font-weight:500;line-height:1.5;margin:0 0 12px}
+.name-card p{color:var(--ink-soft);font-size:15px;line-height:1.9;margin:0}
+.name-note{margin:26px 0 0;padding-top:18px;border-top:1px solid var(--line-soft);color:var(--ink-soft);font-size:16px;line-height:1.9;max-width:820px}
+.name-note strong{color:var(--cinnabar-deep);font-weight:500}
+/* 品牌故事 */
+.story{display:grid;grid-template-columns:1fr 1fr;gap:80px;border-top:1px solid var(--line)}
+.story h2{font-size:clamp(34px,4.6vw,58px);font-weight:500;line-height:1.3;margin:18px 0 0}
+.story p{max-width:600px;color:var(--ink-soft);font-size:17px;line-height:1.95;margin:0 0 18px}
+.story p:last-child{margin-bottom:0}
+/* 品牌理念 */
+.philosophy{border-top:1px solid var(--line)}
+.philosophy-grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line)}
+.philo-card{padding:24px 24px 26px 0;border-bottom:1px solid var(--line)}
+.philo-card+.philo-card{padding-left:24px;border-left:1px solid var(--line)}
+.philo-card .mono{color:var(--cinnabar)}
+.philo-card h3{font-size:22px;font-weight:500;line-height:1.5;margin:22px 0 6px}
+.philo-card p[lang=en]{font:14px var(--font-display-en),Georgia,serif;color:var(--cinnabar-deep);margin:0 0 14px}
+.philo-card p:last-child{color:var(--ink-soft);font-size:14px;line-height:1.85;margin:0}
+/* 品牌主理人 */
+.founders{border-top:1px solid var(--line)}
+.founders-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:34px 30px}
+.founder-card{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:24px;border-top:1px solid var(--line);padding-top:20px}
+.founder-mark{aspect-ratio:.86;background:var(--paper-deep);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--cinnabar)}
+.founder-mark span{font-size:clamp(52px,6vw,84px);line-height:1}
+.founder-mark small{font:10px var(--font-mono);color:var(--ink-soft);letter-spacing:.14em;margin-top:14px}
+.founder-body h3{font-size:clamp(24px,2.6vw,30px);font-weight:500;margin:10px 0 2px}
+.founder-body p{color:var(--ink-soft);font-size:14px;line-height:1.85;margin:8px 0;overflow-wrap:anywhere}
+.founder-body p[lang=en]{font:15px var(--font-display-en),Georgia,serif;color:var(--ink);margin:0}
+.founder-body .founder-line{color:var(--cinnabar-deep);font-size:15px;margin:12px 0 6px}
+.founder-tags{display:flex;flex-wrap:wrap;gap:6px 12px;color:var(--meta);font-size:11px;margin-top:14px}
+.founders-note{margin:22px 0 0;color:var(--muted);font-size:12px}
+.founders-note a{color:var(--cinnabar)}
+/* 做法四条 */
+.values{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.values>div{padding:22px 20px 28px 0}
+.values>div+div{border-left:1px solid var(--line);padding-left:20px}
+.values>div:last-child{border-right:0}
+.values .mono{color:var(--cinnabar)}
+.values h2{font-size:clamp(24px,2.6vw,34px);font-weight:500;margin:30px 0 8px}
+.values p{color:var(--ink-soft);font-size:14px}
+.about-cta{border-bottom:1px solid var(--line)}
+.about-cta h2{font-size:clamp(38px,5vw,64px);font-weight:500;line-height:1.3;margin-top:0}
+@media(max-width:1023px){
+.philosophy-grid{grid-template-columns:1fr}
+.philo-card,.philo-card+.philo-card{padding:22px 0;border-left:0}
+.founders-grid{grid-template-columns:1fr;gap:28px}
+}
+@media(max-width:767px){
+.page-head{padding:58px 0 48px}
+.page-head h1{font-size:53px}
+.page-head p[lang=en]{font-size:20px}
+.name-grid{grid-template-columns:1fr;gap:24px}
+.name-card{grid-template-columns:minmax(0,112px) minmax(0,1fr);gap:18px}
+.story{grid-template-columns:1fr;gap:22px}
+.story h2{font-size:34px}
+.values{grid-template-columns:1fr;gap:22px}
+.values>div,.values>div+div{padding:20px 0;border-left:0;border-bottom:1px solid var(--line)}
+.values>div:last-child{border-bottom:0}
+.founder-card{grid-template-columns:96px minmax(0,1fr);gap:16px}
+.founder-mark{aspect-ratio:1}
+.capability-grid{grid-template-columns:1fr}
+.cap-card,.cap-card+.cap-card{padding:22px 0;border-left:0}
+.cap-card:last-child{border-bottom:0}
+.cap-card .btn{align-self:stretch}
+}
 </style>
