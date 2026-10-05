@@ -16,12 +16,14 @@
 //   · 「关于我们」取消二级菜单（小民其人、静气生活），点开一级直达 /about/ 品牌介绍页，
 //     页内直接呈现创作者介绍（升斗小民 / 非遗小宁，详情页 /artists/{slug}/ 保留）。
 //   · 「静气生活」/journal/ 整体下线，_redirects 301 至 /about/。
+// 2026-10-05 调整：
+//   · 「送礼指南」从「小民好礼」二级菜单移除，该下拉只留 现货好礼 / 定制好礼 两条找礼路径。
+//     /gift-guide/ 页面仍保留（页脚、/scenes/ 的「礼」、心愿单等入口可进入），不再出现在主导航。
 export const navItems = [
   {
     href: '/gifts/', zh: '小民好礼', en: 'Xiaomin Gifts', children: [
       { href: '/gifts/ready-made/', zh: '现货好礼', en: 'Ready to Ship' },
       { href: '/custom-commission/', zh: '定制好礼', en: 'Made to Order' },
-      { href: '/gift-guide/', zh: '送礼指南', en: 'Gift Guide' },
     ],
   },
   {

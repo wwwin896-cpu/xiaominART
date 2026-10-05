@@ -25,11 +25,11 @@ const craftSteps = [
 // 六个空间与心意方向：只做介绍，不跳转菜单
 const rooms = [
   { char: '书', title: '书房 / Study', body: '一方小案，半窗静气。一幅小品悬于书桌之侧，抬眼可见，落笔可安——书房的字，写给与自己朝夕相处的人。' },
-  { char: '厅', title: '客厅 / Living room', body: '客厅是一家的门面。一幅横批定下全屋的调子，客人进门第一眼，先看见这个家的气息，再看见这个家的人。' },
+  { char: '厅', title: '客厅 / Living room', body: '客厅是家里人待得最久的地方。一幅横批定下全屋的调子，家人窝在沙发上抬眼看见的那句话，才是这个家真正的语气。' },
   { char: '茶', title: '茶室 / Tea room', body: '茶席之上，字与茶同席。壶起水落之间，抬眼见字，心便静了三分——茶室里的字，讲究的从来是静气。' },
   { char: '房', title: '卧室 / Bedroom', body: '卧室要的不是气派，是安放。一呼一吸之间，一幅小品让床头多一份温柔的静气，陪自己入睡，也陪自己醒来。' },
-  { char: '礼', title: '送礼 / Gifting', body: '看中了已经写好的，直接带走。装裱完成、附唯一编号与藏品证书，一份不必等待的心意，郑重而妥帖。' },
-  { char: '意', title: '心意 / Intention', body: '心里有一句话还没被写出来——写给谁、为什么写、想在什么时候交到对方手上，告诉我们，一起把它写出来。' },
+  { char: '客', title: '会客厅 / Reception room', body: '待客之处，最见分寸。会客厅里的字不求张扬，只求让人一坐下就松下来——书法是一种褪去火气的表达，主客之间，也当如此。' },
+  { char: '玄', title: '玄关 / Foyer', body: '进门的第一口呼吸。玄关的字，替你把外头的火气留在门外——一方圆光或小横批，安静地迎人进门，也安静地送人出门。' },
 ];
 const paths = [
   {
@@ -49,7 +49,7 @@ const paths = [
 <Layout title="小民好礼｜小民艺术" description="小民好礼，以书写、器物和礼盒为日常关系准备一份有东方审美的心意。">
   <section class="container page-head"><span class="eyebrow">Xiaomin Gifts / 小民好礼</span><h1 class="serif">把一份心意，<br />送进真实的日常。</h1><p lang="en">Thoughtful gifts for everyday rituals.</p><p>小民艺术不是只能被远观的作品。它可以进入书房、客厅、茶室，也可以成为一份送给重要之人的礼物。</p></section>
   <section class="container section craft-section" id="craft-journey"><div class="craft-head" data-reveal><span class="eyebrow">Handmade Journey / 手作匠心</span><h2 class="serif craft-title">手作匠心｜开始旅程</h2><p class="craft-sub serif">「你的心意，会被认真解读，认真看见」</p><p class="craft-note">每一幅，都是世间唯一的相遇</p></div><div class="craft-steps">{craftSteps.map((step, i) => <div class:list={['craft-row', { reverse: i % 2 === 1 }]} data-reveal><figure class="craft-fig"><img src={step.image} alt={step.alt} loading="lazy" decoding="async" /></figure><div class="craft-copy"><span class="craft-no">{step.no}</span><h3 class="serif">{step.title}</h3><p>{step.body}</p></div></div>)}</div></section>
-  <section class="container section rooms-section" aria-labelledby="rooms-title"><div class="section-lead"><span class="eyebrow">Rooms & Intentions / 空间与心意</span><h2 id="rooms-title" class="serif">一个字，就是一个去处。</h2><p>六个方向，各有各的安放方式——先看看你的心事属于哪一个。</p></div><div class="rooms-grid">{rooms.map((room) => <article class="room-card"><span class="room-char serif">{room.char}</span><div class="room-copy"><h3 class="serif">{room.title}</h3><p>{room.body}</p></div></article>)}</div></section>
+  <section class="container section rooms-section" aria-labelledby="rooms-title"><div class="section-lead"><span class="eyebrow">Rooms & Intentions / 空间与心意</span><h2 id="rooms-title" class="serif">一个字，就是一个去处。</h2><p>书法是一种褪去火气的表达。六个方向，各有各的安放方式——先看看你的心事属于哪一个。</p></div><div class="rooms-grid">{rooms.map((room) => <article class="room-card"><span class="room-char serif">{room.char}</span><div class="room-copy"><h3 class="serif">{room.title}</h3><p>{room.body}</p></div></article>)}</div></section>
   <section class="container section paths-section" aria-labelledby="paths-title"><div class="section-lead"><span class="eyebrow">Two Paths / 小民好礼</span><h2 id="paths-title" class="serif">小民好礼，分两条路。</h2><p>看中了已经写好的，直接带走；心里有一句话还没被写出来，我们一起把它写出来。</p></div><div class="path-grid">{paths.map((path) => <a class="path-card" href={path.href} data-event={path.event}><figure><img src={path.image} alt={path.alt} loading="lazy" decoding="async" /></figure><div class="path-copy"><span class="eyebrow">{path.eyebrow}</span><h3 class="serif">{path.title}</h3><p>{path.body}</p><span class="path-meta">{path.meta} →</span></div></a>)}</div></section>
   <section class="container section next-step"><span class="eyebrow">Not sure yet / 还不确定</span><h2 class="serif">如果你还不知道送什么，先从对象、场合和预算告诉我们。</h2><a class="btn btn-primary" href="/custom-commission/?context=送礼建议" data-event="gift_advice_click">获取送礼建议 →</a></section>
 </Layout>
