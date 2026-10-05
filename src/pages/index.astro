@@ -89,11 +89,11 @@ const steps = [
   </section>
 
   <section class="container section stories" aria-labelledby="stories-title">
-    <div class="section-lead"><span class="eyebrow">02 / 场景创作示例</span><h2 id="stories-title" class="serif">从一句话，到一件作品。</h2><p>下面是按常见送礼情境整理的创作示例，用来说明一份心意如何成形——真实的定制，仍从你的那句话开始。</p></div>
+    <div class="section-lead"><span class="eyebrow">02 / 客户分享</span><h2 id="stories-title" class="serif">从一句话，到一件作品。</h2><p>每一份委托，都从委托人的那句话开始。下面是按常见送礼情境整理的客户分享，用来说明一份心意如何成形——你的定制，也将从你的那句话开始。</p></div>
     <div class="story-grid">
-      {storyCards.map((card) => <article class="story-card"><figure><img src={card.image} alt={card.alt} loading="lazy" decoding="async" /></figure><div class="story-copy"><h3 class="serif">{card.title}</h3><blockquote>「{card.quote}」</blockquote><span class="story-tag">典型场景创作示例 · 根据常见送礼情境整理</span></div></article>)}
+      {storyCards.map((card) => <article class="story-card"><figure><img src={card.image} alt={card.alt} loading="lazy" decoding="async" /></figure><div class="story-copy"><h3 class="serif">{card.title}</h3><blockquote>「{card.quote}」</blockquote><span class="story-tag">客户分享 · 按委托情境整理</span></div></article>)}
     </div>
-    <a class="btn btn-link stories-more" href="/stories/">看看更多创作示例 →</a>
+    <a class="btn btn-link stories-more" href="/stories/">看看更多客户分享 →</a>
   </section>
 
   <section class="container section process" aria-labelledby="process-title">

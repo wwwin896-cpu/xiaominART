@@ -27,13 +27,12 @@ export const navItems = [
     ],
   },
   {
-    href: '/scenes/', zh: '灵感参考', en: 'Inspiration', children: [
-      { href: '/scenes/#scene-study', zh: '书', en: 'Study' },
-      { href: '/scenes/#scene-living', zh: '厅', en: 'Living room' },
-      { href: '/scenes/#scene-tea', zh: '茶', en: 'Tea room' },
-      { href: '/scenes/#scene-bedroom', zh: '房', en: 'Bedroom' },
-      { href: '/gift-guide/', zh: '礼', en: 'Gifts' },
-      { href: '/business-gifts/', zh: '企', en: 'Business' },
+    href: '/business-gifts/', zh: '企业礼赠', en: 'Corporate Gifts', children: [
+      { href: '/business-gifts/#dir-client', zh: '客户答谢伴手礼', en: 'Client Appreciation' },
+      { href: '/business-gifts/#dir-commemorative', zh: '企业纪念定制书法', en: 'Commemorative Works' },
+      { href: '/business-gifts/#dir-festival', zh: '节日限定书法礼套装', en: 'Festival Gift Sets' },
+      { href: '/business-gifts/#dir-checkin', zh: '活动签到伴手礼', en: 'Check-in Gifts' },
+      { href: '/business-gifts/#dir-space', zh: '企业空间书法软装', en: 'Space Styling' },
     ],
   },
   {
@@ -46,8 +45,9 @@ export const navItems = [
   },
   {
     href: '/about/', zh: '关于我们', en: 'About Us', children: [
-      { href: '/about/#capability', zh: '谁来写', en: 'Who We Are' },
-      { href: '/artists/', zh: '艺术家介绍', en: 'Artists' },
+      { href: '/about/', zh: '品牌介绍', en: 'Our Story' },
+      { href: '/artists/xiaomin/', zh: '升斗小民', en: 'Shengdou Xiaomin' },
+      { href: '/artists/xiaoning/', zh: '非遗小宁', en: 'Xiao Ning' },
     ],
   },
 ];
