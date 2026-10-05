@@ -22,15 +22,24 @@ const craftSteps = [
     image: '/assets/craft/step-4-packaging.jpg', alt: '小民艺术黑色礼盒与藏品证书包装',
   },
 ];
+// 六个空间与心意方向：只做介绍，不跳转菜单
+const rooms = [
+  { char: '书', title: '书房 / Study', body: '一方小案，半窗静气。一幅小品悬于书桌之侧，抬眼可见，落笔可安——书房的字，写给与自己朝夕相处的人。' },
+  { char: '厅', title: '客厅 / Living room', body: '客厅是一家的门面。一幅横批定下全屋的调子，客人进门第一眼，先看见这个家的气息，再看见这个家的人。' },
+  { char: '茶', title: '茶室 / Tea room', body: '茶席之上，字与茶同席。壶起水落之间，抬眼见字，心便静了三分——茶室里的字，讲究的从来是静气。' },
+  { char: '房', title: '卧室 / Bedroom', body: '卧室要的不是气派，是安放。一呼一吸之间，一幅小品让床头多一份温柔的静气，陪自己入睡，也陪自己醒来。' },
+  { char: '礼', title: '送礼 / Gifting', body: '看中了已经写好的，直接带走。装裱完成、附唯一编号与藏品证书，一份不必等待的心意，郑重而妥帖。' },
+  { char: '意', title: '心意 / Intention', body: '心里有一句话还没被写出来——写给谁、为什么写、想在什么时候交到对方手上，告诉我们，一起把它写出来。' },
+];
 const paths = [
   {
-    href: '/gifts/ready-made/', eyebrow: 'Ready to Ship / 现货好礼', title: '书法小品',
-    body: '已经写好的作品，每一幅都独一无二。看中即订，装裱完成，可直接发货。',
-    meta: '在册 10 幅 · 附编号与藏品证书', image: '/assets/works/work-qing-huan.jpg', alt: '现货书法小品《清欢》实拍',
+    href: '/gifts/ready-made/', eyebrow: 'Ready to Ship / 现货好礼', title: '已经写好的，直接带走',
+    body: '装裱完成的手写小品，每一幅世间唯一，附唯一编号与藏品证书。看中即订，确认后直接发货。',
+    meta: '在册 12 幅 · 摆件 ¥199 起 / 挂墙 ¥399', image: '/assets/works/gift-ready-fan-wide.jpg', alt: '《南谿新霁》洒金扇面小品立在深色斗柜上，旁有台灯、座钟与绿植',
     event: 'ready_made_view',
   },
   {
-    href: '/custom-commission/', eyebrow: 'Made to Order / 定制好礼', title: '定制环节',
+    href: '/custom-commission/', eyebrow: 'Made to Order / 定制好礼', title: '一句话，我们一起写出来',
     body: '从你的故事、空间或一句话开始，一起确认方向，写出一幅世间没有第二幅的作品。',
     meta: '倾听 · 取意 · 创作 · 抵达', image: '/assets/craft/step-1-writing.jpg', alt: '毛笔在宣纸上落笔书写的特写',
     event: 'custom_entry',
@@ -38,24 +47,31 @@ const paths = [
 ];
 ---
 <Layout title="小民好礼｜小民艺术" description="小民好礼，以书写、器物和礼盒为日常关系准备一份有东方审美的心意。">
-  <section class="container page-head"><span class="eyebrow">Xiaomin Gifts / 小民好礼</span><h1 class="serif">把一份心意，<br />送进真实的日常。</h1><p lang="en">Thoughtful gifts for everyday rituals.</p><p>小民好礼分两条路：看中了已经写好的，直接带走；心里有一句话还没被写出来，我们一起把它写出来。</p><div class="quick-links"><a class="btn btn-secondary" href="/gift-guide/" data-event="gift_guide_view">进入选礼指南 →</a></div></section>
-  <section class="container section paths-section"><div class="path-grid">{paths.map((path) => <a class="path-card" href={path.href} data-event={path.event}><figure><img src={path.image} alt={path.alt} loading="lazy" decoding="async" /></figure><div class="path-copy"><span class="eyebrow">{path.eyebrow}</span><h2 class="serif">{path.title}</h2><p>{path.body}</p><span class="path-meta">{path.meta} →</span></div></a>)}</div></section>
+  <section class="container page-head"><span class="eyebrow">Xiaomin Gifts / 小民好礼</span><h1 class="serif">把一份心意，<br />送进真实的日常。</h1><p lang="en">Thoughtful gifts for everyday rituals.</p><p>小民艺术不是只能被远观的作品。它可以进入书房、客厅、茶室，也可以成为一份送给重要之人的礼物。</p></section>
   <section class="container section craft-section" id="craft-journey"><div class="craft-head" data-reveal><span class="eyebrow">Handmade Journey / 手作匠心</span><h2 class="serif craft-title">手作匠心｜开始旅程</h2><p class="craft-sub serif">「你的心意，会被认真解读，认真看见」</p><p class="craft-note">每一幅，都是世间唯一的相遇</p></div><div class="craft-steps">{craftSteps.map((step, i) => <div class:list={['craft-row', { reverse: i % 2 === 1 }]} data-reveal><figure class="craft-fig"><img src={step.image} alt={step.alt} loading="lazy" decoding="async" /></figure><div class="craft-copy"><span class="craft-no">{step.no}</span><h3 class="serif">{step.title}</h3><p>{step.body}</p></div></div>)}</div></section>
+  <section class="container section rooms-section" aria-labelledby="rooms-title"><div class="section-lead"><span class="eyebrow">Rooms & Intentions / 空间与心意</span><h2 id="rooms-title" class="serif">一个字，就是一个去处。</h2><p>六个方向，各有各的安放方式——先看看你的心事属于哪一个。</p></div><div class="rooms-grid">{rooms.map((room) => <article class="room-card"><span class="room-char serif">{room.char}</span><div class="room-copy"><h3 class="serif">{room.title}</h3><p>{room.body}</p></div></article>)}</div></section>
+  <section class="container section paths-section" aria-labelledby="paths-title"><div class="section-lead"><span class="eyebrow">Two Paths / 小民好礼</span><h2 id="paths-title" class="serif">小民好礼，分两条路。</h2><p>看中了已经写好的，直接带走；心里有一句话还没被写出来，我们一起把它写出来。</p></div><div class="path-grid">{paths.map((path) => <a class="path-card" href={path.href} data-event={path.event}><figure><img src={path.image} alt={path.alt} loading="lazy" decoding="async" /></figure><div class="path-copy"><span class="eyebrow">{path.eyebrow}</span><h3 class="serif">{path.title}</h3><p>{path.body}</p><span class="path-meta">{path.meta} →</span></div></a>)}</div></section>
   <section class="container section next-step"><span class="eyebrow">Not sure yet / 还不确定</span><h2 class="serif">如果你还不知道送什么，先从对象、场合和预算告诉我们。</h2><a class="btn btn-primary" href="/custom-commission/?context=送礼建议" data-event="gift_advice_click">获取送礼建议 →</a></section>
 </Layout>
 <style>
-  .page-head { padding: 90px 0 58px; } .page-head h1 { font-size: clamp(30px, 4vw, 52px); line-height: 1.3; font-weight: 500; margin: 20px 0; } .page-head p { max-width: 700px; color: var(--ink-soft); font-size: 18px; } .page-head p[lang='en'] { font: 24px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); } .quick-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
-  .paths-section, .craft-section, .next-step { border-top: 1px solid var(--line); }
+  .page-head { padding: 90px 0 58px; } .page-head h1 { font-size: clamp(30px, 4vw, 52px); line-height: 1.3; font-weight: 500; margin: 20px 0; } .page-head p { max-width: 700px; color: var(--ink-soft); font-size: 18px; } .page-head p[lang='en'] { font: 24px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); }
+  .paths-section, .craft-section, .rooms-section, .next-step { border-top: 1px solid var(--line); }
+  .section-lead { max-width: 680px; margin-bottom: 40px; } .section-lead h2 { font-size: clamp(26px, 3.2vw, 40px); font-weight: 500; margin: 14px 0 12px; } .section-lead p { color: var(--ink-soft); line-height: 1.9; margin: 0; }
+  .rooms-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 26px 30px; }
+  .room-card { display: flex; gap: 20px; padding: 26px 26px 28px; border: 1px solid var(--line); background: var(--paper-light); }
+  .room-char { flex: none; display: flex; align-items: center; justify-content: center; width: 76px; height: 76px; border: 1px solid var(--cinnabar); color: var(--cinnabar); font-size: 40px; font-weight: 500; }
+  .room-copy h3 { font-size: 19px; font-weight: 500; margin: 2px 0 10px; }
+  .room-copy p { color: var(--ink-soft); font-size: 14px; line-height: 1.9; margin: 0; }
   .path-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
   .path-card { display: flex; flex-direction: column; border: 1px solid var(--line); background: var(--paper-light); transition: border-color .3s ease, box-shadow .3s ease; } .path-card:hover { border-color: var(--cinnabar); box-shadow: var(--shadow); }
   .path-card figure { margin: 0; overflow: hidden; aspect-ratio: 16 / 9; background: var(--paper-deep); }
   .path-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s ease; } .path-card:hover img { transform: scale(1.04); }
   .path-copy { padding: 24px 24px 28px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
-  .path-copy h2 { font-size: clamp(26px, 2.8vw, 36px); font-weight: 500; margin: 4px 0 0; }
+  .path-copy h3 { font-size: clamp(24px, 2.6vw, 32px); font-weight: 500; margin: 4px 0 0; }
   .path-copy p { color: var(--ink-soft); font-size: 15px; line-height: 1.9; margin: 0; }
   .path-meta { margin-top: auto; padding-top: 14px; color: var(--cinnabar); font-size: 13px; letter-spacing: .06em; }
   .craft-head { text-align: center; max-width: 720px; margin: 0 auto 64px; } .craft-title { font-size: clamp(28px, 3.6vw, 44px); font-weight: 500; margin: 16px 0 18px; } .craft-sub { font-size: clamp(19px, 2.2vw, 26px); color: var(--cinnabar-deep); margin: 0 0 10px; } .craft-note { color: var(--ink-soft); font-size: 15px; letter-spacing: 0.12em; margin: 0; }
   .craft-steps { display: flex; flex-direction: column; gap: 72px; } .craft-row { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 56px; align-items: center; } .craft-row.reverse { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); } .craft-row.reverse .craft-fig { order: 2; } .craft-row.reverse .craft-copy { order: 1; } .craft-fig { margin: 0; overflow: hidden; background: var(--paper-deep); } .craft-fig img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; display: block; transition: transform .6s ease; } .craft-row:hover .craft-fig img { transform: scale(1.03); } .craft-no { display: inline-block; font: 13px var(--font-display-en), Georgia, serif; letter-spacing: 0.2em; color: var(--cinnabar-deep); border-bottom: 1px solid var(--cinnabar); padding-bottom: 6px; } .craft-copy h3 { font-size: clamp(20px, 2.2vw, 26px); font-weight: 500; line-height: 1.5; margin: 18px 0 14px; } .craft-copy p { color: var(--ink-soft); font-size: 16px; line-height: 1.9; margin: 0; }
   .next-step h2 { max-width: 760px; font-size: clamp(26px, 3.2vw, 40px); font-weight: 500; margin: 18px 0 28px; }
-  @media (max-width: 767px) { .page-head { padding: 56px 0 42px; } .page-head h1 { font-size: 30px; } .page-head p { font-size: 16px; } .page-head p[lang='en'] { font-size: 20px; } .quick-links, .quick-links .btn { width: 100%; } .quick-links { display: grid; } .path-grid { grid-template-columns: 1fr; gap: 20px; } .craft-head { margin-bottom: 44px; } .craft-steps { gap: 52px; } .craft-row, .craft-row.reverse { grid-template-columns: 1fr; gap: 22px; } .craft-row.reverse .craft-fig { order: 0; } .craft-row.reverse .craft-copy { order: 1; } .craft-copy p { font-size: 15px; } }
+  @media (max-width: 767px) { .page-head { padding: 56px 0 42px; } .page-head h1 { font-size: 30px; } .page-head p { font-size: 16px; } .page-head p[lang='en'] { font-size: 20px; } .rooms-grid { grid-template-columns: 1fr; gap: 18px; } .room-card { padding: 20px 18px 22px; gap: 16px; } .room-char { width: 60px; height: 60px; font-size: 32px; } .path-grid { grid-template-columns: 1fr; gap: 20px; } .craft-head { margin-bottom: 44px; } .craft-steps { gap: 52px; } .craft-row, .craft-row.reverse { grid-template-columns: 1fr; gap: 22px; } .craft-row.reverse .craft-fig { order: 0; } .craft-row.reverse .craft-copy { order: 1; } .craft-copy p { font-size: 15px; } }
 </style>
