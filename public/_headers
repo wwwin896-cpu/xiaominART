@@ -22,7 +22,10 @@
 # 策略依据：本站零外部依赖（字体自托管、无第三方 CDN / 统计 / 广告），
 # 唯一的外部请求是同源 /api/lead 与 /api/event。
 # 观察一到两周、控制台确认无违规后，把下面这行改名成 Content-Security-Policy 即正式启用。
+#
+# ⚠️ 绝对不要在这里加 X-Robots-Tag —— 该规则段是 /* 通配，
+# 一旦设成 noindex 会让整站被搜索引擎排除（2026-10-06 已踩过一次，5 分钟即回滚）。
+# 接口类的 noindex 在 functions/api/*.ts 代码里单独设置。
 # 注意：Cloudflare Pages 的 _headers 只作用于静态资源，functions/ 下的 /api/* 需在代码里设头（已设）。
 /*
   Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'
-  X-Robots-Tag: noindex, nofollow
