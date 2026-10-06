@@ -7,7 +7,17 @@
     "jsxImportSource": "astro",
     "types": ["node"]
   },
-  "exclude": [    "xiaominart-test-site",
+  "exclude": [
+    "dist",
+    "dist-new",
+    "dist-test",
+    "dist-vercel-test",
+    ".astro",
+    ".wrangler",
+    "node_modules",
+    "functions/keystatic",
+    "xiaominart-test-site",
     "keystatic.config.ts",
-    ".workspace-trash"]
+    ".workspace-trash"
+  ]
 }

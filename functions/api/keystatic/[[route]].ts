@@ -52,5 +52,12 @@ export const onRequest = async (context: Ctx): Promise<Response> => {
   );
 
   const { body, headers, status } = await handler(context.request);
-  return new Response(body, { status, headers });
+  // Keystatic 的 body 联合类型含 Uint8Array，Web 标准 Response 的 BodyInit 不直接收；
+  // 显式转成 BodyInit 兼容的类型（Uint8Array 在运行时完全合法）。
+  const bodyInit = body as BodyInit | null;
+  // 后台接口一律不缓存、不被搜索引擎收录。
+  return new Response(bodyInit, {
+    status,
+    headers: { ...headers, 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow' },
+  });
 };

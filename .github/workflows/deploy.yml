@@ -34,6 +34,12 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
+      # 质量门禁：类型/模板诊断不过就不部署。
+      # 注意：必须在 Build 之前跑 —— astro check 会把 dist/ 等构建产物一并扫描，
+      # 既慢又会在内联脚本上报假错误；tsconfig.json 的 exclude 已排除这些目录。
+      - name: Type & template check
+        run: npm run check
+
       - name: Build
         run: npm run build
         env:

@@ -3,7 +3,10 @@
 // 注意：页脚已声明「不使用未经核验的数字作为背书」，因此 stats 默认为空数组，
 // 拿到真实数据后再传入即可（例如 stats={[{ value: '12', label: '年创作与教学经验' }]}），不填就不会渲染。
 import { processSteps } from '../data/content';
-const { stats = [] } = Astro.props;
+interface Stat { value: string; label: string }
+interface Props { stats?: Stat[] }
+// stats 默认为空数组：只有拿到真实可核验的数据才传入，不填就不渲染这一段。
+const { stats = [] } = Astro.props as Props;
 const evidence = [
   {
     title: '创作者是真名实姓的',

@@ -10,8 +10,11 @@
 // ─────────────────────────────────────────────────────────────
 
 const CLOUD_REST_BASE = 'https://xiaominart-forms.app.workbuddy.host/.cloud/database/rest';
-const ACCESS_KEY = 'wbpk_F0w7EXBEJ6ijaciNTHWkaW_og4NwUbg9n03Ie90K1Yq4dBZCicDBh3U';
 const MAX_BODY_BYTES = 4 * 1024;
+
+// 云访问密钥从 Cloudflare Pages 环境变量读取（变量名：FORMS_ACCESS_KEY）。
+// 2026-10-06 从源码硬编码改为环境变量：原密钥已随仓库公开，需作废后换新值。
+type Env = Record<string, string | undefined>;
 const ALLOWED_EVENTS = new Set([
   'hero_cta_click',
   'gift_guide_select',
@@ -21,18 +24,27 @@ const ALLOWED_EVENTS = new Set([
   'contact_channel_click',
 ]);
 
-function jsonResponse(body: Record<string, unknown>, status: number): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { 'Content-Type': 'application/json; charset=utf-8' },
-  });
+// /api/* 是接口，不应被搜索引擎收录、也不应被缓存。
+const API_HEADERS = {
+  'Content-Type': 'application/json; charset=utf-8',
+  'Cache-Control': 'no-store',
+  'X-Robots-Tag': 'noindex, nofollow',
+};
+
+function jsonResponse(body: Record<string, unknown>, status: number = 200): Response {
+  return new Response(JSON.stringify(body), { status, headers: API_HEADERS });
 }
 
 function str(value: unknown, max: number): string {
   return typeof value === 'string' ? value.trim().slice(0, max) : '';
 }
 
-async function handleEvent(request: Request): Promise<Response> {
+async function handleEvent(request: Request, accessKey: string): Promise<Response> {
+  // 事件上报是静默链路：密钥没配就直接跳过，不打扰任何用户操作。
+  if (!accessKey) {
+    return jsonResponse({ ok: true, skipped: true });
+  }
+
   if (request.method !== 'POST') {
     return jsonResponse({ ok: false, message: '仅支持 POST。' }, 405);
   }
@@ -63,7 +75,7 @@ async function handleEvent(request: Request): Promise<Response> {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-wb-webapp-access-key': ACCESS_KEY,
+        'x-wb-webapp-access-key': accessKey,
       },
       body: JSON.stringify({
         event_name: name,
@@ -78,13 +90,15 @@ async function handleEvent(request: Request): Promise<Response> {
   return jsonResponse({ ok: true });
 }
 
-export const onRequestPost = async (context: { request: Request }): Promise<Response> =>
-  handleEvent(context.request);
+export const onRequestPost = async (context: { request: Request; env: Env }): Promise<Response> =>
+  handleEvent(context.request, context.env?.FORMS_ACCESS_KEY ?? '');
 
 export const onRequestOptions = async (): Promise<Response> =>
   new Response(null, {
     status: 204,
     headers: {
       Allow: 'POST, OPTIONS',
+      'Cache-Control': 'no-store',
+      'X-Robots-Tag': 'noindex, nofollow',
     },
   });

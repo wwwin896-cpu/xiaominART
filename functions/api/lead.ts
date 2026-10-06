@@ -12,33 +12,49 @@
 // ─────────────────────────────────────────────────────────────
 
 const CLOUD_REST_BASE = 'https://xiaominart-forms.app.workbuddy.host/.cloud/database/rest';
-const ACCESS_KEY = 'wbpk_F0w7EXBEJ6ijaciNTHWkaW_og4NwUbg9n03Ie90K1Yq4dBZCicDBh3U';
 const MAX_BODY_BYTES = 16 * 1024;
 const ALLOWED_FORM_TYPES = new Set(['quick_message', 'commission', 'business_gift']);
 
-function jsonResponse(body: Record<string, unknown>, status: number): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { 'Content-Type': 'application/json; charset=utf-8' },
-  });
+// 云访问密钥从 Cloudflare Pages 环境变量读取（变量名：FORMS_ACCESS_KEY）。
+// 2026-10-06 从源码硬编码改为环境变量：原密钥已随仓库公开，需作废后换新值。
+type Env = Record<string, string | undefined>;
+
+// /api/* 是接口，不应被搜索引擎收录、也不应被缓存。
+const API_HEADERS = {
+  'Content-Type': 'application/json; charset=utf-8',
+  'Cache-Control': 'no-store',
+  'X-Robots-Tag': 'noindex, nofollow',
+};
+
+function jsonResponse(body: Record<string, unknown>, status: number = 200): Response {
+  return new Response(JSON.stringify(body), { status, headers: API_HEADERS });
 }
 
 function str(value: unknown, max: number): string {
   return typeof value === 'string' ? value.trim().slice(0, max) : '';
 }
 
-async function insertToCloud(table: 'leads' | 'subscribers', row: Record<string, unknown>): Promise<Response> {
+async function insertToCloud(
+  table: 'leads' | 'subscribers',
+  row: Record<string, unknown>,
+  accessKey: string,
+): Promise<Response> {
   return fetch(`${CLOUD_REST_BASE}/${table}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-wb-webapp-access-key': ACCESS_KEY,
+      'x-wb-webapp-access-key': accessKey,
     },
     body: JSON.stringify(row),
   });
 }
 
-async function handleLead(request: Request): Promise<Response> {
+async function handleLead(request: Request, accessKey: string): Promise<Response> {
+  // 密钥未配置时明确返回 503，而不是带着空 key 去请求云端拿一个语义不明的错误。
+  if (!accessKey) {
+    return jsonResponse({ ok: false, message: '服务暂未配置完成，请通过页脚微信联系我们。' }, 503);
+  }
+
   if (request.method !== 'POST') {
     return jsonResponse({ ok: false, message: '仅支持 POST。' }, 405);
   }
@@ -63,7 +79,7 @@ async function handleLead(request: Request): Promise<Response> {
     const source = str(body.source, 100) || 'site';
     let res: Response;
     try {
-      res = await insertToCloud('subscribers', { email, source });
+      res = await insertToCloud('subscribers', { email, source }, accessKey);
     } catch {
       return jsonResponse({ ok: false, message: '提交失败，请稍后再试。' }, 502);
     }
@@ -90,7 +106,7 @@ async function handleLead(request: Request): Promise<Response> {
 
   let res: Response;
   try {
-    res = await insertToCloud('leads', { form_type: formType, name, contact, payload });
+    res = await insertToCloud('leads', { form_type: formType, name, contact, payload }, accessKey);
   } catch {
     return jsonResponse({ ok: false, message: '提交失败，请稍后再试。' }, 502);
   }
@@ -98,13 +114,15 @@ async function handleLead(request: Request): Promise<Response> {
   return jsonResponse({ ok: false, message: '提交失败，请稍后再试。' }, 502);
 }
 
-export const onRequestPost = async (context: { request: Request }): Promise<Response> =>
-  handleLead(context.request);
+export const onRequestPost = async (context: { request: Request; env: Env }): Promise<Response> =>
+  handleLead(context.request, context.env?.FORMS_ACCESS_KEY ?? '');
 
 export const onRequestOptions = async (): Promise<Response> =>
   new Response(null, {
     status: 204,
     headers: {
       Allow: 'POST, OPTIONS',
+      'Cache-Control': 'no-store',
+      'X-Robots-Tag': 'noindex, nofollow',
     },
   });

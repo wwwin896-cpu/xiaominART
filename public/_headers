@@ -16,3 +16,13 @@
 /*
   X-Frame-Options: DENY
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), interest-cohort=()
+
+# ── CSP 观察期（Report-Only）──
+# 只报告、不拦截：浏览器发现违规会记进控制台，但页面照常工作，因此不会有白屏风险。
+# 策略依据：本站零外部依赖（字体自托管、无第三方 CDN / 统计 / 广告），
+# 唯一的外部请求是同源 /api/lead 与 /api/event。
+# 观察一到两周、控制台确认无违规后，把下面这行改名成 Content-Security-Policy 即正式启用。
+# 注意：Cloudflare Pages 的 _headers 只作用于静态资源，functions/ 下的 /api/* 需在代码里设头（已设）。
+/*
+  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'
+  X-Robots-Tag: noindex, nofollow

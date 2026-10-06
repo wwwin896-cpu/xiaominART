@@ -2,7 +2,6 @@
 import Layout from '../../layouts/Layout.astro';
 import GiftProductDetail from '../../components/GiftProductDetail.astro';
 import { getGiftCatalog } from '../../lib/keystatic';
-const { products: giftProducts } = getGiftCatalog();
 export const prerender = true;
 export function getStaticPaths() { return getGiftCatalog().products.map((product) => ({ params: { slug: product.slug }, props: { product } })); }
 const { product } = Astro.props;

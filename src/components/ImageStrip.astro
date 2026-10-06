@@ -1,7 +1,15 @@
 ---
 // 三格横向滚动图组：一屏只看三张，各承担一个"凭什么好"的问题。
-// item: { image?, slot?, tag, title, caption }
-const { items = [], label = '细节图组', ratio = '4 / 5' } = Astro.props;
+interface StripItem {
+  image?: string;
+  alt?: string;
+  slot?: string;
+  tag?: string;
+  title: string;
+  caption?: string;
+}
+interface Props { items?: StripItem[]; label?: string; ratio?: string }
+const { items = [], label = '细节图组', ratio = '4 / 5' } = Astro.props as Props;
 ---
 <div class="strip" role="group" aria-label={label} style={`--strip-ratio:${ratio}`}>
   {items.map((item) => (
