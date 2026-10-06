@@ -419,9 +419,12 @@ export type ReadyMadeWork = {
   form: '摆件' | '挂墙';
   /** 人民币价格（元），含装裱。摆件统一 199（禅 299），挂墙 399。 */
   price: number;
-  /** 材质与装裱描述（可选覆盖默认文案），如「赭底宣纸 · 白色卡衬 · 榫卯结构柚木框」。
+  /** 框体与木种，如「手写书法原作 · 榫卯结构柚木框」。
    *  框体统一为榫卯结构实木框（不用钉、不用胶），木种有柚木与胡桃木两种，胡桃木颜色更深。 */
   material?: string;
+  /** 成品外框尺寸（宽 × 高，cm）。2026-10-06 由业主确认为按档位统一：
+   *  摆件 21 × 29.7（A4）／圆光摆件《禅》50 × 50／挂墙 60 × 33。 */
+  size?: { w: number; h: number };
   /** 装饰场景图：作品挂进真实空间的样子。优先于实拍图展示。 */
   sceneImage?: string;
   sceneAlt?: string;
@@ -436,18 +439,18 @@ export type ReadyMadeWork = {
  * 尺寸与纸墨细节不写在页面上，随作品档案在咨询时提供；价格已公开（form/price 字段）。
  */
 export const readyMadeWorks: ReadyMadeWork[] = [
-  { slug: 'qing-huan', title: '清欢', en: 'Quiet Joy', note: '「人间有味是清欢」，苏轼写给寻常日子的七个字。不浓烈，却留得住——适合茶席、餐桌旁，或任何一个想慢下来的墙角。', material: '赭底宣纸 · 白色卡衬 · 榫卯结构柚木框', form: '挂墙', price: 399, image: '/assets/works/work-qing-huan-2.jpg', alt: '赭底白卡柚木框书法小品《清欢》挂在墙上的空间实景，旁有青瓷瓶、座钟与书册' },
-  { slug: 'de-xin-ya-ju', title: '德馨雅居', en: 'Virtue Graces the Home', note: '「斯是陋室，惟吾德馨」——屋子不在大小，住的人自有雅气。适合客厅大墙，也适合乔迁与开业。', material: '手写书法原作 · 榫卯结构胡桃木框', form: '挂墙', price: 399, image: '/assets/works/work-de-xin-ya-ju.jpg', alt: '书法横批《德馨雅居》挂在客厅大墙上，下方是茶台、皮沙发与圆几' },
-  { slug: 'shang-hua-pin-ming', title: '赏花品茗', en: 'Flowers & Tea', note: '赏花品茗，四时清课。瓶花与茶席之间，把日子过成自己的样子。适合茶室与餐边柜，也适合爱花爱茶的人。', material: '手写书法原作 · 榫卯结构柚木框', form: '摆件', price: 199, image: '/assets/works/work-shang-hua-pin-ming.jpg', alt: '书法横批《赏花品茗》立在木质边柜上，旁有瓶花与盖碗茶席' },
-  { slug: 'nan-xi-xin-ji', title: '南谿新霁', en: 'Clearing Over the South Stream', note: '「南谿新霁」——雨过天晴，山清水净。四个字落在洒金扇面上，把雨停之后那一刻的清朗留在案头，适合茶席与书房。', material: '洒金扇面 · 榫卯结构胡桃木框', form: '摆件', price: 199, image: '/assets/works/work-fan.jpg', alt: '胡桃木框洒金扇面书法小品《南谿新霁》立在抹茶茶席上，旁有茶碗、茶筅与和果子' },
-  { slug: 'chan', title: '禅', en: 'Zen', note: '「菩提本无树」，六祖慧能的偈语。一方圆光小品，进门第一眼、家里最安静的那个角落，都合适。', material: '圆光小品 · 榫卯结构胡桃木框', form: '摆件', price: 299, image: '/assets/works/work-chan.jpg', alt: '圆光书法小品《禅》立在玄关石面上，旁有玉兰花枝与暖灯' },
-  { slug: 'mo-jian-hu-yin', title: '莫见乎隐', en: 'Seen Even When Alone', note: '「莫见乎隐，莫显乎微」——《中庸》讲慎独：越是没人看见的地方，越看得见一个人。适合书房，也适合留给自己的角落。', material: '手写书法立轴 · 榫卯结构胡桃木框', form: '挂墙', price: 399, image: '/assets/works/work-mo-jian-hu-yin.jpg', alt: '书法立轴《莫见乎隐·莫显乎微》嵌在拱形壁龛里，下方石台上有陶瓶与蒲苇' },
-  { slug: 'guan-zi-zai', title: '观自在', en: 'At Ease, As You Are', note: '「观自在菩萨」，心经开篇三字。自在不在远处，就在抬眼可见的地方——适合书房与玄关。', material: '手写书法原作 · 榫卯结构胡桃木框', form: '摆件', price: 199, image: '/assets/works/work-guan-zi-zai.jpg', alt: '书法横批《观自在》摆在中式木案上，旁有石盆、瘦枝与笔架' },
-  { slug: 'yi-hu-yi-xi', title: '一呼一吸', en: 'One Breath, Then Another', note: '一呼一吸之间，日子有了自己的节奏。适合卧室床头、书桌旁，也适合送给总在赶时间的人。', material: '手写书法原作 · 榫卯结构柚木框', form: '摆件', price: 199, image: '/assets/works/work-yi-hu-yi-xi.jpg', alt: '书法小品《一呼一吸》立在卧室边柜上，旁有台灯与柿子果盘' },
-  { slug: 'chang-le', title: '长乐', en: 'Everlasting Joy', note: '取意汉瓦「长乐未央」，两个字，是古人最绵长的祝愿。适合书房与日常抬眼可见的地方。', material: '手写书法立轴 · 榫卯结构胡桃木框', form: '挂墙', price: 399, image: '/assets/works/work-chang-le.jpg', alt: '书法立轴《长乐》挂在深木色书房书架间，案上有绿植、笔砚与台灯' },
-  { slug: 'duan-she-li', title: '断舍离', en: 'Less, Then Light', note: '三个字，写给正在做减法的人与家。适合卧室、玄关，也适合送给刚刚搬完家的朋友。', material: '手写书法原作 · 榫卯结构柚木框', form: '摆件', price: 199, image: '/assets/works/work-duan-she-li-2.jpg', alt: '书法小品《断舍离》立在卧室柜上，旁有台灯、书册与瓶枝' },
-  { slug: 'mao-fei-jia-run', title: '猫肥家润', en: 'Fat Cat, Flourishing Home', note: '猫肥家润，花繁人安。把最有烟火气的幸福写进家里——适合客厅，也适合养猫的人家。', material: '手写书法原作 · 榫卯结构柚木框', form: '摆件', price: 199, image: '/assets/works/work-mao-fei-jia-run.jpg', alt: '书法横批《猫肥家润》摆在客厅木几上，背景是沙发、抱枕与绿植' },
-  { slug: 'xiang-jian-yi-wu-shi', title: '相见亦无事', en: 'Nothing Much, Just to See You', note: '「相见亦无事，不来忽忆君」，写给不必寒暄的老朋友。适合客厅与茶席，也适合做乔迁与重逢的礼。', material: '白底红卡 · 榫卯结构胡桃木框', form: '摆件', price: 199, image: '/assets/works/work-xiang-jian-yi-wu-shi.jpg', alt: '白底红卡黑框书法小品《相见亦无事》立在暖光卧室的木柜上，旁有台灯与书册' },
+  { slug: 'qing-huan', title: '清欢', en: 'Quiet Joy', note: '「人间有味是清欢」，苏轼写给寻常日子的七个字。不浓烈，却留得住——适合茶席、餐桌旁，或任何一个想慢下来的墙角。', material: '赭底宣纸 · 白色卡衬 · 榫卯结构柚木框', form: '挂墙', price: 399, size: { w: 60, h: 33 }, image: '/assets/works/work-qing-huan-2.jpg', alt: '赭底白卡柚木框书法小品《清欢》挂在墙上的空间实景，旁有青瓷瓶、座钟与书册' },
+  { slug: 'de-xin-ya-ju', title: '德馨雅居', en: 'Virtue Graces the Home', note: '「斯是陋室，惟吾德馨」——屋子不在大小，住的人自有雅气。适合客厅大墙，也适合乔迁与开业。', material: '手写书法原作 · 榫卯结构胡桃木框', form: '挂墙', price: 399, size: { w: 60, h: 33 }, image: '/assets/works/work-de-xin-ya-ju.jpg', alt: '书法横批《德馨雅居》挂在客厅大墙上，下方是茶台、皮沙发与圆几' },
+  { slug: 'shang-hua-pin-ming', title: '赏花品茗', en: 'Flowers & Tea', note: '赏花品茗，四时清课。瓶花与茶席之间，把日子过成自己的样子。适合茶室与餐边柜，也适合爱花爱茶的人。', material: '手写书法原作 · 榫卯结构柚木框', form: '摆件', price: 199, size: { w: 21, h: 29.7 }, image: '/assets/works/work-shang-hua-pin-ming.jpg', alt: '书法横批《赏花品茗》立在木质边柜上，旁有瓶花与盖碗茶席' },
+  { slug: 'nan-xi-xin-ji', title: '南谿新霁', en: 'Clearing Over the South Stream', note: '「南谿新霁」——雨过天晴，山清水净。四个字落在洒金扇面上，把雨停之后那一刻的清朗留在案头，适合茶席与书房。', material: '洒金扇面 · 榫卯结构胡桃木框', form: '摆件', price: 199, size: { w: 21, h: 29.7 }, image: '/assets/works/work-fan.jpg', alt: '胡桃木框洒金扇面书法小品《南谿新霁》立在抹茶茶席上，旁有茶碗、茶筅与和果子' },
+  { slug: 'chan', title: '禅', en: 'Zen', note: '「菩提本无树」，六祖慧能的偈语。一方圆光小品，进门第一眼、家里最安静的那个角落，都合适。', material: '圆光小品 · 榫卯结构胡桃木框', form: '摆件', price: 299, size: { w: 50, h: 50 }, image: '/assets/works/work-chan.jpg', alt: '圆光书法小品《禅》立在玄关石面上，旁有玉兰花枝与暖灯' },
+  { slug: 'mo-jian-hu-yin', title: '莫见乎隐', en: 'Seen Even When Alone', note: '「莫见乎隐，莫显乎微」——《中庸》讲慎独：越是没人看见的地方，越看得见一个人。适合书房，也适合留给自己的角落。', material: '手写书法立轴 · 榫卯结构胡桃木框', form: '挂墙', price: 399, size: { w: 60, h: 33 }, image: '/assets/works/work-mo-jian-hu-yin.jpg', alt: '书法立轴《莫见乎隐·莫显乎微》嵌在拱形壁龛里，下方石台上有陶瓶与蒲苇' },
+  { slug: 'guan-zi-zai', title: '观自在', en: 'At Ease, As You Are', note: '「观自在菩萨」，心经开篇三字。自在不在远处，就在抬眼可见的地方——适合书房与玄关。', material: '手写书法原作 · 榫卯结构胡桃木框', form: '摆件', price: 199, size: { w: 21, h: 29.7 }, image: '/assets/works/work-guan-zi-zai.jpg', alt: '书法横批《观自在》摆在中式木案上，旁有石盆、瘦枝与笔架' },
+  { slug: 'yi-hu-yi-xi', title: '一呼一吸', en: 'One Breath, Then Another', note: '一呼一吸之间，日子有了自己的节奏。适合卧室床头、书桌旁，也适合送给总在赶时间的人。', material: '手写书法原作 · 榫卯结构柚木框', form: '摆件', price: 199, size: { w: 21, h: 29.7 }, image: '/assets/works/work-yi-hu-yi-xi.jpg', alt: '书法小品《一呼一吸》立在卧室边柜上，旁有台灯与柿子果盘' },
+  { slug: 'chang-le', title: '长乐', en: 'Everlasting Joy', note: '取意汉瓦「长乐未央」，两个字，是古人最绵长的祝愿。适合书房与日常抬眼可见的地方。', material: '手写书法立轴 · 榫卯结构胡桃木框', form: '挂墙', price: 399, size: { w: 60, h: 33 }, image: '/assets/works/work-chang-le.jpg', alt: '书法立轴《长乐》挂在深木色书房书架间，案上有绿植、笔砚与台灯' },
+  { slug: 'duan-she-li', title: '断舍离', en: 'Less, Then Light', note: '三个字，写给正在做减法的人与家。适合卧室、玄关，也适合送给刚刚搬完家的朋友。', material: '手写书法原作 · 榫卯结构柚木框', form: '摆件', price: 199, size: { w: 21, h: 29.7 }, image: '/assets/works/work-duan-she-li-2.jpg', alt: '书法小品《断舍离》立在卧室柜上，旁有台灯、书册与瓶枝' },
+  { slug: 'mao-fei-jia-run', title: '猫肥家润', en: 'Fat Cat, Flourishing Home', note: '猫肥家润，花繁人安。把最有烟火气的幸福写进家里——适合客厅，也适合养猫的人家。', material: '手写书法原作 · 榫卯结构柚木框', form: '摆件', price: 199, size: { w: 21, h: 29.7 }, image: '/assets/works/work-mao-fei-jia-run.jpg', alt: '书法横批《猫肥家润》摆在客厅木几上，背景是沙发、抱枕与绿植' },
+  { slug: 'xiang-jian-yi-wu-shi', title: '相见亦无事', en: 'Nothing Much, Just to See You', note: '「相见亦无事，不来忽忆君」，写给不必寒暄的老朋友。适合客厅与茶席，也适合做乔迁与重逢的礼。', material: '白底红卡 · 榫卯结构胡桃木框', form: '摆件', price: 199, size: { w: 21, h: 29.7 }, image: '/assets/works/work-xiang-jian-yi-wu-shi.jpg', alt: '白底红卡黑框书法小品《相见亦无事》立在暖光卧室的木柜上，旁有台灯与书册' },
 ];
 
 export const channelPages = [
@@ -479,7 +482,7 @@ export const seasons = [
 ];
 
 export const faqs = [
-  ['手写现货和艺术共创定制有什么区别？ / What is the difference between ready-made works and commissions?', '手写现货是已经写好的小幅作品与手写小笺，按四时一笺、墨有呼吸、一点朱砂、案上有山四个主题分类，可以直接选购；艺术共创定制则从你的故事、空间与想法出发重新讨论，每件作品都不重复、不做批量复刻。灵感画廊中的案例仅作方向参考，不售卖同款。 / Ready-made works are already-written small pieces, grouped into four themes and available directly; commissions are shaped around your story, space and intention, so no two works are alike and nothing is mass-replicated. Gallery cases are references only; identical works are not for sale.'],
+  ['手写现货和艺术共创定制有什么区别？ / What is the difference between ready-made works and commissions?', '手写现货是已经写好的作品，一物一件，可以直接选购、看中即发；艺术共创定制则从你的故事、空间与想法出发重新讨论，每件作品都为这一次的委托而写。灵感画廊中的案例仅作方向参考，不作为标准款式售卖；企业批量礼赠另有单独的方案与起订量，可在企业礼赠方向沟通。 / Ready-made works are already written and one of a kind, available directly; commissions are shaped around your story, space and intention, written for that request alone. Gallery cases are references only and are not sold as standard models; corporate gifting follows a separate scheme with its own minimum order, discussed under corporate gifts.'],
   ['哪些需求可以定制，哪些暂不承接？ / What can you commission?', '可承接纸本水墨、综合材料作品、小型艺术器物、居家墙面定制、企业空间艺术与艺术礼赠；暂不承接纯照片临摹复刻、侵权 IP 主题、极低预算大型装置等。 / We can discuss ink on paper, mixed-media works, small art objects, home-wall commissions, corporate spaces and art gifts; we do not take direct photo replicas, infringing IP themes or large installations with extremely limited budgets.'],
   ['价格范围是多少？ / What budget range should I expect?', '预算参考为：小幅礼赠 ¥100–¥300；居家中型墙面作品 ¥300–¥800；器物类定制 ¥800–¥2,000；商业空间大型装置需单独评估。价格会受尺寸、媒介、复杂度、装裱与物流影响。 / Reference ranges are ¥100–¥300 for small gifts, ¥300–¥800 for medium home-wall works, and ¥800–¥2,000 for object commissions; large commercial installations require a separate assessment. Size, medium, complexity, framing and logistics affect the final scope.'],
   ['从咨询到交付需要多久？ / How long does a commission take?', '时间取决于主题、媒介、艺术家档期、确认节点与交付方式。提交简报后，我们会在适合进入下一次沟通时说明可讨论的时间范围。 / Timing depends on subject, medium, artist availability, approval points and delivery. After receiving a brief, we will explain the workable range for the next conversation.'],

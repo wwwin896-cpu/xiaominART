@@ -10,14 +10,24 @@ export function getStaticPaths() {
 const { work } = Astro.props;
 const others = readyMadeWorks.filter((item) => item.slug !== work.slug).slice(0, 3);
 const isWall = work.form === '挂墙';
-const sizeNote = isWall ? '装框后约 40 × 55 cm' : '装框后约 30 × 40 cm';
+const isZen = work.slug === 'chan';
+// 尺寸按档位由业主确认（2026-10-06）：摆件 A4（21 × 29.7）、圆光《禅》50 × 50、挂墙 60 × 33。
+const sizeShape = isZen ? '（圆光方幅）' : isWall ? '' : '（A4 幅面）';
+const sizeNote = work.size
+  ? `装框后 ${work.size.w} × ${work.size.h} cm${sizeShape}`
+  : '以随附作品档案为准';
+const sizeFineprint = isWall
+  ? '为装框后的外框尺寸，横挂或竖挂皆可；画心尺寸随作品档案提供。'
+  : isZen
+    ? '为装框后的方形外框尺寸；圆光形制留白较多，画心约为外框的六成。'
+    : '为装框后的 A4 幅面外框尺寸；画心尺寸随作品档案提供。';
 const material = work.material ?? '手写书法原作（非印刷）· 榫卯结构实木框';
 const woodNote = '框体为榫卯结构实木框（无钉无胶），木种为柚木或胡桃木；胡桃木色泽更深、柚木偏暖。如需指定木种，咨询时说明即可。';
 const mountNote = isWall
   ? '出厂即装框完成：卡纸留白衬裱，背部预装挂点，随附安装说明，可直接上墙，无需二次装裱。'
   : '出厂即装框完成：可直接立于案头、边柜或博古架，无需二次装裱；如需配支架或挂用配件，咨询时说明即可。';
 const packNote = '装框成品以护角与缓冲材料整体包裹，外加加固纸箱寄出；随附唯一编号与藏品证书（一物一码），礼盒包装需求可在咨询时提出。';
-const deliverNote = '现货唯一一件，在册可直接发货；确认后安排寄出，不做复刻、不做批发。';
+const deliverNote = '现货唯一一件，在册可直接发货；确认后安排寄出。如需要同款的批量礼赠（企业答谢、节日礼盒等），可以走企业礼赠方向另外沟通。';
 const productSchema = {
   '@context': 'https://schema.org',
   '@type': 'Product',
@@ -26,6 +36,9 @@ const productSchema = {
   image: [new URL(work.image, Astro.site ?? 'https://xiaominart.com').href],
   brand: { '@type': 'Brand', name: 'XIAOMINART 小民艺术' },
   material,
+  ...(work.size
+    ? { width: { '@type': 'QuantitativeValue', value: work.size.w, unitCode: 'CMT' }, height: { '@type': 'QuantitativeValue', value: work.size.h, unitCode: 'CMT' } }
+    : {}),
   offers: {
     '@type': 'Offer',
     price: work.price,
@@ -55,7 +68,7 @@ const productSchema = {
     <div class="section-lead"><span class="eyebrow">Work Details / 作品详情</span><h2 id="facts-title" class="serif">关于这一幅，你想知道的都在这里。</h2></div>
     <dl class="facts-grid">
       <div class="fact"><dt><span class="mono">01</span>材质</dt><dd>{material}<em>{woodNote}题字「{work.title}」为手写原作，墨迹有细微浓淡变化，是手写与印刷最大的分别。</em></dd></div>
-      <div class="fact"><dt><span class="mono">02</span>尺寸</dt><dd>{sizeNote}<em>标注为近似值，具体以随附作品档案为准；如需精确尺寸，咨询时我们会发给你。</em></dd></div>
+      <div class="fact"><dt><span class="mono">02</span>尺寸</dt><dd>{sizeNote}<em>{sizeFineprint}</em></dd></div>
       <div class="fact"><dt><span class="mono">03</span>装裱与装帧</dt><dd>{mountNote}</dd></div>
       <div class="fact"><dt><span class="mono">04</span>包装</dt><dd>{packNote}</dd></div>
       <div class="fact"><dt><span class="mono">05</span>价格</dt><dd>¥{work.price} RMB（{isWall ? '挂墙档' : work.title === '禅' ? '圆光摆件档' : '摆件档统一价'}），含装裱，不含运费。</dd></div>
