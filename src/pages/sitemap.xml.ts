@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { getGiftCatalog } from '../lib/keystatic';
-import { readyMadeWorks, artists, work, channelPages } from '../data/content';
+import { readyMadeWorks, artists, work, channelPages, blessings } from '../data/content';
 import { lastmodFor } from '../lib/seo';
 
 // sitemap 只收录真实存在、未被重定向、且只有一个 URL 的最终页面。
@@ -19,40 +19,46 @@ import { lastmodFor } from '../lib/seo';
 //     艺术家 2 位（artists/{slug}/）、渠道专题（channel/{slug}/）、作品（works/{slug}/）
 //   · lastmod 不再固定日期：按每个页面的内容源文件最后一次 git 提交时间生成
 //     （见 src/lib/seo.ts；CI 需要 fetch-depth: 0）
+//   · 补录 5 个祝愿词条页 blessings/{slug}/；修正 partners 四个页面的信号文件路径
+//     （实际是平铺的 publishing.astro 等，此前写成 xxx/index.astro 会让 lastmod 失真）
+//   · lastmod 信号文件只取「该页真正专属的内容源」：全站共用的 src/data/content.ts
+//     不再挂到静态页上，否则每改一次导航，全站 lastmod 都会被拉平成同一天，
+//     反而失去「这一页最近动过」的参考价值。详情页例外——它们的正文确实
+//     由 content.ts 里的数组驱动。
 const P = (p: string) => `src/pages/${p}`;
 const CONTENT = ['src/data/content.ts'];
 
-// 静态路由：每项带自己的信号文件（页面模板 + 驱动其内容的数据文件）
+// 静态路由：lastmod 只看该页自身模板（+ 确实驱动它内容的数据文件）
 const staticRoutes: { path: string; files: string[] }[] = [
-  { path: '', files: [P('index.astro'), ...CONTENT] },
+  { path: '', files: [P('index.astro')] },
   // 核心导航（对应 src/data/content.ts 的 navItems）
-  { path: 'gifts/', files: [P('gifts/index.astro'), ...CONTENT] },
+  { path: 'gifts/', files: [P('gifts/index.astro'), 'src/lib/keystatic.ts'] },
   { path: 'gifts/ready-made/', files: [P('gifts/ready-made/index.astro'), ...CONTENT] },
-  { path: 'gift-guide/', files: [P('gift-guide/index.astro'), 'src/lib/keystatic.ts', ...CONTENT] },
-  { path: 'scenes/', files: [P('scenes/index.astro'), ...CONTENT] },
+  { path: 'gift-guide/', files: [P('gift-guide/index.astro'), 'src/lib/keystatic.ts'] },
+  { path: 'scenes/', files: [P('scenes/index.astro')] },
   { path: 'artists/', files: [P('artists/index.astro'), ...CONTENT] },
-  { path: 'business-gifts/', files: [P('business-gifts/index.astro'), ...CONTENT] },
-  // 机构合作
-  { path: 'partners/', files: [P('partners/index.astro'), ...CONTENT] },
-  { path: 'partners/publishing/', files: [P('partners/publishing/index.astro'), ...CONTENT] },
-  { path: 'partners/museum-tourism/', files: [P('partners/museum-tourism/index.astro'), ...CONTENT] },
-  { path: 'partners/heritage/', files: [P('partners/heritage/index.astro'), ...CONTENT] },
-  { path: 'partners/cases/', files: [P('partners/cases/index.astro'), ...CONTENT] },
-  { path: 'about/', files: [P('about/index.astro'), ...CONTENT] },
+  { path: 'business-gifts/', files: [P('business-gifts/index.astro')] },
+  // 机构合作（注意：这四个页面是平铺文件 xxx.astro，不是 xxx/index.astro）
+  { path: 'partners/', files: [P('partners/index.astro')] },
+  { path: 'partners/publishing/', files: [P('partners/publishing.astro')] },
+  { path: 'partners/museum-tourism/', files: [P('partners/museum-tourism.astro')] },
+  { path: 'partners/heritage/', files: [P('partners/heritage.astro')] },
+  { path: 'partners/cases/', files: [P('partners/cases.astro')] },
+  { path: 'about/', files: [P('about/index.astro')] },
   // 转化与信任
-  { path: 'custom-commission/', files: [P('custom-commission/index.astro'), ...CONTENT] },
-  { path: 'contact/', files: [P('contact/index.astro'), ...CONTENT] },
-  { path: 'help/', files: [P('help/index.astro'), ...CONTENT] },
+  { path: 'custom-commission/', files: [P('custom-commission/index.astro')] },
+  { path: 'contact/', files: [P('contact/index.astro')] },
+  { path: 'help/', files: [P('help/index.astro')] },
   // 内容与参考
-  { path: 'art-direction/', files: [P('art-direction/index.astro'), ...CONTENT] },
-  { path: 'pricing-guide/', files: [P('pricing-guide/index.astro'), ...CONTENT] },
+  { path: 'art-direction/', files: [P('art-direction/index.astro')] },
+  { path: 'pricing-guide/', files: [P('pricing-guide/index.astro')] },
   // 独立页面
   { path: 'works/', files: [P('works/index.astro'), ...CONTENT] },
-  { path: 'stories/', files: [P('stories/index.astro'), ...CONTENT] },
-  { path: 'your-story/', files: [P('your-story/index.astro'), ...CONTENT] },
-  { path: 'referral/', files: [P('referral/index.astro'), ...CONTENT] },
-  { path: 'seasons/', files: [P('seasons/index.astro'), ...CONTENT] },
-  { path: 'blessings/', files: [P('blessings/index.astro'), ...CONTENT] },
+  { path: 'stories/', files: [P('stories/index.astro')] },
+  { path: 'your-story/', files: [P('your-story/index.astro')] },
+  { path: 'referral/', files: [P('referral/index.astro')] },
+  { path: 'seasons/', files: [P('seasons/index.astro')] },
+  { path: 'blessings/', files: [P('blessings/index.astro')] },
 ];
 
 // 动态详情路由：从数据源枚举，不手写
@@ -79,7 +85,19 @@ const dynamicRoutes: { path: string; files: string[] }[] = [
     path: `channel/${c.slug}/`,
     files: [P('channel/[slug].astro'), ...CONTENT],
   })),
+  // 祝愿词条（福/禄/寿/喜/财）——索引页与首页 BlessingRail 均有站内链接，
+  // 每页有独立字义与适用场景文案，是「福字书法」这类长尾词的自然落点
+  ...blessings.map((b) => ({
+    path: `blessings/${b.slug}/`,
+    files: [P('blessings/[slug].astro'), ...CONTENT],
+  })),
 ];
+
+// 暂不收录（保持现状，非遗漏）：
+//   · seasons/{slug}/   四季详情页当前是占位文案（「更多节气内容将持续呈现」），
+//                       属薄内容页，等补齐实质内容后再加入本清单
+//   · occasions|recipients/{slug}/  索引页已 301、无导航入口，仅作内容底稿
+//   · progress/ wishlist/ keystatic/  功能页与后台，不需要收录
 
 export const GET: APIRoute = ({ site }) => {
   const base = (site ?? new URL('https://xiaominart.com')).toString().replace(/\/$/, '');
