@@ -11,7 +11,8 @@ const { work } = Astro.props;
 const others = readyMadeWorks.filter((item) => item.slug !== work.slug).slice(0, 3);
 const isWall = work.form === '挂墙';
 const sizeNote = isWall ? '装框后约 40 × 55 cm' : '装框后约 30 × 40 cm';
-const material = work.material ?? '手写书法原作（非印刷）：宣纸或高阶卡纸书写，实木框装裱，纸墨细节以随附作品档案为准。';
+const material = work.material ?? '手写书法原作（非印刷）· 榫卯结构实木框';
+const woodNote = '框体为榫卯结构实木框（无钉无胶），木种为柚木或胡桃木；胡桃木色泽更深、柚木偏暖。如需指定木种，咨询时说明即可。';
 const mountNote = isWall
   ? '出厂即装框完成：卡纸留白衬裱，背部预装挂点，随附安装说明，可直接上墙，无需二次装裱。'
   : '出厂即装框完成：可直接立于案头、边柜或博古架，无需二次装裱；如需配支架或挂用配件，咨询时说明即可。';
@@ -24,6 +25,7 @@ const productSchema = {
   description: work.note,
   image: [new URL(work.image, Astro.site ?? 'https://xiaominart.com').href],
   brand: { '@type': 'Brand', name: 'XIAOMINART 小民艺术' },
+  material,
   offers: {
     '@type': 'Offer',
     price: work.price,
@@ -52,7 +54,7 @@ const productSchema = {
   <section class="container section work-facts" aria-labelledby="facts-title">
     <div class="section-lead"><span class="eyebrow">Work Details / 作品详情</span><h2 id="facts-title" class="serif">关于这一幅，你想知道的都在这里。</h2></div>
     <dl class="facts-grid">
-      <div class="fact"><dt><span class="mono">01</span>材质</dt><dd>{material}<em>题字：{work.title}｜手写原作，墨迹有细微浓淡变化，是手写与印刷最大的分别。</em></dd></div>
+      <div class="fact"><dt><span class="mono">01</span>材质</dt><dd>{material}<em>{woodNote}题字「{work.title}」为手写原作，墨迹有细微浓淡变化，是手写与印刷最大的分别。</em></dd></div>
       <div class="fact"><dt><span class="mono">02</span>尺寸</dt><dd>{sizeNote}<em>标注为近似值，具体以随附作品档案为准；如需精确尺寸，咨询时我们会发给你。</em></dd></div>
       <div class="fact"><dt><span class="mono">03</span>装裱与装帧</dt><dd>{mountNote}</dd></div>
       <div class="fact"><dt><span class="mono">04</span>包装</dt><dd>{packNote}</dd></div>
