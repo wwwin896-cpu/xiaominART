@@ -41,5 +41,18 @@ input, textarea, select { min-height: 44px; }
 .skip-link { position: absolute; left: -9999px; }
 .skip-link:focus { left: 16px; top: 16px; background: var(--paper-light); padding: 8px; z-index: 10; }
 
+/* 表单成功卡（B3，2026-10-07）
+   由 cloud-forms.ts 的 successHtml() 注入，四类表单共用：
+   明确回复时效 + 就地微信二维码，减少「提交完不知道要等多久」的流失。
+   各页若有自己的 .form-note / .wishlist-submit-msg 样式，会通过后加载覆盖优先级更高。 */
+.form-success { display: grid; gap: 10px; justify-items: start; padding: 16px 18px; border: 1px solid var(--line); border-left: 2px solid var(--cinnabar); background: var(--paper-light); }
+.form-success-lead { margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.85; }
+.form-success-lead strong { color: var(--ink); font-weight: 500; }
+.form-success-sub { margin: 2px 0 0; color: var(--ink-soft); font-size: 13px; line-height: 1.7; }
+.form-success-qr { display: inline-block; padding: 6px; border: 1px solid var(--line); background: #fff; }
+.form-success-qr img { display: block; }
+.form-success-tip { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
+@media (max-width: 767px) { .form-success { padding: 14px 15px; } .form-success-qr img { width: 120px; height: 120px; } }
+
 @media (max-width: 767px) { .container { width: min(var(--container), calc(100% - 32px)); } .section { padding: 64px 0; } .section-head { display: block; margin-bottom: 30px; } .section-head p { margin-top: 18px; } .section-head h2 { font-size: 30px; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; } }

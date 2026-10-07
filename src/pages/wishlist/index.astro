@@ -73,7 +73,7 @@ const products = giftProducts;
   }
 </style>
 <script>
-  import { submitWishlist, CONTACT_FALLBACK } from '../../scripts/cloud-forms';
+  import { submitWishlist, CONTACT_FALLBACK, successHtml } from '../../scripts/cloud-forms';
   const key = 'xiaominart-wishlist';
   const read = (): string[] => { try { return JSON.parse(localStorage.getItem(key) || '[]'); } catch { return []; } };
   const grid = document.querySelector<HTMLElement>('[data-wishlist-grid]');
@@ -126,7 +126,8 @@ const products = giftProducts;
     );
     if (button) button.disabled = false;
     if (result.ok) {
-      msg.textContent = '清单已经发到我们这里了，会尽快回复你。想更快聊上，也可以直接加微信：联系页长按二维码添加。';
+      // B3：心愿单是「还在犹豫」的清单，成功态重点讲清我们会逐件答复
+      msg.innerHTML = successHtml('工作日通常 <strong>当天或次日</strong>回复你。', '我们会一件一件告诉你：适不适合对方、怎么包装、什么时候能到。');
       form.reset();
     } else {
       msg.textContent = (result.message || '提交失败，请稍后再试。') + (result.message?.includes('微信') ? '' : CONTACT_FALLBACK);

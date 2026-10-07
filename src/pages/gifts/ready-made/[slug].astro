@@ -9,7 +9,8 @@ export function getStaticPaths() {
 }
 
 const { work } = Astro.props;
-const others = readyMadeWorks.filter((item) => item.slug !== work.slug).slice(0, 3);
+// 推荐位只放仍在售的作品：已售出的推荐出去只会带来无谓询问
+const others = readyMadeWorks.filter((item) => item.slug !== work.slug && !item.sold).slice(0, 3);
 const isWall = work.form === '挂墙';
 const isZen = work.slug === 'chan';
 // 尺寸按档位由业主确认（2026-10-06）：摆件 A4（21 × 29.7）、圆光《禅》50 × 50、挂墙 60 × 33。
@@ -28,7 +29,9 @@ const mountNote = isWall
   ? '出厂即装框完成：卡纸留白衬裱，背部预装挂点，随附安装说明，可直接上墙，无需二次装裱。'
   : '出厂即装框完成：可直接立于案头、边柜或博古架，无需二次装裱；如需配支架或挂用配件，咨询时说明即可。';
 const packNote = '装框成品以护角与缓冲材料整体包裹，外加加固纸箱寄出；随附唯一编号与藏品证书（一物一码），礼盒包装需求可在咨询时提出。';
-const deliverNote = '现货唯一一件，在册可直接发货；确认后安排寄出。如需要同款的批量礼赠（企业答谢、节日礼盒等），可以走企业礼赠方向另外沟通。';
+const deliverNote = work.sold
+  ? '这一幅已售出，不再重复书写同样的内容。如你希望要一件气息接近的作品，可以走定制方向，从你的空间与心意重新讨论；企业批量礼赠另有单独方案。'
+  : '现货唯一一件，在册可直接发货；确认后安排寄出。如需要同款的批量礼赠（企业答谢、节日礼盒等），可以走企业礼赠方向另外沟通。';
 const productSchema = {
   '@context': 'https://schema.org',
   '@type': 'Product',
@@ -44,7 +47,8 @@ const productSchema = {
     '@type': 'Offer',
     price: work.price,
     priceCurrency: 'CNY',
-    availability: 'https://schema.org/InStock',
+    // 售出后标 SoldOut：避免搜索引擎与聚合渠道继续把这一幅当在售商品推荐
+    availability: work.sold ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock',
     itemCondition: 'https://schema.org/NewCondition',
     url: new URL(`/gifts/ready-made/${work.slug}/`, Astro.site ?? 'https://xiaominart.com').href,
   },
@@ -56,13 +60,16 @@ const productSchema = {
   <section class="container work-detail">
     <figure class="detail-figure"><Pic src={work.image} alt={work.alt} loading="eager" decoding="async" /><figcaption>作品实拍 · 装裱完成</figcaption></figure>
     <div class="detail-copy">
-      <span class="eyebrow">Ready to Ship / 现货唯一一件</span>
+      <span class="eyebrow">{work.sold ? 'Sold / 已售出 · 唯一一件' : 'Ready to Ship / 现货唯一一件'}</span>
       <h1 class="serif">{work.title}</h1>
       <p class="en" lang="en">{work.en}</p>
-      <p class="price"><span class="price-num">¥{work.price}</span><span class="price-meta">RMB · 含装裱 / {isWall ? '墙面悬挂' : '案头摆件'}</span></p>
+      {work.sold && <p class="sold-notice"><strong>这一幅已经有主人了。</strong> 现货每幅只写一件，不再重复同样的内容——如果你喜欢它的气息，我们可以按你的空间与心意重新写一件。</p>}
+      <p class="price"><span class="price-num">¥{work.price}</span><span class="price-meta">RMB · 含装裱 / {isWall ? '墙面悬挂' : '案头摆件'}{work.sold ? ' · 已售出' : ''}</span></p>
       <p class="note">{work.note}</p>
-      <div class="detail-actions"><button class="btn btn-primary" type="button" data-wx-open data-event="ready_work_click" data-slot={work.slug}>咨询这一幅 / 微信直聊 →</button><a class="btn btn-secondary" href="/custom-commission/?context=礼赠或纪念&inspiration={encodeURIComponent(`现货定制 · 类似「${work.title}」`)}">定制类似的 →</a><button class="btn btn-secondary wishlist-toggle" type="button" data-wishlist={work.slug} aria-pressed="false">♡ 先收进心愿单</button></div>
-      <p class="detail-fineprint">点「咨询这一幅」弹出微信二维码，扫码即可与我们直接沟通；尺寸与纸墨细节也以随附作品档案为准。</p>
+      {work.sold
+        ? <div class="detail-actions"><a class="btn btn-primary" href="/custom-commission/?context=礼赠或纪念&inspiration={encodeURIComponent(`类似「${work.title}」的定制`)}" data-event="custom_inquiry_start" data-slot={`${work.slug}_sold`}>定制一件类似的 →</a><button class="btn btn-secondary" type="button" data-wx-open data-event="ready_work_click" data-slot={work.slug}>想聊这一幅的来龙去脉 →</button><button class="btn btn-secondary wishlist-toggle" type="button" data-wishlist={work.slug} aria-pressed="false">♡ 先存个念想</button></div>
+        : <div class="detail-actions"><button class="btn btn-primary" type="button" data-wx-open data-event="ready_work_click" data-slot={work.slug}>咨询这一幅 / 微信直聊 →</button><a class="btn btn-secondary" href="/custom-commission/?context=礼赠或纪念&inspiration={encodeURIComponent(`现货定制 · 类似「${work.title}」`)}">定制类似的 →</a><button class="btn btn-secondary wishlist-toggle" type="button" data-wishlist={work.slug} aria-pressed="false">♡ 先收进心愿单</button></div>}
+      <p class="detail-fineprint">{work.sold ? '这一幅已售出并交付，详情页保留作为作品档案。想要气息接近的一件，最直接的方式是走定制——点上方按钮，或按「联系我们」页的微信二维码添加（备注来意）。' : '点「咨询这一幅」弹出微信二维码，扫码即可与我们直接沟通；尺寸与纸墨细节也以随附作品档案为准。'}</p>
     </div>
   </section>
 
@@ -141,6 +148,9 @@ const productSchema = {
   .price-num { font: 500 34px var(--font-display-en), var(--font-body-zh); color: var(--cinnabar); letter-spacing: .01em; }
   .price-meta { color: var(--ink-soft); font-size: 13px; }
   .note { color: var(--ink-soft); font-size: 16px; line-height: 1.95; margin: 0 0 26px; }
+  /* 已售出提示（B2）：一整块的温和说明，不用红色告警感 */
+  .sold-notice { margin: 0 0 20px; padding: 14px 16px; border-left: 2px solid var(--ink-soft); background: var(--paper-deep); color: var(--ink-soft); font-size: 14px; line-height: 1.9; }
+  .sold-notice strong { color: var(--ink); font-weight: 500; }
   .detail-actions { display: flex; flex-wrap: wrap; gap: 12px; }
   .detail-fineprint { margin: 18px 0 0; padding: 14px 16px; border-left: 2px solid var(--cinnabar); background: var(--paper-light); color: var(--ink-soft); font-size: 13px; line-height: 1.8; }
   .work-facts { border-top: 1px solid var(--line); }

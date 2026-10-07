@@ -9,6 +9,30 @@ const FALLBACK_EMAIL = 'hi@xiaominart.com';
 // 2026-10-07（T-01）：失败态给出微信路径——站内最快的联系方式是联系页二维码
 export const CONTACT_FALLBACK = `如持续失败，最快是加微信：在「联系我们」页长按二维码添加（备注来意）；也可以发邮件到 ${FALLBACK_EMAIL}。`;
 
+// 微信二维码路径（与 src/data/site.ts 的 siteContact.wechatQr 保持一致）。
+// 这里独立声明是因为本模块是纯客户端脚本，不参与 Astro 构建期求值。
+const WECHAT_QR = '/assets/images/wechat-qr.jpg';
+
+/**
+ * 表单提交成功后的统一收尾：明确回复时效 + 就地给出微信二维码。
+ * 2026-10-07（B3）：此前成功态只有一句「已收到」，用户不知道要等多久、也拿不到更快的通道，
+ * 容易在等待期流失。这里把「多久回复」和「想更快就扫码」一次性讲清。
+ *
+ * @param note 各页可自定义的时效说明，默认按工作日 1 个工作日内回复
+ * @param hint 补充提示（如企业需求的批量说明、定制可发参考图）
+ */
+export function successHtml(note?: string, hint?: string): string {
+  const timing = note || '工作日通常 <strong>当天或次日</strong>回复你。';
+  const tip = hint ? `<p class="form-success-tip">${hint}</p>` : '';
+  return `<div class="form-success">
+    <p class="form-success-lead"><strong>已经收到你的消息了。</strong>${timing}</p>
+    <p class="form-success-sub">想更快聊上——扫码加微信，备注一句来意即可：</p>
+    <a class="form-success-qr" href="${WECHAT_QR}" target="_blank" rel="noopener" title="点击查看大图，长按识别添加"><img src="${WECHAT_QR}" width="132" height="132" alt="小民艺术微信二维码" loading="lazy" /></a>
+    <p class="form-success-tip">手机上长按二维码识别添加；不方便加微信也可以等我们的回复。</p>
+    ${tip}
+  </div>`;
+}
+
 // 对应 Cloudflare Pages Function 的路由 /api/lead（不带尾斜杠）。
 const API_URL = '/api/lead';
 

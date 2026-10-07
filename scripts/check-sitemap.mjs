@@ -19,8 +19,8 @@ if (!existsSync(sitemapPath)) {
 const ALLOWLIST = new Set([
   '/404',           // 404.html
   '/keystatic',     // 后台入口（SPA 壳）
-  '/progress',      // 定制进度查询（noindex 功能页）
-  '/wishlist',      // 心愿单（noindex，localStorage 本地功能页）
+  '/progress',      // 定制进度（noindex 功能页；暂无站内入口，等接入真实项目查询后再定去留）
+  '/wishlist',      // 心愿单（noindex，localStorage 本地功能页；有移动端底栏入口，故不入 sitemap）
 ]);
 
 // ---------- 收集 dist 里的页面 ----------

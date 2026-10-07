@@ -428,6 +428,10 @@ export type ReadyMadeWork = {
   /** 装饰场景图：作品挂进真实空间的样子。优先于实拍图展示。 */
   sceneImage?: string;
   sceneAlt?: string;
+  /** 已售出标记。现货每幅世间唯一，售出后不再上架；
+   *  置 true 后列表页降级为「已售出」并弱化入口，详情页关闭购买引导。
+   *  仅在售出后手动改为 true，不做自动下架（避免误伤在售作品）。 */
+  sold?: boolean;
 };
 
 /**

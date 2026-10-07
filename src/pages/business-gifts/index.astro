@@ -35,7 +35,7 @@ const faqJsonLd = {
   <section id="business-form" class="container section business-form"><div><span class="eyebrow">Business needs / 企业项目需求</span><h2 class="serif">说说你们想做<br />一件什么事。</h2><p>不用担心填得不够全——场景、数量、时间，说个大概就好。我们会在两个工作日内回复，先聊清楚，再往下走。</p></div><form data-business-form><label>公司名称 / Company<input name="company" required /></label><label>联系人与联系方式 / Contact<input name="contact" required placeholder="微信优先，邮箱或手机号备选" /></label><label>预算范围 / Budget<select name="budget"><option>尚未确定 / To be discussed</option><option>¥10,000 以下</option><option>¥10,000–50,000</option><option>¥50,000 以上</option></select></label><label>预计数量 / Quantity<select name="quantity"><option>50 份起</option><option>100 份起</option><option>200 份起</option><option>尚未确定</option></select></label><label>用途场景 / Use case<select name="scene"><option>客户答谢</option><option>员工福利</option><option>会议礼品</option><option>开业庆典</option><option>节日慰问</option><option>其他</option></select></label><label>期望交付时间 / Timeline<input name="timeline" placeholder="例如：2026 年 12 月前" /></label><label>项目说明 / Brief<textarea name="brief" rows="4" placeholder="品牌背景、希望表达的文化、包装想法等"></textarea></label><label class="honeypot-field" aria-hidden="true">网址 / Website<input name="website" tabindex="-1" autocomplete="off" class="honeypot" /></label><button class="btn btn-primary" type="submit">把需求发给我们 →</button><p class="form-note" data-form-status role="status" aria-live="polite">提交后我们会通过你留下的联系方式回复；想先聊聊也可以加页脚微信，备注「企业礼赠」。</p></form></section>
 </Layout>
 <script>
-  import { submitLead, isHoneypotFilled, CONTACT_FALLBACK } from '../../scripts/cloud-forms';
+  import { submitLead, isHoneypotFilled, CONTACT_FALLBACK, successHtml } from '../../scripts/cloud-forms';
   const form = document.querySelector<HTMLFormElement>('[data-business-form]');
   if (form) {
     const status = form.querySelector<HTMLElement>('[data-form-status]');
@@ -62,7 +62,8 @@ const faqJsonLd = {
       });
       submitButton.disabled = false;
       if (result.ok) {
-        status.textContent = '企业需求已收到。我们会在两个工作日内通过你留下的联系方式回复，并说明下一步需要确认的信息。';
+        // B3：企业需求回复周期更长，成功态必须写明时限，避免对方反复追问
+        status.innerHTML = successHtml('<strong>两个工作日内</strong>我们会通过你留下的联系方式回复。', '如果时间比较紧，可以在微信里补一句期望日期，我们会优先看。');
         form.reset();
       } else {
         status.textContent = `提交失败，请稍后重试；${CONTACT_FALLBACK}`;
