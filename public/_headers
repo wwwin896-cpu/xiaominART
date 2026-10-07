@@ -15,15 +15,17 @@
 /assets/*
   Cache-Control: public, max-age=1209600, stale-while-revalidate=604800
 
-# ── 全站安全基线 + CSP 观察期（Report-Only）──
-# CSP 只报告、不拦截：浏览器发现违规会记进控制台，页面照常工作，无白屏风险。
-# 策略依据：本站零外部依赖（字体自托管、无第三方 CDN / 统计 / 广告），
-# 唯一的外部请求是同源 /api/lead 与 /api/event。
-# 观察一到两周、控制台确认无违规后，把 CSP 那行改名成 Content-Security-Policy 即正式启用。
+# ── 全站安全基线 + CSP（2026-10-07 正式强制，T-10）──
+# 原为 Report-Only 观察期；因站点零外部依赖（字体自托管、无第三方 CDN/统计/广告）、
+# 且未配置 report-uri（观察期实际收不到任何报告），直接转正，风险可控。
+# ⚠️ 接入第三方分析（GA4 / Umami / Clarity）时必须同步扩 CSP：
+#    script-src 加 https://www.googletagmanager.com（GA4）或 Umami 域 / https://www.clarity.ms，
+#    connect-src 加 https://*.google-analytics.com https://region1.google-analytics.com（GA4）
+#    详见 docs/数据分析接入指南.md。
 # 注意：_headers 只作用于静态资源，functions/ 下的 /api/* 需在代码里设头（已设）。
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), interest-cohort=()
-  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'
