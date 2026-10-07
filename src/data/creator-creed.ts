@@ -69,19 +69,19 @@ export const creedAction: Creed = {
   closing: '墨写箴言，行胜于言，方不负纸上笔墨风骨。',
 };
 
-/** 二、扎根古法，碑帖融合 */
+/** 二、扎根古法，碑帖相参 */
 export const creedCraft: Creed = {
   id: 'creed-craft',
   eyebrow: 'Craft / 书者手记 · 其二',
-  lead: '扎根古法，碑帖融合。',
-  motto: '满纸清雅，静雅通透，气韵绵长。',
+  lead: '扎根古法，碑帖相参。',
+  motto: '满纸清和，文心涵养。',
   mottoEn: 'Rooted in tradition, tempered by a quiet hand.',
   items: [
     {
       no: '01',
       title: '笔墨根脉端正，格局开阔',
       en: 'A straight root, an open frame',
-      body: '不随俗流、不媚时风。于雄浑的金石气中，藏一份温润的书卷气——气象是大的，手却是收敛的。',
+      body: '不逐时流、不媚时风。于雄浑的金石气中，藏一份温润的书卷气——气象是大的，手却是收敛的。',
     },
     {
       no: '02',
@@ -93,7 +93,7 @@ export const creedCraft: Creed = {
       no: '03',
       title: '小字之美，不靠雕琢取胜',
       en: 'Not carved, but accumulated',
-      body: '全然是常年读书、临池沉淀下来的文心流露。通篇静雅通透、气韵绵长，静心品读，足以让人褪去浮躁、安顿心神。',
+      body: '全然是常年读书、临池沉淀下来的文心流露。通篇清和涵养、气韵绵长，静心品读，足以让人褪去浮躁、安顿心神。',
     },
   ],
   closing: '古法是根，读书是养。根深了，字才立得住。',
