@@ -132,6 +132,8 @@ const productSchema = {
       syncWishlist();
     });
     window.addEventListener('storage', syncWishlist);
+    // pageshow：从心愿单页返回本页时浏览器恢复 bfcache 快照，按钮状态需重新对齐 localStorage。
+    window.addEventListener('pageshow', syncWishlist);
   </script>
 </Layout>
 <style>

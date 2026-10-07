@@ -150,6 +150,9 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_ID as string | undefined;
   const updateWishlistCount = () => document.querySelectorAll<HTMLElement>('[data-wishlist-count]').forEach((node) => { node.textContent = String(readWishlist().length); });
   updateWishlistCount();
   window.addEventListener('storage', updateWishlistCount);
+  // pageshow：移动端返回时页面会从 bfcache 恢复，底栏心愿单角标需重新对齐 localStorage，
+  // 否则会出现「在详情页加了心愿单、返回后角标没变」的错觉。
+  window.addEventListener('pageshow', updateWishlistCount);
 </script>
 <style>
   .site-header { position: sticky; top: 0; z-index: 5; background: rgba(244, 239, 229, .96); border-bottom: 1px solid var(--line); backdrop-filter: blur(8px); }

@@ -17,6 +17,8 @@ const canOrder = product.miniProgramStatus === 'ready' && Boolean(product.miniPr
   const sync = () => { if (!button) return; const saved = getItems().includes(button.dataset.wishlist); button.classList.toggle('is-saved', saved); button.setAttribute('aria-pressed', String(saved)); button.textContent = saved ? '♥ 已加入礼物清单' : '♡ 加入礼物清单'; };
   sync();
   button?.addEventListener('click', () => { const slug = button.dataset.wishlist || ''; const items = getItems(); localStorage.setItem(key, JSON.stringify(items.includes(slug) ? items.filter((item: string) => item !== slug) : [...items, slug])); sync(); window.dispatchEvent(new StorageEvent('storage', { key })); });
+  // pageshow：移动端从其他页面返回时浏览器会恢复 bfcache 快照，按钮状态需重新对齐 localStorage。
+  window.addEventListener('pageshow', sync);
 </script>
 <style>
   .detail-head { display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1fr); gap: 70px; align-items: center; padding: 90px 0 80px; } .detail-visual { aspect-ratio: 1.05; background: var(--paper-deep); display: grid; place-items: center; align-content: center; gap: 10px; color: var(--cinnabar); position: relative; overflow: hidden; } .detail-visual img { width: 100%; height: 100%; object-fit: cover; display: block; } .detail-visual span { font-size: clamp(130px, 20vw, 240px); } .detail-visual small { position: absolute; left: 16px; bottom: 14px; z-index: 1; color: var(--paper-light); text-shadow: 0 1px 5px rgba(0,0,0,.55); font: 11px var(--font-mono); }

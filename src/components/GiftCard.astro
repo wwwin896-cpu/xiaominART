@@ -45,10 +45,17 @@ const tier = giftTierLabels[product.tier];
   const key = 'xiaominart-wishlist';
   const getItems = () => { try { return JSON.parse(localStorage.getItem(key) || '[]'); } catch { return []; } };
   const setItems = (items: string[]) => { localStorage.setItem(key, JSON.stringify(items)); window.dispatchEvent(new StorageEvent('storage', { key })); };
+  // 收集每张卡片的同步函数：除了初始渲染，还需要在 bfcache 恢复时重跑（见下方 pageshow）。
+  // 移动端 Safari / 微信从详情页返回列表页时，浏览器会原样恢复旧 DOM，按钮状态不会自动刷新。
+  const syncers: Array<() => void> = [];
   document.querySelectorAll<HTMLButtonElement>('[data-wishlist]').forEach((button) => {
     const slug = button.dataset.wishlist || '';
     const sync = () => { const saved = getItems().includes(slug); button.classList.toggle('is-saved', saved); button.setAttribute('aria-pressed', String(saved)); button.textContent = saved ? '♥ 已加入心愿单' : '♡ 加入心愿单'; };
+    syncers.push(sync);
     sync();
     button.addEventListener('click', () => { const items = getItems(); const next = items.includes(slug) ? items.filter((item: string) => item !== slug) : [...items, slug]; setItems(next); sync(); });
   });
+  // storage 事件只在「其他标签页」改动时触发；pageshow 覆盖 bfcache 恢复与前进/后退。
+  window.addEventListener('storage', () => syncers.forEach((sync) => sync()));
+  window.addEventListener('pageshow', () => syncers.forEach((sync) => sync()));
 </script>
