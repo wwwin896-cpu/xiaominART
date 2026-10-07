@@ -1,5 +1,6 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
+import Pic from '../../../components/Pic.astro';
 import { readyMadeWorks } from '../../../data/content';
 import { siteContact } from '../../../data/site';
 
@@ -45,6 +46,7 @@ const productSchema = {
     priceCurrency: 'CNY',
     availability: 'https://schema.org/InStock',
     itemCondition: 'https://schema.org/NewCondition',
+    url: new URL(`/gifts/ready-made/${work.slug}/`, Astro.site ?? 'https://xiaominart.com').href,
   },
 };
 ---
@@ -52,14 +54,14 @@ const productSchema = {
   <script type="application/ld+json" set:html={JSON.stringify(productSchema)} />
   <nav class="container crumb" aria-label="面包屑"><a href="/gifts/">小民好礼</a><span>/</span><a href="/gifts/ready-made/">现货好礼</a><span>/</span><span aria-current="page">{work.title}</span></nav>
   <section class="container work-detail">
-    <figure class="detail-figure"><img src={work.image} alt={work.alt} loading="eager" fetchpriority="high" decoding="async" /><figcaption>作品实拍 · 装裱完成</figcaption></figure>
+    <figure class="detail-figure"><Pic src={work.image} alt={work.alt} loading="eager" decoding="async" /><figcaption>作品实拍 · 装裱完成</figcaption></figure>
     <div class="detail-copy">
       <span class="eyebrow">Ready to Ship / 现货唯一一件</span>
       <h1 class="serif">{work.title}</h1>
       <p class="en" lang="en">{work.en}</p>
       <p class="price"><span class="price-num">¥{work.price}</span><span class="price-meta">RMB · 含装裱 / {isWall ? '墙面悬挂' : '案头摆件'}</span></p>
       <p class="note">{work.note}</p>
-      <div class="detail-actions"><button class="btn btn-primary" type="button" data-wx-open data-event="ready_work_click" data-slot={work.slug}>咨询这一幅 / 微信直聊 →</button><a class="btn btn-secondary" href="/custom-commission/?context=礼赠或纪念&inspiration={encodeURIComponent(`现货定制 · 类似「${work.title}」`)}">定制类似的 →</a></div>
+      <div class="detail-actions"><button class="btn btn-primary" type="button" data-wx-open data-event="ready_work_click" data-slot={work.slug}>咨询这一幅 / 微信直聊 →</button><a class="btn btn-secondary" href="/custom-commission/?context=礼赠或纪念&inspiration={encodeURIComponent(`现货定制 · 类似「${work.title}」`)}">定制类似的 →</a><button class="btn btn-secondary wishlist-toggle" type="button" data-wishlist={work.slug} aria-pressed="false">♡ 先收进心愿单</button></div>
       <p class="detail-fineprint">点「咨询这一幅」弹出微信二维码，扫码即可与我们直接沟通；尺寸与纸墨细节也以随附作品档案为准。</p>
     </div>
   </section>
@@ -80,7 +82,7 @@ const productSchema = {
   <section class="container section others" aria-labelledby="others-title">
     <div class="section-lead"><span class="eyebrow">More / 还有这些现货</span><h2 id="others-title" class="serif">同批现货，也可一并看看。</h2></div>
     <div class="others-grid">
-      {others.map((item) => <a class="other-card" href={`/gifts/ready-made/${item.slug}/`}><figure><img src={item.image} alt={item.alt} loading="lazy" decoding="async" /></figure><div><h3 class="serif">{item.title}</h3><p lang="en">{item.en}</p><span class="other-meta">¥{item.price} · {item.form === '挂墙' ? '挂墙' : '摆件'}</span></div></a>)}
+      {others.map((item) => <a class="other-card" href={`/gifts/ready-made/${item.slug}/`}><figure><Pic src={item.image} alt={item.alt} loading="lazy" decoding="async" /></figure><div><h3 class="serif">{item.title}</h3><p lang="en">{item.en}</p><span class="other-meta">¥{item.price} · {item.form === '挂墙' ? '挂墙' : '摆件'}</span></div></a>)}
     </div>
     <a class="btn btn-link others-back" href="/gifts/ready-made/">看全部现货 →</a>
   </section>
@@ -100,6 +102,29 @@ const productSchema = {
     document.querySelectorAll('[data-wx-open]').forEach((btn) => btn.addEventListener('click', () => dialog?.showModal()));
     dialog?.querySelector('[data-wx-close]')?.addEventListener('click', () => dialog?.close());
     dialog?.addEventListener('click', (e) => { if (e.target === dialog) dialog?.close(); });
+    // 收进心愿单（T-03）：与全站 localStorage key 一致，心愿单页可直接提交清单
+    const wlKey = 'xiaominart-wishlist';
+    const wlButton = document.querySelector<HTMLButtonElement>('[data-wishlist]');
+    const syncWishlist = () => {
+      if (!wlButton) return;
+      let saved: string[] = [];
+      try { saved = JSON.parse(localStorage.getItem(wlKey) || '[]'); } catch { /* ignore */ }
+      const slug = wlButton.dataset.wishlist || '';
+      const on = saved.includes(slug);
+      wlButton.setAttribute('aria-pressed', String(on));
+      wlButton.textContent = on ? '♥ 已收进心愿单' : '♡ 先收进心愿单';
+    };
+    syncWishlist();
+    wlButton?.addEventListener('click', () => {
+      let saved: string[] = [];
+      try { saved = JSON.parse(localStorage.getItem(wlKey) || '[]'); } catch { /* ignore */ }
+      const slug = wlButton.dataset.wishlist || '';
+      const next = saved.includes(slug) ? saved.filter((s) => s !== slug) : [...saved, slug];
+      localStorage.setItem(wlKey, JSON.stringify(next));
+      window.dispatchEvent(new StorageEvent('storage', { key: wlKey }));
+      syncWishlist();
+    });
+    window.addEventListener('storage', syncWishlist);
   </script>
 </Layout>
 <style>

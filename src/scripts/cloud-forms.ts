@@ -6,7 +6,8 @@
 export type SubmitOutcome = { ok: boolean; message?: string };
 
 const FALLBACK_EMAIL = 'hi@xiaominart.com';
-export const CONTACT_FALLBACK = `如持续失败，可直接邮件联系 ${FALLBACK_EMAIL}。`;
+// 2026-10-07（T-01）：失败态给出微信路径——站内最快的联系方式是联系页二维码
+export const CONTACT_FALLBACK = `如持续失败，最快是加微信：在「联系我们」页长按二维码添加（备注来意）；也可以发邮件到 ${FALLBACK_EMAIL}。`;
 
 // 对应 Cloudflare Pages Function 的路由 /api/lead（不带尾斜杠）。
 const API_URL = '/api/lead';
@@ -47,23 +48,65 @@ export async function subscribeEmail(email: string, source: string): Promise<Sub
   return postToApi({ kind: 'subscribe', email, source });
 }
 
+/** 提交礼物清单/购买意向（formType: wishlist）。
+ * items 为心愿单 slug 列表；source 标记提交入口（wishlist-page / ready-made-detail）。 */
+export async function submitWishlist(
+  name: string,
+  contact: string,
+  items: string[],
+  source: string,
+  note = '',
+): Promise<SubmitOutcome> {
+  const result = await submitLead('wishlist', name, contact, { items, source, note });
+  trackEvent('wishlist_submit', { status: result.ok ? 'success' : 'error', count: items.length, source });
+  return result;
+}
+
 /** 蜜罐字段检测：被填写的请求视为机器人，静默丢弃但不报错 */
 export function isHoneypotFilled(form: HTMLFormElement): boolean {
   const honeypot = form.querySelector<HTMLInputElement>('input[name="website"][tabindex="-1"]');
   return Boolean(honeypot && honeypot.value.trim());
 }
 
-// ── 转化事件（第一版最小集）────────────────────────────────────
-// 只上报 6 个核心事件，服务端还有一层白名单校验；失败静默，绝不阻断用户操作。
-const EVENT_URL = '/api/event';
+// ── 转化事件 ─────────────────────────────────────────────────
+// 2026-10-07（T-02）：由「6 个核心事件」扩为全量事件——页面 data-event 使用了 20+ 种
+// 事件名，此前不在 TRACKED_EVENTS 内的直接被 return 丢弃，行为数据从未上报。
+// 事件定义与含义统一维护在 docs/事件字典.md；本集合必须与
+// functions/api/event.ts 的 ALLOWED_EVENTS 保持一致（两端各一份字面量，改动时同步）。
 const TRACKED_EVENTS = new Set([
+  // 程序化触发（表单结果、选礼器）
   'hero_cta_click',
   'gift_guide_select',
   'consultation_start',
   'consultation_submit',
   'business_brief_submit',
   'contact_channel_click',
+  'wishlist_submit',
+  // 页面 data-event：转化入口
+  'custom_inquiry_start',
+  'custom_entry',
+  'business_entry',
+  'artist_service_entry',
+  'channel_landing_view',
+  'mini_program_click',
+  // 页面 data-event：礼赠线
+  'gift_advice_click',
+  'gift_guide_view',
+  'gift_guide_to_detail',
+  'gift_guide_to_advice',
+  'gift_guide_ready_made',
+  'gift_detail_view',
+  'ready_work_click',
+  'scene_to_product',
+  'scene_view',
+  // 页面 data-event：心愿单与分享
+  'wishlist_to_guide',
+  'wish_stories_click',
+  'wish_commission_click',
+  'share_click',
 ]);
+
+const EVENT_URL = '/api/event';
 
 /** 上报一个转化事件；同一事件在同一会话内只发一次，避免重复计数 */
 const sent = new Set<string>();

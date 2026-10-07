@@ -19,8 +19,23 @@ const products = giftProducts;
     </div>
     <div class="wishlist-actions" data-wishlist-actions hidden>
       <a class="btn btn-primary" href="/gift-guide/" data-event="wishlist_to_guide">还拿不定主意？看选礼指南 →</a>
+      <button class="btn btn-secondary" type="button" data-wishlist-submit-open>把清单发给我们聊聊 →</button>
       <button class="btn btn-secondary" type="button" data-wishlist-clear>清空心愿单</button>
     </div>
+    <form class="wishlist-submit" data-wishlist-form hidden>
+      <p class="wishlist-submit-lead">把清单发给我们，我们会一件一件告诉你：适不适合对方、怎么包装、什么时候能到。不用担心表达，写一句就行。</p>
+      <div class="wishlist-submit-row">
+        <label>怎么称呼你<input type="text" name="name" required maxlength="40" autocomplete="name" /></label>
+        <label>微信号或手机号<input type="text" name="contact" required maxlength="80" autocomplete="tel" /></label>
+      </div>
+      <label>想补充的话（可不填）<textarea name="note" rows="3" maxlength="400" placeholder="比如：送长辈的乔迁礼，希望体面一些。"></textarea></label>
+      <input type="text" name="website" tabindex="-1" autocomplete="off" class="hp-field" aria-hidden="true" />
+      <div class="wishlist-submit-foot">
+        <button class="btn btn-primary" type="submit">发送这份清单 →</button>
+        <button class="btn btn-secondary" type="button" data-wishlist-submit-close>先不用</button>
+      </div>
+      <p class="wishlist-submit-msg" data-wishlist-msg role="status"></p>
+    </form>
     <p class="wishlist-hint">页面没有加载出收藏内容时，请确认浏览器没有禁用本地存储；换设备或清理浏览器数据后，心愿单不会自动同步。</p>
   </section>
 </Layout>
@@ -34,6 +49,17 @@ const products = giftProducts;
   .wishlist-empty a { color: var(--cinnabar); border-bottom: 1px solid var(--cinnabar); }
   .gift-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 34px 30px; }
   .wishlist-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 44px; padding-top: 26px; border-top: 1px solid var(--line); }
+  .wishlist-submit { max-width: 680px; margin-top: 26px; padding: 26px 28px; border: 1px solid var(--line); background: var(--paper-light); display: grid; gap: 14px; }
+  .wishlist-submit[hidden] { display: none; }
+  .wishlist-submit-lead { color: var(--ink-soft); font-size: 15px; line-height: 1.9; }
+  .wishlist-submit-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .wishlist-submit label { display: grid; gap: 6px; color: var(--ink-soft); font-size: 13px; }
+  .wishlist-submit input, .wishlist-submit textarea { min-height: 44px; border: 1px solid var(--line); border-radius: 0; background: var(--paper); color: var(--ink); padding: 10px 12px; font: inherit; }
+  .wishlist-submit textarea { min-height: 0; resize: vertical; }
+  .wishlist-submit input:focus, .wishlist-submit textarea:focus { border-color: var(--cinnabar); outline: none; }
+  .wishlist-submit .hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; }
+  .wishlist-submit-foot { display: flex; flex-wrap: wrap; gap: 12px; }
+  .wishlist-submit-msg { color: var(--cinnabar-deep); font-size: 14px; line-height: 1.8; }
   .wishlist-hint { margin-top: 22px; color: var(--muted); font-size: 12px; line-height: 1.8; }
   @media (max-width: 900px) { .gift-grid { grid-template-columns: 1fr; gap: 30px; } }
   @media (max-width: 767px) {
@@ -42,9 +68,12 @@ const products = giftProducts;
     .page-head p { font-size: 16px; }
     .page-head p[lang='en'] { font-size: 20px; }
     .wishlist-actions .btn { width: 100%; }
+    .wishlist-submit-row { grid-template-columns: 1fr; }
+    .wishlist-submit-foot .btn { width: 100%; }
   }
 </style>
 <script>
+  import { submitWishlist, CONTACT_FALLBACK } from '../../scripts/cloud-forms';
   const key = 'xiaominart-wishlist';
   const read = (): string[] => { try { return JSON.parse(localStorage.getItem(key) || '[]'); } catch { return []; } };
   const grid = document.querySelector<HTMLElement>('[data-wishlist-grid]');
@@ -70,5 +99,37 @@ const products = giftProducts;
     localStorage.setItem(key, '[]');
     window.dispatchEvent(new StorageEvent('storage', { key }));
     sync();
+  });
+  // 提交礼物清单（T-03）：清单 + 联系方式 → /api/lead（formType: wishlist）
+  const submitOpen = document.querySelector<HTMLButtonElement>('[data-wishlist-submit-open]');
+  const submitClose = document.querySelector<HTMLButtonElement>('[data-wishlist-submit-close]');
+  const form = document.querySelector<HTMLFormElement>('[data-wishlist-form]');
+  const msg = document.querySelector<HTMLElement>('[data-wishlist-msg]');
+  submitOpen?.addEventListener('click', () => { if (form) { form.hidden = false; form.scrollIntoView({ behavior: 'smooth', block: 'center' }); form.querySelector<HTMLInputElement>('input[name="name"]')?.focus(); } });
+  submitClose?.addEventListener('click', () => { if (form) form.hidden = true; });
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!msg) return;
+    const data = new FormData(form);
+    if ((data.get('website') as string || '').trim()) return; // 蜜罐
+    const items = read();
+    if (items.length === 0) { msg.textContent = '心愿单还是空的，先去挑一件喜欢的吧。'; return; }
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    if (button) button.disabled = true;
+    msg.textContent = '正在发送…';
+    const result = await submitWishlist(
+      (data.get('name') as string || '').trim(),
+      (data.get('contact') as string || '').trim(),
+      items,
+      'wishlist-page',
+      (data.get('note') as string || '').trim(),
+    );
+    if (button) button.disabled = false;
+    if (result.ok) {
+      msg.textContent = '清单已经发到我们这里了，会尽快回复你。想更快聊上，也可以直接加微信：联系页长按二维码添加。';
+      form.reset();
+    } else {
+      msg.textContent = (result.message || '提交失败，请稍后再试。') + (result.message?.includes('微信') ? '' : CONTACT_FALLBACK);
+    }
   });
 </script>

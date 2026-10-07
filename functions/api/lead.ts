@@ -13,7 +13,7 @@
 
 const CLOUD_REST_BASE = 'https://xiaominart-forms.app.workbuddy.host/.cloud/database/rest';
 const MAX_BODY_BYTES = 16 * 1024;
-const ALLOWED_FORM_TYPES = new Set(['quick_message', 'commission', 'business_gift']);
+const ALLOWED_FORM_TYPES = new Set(['quick_message', 'commission', 'business_gift', 'wishlist']);
 
 // 云访问密钥从 Cloudflare Pages 环境变量读取（变量名：FORMS_ACCESS_KEY）。
 // 2026-10-06 从源码硬编码改为环境变量：原密钥已随仓库公开，需作废后换新值。

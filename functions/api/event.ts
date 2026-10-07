@@ -15,13 +15,40 @@ const MAX_BODY_BYTES = 4 * 1024;
 // 云访问密钥从 Cloudflare Pages 环境变量读取（变量名：FORMS_ACCESS_KEY）。
 // 2026-10-06 从源码硬编码改为环境变量：原密钥已随仓库公开，需作废后换新值。
 type Env = Record<string, string | undefined>;
+// 2026-10-07（T-02）：白名单由 6 个扩为全量事件，与 src/scripts/cloud-forms.ts 的
+// TRACKED_EVENTS 保持一致（事件含义见 docs/事件字典.md）。此前页面 20+ 种 data-event
+// 均不在白名单内，全部被丢弃，行为数据为空。
 const ALLOWED_EVENTS = new Set([
+  // 程序化触发（表单结果、选礼器、心愿单提交）
   'hero_cta_click',
   'gift_guide_select',
   'consultation_start',
   'consultation_submit',
   'business_brief_submit',
   'contact_channel_click',
+  'wishlist_submit',
+  // 页面 data-event：转化入口
+  'custom_inquiry_start',
+  'custom_entry',
+  'business_entry',
+  'artist_service_entry',
+  'channel_landing_view',
+  'mini_program_click',
+  // 页面 data-event：礼赠线
+  'gift_advice_click',
+  'gift_guide_view',
+  'gift_guide_to_detail',
+  'gift_guide_to_advice',
+  'gift_guide_ready_made',
+  'gift_detail_view',
+  'ready_work_click',
+  'scene_to_product',
+  'scene_view',
+  // 页面 data-event：心愿单与分享
+  'wishlist_to_guide',
+  'wish_stories_click',
+  'wish_commission_click',
+  'share_click',
 ]);
 
 // /api/* 是接口，不应被搜索引擎收录、也不应被缓存。
