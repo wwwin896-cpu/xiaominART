@@ -1,11 +1,183 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-const stages = [['01', '已提交愿望', '我们已收到你的方向与联系信息。'], ['02', '字句审核', '确认内容、版权与创作边界。'], ['03', '书体匹配', '讨论艺术家、媒介与表达方向。'], ['04', '创作中', '按确认节点推进创作与反馈。'], ['05', '待交付', '确认装裱、物流与交付范围。']];
+import { siteContact } from '../../data/site';
+// 阶段定义与云端 commissions.stage 的取值一一对应（前端只在找到项目时用它对号入座）
+const stages = [
+  { key: 'received', no: '01', zh: '已收到愿望', body: '我们已收到你的方向与联系信息。' },
+  { key: 'review', no: '02', zh: '字句审核', body: '确认内容、版权与创作边界。' },
+  { key: 'match', no: '03', zh: '书体匹配', body: '讨论艺术家、媒介与表达方向。' },
+  { key: 'writing', no: '04', zh: '创作中', body: '按确认节点推进创作与反馈。' },
+  { key: 'delivery', no: '05', zh: '待交付', body: '确认装裱、物流与交付范围。' },
+  { key: 'done', no: '06', zh: '已交付', body: '作品已寄出或交付完成。' },
+];
 ---
-<Layout title="定制进度｜Progress｜小民艺术" description="通过专属链接查看定制共创的阶段说明。" noindex>
-  <section class="container progress-head"><span class="eyebrow">Commission progress / 定制进度</span><h1 class="serif">让每一个节点，<br />都被清楚地看见。</h1><p>这是进度页面模板。正式项目会通过邮件发送专属链接，当前页面不展示任何真实订单或个人信息。</p></section>
-  <section class="container progress-list">{stages.map((stage, index) => <article class:list={{active:index === 0}}><span class="mono">{stage[0]}</span><div><h2 class="serif">{stage[1]}</h2><p>{stage[2]}</p></div><span class="stage-status">{index === 0 ? '当前节点' : '待进入'}</span></article>)}</section>
-  <section class="container progress-note"><p>需要查询具体项目？请通过邮箱 hi@xiaominart.com 联系，并注明你的项目称呼。</p><a class="btn btn-primary" href="mailto:hi@xiaominart.com?subject=小民艺术定制进度咨询">邮件联系 →</a></section>
+<Layout title="定制进度｜Progress｜小民艺术" description="凭专属查询码，查看你的定制项目进行到哪一步。" noindex>
+  <section class="container progress-head">
+    <span class="eyebrow">Commission progress / 定制进度</span>
+    <h1 class="serif">让每一个节点，<br />都被清楚地看见。</h1>
+    <p>定制从沟通开始，到作品寄出为止。凭我们发给你的<strong>专属查询码</strong>，随时可以看看它进行到了哪一步。</p>
+  </section>
+
+  <section class="container progress-query">
+    <form data-progress-form novalidate>
+      <label for="progress-code">专属查询码 / Access code</label>
+      <div class="query-row">
+        <input id="progress-code" name="code" type="text" inputmode="text" autocomplete="off" spellcheck="false" placeholder="XM-7K2P9A" maxlength="9" aria-describedby="progress-hint" required />
+        <button class="btn btn-primary" type="submit">查询进度 →</button>
+      </div>
+      <p class="query-hint" id="progress-hint">查询码在沟通时一并给你，形如 <code>XM-7K2P9A</code>。找不到就直接微信问我们。</p>
+      <p class="query-status" data-progress-status role="status" aria-live="polite"></p>
+    </form>
+  </section>
+
+  <section class="container progress-result" data-progress-result hidden aria-live="polite">
+    <div class="result-head">
+      <span class="eyebrow">Project / 你的项目</span>
+      <h2 class="serif" data-result-name></h2>
+      <p class="result-meta" data-result-meta></p>
+    </div>
+    <ol class="result-stages" data-result-stages></ol>
+    <p class="result-note" data-result-note hidden></p>
+  </section>
+
+  <section class="container section progress-stages" aria-labelledby="stages-title">
+    <div class="section-lead"><span class="eyebrow">How it works / 流程</span><h2 id="stages-title" class="serif">一件定制，会经过这几步。</h2></div>
+    <div class="progress-list">{stages.map((stage) => <article><span class="mono">{stage.no}</span><div><h3 class="serif">{stage.zh}</h3><p>{stage.body}</p></div></article>)}</div>
+  </section>
+
+  <section class="container progress-note">
+    <p>查询码只在沟通时定向发送，请勿公开分享——它相当于你项目的钥匙。如果查询遇到问题，或想了解更细的进展，直接找我们最快。</p>
+    <div class="note-actions">
+      <a class="btn btn-primary" href="/contact/">联系我们 →</a>
+      {siteContact.wechatQr && <a class="btn btn-secondary" href={siteContact.wechatQr} target="_blank" rel="noopener" data-event="contact_channel_click" data-channel="wechat">微信二维码 →</a>}
+    </div>
+  </section>
 </Layout>
-<style>.progress-head{padding:96px 0 72px}.progress-head h1{font-size:clamp(52px,7vw,90px);font-weight:500;line-height:1.15;margin:22px 0}.progress-head p{max-width:620px;color:var(--ink-soft);font-size:18px;line-height:1.8}.progress-list{border-top:1px solid var(--line)}.progress-list article{display:grid;grid-template-columns:80px 1fr 100px;gap:20px;align-items:center;padding:24px 0;border-bottom:1px solid var(--line)}.progress-list h2{font-size:30px;font-weight:500;margin:0 0 6px}.progress-list p{margin:0;color:var(--ink-soft);font-size:14px}.progress-list article.active{border-left:3px solid var(--cinnabar);padding-left:16px}.stage-status{font-size:12px;color:var(--meta)}.progress-note{border-top:1px solid var(--line);margin-top:48px;padding-top:24px;color:var(--ink-soft)}@media(max-width:767px){.progress-head{padding:58px 0 48px}.progress-head h1{font-size:53px}.progress-list article{grid-template-columns:42px 1fr;gap:12px}.stage-status{grid-column:2}.progress-note{margin-top:30px}}
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-progress-form]');
+  const input = document.querySelector<HTMLInputElement>('#progress-code');
+  const status = document.querySelector<HTMLElement>('[data-progress-status]');
+  const result = document.querySelector<HTMLElement>('[data-progress-result]');
+  const nameEl = result?.querySelector<HTMLElement>('[data-result-name]');
+  const metaEl = result?.querySelector<HTMLElement>('[data-result-meta]');
+  const stagesEl = result?.querySelector<HTMLElement>('[data-result-stages]');
+  const noteEl = result?.querySelector<HTMLElement>('[data-result-note]');
+
+  const STAGES: Array<[string, string, string]> = [
+    ['received', '01', '已收到愿望'],
+    ['review', '02', '字句审核'],
+    ['match', '03', '书体匹配'],
+    ['writing', '04', '创作中'],
+    ['delivery', '05', '待交付'],
+    ['done', '06', '已交付'],
+  ];
+
+  const render = (project: { name: string; contactHint: string; stage: string; note: string; updatedAt: string }) => {
+    if (!result || !nameEl || !metaEl || !stagesEl || !noteEl) return;
+    const current = Math.max(0, STAGES.findIndex(([key]) => key === project.stage));
+    nameEl.textContent = project.name;
+    const updated = project.updatedAt ? new Date(project.updatedAt).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
+    metaEl.textContent = [project.contactHint && `联系方式 ${project.contactHint}`, updated && `最近更新 ${updated}`].filter(Boolean).join(' · ');
+    stagesEl.innerHTML = STAGES.map(([key, no, zh], index) => {
+      const state = index < current ? 'done' : index === current ? 'current' : 'todo';
+      const tag = state === 'done' ? '已完成' : state === 'current' ? '当前节点' : '待进入';
+      return `<li class="rs-${state}"><span class="mono">${no}</span><div><h3 class="serif">${zh}</h3></div><span class="rs-tag">${tag}</span></li>`;
+    }).join('');
+    if (project.note) { noteEl.textContent = project.note; noteEl.hidden = false; } else { noteEl.hidden = true; }
+    result.hidden = false;
+    result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!input || !status || !form) return;
+    const code = input.value.trim().toUpperCase();
+    if (!/^XM-[A-Z0-9]{6}$/.test(code)) {
+      status.textContent = '请填写完整的查询码，形如 XM-7K2P9A。';
+      return;
+    }
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    if (button) button.disabled = true;
+    status.textContent = '正在查询…';
+    if (result) result.hidden = true;
+    try {
+      const res = await fetch(`/api/progress?code=${encodeURIComponent(code)}`, { headers: { Accept: 'application/json' } });
+      const data = (await res.json().catch(() => null)) as
+        | { ok?: boolean; message?: string; project?: { name: string; contactHint: string; stage: string; note: string; updatedAt: string } }
+        | null;
+      if (res.ok && data?.ok && data.project) {
+        status.textContent = '';
+        render(data.project);
+      } else {
+        status.textContent = data?.message || '没有找到对应的项目，请核对查询码。';
+      }
+    } catch {
+      status.textContent = '网络异常，请稍后再试，或直接微信联系我们。';
+    } finally {
+      if (button) button.disabled = false;
+    }
+  });
+</script>
+<style>
+  .progress-head { padding: 96px 0 56px; }
+  .progress-head h1 { font-size: clamp(44px, 6vw, 76px); font-weight: 500; line-height: 1.16; margin: 22px 0; letter-spacing: var(--tracking-display); }
+  .progress-head p { max-width: 640px; color: var(--ink-soft); font-size: 18px; line-height: 1.9; }
+  .progress-head strong { color: var(--ink); font-weight: 500; border-bottom: 1px solid var(--cinnabar); }
+
+  .progress-query { padding: 0 0 8px; }
+  .progress-query form { max-width: 620px; padding: 26px 28px; border: 1px solid var(--line); border-left: 2px solid var(--cinnabar); background: var(--paper-light); }
+  .progress-query label { display: block; color: var(--ink-soft); font-size: 13px; margin-bottom: 10px; letter-spacing: .06em; }
+  .query-row { display: flex; gap: 12px; }
+  .query-row input { flex: 1; min-height: 48px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 0; background: var(--paper); color: var(--ink); font: 500 17px var(--font-display-en), var(--font-body-zh); letter-spacing: .08em; text-transform: uppercase; }
+  .query-row input:focus { border-color: var(--cinnabar); outline: none; }
+  .query-hint { margin: 12px 0 0; color: var(--muted); font-size: 12px; line-height: 1.8; }
+  .query-hint code { padding: 1px 5px; background: var(--paper-deep); color: var(--ink-soft); letter-spacing: .06em; }
+  .query-status { margin: 10px 0 0; color: var(--cinnabar-deep); font-size: 14px; line-height: 1.8; }
+  .query-status:empty { display: none; }
+
+  .progress-result { padding: 34px 0 8px; }
+  .progress-result[hidden] { display: none; }
+  .result-head h2 { font-size: clamp(28px, 3.6vw, 42px); font-weight: 500; margin: 12px 0 4px; }
+  .result-meta { color: var(--muted); font-size: 13px; margin: 0; }
+  .result-stages { list-style: none; margin: 26px 0 0; padding: 0; border-top: 1px solid var(--line); }
+  .result-stages li { display: grid; grid-template-columns: 54px 1fr auto; gap: 16px; align-items: center; padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .result-stages h3 { font-size: 22px; font-weight: 500; margin: 0; }
+  .result-stages .mono { color: var(--meta); font-size: 12px; }
+  .rs-tag { font-size: 12px; color: var(--meta); }
+  .rs-done .mono { color: var(--ink-soft); }
+  .rs-done h3 { color: var(--ink-soft); }
+  .rs-done .rs-tag { color: var(--ink-soft); }
+  .rs-current { border-left: 3px solid var(--cinnabar); padding-left: 16px; }
+  .rs-current .mono { color: var(--cinnabar); }
+  .rs-current .rs-tag { color: var(--cinnabar); }
+  .rs-todo h3 { color: var(--muted); }
+  .result-note { margin: 22px 0 0; padding: 14px 16px; border-left: 2px solid var(--line); background: var(--paper-deep); color: var(--ink-soft); font-size: 14px; line-height: 1.9; }
+  .result-note[hidden] { display: none; }
+
+  .progress-stages { border-top: 1px solid var(--line); }
+  .progress-list { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+  .progress-list article { display: grid; grid-template-columns: 38px 1fr; gap: 12px; padding: 22px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .progress-list h3 { font-size: 19px; font-weight: 500; margin: 0 0 6px; }
+  .progress-list p { margin: 0; color: var(--ink-soft); font-size: 13px; line-height: 1.8; }
+  .progress-list .mono { color: var(--cinnabar); font-size: 12px; }
+
+  .progress-note { border-top: 1px solid var(--line); margin-top: 48px; padding: 26px 0 72px; color: var(--ink-soft); }
+  .progress-note p { max-width: 640px; font-size: 14px; line-height: 1.9; }
+  .note-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+
+  @media (max-width: 1023px) { .progress-list { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 767px) {
+    .progress-head { padding: 56px 0 40px; }
+    .progress-head h1 { font-size: 40px; }
+    .progress-head p { font-size: 16px; }
+    .progress-query form { padding: 20px 18px; }
+    .query-row { display: grid; }
+    .query-row .btn { width: 100%; }
+    .result-stages li { grid-template-columns: 40px 1fr; gap: 12px; }
+    .rs-tag { grid-column: 2; }
+    .progress-list { grid-template-columns: 1fr; }
+    .progress-note { padding-bottom: 56px; }
+    .note-actions { display: grid; }
+    .note-actions .btn { width: 100%; }
+  }
 </style>
