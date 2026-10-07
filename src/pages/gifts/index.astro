@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import Pic from '../../components/Pic.astro';
 const craftSteps = [
   {
     no: '第一步', title: '一笔一画皆自心出，飞白枯润墨见真性',
@@ -46,11 +47,11 @@ const paths = [
   },
 ];
 ---
-<Layout title="小民好礼｜小民艺术" description="小民好礼，以书写、器物和礼盒为日常关系准备一份有东方审美的心意。">
+<Layout title="小民好礼｜手写书法礼品与东方心意礼盒｜小民艺术" description="小民好礼，以书写、器物和礼盒为日常关系准备一份有东方审美的心意。">
   <section class="container page-head"><span class="eyebrow">Xiaomin Gifts / 小民好礼</span><h1 class="serif">把一份心意，<br />送进真实的日常。</h1><p lang="en">Thoughtful gifts for everyday rituals.</p><p>小民艺术不是只能被远观的作品。它可以进入书房、客厅、茶室，也可以成为一份送给重要之人的礼物。</p></section>
-  <section class="container section craft-section" id="craft-journey"><div class="craft-head" data-reveal><span class="eyebrow">Handmade Journey / 手作匠心</span><h2 class="serif craft-title">手作匠心｜开始旅程</h2><p class="craft-sub serif">「你的心意，会被认真解读，认真看见」</p><p class="craft-note">每一幅，都是世间唯一的相遇</p></div><div class="craft-steps">{craftSteps.map((step, i) => <div class:list={['craft-row', { reverse: i % 2 === 1 }]} data-reveal><figure class="craft-fig"><img src={step.image} alt={step.alt} loading="lazy" decoding="async" /></figure><div class="craft-copy"><span class="craft-no">{step.no}</span><h3 class="serif">{step.title}</h3><p>{step.body}</p></div></div>)}</div></section>
+  <section class="container section craft-section" id="craft-journey"><div class="craft-head" data-reveal><span class="eyebrow">Handmade Journey / 手作匠心</span><h2 class="serif craft-title">手作匠心｜开始旅程</h2><p class="craft-sub serif">「你的心意，会被认真解读，认真看见」</p><p class="craft-note">每一幅，都是世间唯一的相遇</p></div><div class="craft-steps">{craftSteps.map((step, i) => <div class:list={['craft-row', { reverse: i % 2 === 1 }]} data-reveal><figure class="craft-fig"><Pic src={step.image} alt={step.alt} loading="lazy" decoding="async" /></figure><div class="craft-copy"><span class="craft-no">{step.no}</span><h3 class="serif">{step.title}</h3><p>{step.body}</p></div></div>)}</div></section>
   <section class="container section rooms-section" aria-labelledby="rooms-title"><div class="section-lead"><span class="eyebrow">Rooms & Intentions / 空间与心意</span><h2 id="rooms-title" class="serif">一个字，就是一个去处。</h2><p>书法是一种褪去火气的表达。六个方向，各有各的安放方式——先看看你的心事属于哪一个。</p></div><div class="rooms-grid">{rooms.map((room) => <article class="room-card"><span class="room-char serif">{room.char}</span><div class="room-copy"><h3 class="serif">{room.title}</h3><p>{room.body}</p></div></article>)}</div></section>
-  <section class="container section paths-section" aria-labelledby="paths-title"><div class="section-lead"><span class="eyebrow">Two Paths / 小民好礼</span><h2 id="paths-title" class="serif">小民好礼，分两条路。</h2><p>看中了已经写好的，直接带走；心里有一句话还没被写出来，我们一起把它写出来。</p></div><div class="path-grid">{paths.map((path) => <a class="path-card" href={path.href} data-event={path.event}><figure><img src={path.image} alt={path.alt} loading="lazy" decoding="async" /></figure><div class="path-copy"><span class="eyebrow">{path.eyebrow}</span><h3 class="serif">{path.title}</h3><p>{path.body}</p><span class="path-meta">{path.meta} →</span></div></a>)}</div></section>
+  <section class="container section paths-section" aria-labelledby="paths-title"><div class="section-lead"><span class="eyebrow">Two Paths / 小民好礼</span><h2 id="paths-title" class="serif">小民好礼，分两条路。</h2><p>看中了已经写好的，直接带走；心里有一句话还没被写出来，我们一起把它写出来。</p></div><div class="path-grid">{paths.map((path) => <a class="path-card" href={path.href} data-event={path.event}><figure><Pic src={path.image} alt={path.alt} loading="lazy" decoding="async" /></figure><div class="path-copy"><span class="eyebrow">{path.eyebrow}</span><h3 class="serif">{path.title}</h3><p>{path.body}</p><span class="path-meta">{path.meta} →</span></div></a>)}</div></section>
   <section class="container section next-step"><span class="eyebrow">Not sure yet / 还不确定</span><h2 class="serif">如果你还不知道送什么，先从对象、场合和预算告诉我们。</h2><a class="btn btn-primary" href="/custom-commission/?context=送礼建议" data-event="gift_advice_click">获取送礼建议 →</a></section>
 </Layout>
 <style>

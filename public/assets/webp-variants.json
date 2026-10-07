@@ -1,0 +1,316 @@
+{
+ "/assets/brand/xiaominart-logo.png": [
+  600,
+  1140
+ ],
+ "/assets/craft/step-1-writing.jpg": [
+  600,
+  1280
+ ],
+ "/assets/craft/step-2-mounting.jpg": [
+  600,
+  1280
+ ],
+ "/assets/craft/step-3-framing.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/craft/step-4-packaging.jpg": [
+  600,
+  1280
+ ],
+ "/assets/images/og-image.png": [
+  600,
+  1200
+ ],
+ "/assets/images/wechat-qr.jpg": [
+  796
+ ],
+ "/assets/scenes/bird-seal-tearoom.jpg": [
+  600,
+  1280
+ ],
+ "/assets/scenes/cinnabar-bedroom.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/scenes/cinnabar-study.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/scenes/cinnabar-tea.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/scenes/desk-mountain-dining.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/scenes/desk-mountain-living.jpg": [
+  600,
+  1280
+ ],
+ "/assets/scenes/desk-mountain-panels.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/scenes/dining-room-long-calligraphy.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/scenes/entry-console-scroll.jpg": [
+  600,
+  1024
+ ],
+ "/assets/scenes/four-seasons-cabinet.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/scenes/four-seasons-study.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/scenes/four-seasons-tea.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/scenes/hero-shiguwen-light.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/scenes/hero-shiguwen.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/scenes/housewarming-ze-ji-ri.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/scenes/imperfect-real.jpg": [
+  600,
+  1280
+ ],
+ "/assets/scenes/ink-breath-framing.jpg": [
+  600,
+  1280
+ ],
+ "/assets/scenes/ink-breath-mounting.jpg": [
+  600,
+  1280
+ ],
+ "/assets/scenes/ink-breath-packaging.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/scenes/ink-breath-writing.jpg": [
+  600,
+  1280
+ ],
+ "/assets/scenes/living-room-four-panels.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/scenes/living-room-round-seal.jpg": [
+  600,
+  1024
+ ],
+ "/assets/scenes/packaging-set.jpg": [
+  600,
+  1280
+ ],
+ "/assets/scenes/sideboard-fan-calligraphy.jpg": [
+  600,
+  1024
+ ],
+ "/assets/scenes/study-desk-scroll.jpg": [
+  600,
+  1024
+ ],
+ "/assets/scenes/study-kang-er-shou.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/scenes/study-round-calligraphy.jpg": [
+  600,
+  1024
+ ],
+ "/assets/scenes/tea-console-wide.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/scenes/tea-gold-calligraphy.jpg": [
+  600,
+  1024
+ ],
+ "/assets/scenes/tea-wall-scroll.jpg": [
+  600,
+  1024
+ ],
+ "/assets/scenes/teacher-gu-wei-jin-yong.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/scenes/theme-cinnabar.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/scenes/theme-desk-mountain.jpg": [
+  600,
+  1280
+ ],
+ "/assets/scenes/theme-four-seasons.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/scenes/theme-ink-breath.jpg": [
+  600,
+  1280
+ ],
+ "/assets/works/gift-ready-fan-wide.jpg": [
+  600,
+  1024
+ ],
+ "/assets/works/scene-fu-ru-dong-hai.jpg": [
+  600,
+  1024
+ ],
+ "/assets/works/scene-qing-huan.jpg": [
+  600,
+  1024
+ ],
+ "/assets/works/scene-que-bao-yan-qian-xi.jpg": [
+  600,
+  1024
+ ],
+ "/assets/works/scene-ran-xiang-ye-du-shu.jpg": [
+  600,
+  1024
+ ],
+ "/assets/works/scene-ri-you-xi.jpg": [
+  600,
+  1024
+ ],
+ "/assets/works/scene-wan-shi-sui-yuan.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/works/work-chan.jpg": [
+  600,
+  1024
+ ],
+ "/assets/works/work-chang-le.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/works/work-de-xin-ya-ju.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/works/work-duan-she-li-2.jpg": [
+  600,
+  1280
+ ],
+ "/assets/works/work-duan-she-li.jpg": [
+  600,
+  1280
+ ],
+ "/assets/works/work-fan.jpg": [
+  600,
+  1024
+ ],
+ "/assets/works/work-fu-ru-dong-hai.jpg": [
+  600,
+  1080
+ ],
+ "/assets/works/work-guan-zi-zai.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/works/work-he-qi.jpg": [
+  600,
+  1183
+ ],
+ "/assets/works/work-huan-xi.jpg": [
+  600,
+  1080
+ ],
+ "/assets/works/work-mao-fei-jia-run.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/works/work-ming-pin-gong-shang.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/works/work-mo-jian-hu-yin.jpg": [
+  600,
+  1024
+ ],
+ "/assets/works/work-qing-huan-2.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/works/work-qing-huan.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/works/work-que-bao-yan-qian-xi.jpg": [
+  600,
+  1080
+ ],
+ "/assets/works/work-ran-xiang-ye-du-shu.jpg": [
+  600,
+  1080
+ ],
+ "/assets/works/work-ri-you-xi.jpg": [
+  600,
+  1080
+ ],
+ "/assets/works/work-shang-hua-pin-ming.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/works/work-wan-shi-sui-yuan.jpg": [
+  600,
+  1080
+ ],
+ "/assets/works/work-xiang-jian-yi-wu-shi.jpg": [
+  600,
+  1000,
+  1536
+ ],
+ "/assets/works/work-yi-hu-yi-xi.jpg": [
+  600,
+  1000,
+  1536
+ ]
+}

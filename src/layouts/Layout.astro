@@ -17,6 +17,42 @@ const seoTitle = title.replace(/xiaominart/gi, 'XIAOMINART');
 const url = canonical ?? Astro.url.href;
 const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 const isCurrent = (href: string) => { const normalized = href.replace(/\/$/, '') || '/'; return currentPath === normalized || (normalized !== '/' && currentPath.startsWith(`${normalized}/`)); };
+
+// ── 面包屑全站兜底（T-06，2026-10-07）──
+// 显式传入 breadcrumbs 的页面照旧；未传入的页面按路径自动生成：
+// 深度 1（/about/）→ 首页 / 关于我们；深度 2+（/seasons/spring/）→ 首页 / 四季节气 / {title 首段}。
+const SECTION_LABELS: Record<string, string> = {
+  'about': '关于我们', 'art-direction': '艺术方向', 'business-gifts': '企业礼赠', 'contact': '联系我们',
+  'custom-commission': '定制创作', 'gift-guide': '选礼指南', 'gifts': '小民好礼', 'help': '帮助中心',
+  'pricing-guide': '价格参考', 'progress': '定制进度', 'referral': '分享推荐', 'scenes': '灵感参考',
+  'stories': '墙上的故事', 'wishlist': '心愿单', 'works': '作品档案', 'your-story': '心事成字',
+  'artists': '艺术家', 'blessings': '祝愿字典', 'seasons': '四季节气', 'occasions': '送礼场合',
+  'recipients': '送礼对象', 'partners': '机构合作', 'channel': '购买渠道',
+};
+const PATH_LABELS: Record<string, string> = {
+  '/partners/cases/': '合作案例', '/partners/heritage/': '非遗面塑活动',
+  '/partners/museum-tourism/': '博物馆与文旅', '/partners/publishing/': '出版社插画',
+};
+const autoBreadcrumbs = (() => {
+  if (breadcrumbs.length > 0) return breadcrumbs;
+  if (currentPath === '/') return [];
+  const segments = currentPath.split('/').filter(Boolean);
+  const pathKey = `${currentPath}/`;
+  const leaf = PATH_LABELS[pathKey] ?? title.split('｜')[0];
+  if (segments.length === 1) return [{ name: '首页', href: '/' }, { name: SECTION_LABELS[segments[0]] ?? leaf, href: Astro.url.pathname }];
+  const section = SECTION_LABELS[segments[0]];
+  if (!section) return [];
+  return [{ name: '首页', href: '/' }, { name: section, href: `/${segments[0]}/` }, { name: leaf, href: Astro.url.pathname }];
+})();
+const effectiveBreadcrumbs = breadcrumbs.length > 0 ? breadcrumbs : autoBreadcrumbs;
+
+// ── 数据分析脚手架（T-05，2026-10-07）──
+// 三套分析工具都在 Cloudflare Pages 环境变量里配 PUBLIC_* 值即生效，不配则零注入（现状）。
+// 接入步骤、UTM 规范与 CSP 域名要求见 docs/数据分析接入指南.md。
+const gaId = import.meta.env.PUBLIC_GA4_ID as string | undefined;
+const umamiSrc = import.meta.env.PUBLIC_UMAMI_SRC as string | undefined;
+const umamiId = import.meta.env.PUBLIC_UMAMI_ID as string | undefined;
+const clarityId = import.meta.env.PUBLIC_CLARITY_ID as string | undefined;
 ---
 <html lang="zh-CN">
   <head>
@@ -40,8 +76,12 @@ const isCurrent = (href: string) => { const normalized = href.replace(/\/$/, '')
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={new URL(image, Astro.site ?? Astro.url).href} />
     <meta name="theme-color" content="#f4efe5" />
-    <script type="application/ld+json" is:inline set:html={JSON.stringify({ '@context': 'https://schema.org', '@graph': [ { '@type': 'LocalBusiness', name: '小民艺术', alternateName: 'Xiaomin Art', description, url: new URL('/', Astro.site ?? Astro.url).href, email: 'hi@xiaominart.com', priceRange: '咨询制', areaServed: 'CN' }, { '@type': 'WebSite', name: '小民艺术 XIAOMINART', alternateName: 'XIAOMINART', url: new URL('/', Astro.site ?? Astro.url).href, inLanguage: 'zh-CN' } ] })} />
-    {breadcrumbs.length > 0 && <script type="application/ld+json" is:inline set:html={JSON.stringify({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: breadcrumbs.map((item: { name: string; href: string }, i: number) => ({ '@type': 'ListItem', position: i + 1, name: item.name, item: new URL(item.href, Astro.site ?? Astro.url).href })) })} />}
+    <script type="application/ld+json" is:inline set:html={JSON.stringify({ '@context': 'https://schema.org', '@graph': [ { '@type': 'LocalBusiness', name: '小民艺术', alternateName: 'Xiaomin Art', description, url: new URL('/', Astro.site ?? Astro.url).href, logo: new URL('/assets/brand/xiaominart-logo.png', Astro.site ?? Astro.url).href, email: 'hi@xiaominart.com', priceRange: '咨询制', areaServed: 'CN' }, { '@type': 'WebSite', name: '小民艺术 XIAOMINART', alternateName: 'XIAOMINART', url: new URL('/', Astro.site ?? Astro.url).href, inLanguage: 'zh-CN' } ] })} />
+    {effectiveBreadcrumbs.length > 0 && <script type="application/ld+json" is:inline set:html={JSON.stringify({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: effectiveBreadcrumbs.map((item: { name: string; href: string }, i: number) => ({ '@type': 'ListItem', position: i + 1, name: item.name, item: new URL(item.href, Astro.site ?? Astro.url).href })) })} />}
+    {gaId && <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>}
+    {gaId && <script is:inline set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${gaId}');`}></script>}
+    {umamiSrc && umamiId && <script is:inline defer data-website-id={umamiId} src={umamiSrc}></script>}
+    {clarityId && <script is:inline set:html={`(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];if(y&&y.parentNode){y.parentNode.insertBefore(t,y);}})(window,document,"clarity","script","${clarityId}");`}></script>}
     <link rel="icon" href="/assets/brand/xiaominart-logo-icon.svg" />
     <title>{seoTitle}</title>
   </head>

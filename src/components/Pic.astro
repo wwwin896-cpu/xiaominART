@@ -1,0 +1,46 @@
+---
+// 图片组件（T-04，2026-10-07）：输出 <picture>，WebP 优先、原图兜底，含响应式 srcset。
+// 约定：webp 及 600w/1000w 变体由 scripts/gen-webp.mjs 在构建前生成，
+// 变体清单写入 public/assets/webp-variants.json，本组件构建期读取后输出 srcset。
+// - src：原图片路径（如 /assets/works/work-chan.jpg）
+// - width/height：建议必填（防 CLS）；未知尺寸时用 sharp 查一次后写死
+// - eager：首屏图传 eager 并自动加 fetchpriority="high"
+// - sizes：浏览器选图依据；默认适合「移动整宽 / 桌面半宽」的常见卡片场景
+import manifest from '../../public/assets/webp-variants.json';
+interface Props {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  loading?: 'lazy' | 'eager';
+  decoding?: 'async' | 'sync' | 'auto';
+  class?: string;
+  sizes?: string;
+  'aria-hidden'?: boolean | 'true';
+}
+const { src, alt, width, height, loading = 'lazy', decoding = 'async', class: className, sizes = '(max-width: 767px) 92vw, 640px', 'aria-hidden': ariaHidden } = Astro.props;
+const webpSrc = src.replace(/\.(jpe?g|png)$/i, '.webp');
+const isRaster = /\.(jpe?g|png)$/i.test(src);
+const widths = (manifest as Record<string, number[]>)[src];
+const srcset = widths
+  ? widths.map((w) => `${w === widths[widths.length - 1] ? webpSrc : webpSrc.replace(/\.webp$/, `-${w}.webp`)} ${w}w`).join(', ')
+  : undefined;
+---
+{isRaster ? (
+  <picture>
+    <source type="image/webp" srcset={srcset} sizes={sizes} />
+    <img
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      loading={loading}
+      decoding={decoding}
+      class={className}
+      fetchpriority={loading === 'eager' ? 'high' : undefined}
+      aria-hidden={ariaHidden}
+    />
+  </picture>
+) : (
+  <img src={src} alt={alt} width={width} height={height} loading={loading} decoding={decoding} class={className} aria-hidden={ariaHidden} />
+)}

@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "node scripts/gen-webp.mjs && astro build",
+    "assets:webp": "node scripts/gen-webp.mjs",
+    "check:sitemap": "node scripts/check-sitemap.mjs",
     "preview": "astro preview",
     "check": "astro check",
     "deploy": "npm run build && wrangler pages deploy dist --project-name=xiaominart --branch=main"

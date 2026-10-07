@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Pic from '../components/Pic.astro';
 const sceneCards = [
   { tag: '节日问候', title: '四时一笺', body: '岁有寒暑，月有圆缺——把四季的流转写成一幅字，让问候在案头留得久一点。', price: '¥300', image: '/assets/scenes/theme-four-seasons.jpg', href: '/gifts/seasonal-letter-gift/', alt: '书房木案上的四季题跋书法横幅，旁有兰草与砚台' },
   { tag: '传情达意', title: '一点朱砂', body: '朱砂作底，古字为凭——值得庆祝的事，就该这样郑重地讲出来。', price: '¥300', image: '/assets/scenes/theme-cinnabar.jpg', href: '/gifts/cinnabar-note-gift/', alt: '朱砂红卡的「欢喜」古文字书法框，旁有红梅与灯笼' },
@@ -22,7 +23,7 @@ const steps = [
 <Layout title="小民艺术 XIAOMINART｜方寸之境，也藏山河" description="书画礼品定制平台。在喧嚣之外，寻一处安放身心的角落。这里的每一笔墨痕，都是对生活的另一种回答。">
   <section class="hero" aria-label="品牌横幅">
     <div class="hero-slide is-active hero-slide--soft" data-hero-slide>
-      <div class="hero-media" aria-hidden="true"><img src="/assets/scenes/hero-shiguwen-light.jpg" alt="" loading="eager" fetchpriority="high" /></div>
+      <div class="hero-media" aria-hidden="true"><Pic src="/assets/scenes/hero-shiguwen-light.jpg" alt="" width={1536} height={1024} loading="eager" /></div>
       <div class="container hero-inner">
         <span class="eyebrow">XIAOMINART / 书画礼品定制</span>
         <h1 class="serif">方寸之境，<br />也藏山河。</h1>
@@ -30,18 +31,18 @@ const steps = [
       </div>
     </div>
     <div class="hero-slide" data-hero-slide aria-hidden="true">
-      <div class="hero-media" aria-hidden="true"><img src="/assets/scenes/imperfect-real.jpg" alt="" loading="lazy" /></div>
+      <div class="hero-media" aria-hidden="true"><Pic src="/assets/scenes/imperfect-real.jpg" alt="" width={1280} height={720} loading="lazy" /></div>
       <div class="container hero-inner">
         <span class="eyebrow">XIAOMINART / 书画礼品定制</span>
-        <h1 class="serif">它不完美，<br />却很真实。</h1>
+        <p class="serif hero-title">它不完美，<br />却很真实。</p>
         <p class="hero-sub">手写的墨痕、粗陶的窑变与麻纸的毛边，<br />都是生活本来的样子。</p>
       </div>
     </div>
     <div class="hero-slide" data-hero-slide aria-hidden="true">
-      <div class="hero-media" aria-hidden="true"><img src="/assets/scenes/bird-seal-tearoom.jpg" alt="" loading="lazy" /></div>
+      <div class="hero-media" aria-hidden="true"><Pic src="/assets/scenes/bird-seal-tearoom.jpg" alt="" width={1280} height={720} loading="lazy" /></div>
       <div class="container hero-inner">
         <span class="eyebrow">XIAOMINART / 书画礼品定制</span>
-        <h1 class="serif">看似条条框框，<br />实则分寸有序。</h1>
+        <p class="serif hero-title">看似条条框框，<br />实则分寸有序。</p>
         <p class="hero-sub">融古老鸟虫篆意趣，字如游鱼，昂首摆尾，穿梭自如。<br />在生活的洪流里，愿你也能找到自己的节奏，游刃有余。</p>
       </div>
     </div>
@@ -84,14 +85,14 @@ const steps = [
   <section class="container section choices" aria-labelledby="choices-title">
     <div class="section-lead"><span class="eyebrow">01 / 心意之选</span><h2 id="choices-title" class="serif">为生活添一份心意。</h2><p>不是冰冷的印刷品，而是带着温度的手泽。或是案头的一抹清欢，或是心头的一声叹息。</p></div>
     <div class="choice-grid">
-      {sceneCards.map((card) => <a class="choice-card" href={card.href} data-event="scene_view"><figure><img src={card.image} alt={card.alt} loading="lazy" decoding="async" /></figure><div class="choice-copy"><span class="mono choice-tag">{card.tag}</span><h3 class="serif">{card.title}</h3><p>{card.body}</p><div class="choice-meta"><span class="price">心意起点约 {card.price}</span><span class="card-link">以此为灵感 →</span></div></div></a>)}
+      {sceneCards.map((card) => <a class="choice-card" href={card.href} data-event="scene_view"><figure><Pic src={card.image} alt={card.alt} loading="lazy" decoding="async" /></figure><div class="choice-copy"><span class="mono choice-tag">{card.tag}</span><h3 class="serif">{card.title}</h3><p>{card.body}</p><div class="choice-meta"><span class="price">心意起点约 {card.price}</span><span class="card-link">以此为灵感 →</span></div></div></a>)}
     </div>
   </section>
 
   <section class="container section stories" aria-labelledby="stories-title">
     <div class="section-lead"><span class="eyebrow">02 / 客户分享</span><h2 id="stories-title" class="serif">从一句话，到一件作品。</h2><p>每一份委托，都从委托人的那句话开始。下面是按常见送礼情境整理的客户分享，用来说明一份心意如何成形——你的定制，也将从你的那句话开始。</p></div>
     <div class="story-grid">
-      {storyCards.map((card) => <article class="story-card"><figure><img src={card.image} alt={card.alt} loading="lazy" decoding="async" /></figure><div class="story-copy"><h3 class="serif">{card.title}</h3><blockquote>「{card.quote}」</blockquote><span class="story-tag">客户分享 · 按委托情境整理</span></div></article>)}
+      {storyCards.map((card) => <article class="story-card"><figure><Pic src={card.image} alt={card.alt} loading="lazy" decoding="async" /></figure><div class="story-copy"><h3 class="serif">{card.title}</h3><blockquote>「{card.quote}」</blockquote><span class="story-tag">客户分享 · 按委托情境整理</span></div></article>)}
     </div>
     <a class="btn btn-link stories-more" href="/stories/">看看更多客户分享 →</a>
   </section>
@@ -122,7 +123,7 @@ const steps = [
   .hero-media::after { content: ''; position: absolute; inset: 0; background: linear-gradient(100deg, rgba(244, 239, 229, .96) 0%, rgba(244, 239, 229, .84) 42%, rgba(244, 239, 229, .38) 100%); }
   .hero-slide--soft .hero-media::after { background: linear-gradient(100deg, rgba(244, 239, 229, .95) 0%, rgba(244, 239, 229, .74) 28%, rgba(244, 239, 229, .30) 52%, rgba(244, 239, 229, .08) 100%); }
   .hero-inner { position: relative; z-index: 1; width: min(var(--container), calc(100% - 48px)); margin: 0 auto; padding: 96px 0; text-align: left; }
-  .hero h1 { font-size: clamp(38px, 5.6vw, 72px); line-height: 1.25; font-weight: 400; letter-spacing: .06em; margin: 22px 0 26px; }
+  .hero :is(h1, .hero-title) { font-size: clamp(38px, 5.6vw, 72px); line-height: 1.25; font-weight: 400; letter-spacing: .06em; margin: 22px 0 26px; }
   .hero-sub { max-width: 560px; color: var(--ink-soft); font-size: 17px; line-height: 2; margin: 0 0 34px; }
   .choices, .stories, .process, .closing { border-top: 1px solid var(--line-soft); }
   .section-lead { max-width: 560px; margin-bottom: 44px; }
@@ -180,7 +181,7 @@ const steps = [
     .hero-dots { right: 16px; bottom: 18px; }
     .hero-media::after { background: linear-gradient(180deg, rgba(244, 239, 229, .94) 0%, rgba(244, 239, 229, .78) 60%, rgba(244, 239, 229, .5) 100%); }
     .hero-inner { padding: 72px 0 112px; }
-    .hero h1 { font-size: clamp(34px, 10vw, 46px); }
+    .hero :is(h1, .hero-title) { font-size: clamp(34px, 10vw, 46px); }
     .hero-sub { font-size: 15px; }
     .section { padding: 56px 0; }
     .section-lead { margin-bottom: 30px; }

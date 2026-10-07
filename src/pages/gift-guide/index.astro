@@ -2,6 +2,23 @@
 import Layout from '../../layouts/Layout.astro';
 import { giftProducts, giftRecipients, giftOccasions, giftTierLabels } from '../../data/content';
 
+// 送礼 FAQ（T-06）：数据与 FAQPage 结构化数据同源
+const faqItems: Array<{ q: string; a: string }> = [
+  { q: '可以写手写贺卡吗？', a: '当前礼物方向均保留手写贺卡选项。正式下单或确认前，我们会再次确认贺卡文字和包装方案。' },
+  { q: '可以直接寄给收礼人吗？', a: '送礼咨询时可以备注直寄需求。是否支持去除价格信息、配送地址和时效，需要结合具体礼物方向确认。' },
+  { q: '多久可以发货？', a: '页面展示的是当前参考时间，最终以礼物方向、包装方式和确认时间为准；急件请先提交咨询，不把未确认的时间当作承诺。' },
+  { q: '可以退换吗？', a: '不同礼物方向和个性化程度的售后边界不同。确认前我们会说明退换范围，定制内容请先沟通后再决定。' },
+];
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
+
 // 场景 → 产品 slug 的对应关系直接由产品数据推导，避免两处维护
 const products = giftProducts.map((product) => ({
   slug: product.slug,
@@ -22,7 +39,8 @@ const recipientOptions = giftRecipients.map((item) => ({ slug: item.slug, title:
 const occasionOptions = giftOccasions.map((item) => ({ slug: item.slug, title: item.title, en: item.en, scenes: item.scenes }));
 const decisionData = { products, recipients: recipientOptions, occasions: occasionOptions };
 ---
-<Layout title="选礼指南｜小民艺术" description="按送礼对象与场合筛出 2–3 个方向，标明价格起点、形式与时间参考，再决定要不要咨询。">
+<Layout title="选礼指南｜按场合与对象挑一件对的书法礼物｜小民艺术" description="按送礼对象与场合筛出 2–3 个方向，标明价格起点、形式与时间参考，再决定要不要咨询。">
+  <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
   <section class="container page-head"><span class="eyebrow">Gift Guide / 选礼指南</span><h1 class="serif">先想送给谁，<br />再想知道要说什么。</h1><p lang="en">Start with who it is for, not with a shelf.</p><p>不用先做功课。下面两个问题选完，会直接给出 2–3 个合适的方向，并标明价格起点、形式与时间参考——不满意再回头换条件，不必留下联系方式。</p></section>
 
   <section class="container section decision" data-decision-tool>
@@ -50,7 +68,7 @@ const decisionData = { products, recipients: recipientOptions, occasions: occasi
     </div>
   </section>
 
-  <section class="container section gift-faq"><span class="eyebrow">Gift FAQ / 送礼常见问题</span><h2 class="serif">包装、时效和心意，提前说清楚。</h2><div class="faq-grid"><details><summary>可以写手写贺卡吗？</summary><p>当前礼物方向均保留手写贺卡选项。正式下单或确认前，我们会再次确认贺卡文字和包装方案。</p></details><details><summary>可以直接寄给收礼人吗？</summary><p>送礼咨询时可以备注直寄需求。是否支持去除价格信息、配送地址和时效，需要结合具体礼物方向确认。</p></details><details><summary>多久可以发货？</summary><p>页面展示的是当前参考时间，最终以礼物方向、包装方式和确认时间为准；急件请先提交咨询，不把未确认的时间当作承诺。</p></details><details><summary>可以退换吗？</summary><p>不同礼物方向和个性化程度的售后边界不同。确认前我们会说明退换范围，定制内容请先沟通后再决定。</p></details></div></section>
+  <section class="container section gift-faq"><span class="eyebrow">Gift FAQ / 送礼常见问题</span><h2 class="serif">包装、时效和心意，提前说清楚。</h2><div class="faq-grid">{faqItems.map((item) => <details><summary>{item.q}</summary><p>{item.a}</p></details>)}</div></section>
 </Layout>
 <script type="application/json" data-decision-data set:html={JSON.stringify(decisionData)}></script>
 <script>

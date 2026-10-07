@@ -1,7 +1,29 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+
+// 企业礼赠 FAQ（T-06）：数据与 FAQPage 结构化数据同源，改这里即可，HTML 与 JSON-LD 同步更新
+const faqItems: Array<{ q: string; a: string }> = [
+  { q: '起订量是多少？', a: '不用一开始就想好。轻量款 50 份起、定制款 100 份起、专属款 200 份起，都是参考——先说说你的情况，我们再一起定。' },
+  { q: '可以定制企业 Logo 和品牌元素吗？', a: '可以。轻量款配企业 Logo 卡片；定制款和专属款里，图案、尺寸、包装都能围绕你们来商量。' },
+  { q: '可以先打样再批量吗？', a: '可以。先看一件实物再决定批量，打样的范围、费用和时间，我们会提前说清楚。' },
+  { q: '能开票或对公转账吗？', a: '都可以。在表单里说明需求，具体的主体、票种和节点，等方案确认后我们再对齐。' },
+  { q: '可以分地址寄送并去掉价格单据吗？', a: '可以。收礼人的地址信息、包裹里不放价格单据——这些细节，确认方案时我们会一一安排好。' },
+  { q: '交期需要多久？', a: '取决于数量、定制深度与包装。告诉我们你希望的时间，我们先判断做不做得出来；做不出来会直说，不耽误你另作安排。' },
+  { q: '包装能否定制企业 VI？', a: '定制款和专属款可以讨论企业 VI 的使用范围、包装结构与印刷方式。' },
+  { q: '没有准备好完整需求也能咨询吗？', a: '当然。场景、数量、时间，说个大概就行，剩下的我们一起理。' },
+];
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
 ---
-<Layout title="企业礼赠｜小民艺术" description="为客户答谢、员工福利、会议礼品、开业庆典和节日慰问准备有文化温度的企业礼赠。">
+<Layout title="企业礼赠｜手写书法答谢礼与定制伴手礼｜小民艺术" description="为客户答谢、员工福利、会议礼品、开业庆典和节日慰问准备有文化温度的企业礼赠。">
+  <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
   <section class="container page-head"><span class="eyebrow">Business Gifts / 企业礼赠</span><h1 class="serif">替企业，<br />把谢谢说得有分量。</h1><p lang="en">Corporate gifts with a quieter kind of warmth.</p><p>来找我们做企业礼的，大多不是先想好预算，而是先想到一拨人——合作多年的客户、一起扛过项目的同事，或者一场筹备了很久的活动。想说的是谢谢，是纪念，也是「我们记得」。我们做的，是把这份记得，变成一件拿得出手、也放得进心里的东西。</p></section>
   <section class="container section biz-directions" aria-labelledby="biz-dir-title"><div class="section-lead"><span class="eyebrow">Corporate Gifting / 企业礼赠</span><h2 id="biz-dir-title" class="serif">书法，是一种褪去火气的表达。</h2><p>不喧哗，也不套路。对企业而言，它还是一种契约记录——落笔为凭，把说过的话、走过的年份留在纸上；也是一份对外的文化内核，别人从一幅字里看见的，是企业愿意被记住的那一面。</p><p class="dir-note">下面三件事，是我们与企业最常一起完成的三件事。</p></div><div class="dir-list">
     <article id="gifts" class="dir-item"><span class="mono dir-no">01</span><div><h3 class="serif">送出去的心意</h3><p>客户答谢、节日礼盒、签到台上的一份小礼——数量可以多，份量不能轻。装裱好的小品、卡笺与扇面，配上以企业名义手写的贺卡，轻而不薄；收礼的人拆开时，会觉得这份谢谢是专门为自己准备的。</p><span class="dir-scenes">客户答谢 · 节日礼盒 · 活动签到伴手礼 · 员工福利</span></div></article>
@@ -9,7 +31,7 @@ import Layout from '../../layouts/Layout.astro';
     <article id="space" class="dir-item"><span class="mono dir-no">03</span><div><h3 class="serif">挂进空间的话</h3><p>会客厅、前台与走廊，是企业每天被看见的地方。按空间的尺度、光线与气质来写字与装裱，让企业自己喜欢的那句话，挂在每天进出的墙上——对内是提醒，对外是态度。</p><span class="dir-scenes">会客空间 · 前台与走廊 · 办公室书法软装</span></div></article>
   </div></section>
   <section class="container plans"><article><span class="mono">01</span><span class="eyebrow">Light / 轻量款</span><h2 class="serif">先从一份<br />标准的心意开始。</h2><strong>50 份起</strong><p>标准的字样，配一张以企业名义手写的卡片。第一次合作、会议伴手礼、节日慰问，从这里开始就好。</p></article><article><span class="mono">02</span><span class="eyebrow">Custom / 定制款</span><h2 class="serif">让礼物，<br />更像你们。</h2><strong>100 份起</strong><p>图案、尺寸与包装，可以围着企业的场景来商量。适合客户答谢、员工福利和品牌活动。</p></article><article><span class="mono">03</span><span class="eyebrow">Bespoke / 专属款</span><h2 class="serif">为一件大事，<br />专写一件东西。</h2><strong>200 份起</strong><p>周年、开业、重要的合作关系——从企业自己的那句话出发，创作方向与礼盒都只为这一次而做。</p></article></section>
-  <section class="container section business-faq"><span class="eyebrow">Corporate FAQ / 企业礼赠 FAQ</span><h2 class="serif">先把话说在前面。</h2><div class="faq-grid"><details><summary>起订量是多少？</summary><p>不用一开始就想好。轻量款 50 份起、定制款 100 份起、专属款 200 份起，都是参考——先说说你的情况，我们再一起定。</p></details><details><summary>可以定制企业 Logo 和品牌元素吗？</summary><p>可以。轻量款配企业 Logo 卡片；定制款和专属款里，图案、尺寸、包装都能围绕你们来商量。</p></details><details><summary>可以先打样再批量吗？</summary><p>可以。先看一件实物再决定批量，打样的范围、费用和时间，我们会提前说清楚。</p></details><details><summary>能开票或对公转账吗？</summary><p>都可以。在表单里说明需求，具体的主体、票种和节点，等方案确认后我们再对齐。</p></details><details><summary>可以分地址寄送并去掉价格单据吗？</summary><p>可以。收礼人的地址信息、包裹里不放价格单据——这些细节，确认方案时我们会一一安排好。</p></details><details><summary>交期需要多久？</summary><p>取决于数量、定制深度与包装。告诉我们你希望的时间，我们先判断做不做得出来；做不出来会直说，不耽误你另作安排。</p></details><details><summary>包装能否定制企业 VI？</summary><p>定制款和专属款可以讨论企业 VI 的使用范围、包装结构与印刷方式。</p></details><details><summary>没有准备好完整需求也能咨询吗？</summary><p>当然。场景、数量、时间，说个大概就行，剩下的我们一起理。</p></details></div></section>
+  <section class="container section business-faq"><span class="eyebrow">Corporate FAQ / 企业礼赠 FAQ</span><h2 class="serif">先把话说在前面。</h2><div class="faq-grid">{faqItems.map((item) => <details><summary>{item.q}</summary><p>{item.a}</p></details>)}</div></section>
   <section id="business-form" class="container section business-form"><div><span class="eyebrow">Business needs / 企业项目需求</span><h2 class="serif">说说你们想做<br />一件什么事。</h2><p>不用担心填得不够全——场景、数量、时间，说个大概就好。我们会在两个工作日内回复，先聊清楚，再往下走。</p></div><form data-business-form><label>公司名称 / Company<input name="company" required /></label><label>联系人与联系方式 / Contact<input name="contact" required placeholder="微信优先，邮箱或手机号备选" /></label><label>预算范围 / Budget<select name="budget"><option>尚未确定 / To be discussed</option><option>¥10,000 以下</option><option>¥10,000–50,000</option><option>¥50,000 以上</option></select></label><label>预计数量 / Quantity<select name="quantity"><option>50 份起</option><option>100 份起</option><option>200 份起</option><option>尚未确定</option></select></label><label>用途场景 / Use case<select name="scene"><option>客户答谢</option><option>员工福利</option><option>会议礼品</option><option>开业庆典</option><option>节日慰问</option><option>其他</option></select></label><label>期望交付时间 / Timeline<input name="timeline" placeholder="例如：2026 年 12 月前" /></label><label>项目说明 / Brief<textarea name="brief" rows="4" placeholder="品牌背景、希望表达的文化、包装想法等"></textarea></label><label class="honeypot-field" aria-hidden="true">网址 / Website<input name="website" tabindex="-1" autocomplete="off" class="honeypot" /></label><button class="btn btn-primary" type="submit">把需求发给我们 →</button><p class="form-note" data-form-status role="status" aria-live="polite">提交后我们会通过你留下的联系方式回复；想先聊聊也可以加页脚微信，备注「企业礼赠」。</p></form></section>
 </Layout>
 <script>

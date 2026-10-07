@@ -1,5 +1,6 @@
 ---
 // 三格横向滚动图组：一屏只看三张，各承担一个"凭什么好"的问题。
+import Pic from './Pic.astro';
 interface StripItem {
   image?: string;
   alt?: string;
@@ -16,7 +17,7 @@ const { items = [], label = '细节图组', ratio = '4 / 5' } = Astro.props as P
     <figure class="strip-item">
       <div class="strip-pic">
         {item.image
-          ? <img src={item.image} alt={item.alt ?? item.title} loading="lazy" decoding="async" />
+          ? <Pic src={item.image} alt={item.alt ?? item.title} loading="lazy" decoding="async" />
           : <div class="strip-slot" role="img" aria-label={item.slot ?? item.title}><span>{item.slot ?? '图片待补'}</span></div>}
       </div>
       <figcaption>

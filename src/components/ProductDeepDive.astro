@@ -1,5 +1,6 @@
 ---
 import type { GiftProduct } from '../data/content';
+import Pic from './Pic.astro';
 const { product } = Astro.props as { product: GiftProduct };
 const gallery = product.gallery ?? [];
 const deepDive = product.deepDive ?? [];
@@ -9,7 +10,7 @@ const hasContent = gallery.length > 0 || deepDive.length > 0;
   <span class="eyebrow">Mounting & Spaces / 装裱形式 · 使用空间</span>
   <h2 class="serif">同一幅字，三种与生活相处的方式。</h2>
   <div class="dd-gallery-grid">
-    {gallery.map((item) => <figure><img src={item.src} alt={item.alt} loading="lazy" decoding="async" /><figcaption>{item.caption}</figcaption></figure>)}
+    {gallery.map((item) => <figure><Pic src={item.src} alt={item.alt} loading="lazy" decoding="async" /><figcaption>{item.caption}</figcaption></figure>)}
   </div>
 </section>}
 {deepDive.length > 0 && <section class="container dd-sections" aria-label="产品详细介绍">
@@ -21,7 +22,7 @@ const hasContent = gallery.length > 0 || deepDive.length > 0;
     {sec.specs && <dl class="dd-specs">{sec.specs.map((row) => <div class="dd-spec-row"><dt>{row.label}</dt><dd>{row.value}</dd></div>)}</dl>}
     {sec.specsNote && <p class="dd-note">{sec.specsNote}</p>}
     {sec.cards && <div class="dd-cards" style={`--dd-cols:${sec.cardColumns ?? 1}`}>{sec.cards.map((card) => <div class="dd-card"><h3 class="serif">{card.name}</h3><p>{card.text}</p></div>)}</div>}
-    {sec.image && <figure class="dd-fig"><img src={sec.image} alt={sec.imageAlt ?? ''} loading="lazy" decoding="async" /></figure>}
+    {sec.image && <figure class="dd-fig"><Pic src={sec.image} alt={sec.imageAlt ?? ''} loading="lazy" decoding="async" /></figure>}
   </article>)}
 </section>}
 <style>

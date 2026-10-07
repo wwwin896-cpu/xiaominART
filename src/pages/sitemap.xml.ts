@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { getGiftCatalog } from '../lib/keystatic';
-import { readyMadeWorks, artists, work, channelPages, blessings } from '../data/content';
+import { readyMadeWorks, artists, work, channelPages, blessings, seasons } from '../data/content';
 import { lastmodFor } from '../lib/seo';
 
 // sitemap 只收录真实存在、未被重定向、且只有一个 URL 的最终页面。
@@ -25,6 +25,11 @@ import { lastmodFor } from '../lib/seo';
 //     不再挂到静态页上，否则每改一次导航，全站 lastmod 都会被拉平成同一天，
 //     反而失去「这一页最近动过」的参考价值。详情页例外——它们的正文确实
 //     由 content.ts 里的数组驱动。
+//
+// 2026-10-07 补录（T-08，外部检查任务包）：seasons/{slug}/、occasions/{slug}/、recipients/{slug}/
+//   · occasions / recipients 详情页是带商品网格的真实落地页（索引页才被 301）
+//   · seasons 详情页偏薄但可索引，先入图；内容补齐后 lastmod 会自然更新
+//   · 同步新增发布校验：scripts/check-sitemap.mjs 在构建后核对 dist 页面与 sitemap 的一致性
 const P = (p: string) => `src/pages/${p}`;
 const CONTENT = ['src/data/content.ts'];
 
@@ -91,13 +96,26 @@ const dynamicRoutes: { path: string; files: string[] }[] = [
     path: `blessings/${b.slug}/`,
     files: [P('blessings/[slug].astro'), ...CONTENT],
   })),
+  // 四季节气详情（2026-10-07 补录，内容偏薄但可索引）
+  ...seasons.map((s) => ({
+    path: `seasons/${s.slug}/`,
+    files: [P('seasons/[slug].astro'), ...CONTENT],
+  })),
+  // 送礼场合 / 送礼对象落地页（2026-10-07 补录：带商品网格的真实内容页；被 301 的是索引页）
+  ...getGiftCatalog().occasions.map((item) => ({
+    path: `occasions/${item.slug}/`,
+    files: [P('occasions/[slug].astro'), 'src/lib/keystatic.ts'],
+  })),
+  ...getGiftCatalog().recipients.map((item) => ({
+    path: `recipients/${item.slug}/`,
+    files: [P('recipients/[slug].astro'), 'src/lib/keystatic.ts'],
+  })),
 ];
 
 // 暂不收录（保持现状，非遗漏）：
-//   · seasons/{slug}/   四季详情页当前是占位文案（「更多节气内容将持续呈现」），
-//                       属薄内容页，等补齐实质内容后再加入本清单
-//   · occasions|recipients/{slug}/  索引页已 301、无导航入口，仅作内容底稿
+//   · occasions|recipients 的索引页（/occasions/ /recipients/）已整体 301 到 gift-guide/
 //   · progress/ wishlist/ keystatic/  功能页与后台，不需要收录
+// 发布校验：npm run check:sitemap（CI 在 build 后自动跑），任何可索引页漏图会直接报错
 
 export const GET: APIRoute = ({ site }) => {
   const base = (site ?? new URL('https://xiaominart.com')).toString().replace(/\/$/, '');

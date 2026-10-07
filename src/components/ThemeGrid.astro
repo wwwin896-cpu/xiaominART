@@ -1,5 +1,6 @@
 ---
 // 手写现货四主题：命名沿用品牌既有的四个方向，各自指向唯一有效的商品详情页。
+import Pic from './Pic.astro';
 const themes = [
   {
     key: 'SEASONAL LETTER',
@@ -42,7 +43,7 @@ const themes = [
 <div class="themes">
   {themes.map((theme) => (
     <a class="theme" href={theme.href} data-event={theme.event}>
-      <figure><img src={theme.image} alt={theme.alt} loading="lazy" decoding="async" /></figure>
+      <figure><Pic src={theme.image} alt={theme.alt} loading="lazy" decoding="async" /></figure>
       <div class="theme-body">
         <span class="mono theme-key">{theme.key}</span>
         <h3 class="serif">{theme.title}</h3>

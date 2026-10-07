@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import { siteContact } from '../../data/site';
 ---
-<Layout title="联系小民艺术｜Contact｜小民艺术" description="通过微信、邮箱或定制咨询表单联系小民艺术：三条入口，同一条人工对接的沟通路径。">
+<Layout title="联系小民艺术｜定制咨询与微信联系｜小民艺术" description="通过微信、邮箱或定制咨询表单联系小民艺术：三条入口，同一条人工对接的沟通路径。">
   <section class="container contact-head"><span class="eyebrow">Contact / 联系</span><h1 class="serif">把问题留给我们，<br />从一句话开始。</h1><p>微信最快、邮件最正式、咨询表单最完整——三条入口通向同一件事：把你想表达的说清楚。急事建议直接扫码加微信。</p></section>
   <section class="container contact-grid">
     {siteContact.wechatQr ? <div class="contact-card contact-card--wechat"><span class="eyebrow">WeChat / 微信（最快）</span><strong>扫码添加</strong><a class="contact-qr-link" href={siteContact.wechatQr} target="_blank" rel="noopener" data-event="contact_channel_click" data-channel="wechat" title="点击查看大图，长按识别添加"><img class="contact-qr" src={siteContact.wechatQr} width="150" height="150" alt="小民艺术微信二维码" loading="lazy" /></a><span>添加时请备注来意：<em>送礼 / 定制 / 企业</em>。工作日通常当天回复。</span></div> : <div class="contact-card"><span class="eyebrow">WeChat / 微信</span><strong>企业微信</strong><span>如需即时沟通，请在邮件或咨询表单中留下微信号，我们会主动添加你。</span></div>}

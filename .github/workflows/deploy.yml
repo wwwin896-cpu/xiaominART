@@ -47,6 +47,10 @@ jobs:
           # GitHub 上没有 .env，需要在这里显式提供。此值公开，非密钥。
           PUBLIC_KEYSTATIC_GITHUB_APP_SLUG: wwwin896-cpu-keystatic
 
+      # 发布校验（T-08「上线即入图」）：任何可索引页漏出 sitemap 或 sitemap 出现死图都会失败
+      - name: Sitemap consistency check
+        run: npm run check:sitemap
+
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
