@@ -69,12 +69,21 @@ const steps = [
     dots.forEach((dot, i) => dot.addEventListener('click', () => { show(i); play(); }));
     if (slides.length > 1) {
       play();
-      // 悬停、键盘聚焦或触摸时暂停，避免用户正在看的时候画面被切走
-      hero?.addEventListener('mouseenter', stop);
-      hero?.addEventListener('mouseleave', play);
-      hero?.addEventListener('focusin', stop);
-      hero?.addEventListener('focusout', play);
-      hero?.addEventListener('touchstart', stop, { passive: true });
+      // 悬停暂停只绑在「有真实悬停能力」的设备上（2026-10-08 修复）：
+      // 触屏 (hover: none) 上 touchend 后浏览器会合成 mouseenter，且永远不会来
+      // mouseleave——若绑定，首次触摸 banner 后轮播就永久冻结在当前一张。
+      const canHover = window.matchMedia('(hover: hover) and (pointer: fine)');
+      if (canHover.matches) {
+        hero?.addEventListener('mouseenter', stop);
+        hero?.addEventListener('mouseleave', play);
+        hero?.addEventListener('focusin', stop);
+        hero?.addEventListener('focusout', play);
+      } else {
+        // 触屏：按下暂停、抬手恢复
+        hero?.addEventListener('touchstart', stop, { passive: true });
+        hero?.addEventListener('touchend', play);
+        hero?.addEventListener('touchcancel', play);
+      }
       document.addEventListener('visibilitychange', () => (document.hidden ? stop() : play()));
       // 系统切换「减少动态效果」时立即生效（WCAG 2.2.2）
       reduceMotion.addEventListener('change', play);
@@ -119,7 +128,7 @@ const steps = [
   .hero-dot { width: 30px; height: 3px; padding: 0; border: 0; background: rgba(43, 41, 36, .28); cursor: pointer; transition: background .3s ease, width .3s ease; }
   .hero-dot.is-active { background: var(--cinnabar); }
   .hero-media { position: absolute; inset: 0; }
-  .hero-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .hero-media :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; }
   .hero-media::after { content: ''; position: absolute; inset: 0; background: linear-gradient(100deg, rgba(244, 239, 229, .96) 0%, rgba(244, 239, 229, .84) 42%, rgba(244, 239, 229, .38) 100%); }
   .hero-slide--soft .hero-media::after { background: linear-gradient(100deg, rgba(244, 239, 229, .95) 0%, rgba(244, 239, 229, .74) 28%, rgba(244, 239, 229, .30) 52%, rgba(244, 239, 229, .08) 100%); }
   .hero-inner { position: relative; z-index: 1; width: min(var(--container), calc(100% - 48px)); margin: 0 auto; padding: 96px 0; text-align: left; }
@@ -132,8 +141,8 @@ const steps = [
   .choice-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 34px 30px; }
   .choice-card { display: flex; flex-direction: column; }
   .choice-card figure { margin: 0; overflow: hidden; aspect-ratio: 4 / 3; background: var(--paper-deep); }
-  .choice-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease, filter .5s ease; }
-  .choice-card:hover img { transform: scale(1.035); filter: brightness(1.05); }
+  .choice-card :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease, filter .5s ease; }
+  .choice-card:hover :global(img) { transform: scale(1.035); filter: brightness(1.05); }
   .choice-tag { display: block; color: var(--cinnabar); font-size: 12px; letter-spacing: .14em; margin: 0 0 6px; }
   .choice-copy { padding: 18px 2px 0; }
   .choice-copy h3 { font-size: 20px; font-weight: 500; margin: 0 0 8px; }
@@ -144,8 +153,8 @@ const steps = [
   .story-grid { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-rows: 380px; gap: 30px; }
   .story-card { display: grid; grid-template-columns: .9fr 1.1fr; border: 1px solid var(--line); background: var(--paper-light); }
   .story-card figure { margin: 0; overflow: hidden; }
-  .story-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease, filter .5s ease; }
-  .story-card:hover img { transform: scale(1.03); filter: brightness(1.05); }
+  .story-card :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease, filter .5s ease; }
+  .story-card:hover :global(img) { transform: scale(1.03); filter: brightness(1.05); }
   .story-copy { padding: 26px 26px 24px; display: flex; flex-direction: column; gap: 12px; }
   .story-copy h3 { font-size: 19px; font-weight: 500; margin: 0; line-height: 1.5; }
   .story-copy blockquote { margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.95; }

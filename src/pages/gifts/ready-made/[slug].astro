@@ -142,7 +142,7 @@ const productSchema = {
   .crumb a:hover { color: var(--cinnabar); }
   .work-detail { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 60px; padding: 34px 0 20px; align-items: start; }
   .detail-figure { margin: 0; border: 1px solid var(--line); background: var(--paper-deep); position: relative; }
-  .detail-figure img { width: 100%; display: block; }
+  .detail-figure :global(img) { width: 100%; display: block; }
   .detail-figure figcaption { padding: 10px 14px; border-top: 1px solid var(--line); background: var(--paper-light); color: var(--muted); font-size: 12px; letter-spacing: .08em; }
   .detail-copy h1 { font-size: clamp(34px, 4.4vw, 56px); font-weight: 500; line-height: 1.25; margin: 16px 0 4px; }
   .detail-copy .en { font: 20px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); margin: 0 0 20px; }
@@ -167,8 +167,8 @@ const productSchema = {
   .others-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
   .other-card { border: 1px solid var(--line); background: var(--paper-light); display: flex; flex-direction: column; }
   .other-card figure { margin: 0; overflow: hidden; background: var(--paper-deep); }
-  .other-card img { width: 100%; display: block; transition: transform .6s ease; }
-  .other-card:hover img { transform: scale(1.03); }
+  .other-card :global(img) { width: 100%; display: block; transition: transform .6s ease; }
+  .other-card:hover :global(img) { transform: scale(1.03); }
   .other-card > div { padding: 16px 18px 20px; }
   .other-card h3 { font-size: 21px; font-weight: 500; margin: 0 0 2px; }
   .other-card p[lang='en'] { font: 14px var(--font-display-en), Georgia, serif; color: var(--ink-soft); margin: 0 0 8px; }

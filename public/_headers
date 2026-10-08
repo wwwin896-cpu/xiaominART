@@ -22,10 +22,13 @@
 #    script-src 加 https://www.googletagmanager.com（GA4）或 Umami 域 / https://www.clarity.ms，
 #    connect-src 加 https://*.google-analytics.com https://region1.google-analytics.com（GA4）
 #    详见 docs/数据分析接入指南.md。
+# font-src 需含 data:：@fontsource 的 CSS 经 Vite 内联后，部分字体子集是 data: URI
+#    （2026-10-08 修复：此前 font-src 'self' 把 Noto Serif SC 的内嵌子集全部拦掉，
+#    标题衬线字静默回退为系统字体）。data: URI 字体无外联风险，放行安全。
 # 注意：_headers 只作用于静态资源，functions/ 下的 /api/* 需在代码里设头（已设）。
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), interest-cohort=()
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; form-action 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'

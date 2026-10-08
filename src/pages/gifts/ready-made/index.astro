@@ -22,12 +22,12 @@ import { getReadyMadeWorks } from '../../../lib/ready-made';
   .scene-tag { position: absolute; top: 12px; left: 12px; padding: 3px 9px; background: rgba(250, 248, 243, .92); color: var(--ink-soft); font-size: 11px; letter-spacing: .14em; }
   /* 已售出（B2）：图上盖一枚印章式角标，卡片整体降到 72% 不透明度以示「已翻页」 */
   .sold-tag { position: absolute; top: 12px; right: 12px; padding: 4px 11px; background: rgba(28, 24, 18, .82); color: #f5f1e8; font-size: 11px; letter-spacing: .16em; }
-  .work-card.is-sold figure img { opacity: .72; }
+  .work-card.is-sold figure :global(img) { opacity: .72; }
   .work-card.is-sold .work-badge { border-color: var(--line); color: var(--muted); }
   .work-card.is-sold .work-price { color: var(--muted); text-decoration: line-through; text-decoration-thickness: 1px; }
   .work-card.is-sold .work-price span { text-decoration: none; }
-  .work-card img { width: 100%; display: block; transition: transform .6s ease; }
-  .work-card:hover img { transform: scale(1.03); }
+  .work-card :global(img) { width: 100%; display: block; transition: transform .6s ease; }
+  .work-card:hover :global(img) { transform: scale(1.03); }
   .work-copy { padding: 20px 20px 24px; flex: 1; display: flex; flex-direction: column; }
   .work-badge { display: inline-block; padding: 4px 10px; border: 1px solid var(--cinnabar); color: var(--cinnabar-deep); font-size: 11px; letter-spacing: .12em; }
   .work-copy h2 { font-size: 26px; font-weight: 500; line-height: 1.4; margin: 14px 0 2px; }

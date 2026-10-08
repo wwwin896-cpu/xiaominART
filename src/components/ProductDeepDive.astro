@@ -30,8 +30,8 @@ const hasContent = gallery.length > 0 || deepDive.length > 0;
   .dd-gallery h2 { font-size: clamp(24px, 2.8vw, 38px); font-weight: 500; margin: 14px 0 30px; }
   .dd-gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
   .dd-gallery-grid figure { margin: 0; }
-  .dd-gallery-grid img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; display: block; background: var(--paper-deep); transition: transform .5s ease, filter .5s ease; }
-  .dd-gallery-grid figure:hover img { transform: scale(1.02); filter: brightness(1.04); }
+  .dd-gallery-grid :global(img) { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; display: block; background: var(--paper-deep); transition: transform .5s ease, filter .5s ease; }
+  .dd-gallery-grid figure:hover :global(img) { transform: scale(1.02); filter: brightness(1.04); }
   .dd-gallery-grid figcaption { padding-top: 12px; color: var(--ink-soft); font-size: 13px; line-height: 1.7; }
   .dd-sections { padding: 0 0 80px; }
   .dd-sec { max-width: 860px; padding: 44px 0; border-top: 1px solid var(--line-soft); }
@@ -45,7 +45,7 @@ const hasContent = gallery.length > 0 || deepDive.length > 0;
   .dd-spec-row dd { margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.8; }
   .dd-note { color: var(--muted); font-size: 12px; margin: 12px 0 0; }
   .dd-fig { margin: 24px 0 0; }
-  .dd-fig img { width: 100%; display: block; background: var(--paper-deep); }
+  .dd-fig :global(img) { width: 100%; display: block; background: var(--paper-deep); }
   .dd-cards { display: grid; grid-template-columns: repeat(var(--dd-cols, 1), 1fr); gap: 16px; margin-top: 8px; }
   .dd-card { border: 1px solid var(--line); background: var(--paper-light); padding: 22px 22px 20px; }
   .dd-card h3 { font-size: 17px; font-weight: 500; margin: 0 0 10px; }

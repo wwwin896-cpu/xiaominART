@@ -58,8 +58,8 @@ const themes = [
   .theme { display: flex; background: var(--paper-light); min-height: 220px; transition: background-color .3s ease; }
   .theme:hover { background: var(--paper); }
   .theme figure { flex: 0 0 42%; margin: 0; overflow: hidden; background: var(--paper-deep); }
-  .theme img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s ease; }
-  .theme:hover img { transform: scale(1.03); }
+  .theme :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s ease; }
+  .theme:hover :global(img) { transform: scale(1.03); }
   .theme-body { padding: 26px 24px; display: flex; flex-direction: column; gap: 8px; }
   .theme-key { color: var(--meta); font-size: 10.5px; letter-spacing: .1em; }
   .theme-body h3 { font-size: 19px; font-weight: 500; margin: 0; line-height: 1.5; }

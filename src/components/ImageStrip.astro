@@ -33,8 +33,8 @@ const { items = [], label = '细节图组', ratio = '4 / 5' } = Astro.props as P
   .strip::-webkit-scrollbar { display: none; }
   .strip-item { flex: 0 0 calc((100% - 44px) / 3); min-width: 240px; scroll-snap-align: start; margin: 0; }
   .strip-pic { aspect-ratio: var(--strip-ratio); background: var(--paper-deep); border: 1px solid var(--line-soft); overflow: hidden; }
-  .strip-pic img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s ease; }
-  .strip-item:hover .strip-pic img { transform: scale(1.03); }
+  .strip-pic :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s ease; }
+  .strip-item:hover .strip-pic :global(img) { transform: scale(1.03); }
   .strip-slot { display: grid; place-content: center; width: 100%; height: 100%; border: 1px dashed var(--line); color: var(--muted); font-size: 12px; letter-spacing: .18em; text-align: center; }
   figcaption { padding-top: 14px; }
   .strip-tag { display: block; color: var(--cinnabar); font-size: 12px; letter-spacing: .22em; margin-bottom: 8px; }
