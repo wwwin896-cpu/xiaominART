@@ -106,7 +106,7 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_ID as string | undefined;
         <div><p class="eyebrow">XIAOMINART / 日常之礼</p><p class="footer-claim serif">愿你在这方寸之间，<br />找到属于自己的定制心意。</p></div>
         <div class="footer-contact"><p class="eyebrow">Contact / 联系</p><a href={`mailto:${siteContact.email}`}>{siteContact.email}</a>{siteContact.wechatId ? <p>微信 / 企业微信：<strong>{siteContact.wechatId}</strong>（备注来意，尽快回复）</p> : siteContact.wechatQr ? <p>微信 / 企业微信：扫码添加（备注来意，尽快回复）</p> : <p>微信 / 企业微信：提交<a href="/custom-commission/">定制咨询表单</a>并留下你的微信号，我们会主动添加你。</p>}{siteContact.wechatQr ? <a class="wechat-qr-link" href={siteContact.wechatQr} target="_blank" rel="noopener" title="点击查看大图，长按识别添加"><img class="wechat-qr" src={siteContact.wechatQr} width="112" height="112" alt="小民艺术微信二维码" loading="lazy" /></a> : null}<p>送礼问题可先从送礼指南开始；需要个性化建议，可提交咨询。</p></div>
       </div>
-      <div class="container trust-signals" aria-label="信息边界 / Information boundaries"><div><span class="eyebrow">Artist / 艺术家</span><strong>由具体创作方向与沟通内容开始</strong></div><div><span class="eyebrow">Projects / 项目</span><strong>已确认内容才会公开呈现</strong></div><div><span class="eyebrow">Privacy / 隐私</span><strong>客户故事与图像获得授权后发布</strong></div><p>我们不使用未经核验的客户数量、媒体曝光或合作机构作为背书。</p></div>
+      <div class="container trust-signals" aria-label="信息边界 / Information boundaries"><div><span class="eyebrow">Artist / 艺术家</span><strong>由具体创作方向与沟通内容开始</strong></div><div><span class="eyebrow">Projects / 项目</span><strong>已确认内容才会公开呈现</strong></div><div class="trust-privacy"><span class="eyebrow">Privacy / 隐私</span><strong>客户故事与图像获得授权后发布</strong></div><p>我们不使用未经核验的客户数量、媒体曝光或合作机构作为背书。</p></div>
       <div class="container footer-newsletter"><Newsletter /></div>
       <div class="container footer-bottom"><span>© {new Date().getFullYear()} XIAOMINART | 守艺 · 传情</span><span>世间无双，只此一幅 | Every piece is one of a kind.</span></div>
     </footer>
@@ -213,7 +213,14 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_ID as string | undefined;
     nav a:last-child { border-bottom: 0; }
     .footer-grid { grid-template-columns: 1fr; }
     .footer-grid > div:first-child { grid-column: 1 / -1; }
-    .trust-signals, .footer-newsletter { display: none; }
+    /* 移动端信任区不整块隐藏：留着「隐私 / 事实边界」这一行。
+       社交流量进来时，联系入口（.footer-contact）与这条边界说明是最小必要信息；
+       艺术家 / 项目两格与那段免责说明属于展开阅读，小屏上先收起来。 */
+    .trust-signals { display: block; margin-top: 20px; padding-top: 0; border-top: 0; }
+    .trust-signals > div, .trust-signals > p { display: none; }
+    .trust-signals > .trust-privacy { display: flex; flex-direction: row; flex-wrap: wrap; gap: 4px 8px; align-items: baseline; }
+    .trust-signals > .trust-privacy strong { font-size: 12px; }
+    .footer-newsletter { display: none; }
     .footer-contact { border-top: 1px solid var(--line-soft); padding-top: 16px; }
     .footer-contact .wechat-qr-link { min-height: 0; }
     .footer-contact .wechat-qr { width: 132px; height: 132px; }

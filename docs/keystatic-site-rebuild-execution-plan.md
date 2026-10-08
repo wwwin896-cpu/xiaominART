@@ -1,5 +1,11 @@
 # 小民艺术｜Keystatic 接入与网站重做执行方案
 
+> ⚠️ **本文为规划期存档，其中部署章节已过时**
+>
+> 编制时站点仍在 Vercel，文中「发布：Git commit → Vercel 自动构建」「生产环境变量配置在 Vercel Project Settings」「直接从用户咨询写入 Vercel 本地文件」等表述**均已不适用**。
+> 现状：Keystatic 已接入并上线（`/keystatic/`），内容写入 GitHub 仓库、由 **Cloudflare Pages** 构建部署；咨询数据走 WorkBuddy 云数据库 REST，**不再依赖 serverless 本地文件**。
+> 现行部署与环境变量以 `docs/cloudflare-部署与后台说明.md` 与 `docs/后台使用指南.md` 为准。
+
 ## 0. 本文用途
 
 本方案基于附件《小民艺术_Keystatic接入执行清单.docx》，并结合当前 `xiaominart-site` 项目实际状态，以及近两天确认的品牌方向和新 Logo 锁定文案编制。

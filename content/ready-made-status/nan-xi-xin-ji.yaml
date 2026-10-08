@@ -1,0 +1,6 @@
+# 现货上下架状态 · nan-xi-xin-ji
+# 勾选 sold 表示已售出；取消勾选即重新上架。
+work: nan-xi-xin-ji
+sold: false
+soldAt: ''
+note: ''

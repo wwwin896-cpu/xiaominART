@@ -430,7 +430,11 @@ export type ReadyMadeWork = {
   sceneAlt?: string;
   /** 已售出标记。现货每幅世间唯一，售出后不再上架；
    *  置 true 后列表页降级为「已售出」并弱化入口，详情页关闭购买引导。
-   *  仅在售出后手动改为 true，不做自动下架（避免误伤在售作品）。 */
+   *
+   *  ⚠️ 2026-10-08 起，售出状态改由后台维护：
+   *  Keystatic「现货上下架」→ `content/ready-made-status/<slug>.yaml`，
+   *  读取层见 `src/lib/ready-made.ts`（页面请用 getReadyMadeWorks()）。
+   *  这里的字段只在**没有对应状态文件**时作为兜底，正常不要再手改。 */
   sold?: boolean;
 };
 

@@ -1,16 +1,16 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import Pic from '../../../components/Pic.astro';
-import { readyMadeWorks } from '../../../data/content';
+import { getReadyMadeWorks } from '../../../lib/ready-made';
 import { siteContact } from '../../../data/site';
 
 export function getStaticPaths() {
-  return readyMadeWorks.map((work) => ({ params: { slug: work.slug }, props: { work } }));
+  return getReadyMadeWorks().map((work) => ({ params: { slug: work.slug }, props: { work } }));
 }
 
 const { work } = Astro.props;
 // 推荐位只放仍在售的作品：已售出的推荐出去只会带来无谓询问
-const others = readyMadeWorks.filter((item) => item.slug !== work.slug && !item.sold).slice(0, 3);
+const others = getReadyMadeWorks().filter((item) => item.slug !== work.slug && !item.sold).slice(0, 3);
 const isWall = work.form === '挂墙';
 const isZen = work.slug === 'chan';
 // 尺寸按档位由业主确认（2026-10-06）：摆件 A4（21 × 29.7）、圆光《禅》50 × 50、挂墙 60 × 33。

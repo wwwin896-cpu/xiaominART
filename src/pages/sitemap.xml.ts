@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { getGiftCatalog } from '../lib/keystatic';
-import { readyMadeWorks, artists, work, channelPages, blessings, seasons } from '../data/content';
+import { artists, work, channelPages, blessings, seasons } from '../data/content';
+import { getReadyMadeWorks } from '../lib/ready-made';
 import { lastmodFor } from '../lib/seo';
 
 // sitemap 只收录真实存在、未被重定向、且只有一个 URL 的最终页面。
@@ -74,7 +75,7 @@ const dynamicRoutes: { path: string; files: string[] }[] = [
     files: [P('gifts/[slug].astro'), 'src/lib/keystatic.ts', ...CONTENT],
   })),
   // 现货详情（12 幅）
-  ...readyMadeWorks.map((w) => ({
+  ...getReadyMadeWorks().map((w) => ({
     path: `gifts/ready-made/${w.slug}/`,
     files: [P('gifts/ready-made/[slug].astro'), ...CONTENT],
   })),

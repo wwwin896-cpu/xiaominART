@@ -1,13 +1,13 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import Pic from '../../../components/Pic.astro';
-import { readyMadeWorks } from '../../../data/content';
+import { getReadyMadeWorks } from '../../../lib/ready-made';
 ---
 <Layout title="现货好礼｜书法小品｜小民艺术" description="已经写好的书法小品，每一幅都独一无二，装裱完成，看中即可直接发货。">
   <section class="container page-head"><span class="eyebrow">Ready to Ship / 现货好礼</span><h1 class="serif">已经写好，<br />等一个懂它的人。</h1><p lang="en">Already written. Ready to go.</p><p>下面这些，是小民已经完成的小幅书法作品。每一幅都只有一件，装裱完成即可直接发货——你在页面上看到的这一幅，就是将来到家的那一幅。</p></section>
   <section class="container section works-section">
     <div class="works-grid">
-      {readyMadeWorks.map((work) => <article class={`work-card reveal${work.sold ? ' is-sold' : ''}`} data-reveal><figure><Pic src={work.sceneImage ?? work.image} alt={work.sceneAlt ?? work.alt} loading="lazy" decoding="async" />{work.sceneImage && <span class="scene-tag">空间示意</span>}{work.sold && <span class="sold-tag">已售出</span>}</figure><div class="work-copy"><span class="work-badge">{work.sold ? '已售出 · 可定制类似作品' : '现货 · 可直接发货'}</span><h2 class="serif"><a href={`/gifts/ready-made/${work.slug}/`}>{work.title}</a></h2><p lang="en">{work.en}</p><p class="work-price">¥{work.price} <span>RMB · {work.form === '挂墙' ? '挂墙' : '摆件'}</span></p><p class="work-note">{work.note}</p><a class="work-cta" href={`/gifts/ready-made/${work.slug}/`} data-event="ready_work_click" data-slot={work.slug}>{work.sold ? '看看这一幅 →' : '查看详情与价格 →'}</a></div></article>)}
+      {getReadyMadeWorks().map((work) => <article class={`work-card reveal${work.sold ? ' is-sold' : ''}`} data-reveal><figure><Pic src={work.sceneImage ?? work.image} alt={work.sceneAlt ?? work.alt} loading="lazy" decoding="async" />{work.sceneImage && <span class="scene-tag">空间示意</span>}{work.sold && <span class="sold-tag">已售出</span>}</figure><div class="work-copy"><span class="work-badge">{work.sold ? '已售出 · 可定制类似作品' : '现货 · 可直接发货'}</span><h2 class="serif"><a href={`/gifts/ready-made/${work.slug}/`}>{work.title}</a></h2><p lang="en">{work.en}</p><p class="work-price">¥{work.price} <span>RMB · {work.form === '挂墙' ? '挂墙' : '摆件'}</span></p><p class="work-note">{work.note}</p><a class="work-cta" href={`/gifts/ready-made/${work.slug}/`} data-event="ready_work_click" data-slot={work.slug}>{work.sold ? '看看这一幅 →' : '查看详情与价格 →'}</a></div></article>)}
     </div>
     <p class="works-fineprint">每幅作品均附唯一编号与藏品证书（一物一码）。框体为榫卯结构实木框（无钉无胶），木种有柚木与胡桃木两种，胡桃木色泽更深。页面标价为人民币含装裱价：案头摆件 ¥199（装框后 A4 幅面 21 × 29.7 cm）、圆光小品《禅》¥299（50 × 50 cm）、墙面悬挂 ¥399（60 × 33 cm）；以上均为外框尺寸，具体画心与纸墨细节随作品档案在咨询时提供。</p>
   </section>

@@ -1,0 +1,6 @@
+# 现货上下架状态 · qing-huan
+# 勾选 sold 表示已售出；取消勾选即重新上架。
+work: qing-huan
+sold: false
+soldAt: ''
+note: ''

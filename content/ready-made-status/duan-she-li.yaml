@@ -1,0 +1,6 @@
+# 现货上下架状态 · duan-she-li
+# 勾选 sold 表示已售出；取消勾选即重新上架。
+work: duan-she-li
+sold: false
+soldAt: ''
+note: ''

@@ -1,5 +1,9 @@
 # XiaominART 独立站迭代验收清单
 
+> ⚠️ **本文为早期迭代验收存档**
+> 第 A 节「保留 Astro + Sanity 占位 + Vercel 配置」等条目反映当时的架构假设，**与现状不符**：Sanity 未启用（残留代码见 `src/lib/sanity.ts`），部署已从 Vercel 迁至 Cloudflare Pages。
+> 现行验收标准见 `docs/cloudflare-部署与后台说明.md`；安全与密钥项见 `docs/密钥轮换与安全头操作说明.md`。
+
 ## A. 项目边界
 
 - [x] 在现有 `xiaominart-site/` Demo 内迭代。

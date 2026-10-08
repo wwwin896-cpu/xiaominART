@@ -29,7 +29,7 @@ export default config({
       name: '小民艺术｜东方日常之礼',
     },
     navigation: {
-      内容管理: ['settings', 'navigation', 'products', 'occasions', 'recipients', 'scenes', 'channelPages', 'blog', 'faqs', 'clientStories'],
+      内容管理: ['settings', 'navigation', 'products', 'occasions', 'recipients', 'scenes', 'channelPages', 'blog', 'faqs', 'clientStories', 'readyMadeStatus'],
     },
   },
   singletons: {
@@ -222,6 +222,27 @@ export default config({
         authorization: fields.checkbox({ label: '已获公开授权', defaultValue: false }),
         published: fields.checkbox({ label: '发布', defaultValue: false }),
         body: contentBody,
+      },
+    }),
+    // 现货（ready-made）每幅世间唯一，售出后不能再当作「在售」展示。
+    // 这组状态原来写死在 src/data/content.ts 里，业主无法自助修改；
+    // 现抽到后台，勾一下即生效（走 GitHub → 自动构建，约 2-3 分钟上线）。
+    // 一条记录对应一幅作品，文件名即作品 slug，请勿改名。
+    readyMadeStatus: collection({
+      label: '现货上下架',
+      path: 'content/ready-made-status/*',
+      slugField: 'work',
+      format: 'yaml',
+      columns: ['work', 'sold', 'soldAt'],
+      schema: {
+        work: fields.slug({ name: { label: '作品（slug，勿改）', validation: { isRequired: true } } }),
+        sold: fields.checkbox({
+          label: '已售出',
+          defaultValue: false,
+          description: '勾选后：列表页显示「已售出」角标并弱化入口、详情页关闭购买引导、推荐位自动排除、结构化数据改为 SoldOut。取消勾选即重新上架。',
+        }),
+        soldAt: fields.text({ label: '售出日期（内部备注）', description: '如 2026-10-08，只作记录，不显示在网站上。' }),
+        note: fields.text({ label: '内部备注', description: '如买家、交付方式，不会显示在网站上。' }),
       },
     }),
   },

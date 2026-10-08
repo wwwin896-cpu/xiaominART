@@ -3,6 +3,10 @@
 更新日期：2026-09-28
 适用仓库：`wwwin896-cpu/xiaominART`（站点根目录即仓库根目录）
 
+> **状态：迁移已完成。** 站点现由 Cloudflare Pages 提供服务，Vercel 项目已停用。
+> 本文是现行部署与环境变量的**唯一权威说明**；文中「一、为什么从 Vercel 迁移」与迁移步骤小节保留下来作为决策留痕，其中的 Vercel 操作步骤仅作背景，不再需要执行。
+> 其余提到 Vercel 的历史文档（`production-domain-and-qa.md`、`keystatic-site-rebuild-execution-plan.md`、`acceptance-checklist.md` 等）均已加存档标记，排障请以本文为准。
+
 ---
 
 ## 一、为什么从 Vercel 迁移

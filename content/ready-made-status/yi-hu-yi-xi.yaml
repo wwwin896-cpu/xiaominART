@@ -1,0 +1,6 @@
+# 现货上下架状态 · yi-hu-yi-xi
+# 勾选 sold 表示已售出；取消勾选即重新上架。
+work: yi-hu-yi-xi
+sold: false
+soldAt: ''
+note: ''

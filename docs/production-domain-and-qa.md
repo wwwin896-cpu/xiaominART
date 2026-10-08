@@ -1,6 +1,12 @@
 # XIAOMINGART 生产域名与线上核验报告
 
-## 当前部署
+> ⚠️ **本文已被取代（Vercel 时代存档，请勿据此排障）**
+>
+> 记录的是站点迁往 Cloudflare Pages **之前**的 Vercel 部署与 DNS 核验过程。文中的 Vercel 项目、别名、A/CNAME 记录与 NS 均已作废。
+> 现行部署与 DNS 以 `docs/cloudflare-部署与后台说明.md` 为准；仓库与运行说明以根目录 `README.md` 为准。
+> 保留本文仅为迁移过程留痕。
+
+## 当前部署（Vercel 时代，已失效）
 
 - Vercel 项目：`geektion-e-drive/xiaomin-art`
 - 最新生产部署状态：`Ready`
