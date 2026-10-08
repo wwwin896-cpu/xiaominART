@@ -9,7 +9,13 @@
 //
 // 迁移说明：原实现是 Vercel serverless 函数（src/pages/api/lead.ts），
 // 站点改为 Cloudflare Pages 静态托管后，同一份逻辑搬到这里，代码未改动。
+//
+// 2026-10-09（WO-P0-01）：落库成功后通过飞书群机器人 + Resend 邮件双通道
+// 通知业主（见 ./_lib/notify.ts）。通知走 waitUntil 后台执行，
+// 失败不影响用户提交；未配置环境变量 = 通道静默关闭。
 // ─────────────────────────────────────────────────────────────
+
+import { notify, type Env, type WaitUntil } from './_lib/notify';
 
 const CLOUD_REST_BASE = 'https://xiaominart-forms.app.workbuddy.host/.cloud/database/rest';
 const MAX_BODY_BYTES = 16 * 1024;
@@ -17,7 +23,6 @@ const ALLOWED_FORM_TYPES = new Set(['quick_message', 'commission', 'business_gif
 
 // 云访问密钥从 Cloudflare Pages 环境变量读取（变量名：FORMS_ACCESS_KEY）。
 // 2026-10-06 从源码硬编码改为环境变量：原密钥已随仓库公开，需作废后换新值。
-type Env = Record<string, string | undefined>;
 
 // /api/* 是接口，不应被搜索引擎收录、也不应被缓存。
 const API_HEADERS = {
@@ -49,7 +54,8 @@ async function insertToCloud(
   });
 }
 
-async function handleLead(request: Request, accessKey: string): Promise<Response> {
+async function handleLead(request: Request, env: Env, waitUntil: WaitUntil): Promise<Response> {
+  const accessKey = env.FORMS_ACCESS_KEY ?? '';
   // 密钥未配置时明确返回 503，而不是带着空 key 去请求云端拿一个语义不明的错误。
   if (!accessKey) {
     return jsonResponse({ ok: false, message: '服务暂未配置完成，请通过页脚微信联系我们。' }, 503);
@@ -83,7 +89,10 @@ async function handleLead(request: Request, accessKey: string): Promise<Response
     } catch {
       return jsonResponse({ ok: false, message: '提交失败，请稍后再试。' }, 502);
     }
-    if (res.status === 201) return jsonResponse({ ok: true });
+    if (res.status === 201) {
+      notify(env, waitUntil, { kind: 'subscribe', name: '', contact: '', email });
+      return jsonResponse({ ok: true });
+    }
     if (res.status === 409) {
       return jsonResponse({ ok: true, message: '这个邮箱已经订阅过了，无需重复提交。' });
     }
@@ -110,12 +119,18 @@ async function handleLead(request: Request, accessKey: string): Promise<Response
   } catch {
     return jsonResponse({ ok: false, message: '提交失败，请稍后再试。' }, 502);
   }
-  if (res.status === 201) return jsonResponse({ ok: true });
+  if (res.status === 201) {
+    notify(env, waitUntil, { kind: 'lead', formType, name, contact, payload });
+    return jsonResponse({ ok: true });
+  }
   return jsonResponse({ ok: false, message: '提交失败，请稍后再试。' }, 502);
 }
 
-export const onRequestPost = async (context: { request: Request; env: Env }): Promise<Response> =>
-  handleLead(context.request, context.env?.FORMS_ACCESS_KEY ?? '');
+export const onRequestPost = async (context: {
+  request: Request;
+  env: Env;
+  waitUntil: WaitUntil;
+}): Promise<Response> => handleLead(context.request, context.env, context.waitUntil);
 
 export const onRequestOptions = async (): Promise<Response> =>
   new Response(null, {
