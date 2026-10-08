@@ -1,27 +1,75 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import FactBoundary from '../../components/FactBoundary.astro';
+import Pic from '../../components/Pic.astro';
 import { getAuthorizedStories } from '../../lib/stories';
 
 // 只取「已获公开授权 + 已发布」的故事；两者缺一即为空数组。
-// 空数组时保持留白文案——不用编造的评价填充空位。
 const stories = getAuthorizedStories();
+
+// 客户案例分享（2026-10-08 业主提供图，授权后公开）。
+// 文案按委托情境整理，不署名、不编造细节——沿用站内事实边界措辞。
+// orientation 决定归组：竖幅归竖幅、横幅归横幅，组内统一比例保证每行同高。
+type CaseItem = { title: string; quote: string; image: string; width: number; height: number; orientation: 'portrait' | 'landscape'; alt: string };
+const storyCases: CaseItem[] = [
+  { title: '新居客厅 · 一幅「中家赞」', quote: '搬进新家的那周把它挂上墙。朋友进门都会先看它一眼——三个古字，是写给这个家的一句话。', image: '/assets/stories/story-zhong-jia-zan.jpg', width: 1024, height: 1536, orientation: 'portrait', alt: '现代中式客厅的墨绿墙上，斗柜上方挂着「中家赞」竖幅书法，旁有落地灯与扶手椅' },
+  { title: '客厅沙发墙 · 竖幅隶书', quote: '「闲至翻书读古香」。沙发墙上一直空着一格，挂上它之后，整个下午的光都落在字上。', image: '/assets/stories/story-du-shu-gu-xiang.jpg', width: 1024, height: 1536, orientation: 'portrait', alt: '客厅矮沙发上方的水泥绿墙挂「闲至翻书读古香」竖幅隶书，木格栅窗光斜落' },
+  { title: '长辈祝寿 · 「寿」字圆光', quote: '给母亲的大寿定的。圆光「寿」字配西式的墙，意外地合——老人每次路过都要看一眼。', image: '/assets/stories/story-shou-yuanguang.jpg', width: 1024, height: 1536, orientation: 'portrait', alt: '法式客厅的米色护墙板中央挂「寿」字圆光书法小品，下方是胡桃木边柜' },
+  { title: '玄关斗柜 · 横幅小品', quote: '柜面上方留了一截墙，配了这幅「喜乐自在大欢喜」。进出门都看得见，看一眼就高兴。', image: '/assets/stories/story-xi-le-huanxi.jpg', width: 1024, height: 1536, orientation: 'portrait', alt: '中古木斗柜上的「喜乐自在大欢喜」横幅书法小品，旁有纸灯、书册与樱枝' },
+  { title: '书房案头 · 案头小镜框', quote: '「永奇嗜读戏」。立在书桌上，和台灯、钢笔做伴——写字的人给自己案头留的一句话。', image: '/assets/stories/story-du-xi-xiangkuang.jpg', width: 1024, height: 1536, orientation: 'portrait', alt: '书房木质案头立着「永奇嗜读戏」竖幅小镜框，旁有绿玻璃台灯、钢笔与盆栽' },
+  { title: '书房案头 · 金文小品', quote: '临了一段金文装进横框，配老木桌和陶瓶。光影斑驳落在纸上，字像从土里长出来的。', image: '/assets/stories/story-jinwen-xiaopin.jpg', width: 1280, height: 720, orientation: 'landscape', alt: '老木桌上的金文书法横框，旁有陶瓶与枯莲蓬，墙面落着竹影般的光' },
+  { title: '茶室挂字 · 鸟虫篆长卷', quote: '茶席正对的墙，挂了这卷鸟虫篆。字如游鱼——客人喝茶时总忍不住一个个认过去。', image: '/assets/stories/story-niaochong-hengjuan.jpg', width: 1280, height: 720, orientation: 'landscape', alt: '茶室长桌与茶器上方挂着鸟虫篆长卷横幅，竹帘光影洒在绿墙上' },
+  { title: '客厅边柜 · 团扇横框', quote: '团扇小品装进横框，挂在边柜上方。灯一开，扇面的字跟着一起暖起来。', image: '/assets/stories/story-shanmian-biankuang.jpg', width: 1536, height: 1024, orientation: 'landscape', alt: '胡桃木悬空边柜上方的团扇扇面书法横框，旁有纸灯与书册' },
+];
+const portraitCases = storyCases.filter((c) => c.orientation === 'portrait');
+const landscapeCases = storyCases.filter((c) => c.orientation === 'landscape');
 ---
 <Layout title="墙上的故事｜小民艺术" description="经授权的用户故事与作品记录。默认私密，公开需要单独授权。">
   <section class="container page-head">
     <span class="eyebrow">Stories on the wall / 墙上的故事</span>
     <h1 class="serif">每一幅字，<br />先属于一个人。</h1>
-    <p>故事默认只有你和写字的我们可见。公开，需要你单独授权。</p>
+    <p>下面是已经上墙的案例分享。你的故事若要在这里出现，永远需要你单独授权。</p>
   </section>
 
-  {stories.length === 0 ? (
-    <section class="container empty">
-      <span class="eyebrow">Archive status / 档案状态</span>
-      <h2 class="serif">故事墙正在留白。</h2>
-      <p>第一批作品完成打样、编号与授权后，会在这里逐件公开。我们不会用编造的评价填充空位。</p>
-      <a class="btn btn-secondary" href="/custom-commission/">从故事开始定制 →</a>
-    </section>
-  ) : (
+  <section class="container section cases" aria-labelledby="cases-title">
+    <div class="section-lead">
+      <span class="eyebrow">01 / 客户案例分享</span>
+      <h2 id="cases-title" class="serif">它们已经挂在别人家的墙上。</h2>
+      <p>每一幅都是为具体的空间、具体的人而写。按装裱形制分列——竖幅归竖幅，横幅归横幅，方便你想象它们落在自己墙上的样子。</p>
+    </div>
+
+    <div class="case-grid case-grid--portrait">
+      {portraitCases.map((c) => (
+        <article class="case-card">
+          <figure><Pic src={c.image} alt={c.alt} width={c.width} height={c.height} loading="lazy" decoding="async" sizes="(max-width: 767px) 46vw, 360px" /></figure>
+          <div class="case-copy">
+            <h3 class="serif">{c.title}</h3>
+            <p>{c.quote}</p>
+            <span class="mono case-tag">客户分享 · 按委托情境整理</span>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <p class="mono case-divider" aria-hidden="true">landscape / 横幅 · 横框</p>
+
+    <div class="case-grid case-grid--landscape">
+      {landscapeCases.map((c) => (
+        <article class="case-card">
+          <figure><Pic src={c.image} alt={c.alt} width={c.width} height={c.height} loading="lazy" decoding="async" sizes="(max-width: 767px) 92vw, 360px" /></figure>
+          <div class="case-copy">
+            <h3 class="serif">{c.title}</h3>
+            <p>{c.quote}</p>
+            <span class="mono case-tag">客户分享 · 按委托情境整理</span>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <p class="cases-fineprint">以上案例均经主人授权后公开；图像按委托情境整理呈现。想要一幅为你的空间而写的字，从<a href="/custom-commission/">定制咨询</a>开始。</p>
+  </section>
+
+  {stories.length > 0 && (
     <section class="container section stories-wall">
       <div class="section-lead">
         <span class="eyebrow">Authorised stories / 已获授权</span>
@@ -47,9 +95,25 @@ const stories = getAuthorizedStories();
   .page-head{padding:96px 0 72px}
   .page-head h1{font-size:clamp(52px,7vw,84px);line-height:1.1;margin:20px 0}
   .page-head p{color:var(--muted);font-size:17px}
-  .empty{border-block:1px solid var(--border);padding:64px 0;max-width:760px;margin-left:max(16px,calc((100% - 1120px)/2));margin-right:auto}
-  .empty h2{font-size:48px;margin:18px 0}
-  .empty p{color:var(--muted);max-width:520px}
+  .section-lead{max-width:560px;margin-bottom:44px}
+  .section-lead h2{font-size:clamp(24px,2.8vw,38px);font-weight:500;line-height:1.4;margin:14px 0 12px;letter-spacing:.02em}
+  .section-lead p{color:var(--ink-soft);margin:0;line-height:1.9}
+  /* 竖幅 / 横幅各自成组：组内列数与比例一致 → 每行作品同一高度 */
+  .case-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px 30px}
+  .case-grid--portrait{margin-bottom:52px}
+  .case-card{display:flex;flex-direction:column}
+  .case-card figure{margin:0;overflow:hidden;background:var(--paper-deep)}
+  .case-grid--portrait figure{aspect-ratio:2/3}
+  .case-grid--landscape figure{aspect-ratio:3/2}
+  .case-card :global(img){width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease,filter .5s ease}
+  .case-card:hover :global(img){transform:scale(1.03);filter:brightness(1.04)}
+  .case-copy{padding:16px 2px 0;display:flex;flex-direction:column;gap:8px}
+  .case-copy h3{font-size:20px;font-weight:500;margin:0}
+  .case-copy p{color:var(--ink-soft);font-size:14px;line-height:1.85;margin:0}
+  .case-tag{color:var(--muted);font-size:11px;letter-spacing:.1em}
+  .case-divider{color:var(--muted);font-size:12px;letter-spacing:.18em;margin:0 0 24px}
+  .cases-fineprint{color:var(--muted);font-size:12px;line-height:1.9;margin:40px 0 0;padding-top:18px;border-top:1px solid var(--line-soft)}
+  .cases-fineprint a{color:var(--cinnabar)}
   .wall-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:32px}
   .wall-card{border:1px solid var(--border);padding:28px;display:flex;flex-direction:column;gap:12px}
   .wall-type{color:var(--muted);font-size:12px;letter-spacing:.08em}
@@ -57,5 +121,12 @@ const stories = getAuthorizedStories();
   .wall-card blockquote{margin:0;color:var(--ink-soft);line-height:1.9}
   .wall-name{color:var(--muted);font-size:13px;margin-top:auto}
   @media(max-width:900px){.wall-grid{grid-template-columns:1fr}}
-  @media(max-width:767px){.page-head{padding:56px 0 40px}.empty{margin-inline:16px;padding:48px 0}.empty h2{font-size:38px}}
+  @media(max-width:767px){
+    .page-head{padding:56px 0 40px}
+    .case-grid{gap:28px 14px}
+    .case-grid--portrait{grid-template-columns:repeat(2,1fr);margin-bottom:40px}
+    .case-grid--landscape{grid-template-columns:1fr}
+    .case-copy h3{font-size:17px}
+    .case-copy p{font-size:13px}
+  }
 </style>
