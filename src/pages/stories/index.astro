@@ -10,19 +10,89 @@ const stories = getAuthorizedStories();
 // 客户案例分享（2026-10-08 业主提供图，授权后公开）。
 // 文案按委托情境整理，不署名、不编造细节——沿用站内事实边界措辞。
 // orientation 决定归组：竖幅归竖幅、横幅归横幅，组内统一比例保证每行同高。
-type CaseItem = { title: string; quote: string; image: string; width: number; height: number; orientation: 'portrait' | 'landscape'; alt: string };
+//
+// 多维标签（WO-P1-01，2026-10-09）：
+// 每条案例挂 scene / space / form 三个维度，取值必须是下面 FACETS 里的 key，
+// 否则筛选器点不到它（下面有断言在构建期兜底）。
+// ⚠ 标签按「图片里实际看得见的东西」标注，不做营销式想象扩展。
+type Orientation = 'portrait' | 'landscape';
+type CaseItem = {
+  title: string;
+  quote: string;
+  image: string;
+  width: number;
+  height: number;
+  orientation: Orientation;
+  alt: string;
+  scene: string;
+  space: string;
+  form: string;
+};
+
+// 筛选维度。key 进 URL 参数，label 是界面文案。
+const FACETS = {
+  scene: {
+    label: '场景 / Occasion',
+    options: [
+      { key: 'housewarming', label: '新居乔迁' },
+      { key: 'birthday', label: '寿辰庆典' },
+      { key: 'study', label: '书房自赏' },
+      { key: 'tea', label: '茶室清赏' },
+      { key: 'entryway', label: '入户玄关' },
+    ],
+  },
+  space: {
+    label: '空间 / Space',
+    options: [
+      { key: 'living', label: '客厅' },
+      { key: 'study', label: '书房案头' },
+      { key: 'tea', label: '茶室茶席' },
+      { key: 'entry', label: '入户玄关' },
+      { key: 'cabinet', label: '边柜斗柜' },
+    ],
+  },
+  form: {
+    label: '形制 / Form',
+    options: [
+      { key: 'vertical-script', label: '竖幅书法' },
+      { key: 'round-light', label: '团扇圆光' },
+      { key: 'horizontal-frame', label: '横幅横框' },
+      { key: 'small-frame', label: '案头小框' },
+      { key: 'long-scroll', label: '长卷' },
+    ],
+  },
+} as const;
+
 const storyCases: CaseItem[] = [
-  { title: '新居客厅 · 一幅「中家赞」', quote: '搬进新家的那周把它挂上墙。朋友进门都会先看它一眼——三个古字，是写给这个家的一句话。', image: '/assets/stories/story-zhong-jia-zan.jpg', width: 1024, height: 1536, orientation: 'portrait', alt: '现代中式客厅的墨绿墙上，斗柜上方挂着「中家赞」竖幅书法，旁有落地灯与扶手椅' },
-  { title: '客厅沙发墙 · 竖幅隶书', quote: '「闲至翻书读古香」。沙发墙上一直空着一格，挂上它之后，整个下午的光都落在字上。', image: '/assets/stories/story-du-shu-gu-xiang.jpg', width: 1024, height: 1536, orientation: 'portrait', alt: '客厅矮沙发上方的水泥绿墙挂「闲至翻书读古香」竖幅隶书，木格栅窗光斜落' },
-  { title: '长辈祝寿 · 「寿」字圆光', quote: '给母亲的大寿定的。圆光「寿」字配西式的墙，意外地合——老人每次路过都要看一眼。', image: '/assets/stories/story-shou-yuanguang.jpg', width: 1024, height: 1536, orientation: 'portrait', alt: '法式客厅的米色护墙板中央挂「寿」字圆光书法小品，下方是胡桃木边柜' },
-  { title: '玄关斗柜 · 横幅小品', quote: '柜面上方留了一截墙，配了这幅「喜乐自在大欢喜」。进出门都看得见，看一眼就高兴。', image: '/assets/stories/story-xi-le-huanxi.jpg', width: 1024, height: 1536, orientation: 'portrait', alt: '中古木斗柜上的「喜乐自在大欢喜」横幅书法小品，旁有纸灯、书册与樱枝' },
-  { title: '书房案头 · 案头小镜框', quote: '「永奇嗜读戏」。立在书桌上，和台灯、钢笔做伴——写字的人给自己案头留的一句话。', image: '/assets/stories/story-du-xi-xiangkuang.jpg', width: 1024, height: 1536, orientation: 'portrait', alt: '书房木质案头立着「永奇嗜读戏」竖幅小镜框，旁有绿玻璃台灯、钢笔与盆栽' },
-  { title: '书房案头 · 金文小品', quote: '临了一段金文装进横框，配老木桌和陶瓶。光影斑驳落在纸上，字像从土里长出来的。', image: '/assets/stories/story-jinwen-xiaopin.jpg', width: 1280, height: 720, orientation: 'landscape', alt: '老木桌上的金文书法横框，旁有陶瓶与枯莲蓬，墙面落着竹影般的光' },
-  { title: '茶室挂字 · 鸟虫篆长卷', quote: '茶席正对的墙，挂了这卷鸟虫篆。字如游鱼——客人喝茶时总忍不住一个个认过去。', image: '/assets/stories/story-niaochong-hengjuan.jpg', width: 1280, height: 720, orientation: 'landscape', alt: '茶室长桌与茶器上方挂着鸟虫篆长卷横幅，竹帘光影洒在绿墙上' },
-  { title: '客厅边柜 · 团扇横框', quote: '团扇小品装进横框，挂在边柜上方。灯一开，扇面的字跟着一起暖起来。', image: '/assets/stories/story-shanmian-biankuang.jpg', width: 1536, height: 1024, orientation: 'landscape', alt: '胡桃木悬空边柜上方的团扇扇面书法横框，旁有纸灯与书册' },
+  { title: '新居客厅 · 一幅「中家赞」', quote: '搬进新家的那周把它挂上墙。朋友进门都会先看它一眼——三个古字，是写给这个家的一句话。', image: '/assets/stories/story-zhong-jia-zan.jpg', width: 1024, height: 1536, orientation: 'portrait', alt: '现代中式客厅的墨绿墙上，斗柜上方挂着「中家赞」竖幅书法，旁有落地灯与扶手椅', scene: 'housewarming', space: 'living', form: 'vertical-script' },
+  { title: '客厅沙发墙 · 竖幅隶书', quote: '「闲至翻书读古香」。沙发墙上一直空着一格，挂上它之后，整个下午的光都落在字上。', image: '/assets/stories/story-du-shu-gu-xiang.jpg', width: 1024, height: 1536, orientation: 'portrait', alt: '客厅矮沙发上方的水泥绿墙挂「闲至翻书读古香」竖幅隶书，木格栅窗光斜落', scene: 'housewarming', space: 'living', form: 'vertical-script' },
+  { title: '长辈祝寿 · 「寿」字圆光', quote: '给母亲的大寿定的。圆光「寿」字配西式的墙，意外地合——老人每次路过都要看一眼。', image: '/assets/stories/story-shou-yuanguang.jpg', width: 1024, height: 1536, orientation: 'portrait', alt: '法式客厅的米色护墙板中央挂「寿」字圆光书法小品，下方是胡桃木边柜', scene: 'birthday', space: 'living', form: 'round-light' },
+  { title: '玄关斗柜 · 横幅小品', quote: '柜面上方留了一截墙，配了这幅「喜乐自在大欢喜」。进出门都看得见，看一眼就高兴。', image: '/assets/stories/story-xi-le-huanxi.jpg', width: 1024, height: 1536, orientation: 'portrait', alt: '中古木斗柜上的「喜乐自在大欢喜」横幅书法小品，旁有纸灯、书册与樱枝', scene: 'entryway', space: 'cabinet', form: 'horizontal-frame' },
+  { title: '书房案头 · 案头小镜框', quote: '「永奇嗜读戏」。立在书桌上，和台灯、钢笔做伴——写字的人给自己案头留的一句话。', image: '/assets/stories/story-du-xi-xiangkuang.jpg', width: 1024, height: 1536, orientation: 'portrait', alt: '书房木质案头立着「永奇嗜读戏」竖幅小镜框，旁有绿玻璃台灯、钢笔与盆栽', scene: 'study', space: 'study', form: 'small-frame' },
+  { title: '书房案头 · 金文小品', quote: '临了一段金文装进横框，配老木桌和陶瓶。光影斑驳落在纸上，字像从土里长出来的。', image: '/assets/stories/story-jinwen-xiaopin.jpg', width: 1280, height: 720, orientation: 'landscape', alt: '老木桌上的金文书法横框，旁有陶瓶与枯莲蓬，墙面落着竹影般的光', scene: 'study', space: 'study', form: 'horizontal-frame' },
+  { title: '茶室挂字 · 鸟虫篆长卷', quote: '茶席正对的墙，挂了这卷鸟虫篆。字如游鱼——客人喝茶时总忍不住一个个认过去。', image: '/assets/stories/story-niaochong-hengjuan.jpg', width: 1280, height: 720, orientation: 'landscape', alt: '茶室长桌与茶器上方挂着鸟虫篆长卷横幅，竹帘光影洒在绿墙上', scene: 'tea', space: 'tea', form: 'long-scroll' },
+  { title: '客厅边柜 · 团扇横框', quote: '团扇小品装进横框，挂在边柜上方。灯一开，扇面的字跟着一起暖起来。', image: '/assets/stories/story-shanmian-biankuang.jpg', width: 1536, height: 1024, orientation: 'landscape', alt: '胡桃木悬空边柜上方的团扇扇面书法横框，旁有纸灯与书册', scene: 'housewarming', space: 'cabinet', form: 'round-light' },
 ];
+
+// 构建期兜底：标签打错拼写时直接让构建失败，而不是上线一个「点了筛选没结果」的页面。
+{
+  const valid = new Map<string, Set<string>>();
+  for (const [facet, conf] of Object.entries(FACETS)) {
+    valid.set(facet, new Set(conf.options.map((o) => o.key)));
+  }
+  for (const item of storyCases) {
+    for (const facet of ['scene', 'space', 'form'] as const) {
+      if (!valid.get(facet)?.has(item[facet])) {
+        throw new Error(`案例「${item.title}」的 ${facet}="${item[facet]}" 不在 FACETS 候选集内`);
+      }
+    }
+  }
+}
+
 const portraitCases = storyCases.filter((c) => c.orientation === 'portrait');
 const landscapeCases = storyCases.filter((c) => c.orientation === 'landscape');
+const facetEntries = Object.entries(FACETS) as [keyof typeof FACETS, (typeof FACETS)[keyof typeof FACETS]][];
+
 ---
 <Layout title="墙上的故事｜小民艺术" description="经授权的用户故事与作品记录。默认私密，公开需要单独授权。">
   <section class="container page-head">
@@ -38,32 +108,68 @@ const landscapeCases = storyCases.filter((c) => c.orientation === 'landscape');
       <p>每一幅都是为具体的空间、具体的人而写。按装裱形制分列——竖幅归竖幅，横幅归横幅，方便你想象它们落在自己墙上的样子。</p>
     </div>
 
-    <div class="case-grid case-grid--portrait">
-      {portraitCases.map((c) => (
-        <article class="case-card">
-          <figure><Pic src={c.image} alt={c.alt} width={c.width} height={c.height} loading="lazy" decoding="async" sizes="(max-width: 767px) 46vw, 360px" /></figure>
-          <div class="case-copy">
-            <h3 class="serif">{c.title}</h3>
-            <p>{c.quote}</p>
-            <span class="mono case-tag">客户分享 · 按委托情境整理</span>
+    {/* 多维筛选（WO-P1-01）。切换不整页刷新，选中态写入 URL 便于分享与引流。
+        服务端渲染出全部卡片，由脚本按 data-* 标签显隐——这样无 JS 时仍是完整列表。 */}
+    <div class="case-filter" data-case-filter>
+      <div class="case-filter-head">
+        <span class="mono case-filter-label">按维度缩小范围</span>
+        <button class="case-filter-reset" type="button" data-filter-reset hidden>清除全部 ✕</button>
+      </div>
+      {facetEntries.map(([facet, conf]) => (
+        <div class="case-filter-row" role="group" aria-label={conf.label} data-facet={facet}>
+          <span class="mono case-filter-facet">{conf.label}</span>
+          <div class="case-filter-opts">
+            {conf.options.map((opt) => (
+              <button class="case-chip" type="button" data-facet-value={opt.key} aria-pressed="false">{opt.label}</button>
+            ))}
           </div>
-        </article>
+        </div>
       ))}
+      <p class="case-filter-status mono" data-filter-status role="status" aria-live="polite"></p>
+    </div>
+
+    <div class="case-group" data-case-group="portrait">
+      <div class="case-grid case-grid--portrait" data-case-grid="portrait">
+        {portraitCases.map((c) => (
+          <article class="case-card" data-case data-scene={c.scene} data-space={c.space} data-form={c.form}>
+            <figure><Pic src={c.image} alt={c.alt} width={c.width} height={c.height} loading="lazy" decoding="async" sizes="(max-width: 767px) 46vw, 360px" /></figure>
+            <div class="case-copy">
+              <h3 class="serif">{c.title}</h3>
+              <p>{c.quote}</p>
+              <div class="case-tags">
+                {FACETS.scene.options.find((o) => o.key === c.scene) && <span class="case-tag-pill">{FACETS.scene.options.find((o) => o.key === c.scene)?.label}</span>}
+                {FACETS.space.options.find((o) => o.key === c.space) && <span class="case-tag-pill">{FACETS.space.options.find((o) => o.key === c.space)?.label}</span>}
+                {FACETS.form.options.find((o) => o.key === c.form) && <span class="case-tag-pill">{FACETS.form.options.find((o) => o.key === c.form)?.label}</span>}
+              </div>
+              <a class="case-cta" href={`/custom-commission/?inspiration=${encodeURIComponent(c.title)}&space=${encodeURIComponent(FACETS.space.options.find((o) => o.key === c.space)?.label || '')}`}>以此案例为灵感定制 →</a>
+            </div>
+          </article>
+        ))}
+      </div>
+      <p class="case-empty mono" data-case-empty="portrait" hidden>这个维度组合下暂无竖幅案例，试试放宽条件。</p>
     </div>
 
     <p class="mono case-divider" aria-hidden="true">landscape / 横幅 · 横框</p>
 
-    <div class="case-grid case-grid--landscape">
-      {landscapeCases.map((c) => (
-        <article class="case-card">
-          <figure><Pic src={c.image} alt={c.alt} width={c.width} height={c.height} loading="lazy" decoding="async" sizes="(max-width: 767px) 92vw, 360px" /></figure>
-          <div class="case-copy">
-            <h3 class="serif">{c.title}</h3>
-            <p>{c.quote}</p>
-            <span class="mono case-tag">客户分享 · 按委托情境整理</span>
-          </div>
-        </article>
-      ))}
+    <div class="case-group" data-case-group="landscape">
+      <div class="case-grid case-grid--landscape" data-case-grid="landscape">
+        {landscapeCases.map((c) => (
+          <article class="case-card" data-case data-scene={c.scene} data-space={c.space} data-form={c.form}>
+            <figure><Pic src={c.image} alt={c.alt} width={c.width} height={c.height} loading="lazy" decoding="async" sizes="(max-width: 767px) 92vw, 360px" /></figure>
+            <div class="case-copy">
+              <h3 class="serif">{c.title}</h3>
+              <p>{c.quote}</p>
+              <div class="case-tags">
+                {FACETS.scene.options.find((o) => o.key === c.scene) && <span class="case-tag-pill">{FACETS.scene.options.find((o) => o.key === c.scene)?.label}</span>}
+                {FACETS.space.options.find((o) => o.key === c.space) && <span class="case-tag-pill">{FACETS.space.options.find((o) => o.key === c.space)?.label}</span>}
+                {FACETS.form.options.find((o) => o.key === c.form) && <span class="case-tag-pill">{FACETS.form.options.find((o) => o.key === c.form)?.label}</span>}
+              </div>
+              <a class="case-cta" href={`/custom-commission/?inspiration=${encodeURIComponent(c.title)}&space=${encodeURIComponent(FACETS.space.options.find((o) => o.key === c.space)?.label || '')}`}>以此案例为灵感定制 →</a>
+            </div>
+          </article>
+        ))}
+      </div>
+      <p class="case-empty mono" data-case-empty="landscape" hidden>这个维度组合下暂无横幅案例，试试放宽条件。</p>
     </div>
 
     <p class="cases-fineprint">以上案例均经主人授权后公开；图像按委托情境整理呈现。想要一幅为你的空间而写的字，从<a href="/custom-commission/">定制咨询</a>开始。</p>
@@ -91,6 +197,140 @@ const landscapeCases = storyCases.filter((c) => c.orientation === 'landscape');
 
   <section class="container section"><FactBoundary /></section>
 </Layout>
+<script>
+  import { trackEvent } from '../../scripts/cloud-forms';
+
+  // 案例多维筛选（WO-P1-01）
+  // 设计要点：
+  //  1. 卡片已在服务端全量渲染，这里只做显隐 —— 无 JS / JS 失败时仍是完整列表
+  //  2. 每个维度单选（再点一次取消），跨维度取「与」；同维度内不允许多选以免组合爆炸
+  //  3. 选中态写入 URL query，便于小红书等渠道直接分享某个切面
+  //  4. 隐藏用 hidden 属性而非移除 DOM，保证再次筛选时能恢复
+  const FACET_KEYS = ['scene', 'space', 'form'] as const;
+  type FacetKey = (typeof FACET_KEYS)[number];
+
+  const root = document.querySelector<HTMLElement>('[data-case-filter]');
+  const gridGroups = document.querySelectorAll<HTMLElement>('[data-case-group]');
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-case]'));
+
+  if (root && cards.length) {
+    // 当前选中的值：每个维度至多一个
+    const active: Record<FacetKey, string | null> = { scene: null, space: null, form: null };
+
+    const readUrl = () => {
+      const params = new URLSearchParams(window.location.search);
+      for (const key of FACET_KEYS) {
+        const value = params.get(key);
+        // 只接受真实存在的选项，防手改 URL 造出空结果
+        if (value && root.querySelector(`[data-facet="${key}"] [data-facet-value="${CSS.escape(value)}"]`)) {
+          active[key] = value;
+        }
+      }
+    };
+
+    const writeUrl = () => {
+      const params = new URLSearchParams(window.location.search);
+      for (const key of FACET_KEYS) {
+        if (active[key]) params.set(key, active[key] as string);
+        else params.delete(key);
+      }
+      const query = params.toString();
+      // 用 replaceState：筛选是同一页面的视图状态，不该污染浏览器历史
+      // （否则用户点几次筛选后，返回键要按很多次才能离开这一页）
+      window.history.replaceState(null, '', query ? `${window.location.pathname}?${query}` : window.location.pathname);
+    };
+
+    const syncChips = () => {
+      root.querySelectorAll<HTMLButtonElement>('[data-facet-value]').forEach((chip) => {
+        const facet = chip.closest<HTMLElement>('[data-facet]')?.dataset.facet as FacetKey | undefined;
+        const on = facet ? active[facet] === chip.dataset.facetValue : false;
+        chip.setAttribute('aria-pressed', String(on));
+        chip.classList.toggle('is-active', on);
+      });
+      const anyActive = FACET_KEYS.some((key) => active[key]);
+      const reset = root.querySelector<HTMLButtonElement>('[data-filter-reset]');
+      if (reset) reset.hidden = !anyActive;
+    };
+
+    const apply = (animate: boolean) => {
+      let shown = 0;
+      for (const card of cards) {
+        const matched = FACET_KEYS.every((key) => !active[key] || card.dataset[key] === active[key]);
+        card.hidden = !matched;
+        if (matched) {
+          shown += 1;
+          if (animate) {
+            // 重置动效：先移除类并强制回流，再加回——否则连续筛选时淡入不会重播
+            card.classList.remove('case-card--enter');
+            void card.offsetWidth;
+            card.classList.add('case-card--enter');
+          }
+        }
+      }
+
+      // 分组级空态：该形制下一个都没匹配上时，连标题分隔一起收起来，
+      // 避免出现「landscape / 横幅」标题下面空一片
+      for (const group of gridGroups) {
+        const kind = group.dataset.caseGroup;
+        const anyVisible = Array.from(group.querySelectorAll<HTMLElement>('[data-case]')).some((c) => !c.hidden);
+        group.hidden = !anyVisible;
+        const empty = group.querySelector<HTMLElement>(`[data-case-empty="${kind}"]`);
+        if (empty) empty.hidden = anyVisible;
+        // 横幅分隔标题跟随分组显隐
+        if (kind === 'landscape') {
+          const divider = document.querySelector<HTMLElement>('.case-divider');
+          if (divider) divider.hidden = !anyVisible;
+        }
+      }
+
+      const status = document.querySelector<HTMLElement>('[data-filter-status]');
+      if (status) {
+        const labels = FACET_KEYS
+          .filter((key) => active[key])
+          .map((key) => root.querySelector(`[data-facet="${key}"] [data-facet-value="${CSS.escape(active[key] as string)}"]`)?.textContent?.trim())
+          .filter(Boolean);
+        status.textContent = labels.length ? `已筛选：${labels.join(' · ')}，共 ${shown} 个案例` : '';
+      }
+    };
+
+    root.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      const reset = target.closest<HTMLButtonElement>('[data-filter-reset]');
+      if (reset) {
+        for (const key of FACET_KEYS) active[key] = null;
+        writeUrl();
+        syncChips();
+        apply(true);
+        trackEvent('case_filter_reset', { page: window.location.pathname });
+        return;
+      }
+      const chip = target.closest<HTMLButtonElement>('[data-facet-value]');
+      if (!chip) return;
+      const facet = chip.closest<HTMLElement>('[data-facet]')?.dataset.facet as FacetKey | undefined;
+      const value = chip.dataset.facetValue;
+      if (!facet || !value) return;
+      // 再点一次已选中的 → 取消选择
+      active[facet] = active[facet] === value ? null : value;
+      writeUrl();
+      syncChips();
+      apply(true);
+      trackEvent('case_filter_apply', { facet, value, page: window.location.pathname });
+    });
+
+    readUrl();
+    syncChips();
+    apply(false);
+
+    // 浏览器前进/后退时同步（本页用 replaceState 不产生历史，
+    // 但用户可能从别的页面返回，或手动改 URL 后回车）
+    window.addEventListener('popstate', () => {
+      for (const key of FACET_KEYS) active[key] = null;
+      readUrl();
+      syncChips();
+      apply(false);
+    });
+  }
+</script>
 <style>
   .page-head{padding:96px 0 72px}
   .page-head h1{font-size:clamp(52px,7vw,84px);line-height:1.1;margin:20px 0}
@@ -111,6 +351,29 @@ const landscapeCases = storyCases.filter((c) => c.orientation === 'landscape');
   .case-copy h3{font-size:20px;font-weight:500;margin:0}
   .case-copy p{color:var(--ink-soft);font-size:14px;line-height:1.85;margin:0}
   .case-tag{color:var(--muted);font-size:11px;letter-spacing:.1em}
+  /* ── 多维筛选（WO-P1-01）── */
+  .case-filter{margin:0 0 44px;padding:20px 22px;border:1px solid var(--line);background:var(--paper-light)}
+  .case-filter-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px}
+  .case-filter-label{color:var(--muted);font-size:11px;letter-spacing:.14em}
+  .case-filter-reset{border:0;background:none;padding:0;color:var(--cinnabar);font:inherit;font-size:12px;cursor:pointer;border-bottom:1px solid var(--cinnabar)}
+  .case-filter-row{display:flex;align-items:baseline;gap:18px;padding:9px 0}
+  .case-filter-row+.case-filter-row{border-top:1px solid var(--line-soft)}
+  .case-filter-facet{flex:0 0 116px;color:var(--muted);font-size:11px;letter-spacing:.1em;padding-top:5px}
+  .case-filter-opts{display:flex;flex-wrap:wrap;gap:8px}
+  .case-chip{border:1px solid var(--line);background:transparent;color:var(--ink-soft);padding:5px 12px;font:inherit;font-size:13px;line-height:1.5;cursor:pointer;transition:background .25s ease,color .25s ease,border-color .25s ease}
+  .case-chip:hover{border-color:var(--cinnabar);color:var(--cinnabar)}
+  .case-chip.is-active{background:var(--cinnabar);border-color:var(--cinnabar);color:var(--accent-on)}
+  .case-chip:focus-visible{outline:2px solid var(--cinnabar);outline-offset:2px}
+  .case-filter-status{color:var(--muted);font-size:11px;letter-spacing:.08em;margin:14px 0 0;min-height:1em}
+  .case-group{display:block}
+  .case-card--enter{animation:case-fade .42s ease both}
+  @keyframes case-fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  @media(prefers-reduced-motion:reduce){.case-card--enter{animation:none}}
+  .case-tags{display:flex;flex-wrap:wrap;gap:6px}
+  .case-tag-pill{border:1px solid var(--line-soft);color:var(--muted);font-size:11px;letter-spacing:.04em;padding:3px 9px}
+  .case-cta{margin-top:2px;color:var(--cinnabar);font-size:13px;border-bottom:1px solid transparent;align-self:flex-start;transition:border-color .25s ease}
+  .case-cta:hover{border-bottom-color:var(--cinnabar)}
+  .case-empty{color:var(--muted);font-size:12px;letter-spacing:.06em;padding:26px 0;border-top:1px solid var(--line-soft);margin:0 0 40px}
   .case-divider{color:var(--muted);font-size:12px;letter-spacing:.18em;margin:0 0 24px}
   .cases-fineprint{color:var(--muted);font-size:12px;line-height:1.9;margin:40px 0 0;padding-top:18px;border-top:1px solid var(--line-soft)}
   .cases-fineprint a{color:var(--cinnabar)}
@@ -128,5 +391,13 @@ const landscapeCases = storyCases.filter((c) => c.orientation === 'landscape');
     .case-grid--landscape{grid-template-columns:1fr}
     .case-copy h3{font-size:17px}
     .case-copy p{font-size:13px}
+    .case-filter{padding:16px 14px;margin-bottom:32px}
+    .case-filter-row{flex-direction:column;gap:9px}
+    .case-filter-facet{flex:none;padding-top:0}
+    .case-filter-opts{gap:7px}
+    .case-chip{padding:6px 11px;font-size:12.5px}
   }
+  /* ⚠ 必须显式声明：上面的 .case-group / .case-card 等设了 display，
+     会覆盖浏览器对 [hidden] 的默认 display:none（同优先级时后者按作者样式胜出）。 */
+  .case-group[hidden],.case-grid[hidden],.case-card[hidden],.case-divider[hidden],.case-empty[hidden],.case-filter-reset[hidden]{display:none !important}
 </style>
