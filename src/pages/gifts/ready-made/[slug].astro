@@ -105,35 +105,24 @@ const productSchema = {
     </div>
   </dialog>
   <script>
+    import { isWishlisted, toggleWishlist, onWishlistChange } from '../../../scripts/wishlist';
     const dialog = document.querySelector('[data-wx-dialog]') as HTMLDialogElement | null;
     document.querySelectorAll('[data-wx-open]').forEach((btn) => btn.addEventListener('click', () => dialog?.showModal()));
     dialog?.querySelector('[data-wx-close]')?.addEventListener('click', () => dialog?.close());
     dialog?.addEventListener('click', (e) => { if (e.target === dialog) dialog?.close(); });
-    // 收进心愿单（T-03）：与全站 localStorage key 一致，心愿单页可直接提交清单
-    const wlKey = 'xiaominart-wishlist';
+    // 收进心愿单（T-03）：读写统一走 src/scripts/wishlist.ts（与抽屉、卡片按钮共享同一份逻辑）
     const wlButton = document.querySelector<HTMLButtonElement>('[data-wishlist]');
+    const wlSlug = wlButton?.dataset.wishlist || '';
     const syncWishlist = () => {
       if (!wlButton) return;
-      let saved: string[] = [];
-      try { saved = JSON.parse(localStorage.getItem(wlKey) || '[]'); } catch { /* ignore */ }
-      const slug = wlButton.dataset.wishlist || '';
-      const on = saved.includes(slug);
+      const on = isWishlisted(wlSlug);
       wlButton.setAttribute('aria-pressed', String(on));
       wlButton.textContent = on ? '♥ 已收进心愿单' : '♡ 先收进心愿单';
     };
     syncWishlist();
-    wlButton?.addEventListener('click', () => {
-      let saved: string[] = [];
-      try { saved = JSON.parse(localStorage.getItem(wlKey) || '[]'); } catch { /* ignore */ }
-      const slug = wlButton.dataset.wishlist || '';
-      const next = saved.includes(slug) ? saved.filter((s) => s !== slug) : [...saved, slug];
-      localStorage.setItem(wlKey, JSON.stringify(next));
-      window.dispatchEvent(new StorageEvent('storage', { key: wlKey }));
-      syncWishlist();
-    });
-    window.addEventListener('storage', syncWishlist);
-    // pageshow：从心愿单页返回本页时浏览器恢复 bfcache 快照，按钮状态需重新对齐 localStorage。
-    window.addEventListener('pageshow', syncWishlist);
+    wlButton?.addEventListener('click', () => { toggleWishlist(wlSlug); syncWishlist(); });
+    // 覆盖 bfcache 恢复（从心愿单页返回时浏览器复用旧 DOM）与抽屉内移除
+    onWishlistChange(syncWishlist);
   </script>
 </Layout>
 <style>

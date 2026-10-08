@@ -1,0 +1,310 @@
+---
+// ─────────────────────────────────────────────────────────────
+// 站内搜索（WO-P0-03）——Pagefind 静态索引
+//
+// 为什么是 Pagefind：站点是纯静态构建（Cloudflare Pages，无 SSR），
+// 没有可查的后端。Pagefind 在**构建完成后**扫描 dist/ 生成分片索引，
+// 查询全部在浏览器里完成 —— 零后端、零运行时费用、零第三方依赖，
+// 与本站在 public/_headers 里已经强制的 CSP（default-src 'self'）天然兼容。
+//
+// ⚠️ 索引不覆盖的内容：
+//   1. 非 HTML 资产（图片/PDF）—— 本站没有可搜索的文档类资产
+//   2. /wishlist/ /progress/ 等 noindex 功能页 —— Pagefind 默认跳过 data-pagefind-ignore，
+//      且这些页面内容对每个用户不同，索引它们只会搜出空壳
+//   3. 后台 /keystatic/ /admin/* —— 同上，且不应出现在公开搜索结果里
+//
+// 首页/列表页的正文若整块索引，会让「小民艺术」「礼物」这类词命中所有页面。
+// 因此索引粒度依赖 Pagefind 的默认行为（按 <main> 内可读文本切块），
+// 不做额外 data-pagefind-body 标记 —— 避免把导航/页脚重复索引进每一页。
+// ─────────────────────────────────────────────────────────────
+---
+
+<div class="search-modal" id="search-modal" role="dialog" aria-modal="true" aria-label="站内搜索" hidden>
+  <div class="search-panel" role="document">
+    <div class="search-head">
+      <span class="search-icon" aria-hidden="true">⌕</span>
+      <input
+        class="search-input"
+        type="search"
+        name="q"
+        data-search-input
+        placeholder="搜作品、礼物、场景、帮助…"
+        autocomplete="off"
+        spellcheck="false"
+        aria-label="搜索关键词"
+        aria-controls="search-results"
+      />
+      <button class="search-close" type="button" data-search-close aria-label="关闭搜索">关闭</button>
+    </div>
+    <p class="search-hint" data-search-hint>输入关键词开始搜索。按 <kbd>Esc</kbd> 关闭。</p>
+    <div class="search-results" id="search-results" data-search-results role="listbox" aria-label="搜索结果"></div>
+    <p class="search-foot" data-search-foot hidden></p>
+  </div>
+</div>
+
+<script>
+  type PagefindResult = { id: string; data: () => Promise<{ url: string; meta: { title?: string }; excerpt: string }> };
+  type PagefindApi = {
+    search: (query: string) => Promise<{ results: PagefindResult[] }>;
+    init?: () => Promise<void>;
+  };
+
+  const modal = document.querySelector<HTMLElement>('#search-modal');
+  const input = document.querySelector<HTMLInputElement>('[data-search-input]');
+  const resultsEl = document.querySelector<HTMLElement>('[data-search-results]');
+  const hintEl = document.querySelector<HTMLElement>('[data-search-hint]');
+  const footEl = document.querySelector<HTMLElement>('[data-search-foot]');
+  let lastFocused: HTMLElement | null = null;
+  let pagefind: PagefindApi | null = null;
+  let pagefindFailed = false;
+  let searchToken = 0;
+  let debounceTimer: ReturnType<typeof setTimeout> | undefined;
+
+  /**
+   * 懒加载 Pagefind 运行时。
+   *
+   * 索引体积不小（本站约 70 页，分片后仍有若干百 KB），
+   * 首屏加载会拖慢 LCP —— 因此只在用户第一次真的打开搜索面板时才 import。
+   * 路径 `/pagefind/pagefind.js` 是 Pagefind 构建产物的固定入口。
+   */
+  const loadPagefind = async (): Promise<PagefindApi | null> => {
+    if (pagefind) return pagefind;
+    if (pagefindFailed) return null;
+    try {
+      // 用变量拼路径，绕开两条静态分析的麻烦：
+      //   1. TypeScript 会把字面量模块路径当成本地文件去解析 —— dist 下的产物它看不到，
+      //      直接写 '/pagefind/pagefind.js' 会报 ts(2307)「Cannot find module」。
+      //   2. Vite 会把裸 import() 的字符串纳入模块图，构建期找不到文件就失败。
+      // 该模块由 scripts/build-search.mjs 在 astro build 之后生成，路径固定。
+      const runtimePath = '/pagefind/pagefind.js';
+      const mod = (await import(/* @vite-ignore */ runtimePath)) as PagefindApi;
+      await mod.init?.();
+      pagefind = mod;
+      return pagefind;
+    } catch {
+      // 本地 astro dev（未经 Pagefind 构建）时索引不存在，此处会失败。
+      // 标记后不再重试，UI 给出「部署后可用」的说明而不是一直转圈。
+      pagefindFailed = true;
+      return null;
+    }
+  };
+
+  const open = async (trigger?: HTMLElement | null) => {
+    if (!modal) return;
+    lastFocused = trigger || (document.activeElement as HTMLElement | null);
+    modal.hidden = false;
+    document.body.classList.add('search-open');
+    input?.focus();
+    window.dispatchEvent(new CustomEvent('xiaominart:event', { detail: { name: 'search_open', path: window.location.pathname } }));
+    const api = await loadPagefind();
+    if (!api && hintEl) {
+      hintEl.textContent = '搜索索引在正式站点上可用；本地开发环境未经索引构建。';
+    }
+  };
+
+  const close = () => {
+    if (!modal || modal.hidden) return;
+    modal.hidden = true;
+    document.body.classList.remove('search-open');
+    lastFocused?.focus?.();
+  };
+
+  const renderResults = (items: Array<{ url: string; title: string; excerpt: string }>, query: string) => {
+    if (!resultsEl) return;
+    resultsEl.textContent = '';
+    if (items.length === 0) {
+      if (hintEl) hintEl.textContent = `没有找到「${query}」相关的内容。换个说法试试，或者直接问我们。`;
+      if (footEl) footEl.hidden = false;
+      return;
+    }
+    if (hintEl) hintEl.textContent = `找到 ${items.length} 条结果`;
+    if (footEl) footEl.hidden = true;
+
+    items.forEach((item) => {
+      const a = document.createElement('a');
+      a.className = 'search-result';
+      a.href = item.url;
+      a.setAttribute('role', 'option');
+      a.dataset.event = 'search_result_click';
+      a.dataset.slot = item.url;
+
+      const title = document.createElement('strong');
+      title.textContent = item.title;
+      const excerpt = document.createElement('p');
+      // Pagefind 的 excerpt 是**它自己生成的**、带 <mark> 高亮标签的 HTML 片段。
+      // 这不是用户输入，可以直接交给 innerHTML —— 但仍做一次结构白名单校验，
+      // 以免 Pagefind 版本升级后引入其他标签（与 cloud-forms 的 successHtml 同一套思路）。
+      excerpt.innerHTML = sanitizeExcerpt(item.excerpt);
+      a.append(title, excerpt);
+      resultsEl.append(a);
+    });
+  };
+
+  /** 只允许 Pagefind 会产出的高亮标签，剔除其余标记与事件属性。 */
+  const sanitizeExcerpt = (html: string): string => {
+    const template = document.createElement('template');
+    template.innerHTML = html;
+    const allowed = new Set(['MARK', 'EM', 'STRONG', 'B']);
+    template.content.querySelectorAll('*').forEach((node) => {
+      if (!allowed.has(node.tagName)) {
+        node.replaceWith(...Array.from(node.childNodes));
+        return;
+      }
+      Array.from(node.attributes).forEach((attr) => {
+        if (attr.name.startsWith('on') || attr.name === 'style') node.removeAttribute(attr.name);
+      });
+    });
+    return template.innerHTML;
+  };
+
+  /**
+   * 结果重排。
+   *
+   * 为什么需要：Pagefind 的相关性主要看「关键词在页面上命中多少次 + 出现位置」，
+   * 它对「这个页面是关于什么的」没有概念。本站的列表页（/gifts/、/scenes/、
+   * /recipients/partner/）会把同一批商品名与描述重复铺满整页，
+   * 于是搜「朱砂」时，一列商品卡片的 /recipients/partner/ 排在真正的
+   * 「一点朱砂」商品详情页前面 —— 用户想找的是后者。
+   *
+   * 修正策略（保守、可解释，不做黑箱打分）：
+   *   1. 标题命中给强加权 —— 标题里带这个词，基本就是这页在讲这个。
+   *   2. 详情页（路径更深、有具体 slug）略优于聚合列表页。
+   *   3. 首页（/）降权 —— 首页命中通常只说明这个词在全站都出现，
+   *      信息量最低。
+   * 只调顺序，不增删结果。
+   */
+  const rankBoost = (url: string, title: string, query: string): number => {
+    let score = 0;
+    const q = query.toLowerCase();
+    const t = title.toLowerCase();
+
+    // 标题命中：整体命中 > 部分命中
+    if (t.includes(q)) score += 100;
+    else if (q.length > 1 && t.split(/[\s·｜|/,，]/).some((part) => part && q.includes(part.trim()) && part.trim().length > 1)) score += 40;
+
+    let path = url;
+    try { path = new URL(url, location.origin).pathname; } catch { /* 保持原样 */ }
+    const segments = path.split('/').filter(Boolean);
+
+    // 首页信息量最低
+    if (segments.length === 0) score -= 60;
+    // 详情页（/gifts/xxx/、/artists/xxx/、/blessings/xxx/ 等）优先于聚合页
+    else if (segments.length >= 2) score += 25;
+    // 明确是商品详情，再给一档
+    if (segments[0] === 'gifts' && segments.length >= 2) score += 30;
+
+    // 路径里直接含查询词（中文 slug 不适用，但英文 slug 例如 chan / cinnabar 有用）
+    if (q.length > 2 && /^[a-z0-9-]+$/.test(q) && path.includes(q)) score += 50;
+
+    return score;
+  };
+
+  const runSearch = async (query: string) => {
+    if (!resultsEl || !hintEl) return;
+    const trimmed = query.trim();
+    // ⚠️ 门槛是 1 个字符，不是 2 个。
+    // 最初写的是 `< 2`（照搬英文「单词至少两字母」的直觉），
+    // 结果中文单字查询全被挡掉 —— 实测「禅」在索引里有 4 条命中，
+    // 但界面上永远显示空。中文单字（禅/墨/字/福）恰恰是最自然的搜索词，
+    // 这里只挡「完全为空」的情况。
+    if (trimmed.length < 1) {
+      resultsEl.textContent = '';
+      hintEl.textContent = '输入关键词开始搜索。按 Esc 关闭。';
+      if (footEl) footEl.hidden = true;
+      return;
+    }
+    const api = await loadPagefind();
+    if (!api) return;
+
+    // 竞态保护：用户连续输入时，先发的请求可能后返回，用递增 token 丢弃过期结果
+    const token = ++searchToken;
+    hintEl.textContent = '搜索中…';
+    // 多取一些原始结果（取 16 条而非直接取 8 条），留出重排余量后再截断。
+    // 原因见下方 rankBoost：Pagefind 默认按「词在页面上出现多少次」排序，
+    // 列表页因为把商品名重复列了很多遍，会把真正的商品详情页压下去。
+    const { results } = await api.search(trimmed);
+    if (token !== searchToken) return;
+    const resolved = await Promise.all(results.slice(0, 16).map((r) => r.data()));
+    if (token !== searchToken) return;
+    const reranked = resolved
+      .map((r) => ({ ...r, score: rankBoost(r.url, r.meta.title || '', trimmed) }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 8);
+    renderResults(
+      reranked.map((r) => ({
+        url: r.url,
+        title: r.meta.title || r.url,
+        excerpt: r.excerpt,
+      })),
+      trimmed,
+    );
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-search-open]').forEach((trigger) => {
+    trigger.addEventListener('click', (event) => { event.preventDefault(); void open(trigger); });
+  });
+  document.querySelector('[data-search-close]')?.addEventListener('click', close);
+  modal?.addEventListener('click', (event) => { if (event.target === modal) close(); });
+
+  input?.addEventListener('input', () => {
+    if (debounceTimer) clearTimeout(debounceTimer);
+    // 180ms：够短到不觉得卡，够长到不会每敲一个字都跑一次索引查询
+    debounceTimer = setTimeout(() => void runSearch(input.value), 180);
+  });
+
+  // 键盘：⌘K / Ctrl+K 开搜索，/ 也可（但排除输入态），Esc 关。
+  // 这是全站快捷键，因此挂在 document 上而非面板内部。
+  document.addEventListener('keydown', (event) => {
+    const target = event.target as HTMLElement | null;
+    const typing = !!target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+      event.preventDefault();
+      if (modal?.hidden !== false) void open(); else close();
+      return;
+    }
+    if (event.key === '/' && !typing && modal?.hidden !== false) {
+      event.preventDefault();
+      void open();
+      return;
+    }
+    if (event.key === 'Escape') close();
+  });
+</script>
+
+<style>
+  /* 面板外壳（静态标记）：scoped 安全 */
+  .search-modal { position: fixed; inset: 0; z-index: 18; display: flex; align-items: flex-start; justify-content: center; padding: 12vh 18px 18px; background: rgba(24, 22, 19, .5); }
+  .search-modal[hidden] { display: none; }
+  .search-panel { width: min(640px, 100%); max-height: 74vh; display: flex; flex-direction: column; background: var(--paper-light); border: 1px solid var(--line); box-shadow: var(--shadow); }
+  .search-head { display: flex; align-items: center; gap: 12px; padding: 16px 18px; border-bottom: 1px solid var(--line); }
+  .search-icon { font-size: 20px; line-height: 1; color: var(--cinnabar); }
+  .search-input { flex: 1; min-width: 0; min-height: 44px; border: 0; background: transparent; color: var(--ink); font: inherit; font-size: 17px; outline: none; }
+  .search-input::-webkit-search-cancel-button { cursor: pointer; }
+  .search-close { flex-shrink: 0; min-height: 36px; padding: 5px 12px; border: 1px solid var(--line); background: transparent; color: var(--ink-soft); font: inherit; font-size: 12px; cursor: pointer; }
+  .search-close:hover { border-color: var(--cinnabar); color: var(--cinnabar); }
+  .search-hint { margin: 0; padding: 13px 18px; color: var(--muted); font-size: 12px; }
+  .search-hint kbd { padding: 1px 5px; border: 1px solid var(--line); background: var(--paper); font-family: var(--font-mono); font-size: 11px; }
+  .search-results { flex: 1; overflow-y: auto; border-top: 1px solid var(--line); }
+  .search-foot { margin: 0; padding: 14px 18px; border-top: 1px solid var(--line); color: var(--ink-soft); font-size: 13px; }
+  .search-foot[hidden] { display: none; }
+  body.search-open { overflow: hidden; }
+  @media (max-width: 767px) {
+    .search-modal { padding: 0; }
+    .search-panel { width: 100%; max-height: 100vh; height: 100%; border: 0; }
+    .search-close { padding: 5px 10px; }
+  }
+</style>
+
+<!-- ⚠️ 结果条目样式必须 is:global：结果行（a.search-result 及其子元素）是脚本
+     document.createElement 动态创建的，不带 Astro 作用域属性，scoped 选择器匹配不上
+     —— 实测后果是 <mark> 高亮回退成浏览器默认黄底（2026-10-08 已踩，与抽屉同款问题）。
+     search-result- 前缀不足以命名空间化（a 标签本身无类名钩子），
+     因此用 .search-results 容器限定作用范围，不污染全局。 -->
+<style is:global>
+  .search-results .search-result { display: grid; gap: 5px; padding: 14px 18px; border-bottom: 1px solid var(--line-soft); color: var(--ink); }
+  .search-results .search-result:hover { background: var(--paper); }
+  .search-results .search-result strong { font-size: 15px; font-weight: 500; color: var(--cinnabar-deep); }
+  .search-results .search-result p { margin: 0; color: var(--ink-soft); font-size: 13px; line-height: 1.75; }
+  /* Pagefind 用 <mark> 标出命中词，沿用朱砂色，与站内选中态一致 */
+  .search-results .search-result mark { background: transparent; color: var(--cinnabar); font-weight: 500; }
+</style>

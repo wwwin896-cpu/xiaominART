@@ -2,7 +2,14 @@
 import Layout from '../../layouts/Layout.astro';
 import GiftCard from '../../components/GiftCard.astro';
 import { giftProducts } from '../../data/content';
+import { getReadyMadeWorks } from '../../lib/ready-made';
+
+// ⚠️ 2026-10-08 修复既有缺陷：这里原本只有 giftProducts。
+// 但现货详情页（gifts/ready-made/[slug].astro）的「先收进心愿单」写的是**同一个**
+// localStorage key，于是用户收藏的现货作品在心愿单页上凭空消失 —— 抽屉上线时发现了它。
+// 现在把两套体系都渲染出来，各自用对应的卡片组件。
 const products = giftProducts;
+const readyMade = getReadyMadeWorks();
 ---
 <Layout title="我的心愿单｜小民艺术" description="把喜欢的小民好礼先存在这里，想清楚之后再来咨询——心愿单只保存在你自己的浏览器里。" noindex>
   <section class="container page-head">
@@ -16,6 +23,25 @@ const products = giftProducts;
     <p class="wishlist-empty" data-wishlist-empty hidden>心愿单还是空的。到<a href="/gifts/">小民好礼</a>里挑一件，点「加入心愿单」就会出现在这里。</p>
     <div class="gift-grid" data-wishlist-grid>
       {products.map((product) => <div class="wishlist-slot" data-slot={product.slug} hidden><GiftCard product={product} /></div>)}
+      {/* 现货十二幅：与礼品共用同一个心愿单 key，此前漏渲染，导致收藏的现货在这一页消失 */}
+      {readyMade.map((work) => (
+        <div class="wishlist-slot" data-slot={work.slug} hidden>
+          <article class="rm-inline-card">
+            <a class="rm-inline-visual" href={`/gifts/ready-made/${work.slug}/`} aria-label={`${work.title}详情`}>
+              <img src={work.sceneImage ?? work.image} alt={work.sceneAlt ?? work.alt} loading="lazy" decoding="async" />
+            </a>
+            <div class="rm-inline-body">
+              <span class="eyebrow">现货 / Ready-made</span>
+              <h2 class="serif"><a href={`/gifts/ready-made/${work.slug}/`}>{work.title}</a></h2>
+              <p lang="en">{work.en}</p>
+              <p class="rm-inline-price">¥{work.price} <span>RMB · {work.form}</span></p>
+              <div class="rm-inline-actions">
+                <a class="btn btn-link" href={`/gifts/ready-made/${work.slug}/`}>查看详情 →</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      ))}
     </div>
     <div class="wishlist-actions" data-wishlist-actions hidden>
       <a class="btn btn-primary" href="/gift-guide/" data-event="wishlist_to_guide">还拿不定主意？看选礼指南 →</a>
@@ -61,6 +87,19 @@ const products = giftProducts;
   .wishlist-submit-foot { display: flex; flex-wrap: wrap; gap: 12px; }
   .wishlist-submit-msg { color: var(--cinnabar-deep); font-size: 14px; line-height: 1.8; }
   .wishlist-hint { margin-top: 22px; color: var(--muted); font-size: 12px; line-height: 1.8; }
+  /* 现货作品卡（与 GiftCard 视觉基调一致，但字段不同，故单独一套） */
+  .rm-inline-card { border-top: 1px solid var(--line); min-width: 0; }
+  .rm-inline-visual { display: block; aspect-ratio: 1.2; background: var(--paper-deep); }
+  .rm-inline-visual img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .rm-inline-body { padding: 18px 0 0; }
+  .rm-inline-body h2 { font-size: 28px; font-weight: 500; margin: 9px 0 2px; }
+  .rm-inline-body h2 a:hover { color: var(--cinnabar); }
+  .rm-inline-body p { margin: 7px 0 0; color: var(--ink-soft); font-size: 14px; }
+  .rm-inline-body p[lang='en'] { font: 16px var(--font-display-en), Georgia, serif; color: var(--ink); }
+  .rm-inline-price { font: 22px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); margin-top: 16px !important; }
+  .rm-inline-price span { font: 12px var(--font-body-en), sans-serif; color: var(--muted); }
+  .rm-inline-actions { margin-top: 14px; }
+  @media (max-width: 767px) { .rm-inline-visual { aspect-ratio: 1.35; } }
   @media (max-width: 900px) { .gift-grid { grid-template-columns: 1fr; gap: 30px; } }
   @media (max-width: 767px) {
     .page-head { padding: 56px 0 42px; }
@@ -74,14 +113,13 @@ const products = giftProducts;
 </style>
 <script>
   import { submitWishlist, CONTACT_FALLBACK, successHtml } from '../../scripts/cloud-forms';
-  const key = 'xiaominart-wishlist';
-  const read = (): string[] => { try { return JSON.parse(localStorage.getItem(key) || '[]'); } catch { return []; } };
+  import { readWishlist, clearWishlist, onWishlistChange } from '../../scripts/wishlist';
   const grid = document.querySelector<HTMLElement>('[data-wishlist-grid]');
   const empty = document.querySelector<HTMLElement>('[data-wishlist-empty]');
   const actions = document.querySelector<HTMLElement>('[data-wishlist-actions]');
   const slots = Array.from(document.querySelectorAll<HTMLElement>('[data-slot]'));
   const sync = () => {
-    const saved = read();
+    const saved = readWishlist();
     let visible = 0;
     slots.forEach((slot) => {
       const match = saved.includes(slot.dataset.slot || '');
@@ -93,11 +131,9 @@ const products = giftProducts;
     if (grid) grid.hidden = visible === 0;
   };
   sync();
-  window.addEventListener('storage', sync);
-  window.addEventListener('pageshow', sync);
+  onWishlistChange(sync);
   document.querySelector<HTMLButtonElement>('[data-wishlist-clear]')?.addEventListener('click', () => {
-    localStorage.setItem(key, '[]');
-    window.dispatchEvent(new StorageEvent('storage', { key }));
+    clearWishlist();
     sync();
   });
   // 提交礼物清单（T-03）：清单 + 联系方式 → /api/lead（formType: wishlist）
@@ -112,7 +148,7 @@ const products = giftProducts;
     if (!msg) return;
     const data = new FormData(form);
     if ((data.get('website') as string || '').trim()) return; // 蜜罐
-    const items = read();
+    const items = readWishlist();
     if (items.length === 0) { msg.textContent = '心愿单还是空的，先去挑一件喜欢的吧。'; return; }
     const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
     if (button) button.disabled = true;

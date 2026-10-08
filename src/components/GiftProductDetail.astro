@@ -38,14 +38,14 @@ const headlineSpecs = (specChapter?.specs || []).slice(0, 5);
 <section class="container detail-info"><article><span class="eyebrow">Meaning / 礼物寓意</span><h2 class="serif">送出一份有分量的安静。</h2><p>{product.meaning}</p></article><article><span class="eyebrow">Packaging / 礼品包装</span><h2 class="serif">把仪式感也准备好。</h2><p>{product.packaging}。如需直寄给收礼人，请在咨询时备注，我们会说明可行的配送和价格信息。</p></article><article><span class="eyebrow">Dispatch / 预计发货</span><h2 class="serif">时间提前说清楚。</h2><p>{product.dispatch}。页面为当前参考范围，不等同于未确认的交付承诺；急件请先咨询。</p></article></section>
 <section class="container section card-faq"><span class="eyebrow">Gift FAQ / 礼物常见问题</span><h2 class="serif">还有几个问题，直接在这里看。</h2><div class="faq-grid"><details><summary>可以写贺卡吗？</summary><p>可以。咨询时提交贺卡文字，我们会在确认礼物方向时一起确认字数、版式与包装。</p></details><details><summary>可以直接寄给收礼人吗？</summary><p>可以提出直寄需求；收件信息、是否去除价格信息和物流时效需根据具体方案确认。</p></details><details><summary>这件礼物可以退换吗？</summary><p>个性化内容和包装方案的售后边界不同。确认前会说明可退换范围，再决定是否进入下一步。</p></details><details><summary>如何开始？</summary><p>点击“获取送礼建议”，告诉我们送给谁、什么场景、预算和时间，我们会先阅读再回复。</p></details></div></section>
 <script>
-  const key = 'xiaominart-wishlist';
+  import { isWishlisted, toggleWishlist, onWishlistChange } from '../scripts/wishlist';
   const button = document.querySelector<HTMLButtonElement>('[data-wishlist]');
-  const getItems = () => { try { return JSON.parse(localStorage.getItem(key) || '[]'); } catch { return []; } };
-  const sync = () => { if (!button) return; const saved = getItems().includes(button.dataset.wishlist); button.classList.toggle('is-saved', saved); button.setAttribute('aria-pressed', String(saved)); button.textContent = saved ? '♥ 已加入礼物清单' : '♡ 加入礼物清单'; };
+  const slug = button?.dataset.wishlist || '';
+  const sync = () => { if (!button) return; const saved = isWishlisted(slug); button.classList.toggle('is-saved', saved); button.setAttribute('aria-pressed', String(saved)); button.textContent = saved ? '♥ 已加入礼物清单' : '♡ 加入礼物清单'; };
   sync();
-  button?.addEventListener('click', () => { const slug = button.dataset.wishlist || ''; const items = getItems(); localStorage.setItem(key, JSON.stringify(items.includes(slug) ? items.filter((item: string) => item !== slug) : [...items, slug])); sync(); window.dispatchEvent(new StorageEvent('storage', { key })); });
-  // pageshow：移动端从其他页面返回时浏览器会恢复 bfcache 快照，按钮状态需重新对齐 localStorage。
-  window.addEventListener('pageshow', sync);
+  button?.addEventListener('click', () => { toggleWishlist(slug); sync(); });
+  // 覆盖 bfcache 恢复（移动端从其他页面返回时浏览器会原样复用旧 DOM）与抽屉内移除
+  onWishlistChange(sync);
 </script>
 <style>
   .detail-head { display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1fr); gap: 70px; align-items: center; padding: 90px 0 80px; } .detail-visual { aspect-ratio: 1.05; background: var(--paper-deep); display: grid; place-items: center; align-content: center; gap: 10px; color: var(--cinnabar); position: relative; overflow: hidden; } .detail-visual img { width: 100%; height: 100%; object-fit: cover; display: block; } .detail-visual span { font-size: clamp(130px, 20vw, 240px); } .detail-visual small { position: absolute; left: 16px; bottom: 14px; z-index: 1; color: var(--paper-light); text-shadow: 0 1px 5px rgba(0,0,0,.55); font: 11px var(--font-mono); }

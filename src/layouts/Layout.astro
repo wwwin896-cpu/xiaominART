@@ -12,6 +12,8 @@ import { siteContact } from '../data/site';
 import Newsletter from '../components/Newsletter.astro';
 import FloatingConsultation from '../components/FloatingConsultation.astro';
 import ShareButton from '../components/ShareButton.astro';
+import WishlistDrawer from '../components/WishlistDrawer.astro';
+import SearchModal from '../components/SearchModal.astro';
 const { title = '小民艺术｜日常之礼', description = '小民艺术，以亲笔书写为起点的东方日常之礼。见字如面，心意表达。', canonical, image = '/assets/images/og-image.png', noindex = false, breadcrumbs = [] } = Astro.props;
 const seoTitle = title.replace(/xiaominart/gi, 'XIAOMINART');
 const url = canonical ?? Astro.url.href;
@@ -95,12 +97,32 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_ID as string | undefined;
         <nav id="site-nav" aria-label="主导航">
           {navItems.map((item) => <div class="nav-item"><a href={item.href} class:list={{ current: isCurrent(item.href) }} aria-current={isCurrent(item.href) ? 'page' : undefined}><span>{item.zh}</span><small lang="en">{item.en}</small></a>{item.children?.length ? <div class="nav-dropdown">{item.children.map((child) => <a href={child.href}><span>{child.zh}</span><small lang="en">{child.en}</small></a>)}</div> : null}</div>)}
         </nav>
+        {/* 桌面端没有移动底栏，心愿单需要一个常驻入口：
+            它不能塞进主导航（业主明确要求保持 4 个导航项不动），
+            因此做成导航右侧的图标按钮，与移动底栏的「心愿单」开的是同一个抽屉。 */}
+        <div class="header-tools">
+          <button class="wishlist-entry" type="button" data-wishlist-open aria-label="打开心愿单">
+            <span aria-hidden="true">♡</span>
+            <span class="wishlist-entry-zh">心愿单</span>
+            <span class="wishlist-entry-count" data-wishlist-count hidden></span>
+          </button>
+          <button class="search-entry" type="button" data-search-open aria-label="搜索站内内容（快捷键 Ctrl 或 ⌘ 加 K）">
+            <span aria-hidden="true">⌕</span>
+            <span class="search-entry-zh">搜索</span>
+          </button>
+        </div>
       </div>
     </header>
-    <main id="main"><slot /></main>
+    {/* noindex 的功能页（心愿单、进度查询、内部后台）不进搜索索引：
+        它们的内容依赖 localStorage 或查询码，索引下来只会是空壳，
+        搜索命中后点进去反而看到空白页。用 noindex 这个已有信号统一判定，
+        避免每加一个功能页就忘了标一次 data-pagefind-ignore。 */}
+    <main id="main" data-pagefind-ignore={noindex ? '' : undefined}><slot /></main>
     <FloatingConsultation />
     <ShareButton />
-    <nav class="mobile-shopping-bar" aria-label="移动端底部导航"><a href="/gifts/" aria-label="浏览小民好礼"><span class="bar-zh">礼物</span><small lang="en">Gifts</small></a><a href="/wishlist/" aria-label="查看我的心愿单"><span class="bar-zh">心愿单</span><small lang="en">Saved <span data-wishlist-count></span></small></a><button class="wechat-link" type="button" aria-controls="wechat-sheet" aria-expanded="false" aria-label="加微信直接聊"><span class="bar-zh">微信直联</span><small lang="en">WeChat</small></button><button class="bar-share" type="button" data-share-button data-event="share_click" aria-label="分享本页给微信好友或朋友圈"><span class="bar-zh">分享</span><small lang="en">Share</small></button></nav>
+    <WishlistDrawer />
+    <SearchModal />
+    <nav class="mobile-shopping-bar" aria-label="移动端底部导航"><a href="/gifts/" aria-label="浏览小民好礼"><span class="bar-zh">礼物</span><small lang="en">Gifts</small></a><button class="wishlist-bar" type="button" data-wishlist-open aria-label="打开心愿单"><span class="bar-zh">心愿单</span><small lang="en">Saved <span data-wishlist-count></span></small></button><button class="wechat-link" type="button" aria-controls="wechat-sheet" aria-expanded="false" aria-label="加微信直接聊"><span class="bar-zh">微信直联</span><small lang="en">WeChat</small></button><button class="bar-share" type="button" data-share-button data-event="share_click" aria-label="分享本页给微信好友或朋友圈"><span class="bar-zh">分享</span><small lang="en">Share</small></button></nav>
     <div class="wechat-sheet" id="wechat-sheet" role="dialog" aria-modal="true" aria-labelledby="wechat-sheet-title" hidden>
       <div class="wechat-sheet-card">
         <button class="wechat-sheet-close" type="button" aria-label="关闭">×</button>
@@ -125,6 +147,7 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_ID as string | undefined;
 </html>
 <script>
   import { trackEvent } from '../scripts/cloud-forms';
+  import { readWishlist, onWishlistChange } from '../scripts/wishlist';
   const toggle = document.querySelector('.menu-toggle');
   const nav = document.querySelector('#site-nav');
   const closeMenu = () => { if (!toggle || !nav) return; toggle.setAttribute('aria-expanded', 'false'); nav.classList.remove('open'); document.body.classList.remove('menu-open'); };
@@ -197,14 +220,20 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_ID as string | undefined;
       restore();
     }
   });
-  const wishlistKey = 'xiaominart-wishlist';
-  const readWishlist = (): string[] => { try { return JSON.parse(localStorage.getItem(wishlistKey) || '[]'); } catch { return []; } };
-  const updateWishlistCount = () => document.querySelectorAll<HTMLElement>('[data-wishlist-count]').forEach((node) => { node.textContent = String(readWishlist().length); });
+  // 底栏 / 桌面导航的心愿单角标。
+  // 读写与订阅统一走 src/scripts/wishlist.ts —— 此前这里是第 4 份独立实现，
+  // 抽屉上线后必须与其他三处共享同一份逻辑，否则会出现「抽屉里移除了一件、
+  // 角标却还停在旧数字」的状态不同步。
+  const updateWishlistCount = () => {
+    const count = readWishlist().length;
+    document.querySelectorAll<HTMLElement>('[data-wishlist-count]').forEach((node) => {
+      node.textContent = String(count);
+      // 桌面端是胶囊数字，0 时整颗隐藏；移动端底栏是文字后缀，0 时留空即可
+      if (node.classList.contains('wishlist-entry-count')) node.hidden = count === 0;
+    });
+  };
   updateWishlistCount();
-  window.addEventListener('storage', updateWishlistCount);
-  // pageshow：移动端返回时页面会从 bfcache 恢复，底栏心愿单角标需重新对齐 localStorage，
-  // 否则会出现「在详情页加了心愿单、返回后角标没变」的错觉。
-  window.addEventListener('pageshow', updateWishlistCount);
+  onWishlistChange(updateWishlistCount);
 </script>
 <style>
   .site-header { position: sticky; top: 0; z-index: 5; background: rgba(244, 239, 229, .96); border-bottom: 1px solid var(--line); backdrop-filter: blur(8px); }
@@ -227,6 +256,16 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_ID as string | undefined;
   .nav-dropdown a:last-child { border-bottom: 0; }
   .nav-item:hover .nav-dropdown, .nav-item:focus-within .nav-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
   .menu-toggle { display: none; margin-left: auto; background: transparent; border: 1px solid var(--ink); color: var(--ink); padding: 9px 12px; min-height: 44px; }
+  /* 桌面端工具区：心愿单 + 搜索。
+     不放进主导航 —— 业主要求 4 个导航项保持不动（2026-10-08 裁决）。 */
+  .header-tools { display: flex; align-items: center; gap: 4px; margin-left: 6px; padding-left: 16px; border-left: 1px solid var(--line); }
+  .header-tools button { display: flex; align-items: center; gap: 7px; min-height: 44px; padding: 0 10px; border: 0; background: transparent; color: var(--ink-soft); font: inherit; font-size: 13px; cursor: pointer; }
+  .header-tools button:hover { color: var(--cinnabar); }
+  .header-tools button > span[aria-hidden] { font-size: 17px; line-height: 1; }
+  .wishlist-entry-count { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 5px; background: var(--cinnabar); color: var(--paper-light); border-radius: 9px; font: 11px var(--font-mono); }
+  .wishlist-entry-count[hidden] { display: none; }
+  /* 搜索面板打开时锁住页面滚动 */
+  body.drawer-open { overflow: hidden; }
   .back-btn { display: none; }
   .site-footer { border-top: 1px solid var(--line); padding: 80px 0 24px; margin-top: 0; }
   .footer-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 36px; align-items: start; }
@@ -292,6 +331,9 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_ID as string | undefined;
      .mobile-shopping-bar span[data-wishlist-count] { color: var(--cinnabar); font-family: var(--font-mono); }
      .mobile-shopping-bar .wechat-link { justify-self: center; }
      .mobile-shopping-bar .wechat-link:active .bar-zh, .mobile-shopping-bar .wechat-link[aria-expanded="true"] .bar-zh { color: var(--cinnabar); }
+     .mobile-shopping-bar .wishlist-bar:active .bar-zh { color: var(--cinnabar); }
+     /* 窄屏用底栏承担工具入口，头部不再重复放一套 */
+     .header-tools { display: none; }
   }
   /* 微信直联弹层：仅移动端底栏触发，沿用弹层视觉基调 */
   .wechat-sheet { position: fixed; inset: 0; z-index: 16; display: grid; place-items: center; padding: 18px; background: rgba(24, 22, 19, .5); }

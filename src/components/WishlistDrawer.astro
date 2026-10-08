@@ -1,0 +1,245 @@
+---
+// ─────────────────────────────────────────────────────────────
+// 心愿单抽屉（WO-P1-02）
+//
+// 解决的问题：此前用户只能「点进 /wishlist/ 页」才看得到自己存了什么。
+// 移动端底栏的「心愿单」是直接跳页，看完要按两次返回才能回到原处，
+// 在浏览列表时几乎不会去点 —— 收藏完等于石沉大海。
+//
+// 形态：右侧滑出抽屉，在任何页面都可打开，就地查看 / 移除 / 带去咨询。
+// 数据源：localStorage 里的 slug 数组。抽屉**只存 slug**，
+// 商品名与价格从 `giftProducts` + `readyMadeWorks` 在构建期烘焙进来，
+// 因此改价后抽屉显示的是最新值，不会出现「抽屉里还是旧价」。
+//
+// 移动端底栏的「心愿单」按钮由「跳转 /wishlist/」改为「开抽屉」，
+// 抽屉内保留「看完整心愿单页」入口 —— 提交清单表单仍在那边，不重复实现。
+// 桌面端：导航区新增入口（见 Layout.astro），因为桌面没有底栏。
+// ─────────────────────────────────────────────────────────────
+import { giftProducts, readyMadeWorks } from '../data/content';
+
+/** 抽屉只需要这几个字段：slug / 名称 / 副标题 / 价格 / 详情链接 / 缩略图 */
+type DrawerItem = {
+  slug: string;
+  name: string;
+  en: string;
+  price: string;
+  href: string;
+  image: string | null;
+};
+
+// 两套商品体系合并（现货十二幅 + 礼品），键统一用 slug。
+// 两套数据的字段名与类型并不一致：礼品 price 是字符串（"¥199 起"），
+// 现货 price 是数字（199）；现货 image 必然存在，礼品 image 可选。
+// 这里统一收敛成 DrawerItem 的字符串/可空形式，客户端只认这一种形状。
+const catalog = new Map<string, DrawerItem>();
+for (const product of giftProducts) {
+  catalog.set(product.slug, {
+    slug: product.slug,
+    name: product.name,
+    en: product.en,
+    price: product.price,
+    href: `/gifts/${product.slug}/`,
+    image: product.image ?? null,
+  });
+}
+for (const work of readyMadeWorks) {
+  // 现货不覆盖礼品里的同名 slug，避免内容后台新加的商品被代码里的数据顶掉
+  if (catalog.has(work.slug)) continue;
+  catalog.set(work.slug, {
+    slug: work.slug,
+    name: work.title,
+    en: work.en || '',
+    // 现货价格是纯数字，补上 ¥ 与前缀，与礼品侧的展示口径保持一致
+    price: `¥${work.price}`,
+    href: `/gifts/ready-made/${work.slug}/`,
+    image: work.image ?? null,
+  });
+}
+// 序列化给客户端脚本：只烘焙抽屉真正要用的字段，不整份丢过去
+const catalogJson = JSON.stringify(Object.fromEntries(catalog));
+---
+
+<div class="wishlist-drawer" id="wishlist-drawer" role="dialog" aria-modal="true" aria-labelledby="wishlist-drawer-title" hidden>
+  <div class="wishlist-drawer-panel">
+    <div class="wishlist-drawer-head">
+      <div>
+        <span class="eyebrow">Wishlist / 心愿单</span>
+        <h2 id="wishlist-drawer-title" class="serif">先收着，想清楚再送。</h2>
+      </div>
+      <button class="wishlist-drawer-close" type="button" data-wishlist-drawer-close aria-label="关闭心愿单">×</button>
+    </div>
+    <p class="wishlist-drawer-empty" data-wishlist-drawer-empty hidden>还是空的。到<a href="/gifts/">小民好礼</a>里挑一件，点「加入心愿单」就会出现在这里。</p>
+    <ul class="wishlist-drawer-list" data-wishlist-drawer-list></ul>
+    <div class="wishlist-drawer-foot" data-wishlist-drawer-foot hidden>
+      <a class="btn btn-primary" href="/wishlist/" data-event="wishlist_drawer_guide">带着清单去咨询 →</a>
+      <a class="btn btn-secondary" href="/wishlist/">看完整心愿单页</a>
+      <button class="btn btn-link wishlist-drawer-clear" type="button" data-wishlist-drawer-clear>清空</button>
+    </div>
+    <p class="wishlist-drawer-hint">清单只保存在你自己的浏览器里，不会上传、不会同步给任何人。</p>
+  </div>
+</div>
+
+<script type="application/json" data-wishlist-catalog set:html={catalogJson}></script>
+
+<script>
+  import { readWishlist, writeWishlist, clearWishlist, onWishlistChange, WISHLIST_KEY } from '../scripts/wishlist';
+
+  type CatalogItem = { slug: string; name: string; en: string; price: string; href: string; image: string | null };
+  let catalog: Record<string, CatalogItem> = {};
+  try {
+    catalog = JSON.parse(document.querySelector('[data-wishlist-catalog]')?.textContent || '{}');
+  } catch {
+    catalog = {};
+  }
+
+  const drawer = document.querySelector<HTMLElement>('#wishlist-drawer');
+  const listEl = document.querySelector<HTMLElement>('[data-wishlist-drawer-list]');
+  const emptyEl = document.querySelector<HTMLElement>('[data-wishlist-drawer-empty]');
+  const footEl = document.querySelector<HTMLElement>('[data-wishlist-drawer-foot]');
+  let lastFocused: HTMLElement | null = null;
+
+  /**
+   * 渲染清单。
+   *
+   * 用 DOM API 而不是 innerHTML 拼接：商品名来自内容后台（Keystatic），
+   * 属于可被外部输入改动的数据，一旦有人把名称写成含尖括号的内容，
+   * 字符串拼接就会变成注入点。
+   */
+  const render = () => {
+    const items = readWishlist();
+    const known = items.filter((slug) => catalog[slug]);
+    // 已下架的商品（后台删除或 slug 改名）会留在 localStorage 里成为孤儿项：
+    // 直接剔除并在下一次写入时落盘清理，避免抽屉里出现一张点不动的空卡。
+    if (known.length !== items.length) writeWishlist(known);
+
+    if (listEl) {
+      listEl.textContent = '';
+      known.forEach((slug) => {
+        const item = catalog[slug];
+        if (!item) return;
+        const li = document.createElement('li');
+        li.className = 'wishlist-drawer-item';
+
+        const link = document.createElement('a');
+        link.className = 'wishlist-drawer-link';
+        link.href = item.href;
+        if (item.image) {
+          const img = document.createElement('img');
+          img.src = item.image;
+          img.alt = '';
+          img.loading = 'lazy';
+          img.decoding = 'async';
+          link.append(img);
+        } else {
+          const ph = document.createElement('span');
+          ph.className = 'wishlist-drawer-ph serif';
+          ph.setAttribute('aria-hidden', 'true');
+          ph.textContent = '字';
+          link.append(ph);
+        }
+
+        const copy = document.createElement('span');
+        copy.className = 'wishlist-drawer-copy';
+        const name = document.createElement('strong');
+        name.textContent = item.name;
+        const en = document.createElement('small');
+        en.textContent = item.en;
+        en.lang = 'en';
+        const price = document.createElement('em');
+        price.textContent = item.price;
+        copy.append(name, en, price);
+        link.append(copy);
+
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.className = 'wishlist-drawer-remove';
+        remove.textContent = '移除';
+        remove.setAttribute('aria-label', `从心愿单移除 ${item.name}`);
+        remove.addEventListener('click', () => {
+          writeWishlist(readWishlist().filter((s) => s !== slug));
+        });
+
+        li.append(link, remove);
+        listEl.append(li);
+      });
+    }
+
+    if (emptyEl) emptyEl.hidden = known.length > 0;
+    if (footEl) footEl.hidden = known.length === 0;
+  };
+
+  const open = (trigger?: HTMLElement | null) => {
+    if (!drawer) return;
+    lastFocused = trigger || (document.activeElement as HTMLElement | null);
+    drawer.hidden = false;
+    document.body.classList.add('drawer-open');
+    drawer.querySelector<HTMLElement>('.wishlist-drawer-close')?.focus();
+  };
+  const close = () => {
+    if (!drawer || drawer.hidden) return;
+    drawer.hidden = true;
+    document.body.classList.remove('drawer-open');
+    lastFocused?.focus?.();
+  };
+
+  // 任意带 data-wishlist-open 的元素都能开抽屉（底栏 + 桌面导航 + 抽屉内跳转链）
+  document.querySelectorAll<HTMLElement>('[data-wishlist-open]').forEach((trigger) => {
+    trigger.addEventListener('click', (event) => {
+      event.preventDefault();
+      open(trigger);
+      window.dispatchEvent(new CustomEvent('xiaominart:event', { detail: { name: 'wishlist_drawer_open', path: window.location.pathname } }));
+    });
+  });
+  drawer?.querySelector('[data-wishlist-drawer-close]')?.addEventListener('click', close);
+  // 点遮罩关闭，但点面板内部不关
+  drawer?.addEventListener('click', (event) => { if (event.target === drawer) close(); });
+  document.addEventListener('keydown', (event) => { if (event.key === 'Escape') close(); });
+  drawer?.querySelector('[data-wishlist-drawer-clear]')?.addEventListener('click', () => clearWishlist());
+
+  render();
+  onWishlistChange(render);
+
+  // 抽屉开着时，请求直接跳走（点详情链接）要收起遮罩，否则返回后会看到抽屉虚掩在页面上
+  drawer?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => {
+    document.body.classList.remove('drawer-open');
+  }));
+  // 导出给 Layout 使用：底栏按钮需要在不打开抽屉时也能更新角标
+  void WISHLIST_KEY;
+</script>
+
+<style>
+  /* 抽屉外壳（静态标记）：这些元素在 .astro 模板里写死，可安全使用 scoped 样式 */
+  .wishlist-drawer { position: fixed; inset: 0; z-index: 17; background: rgba(24, 22, 19, .46); }
+  .wishlist-drawer[hidden] { display: none; }
+  .wishlist-drawer-panel { position: absolute; right: 0; top: 0; bottom: 0; width: min(420px, 92vw); display: flex; flex-direction: column; background: var(--paper-light); border-left: 1px solid var(--line); box-shadow: -12px 0 34px rgba(77, 56, 34, .14); animation: wishlist-slide-in .28s ease-out; }
+  @keyframes wishlist-slide-in { from { transform: translateX(18px); opacity: .4; } to { transform: none; opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .wishlist-drawer-panel { animation: none; } }
+  .wishlist-drawer-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; padding: 26px 24px 16px; border-bottom: 1px solid var(--line); }
+  .wishlist-drawer-head h2 { font-size: 23px; font-weight: 500; margin: 10px 0 0; }
+  .wishlist-drawer-close { border: 0; background: transparent; font-size: 26px; line-height: 1; color: var(--ink); cursor: pointer; padding: 0 2px; }
+  .wishlist-drawer-empty { padding: 30px 24px; color: var(--ink-soft); font-size: 14px; line-height: 1.9; }
+  .wishlist-drawer-empty a { color: var(--cinnabar); border-bottom: 1px solid var(--cinnabar); }
+  .wishlist-drawer-foot { display: grid; gap: 8px; padding: 18px 24px 0; border-top: 1px solid var(--line); }
+  .wishlist-drawer-foot .btn { width: 100%; }
+  .wishlist-drawer-clear { justify-self: center; margin-top: 2px; color: var(--muted); font-size: 13px; border-bottom-color: var(--line); }
+  .wishlist-drawer-hint { margin: 0; padding: 14px 24px calc(20px + env(safe-area-inset-bottom)); color: var(--muted); font-size: 11px; line-height: 1.8; }
+  @media (max-width: 767px) { .wishlist-drawer-panel { width: 100%; border-left: 0; } }
+</style>
+
+<!-- ⚠️ 条目样式必须 is:global。
+     清单条目（li / a / img / 按钮）是客户端脚本用 document.createElement 动态创建的，
+     不携带 Astro 的 data-astro-cid 作用域属性，scoped 选择器一条都匹配不上——
+     实测后果是图片样式全部落空、商品大图把整个抽屉撑爆（2026-10-08 已踩）。
+     类名带 wishlist-drawer- 前缀做命名空间，不会污染全局。 -->
+<style is:global>
+  .wishlist-drawer-list { flex: 1; overflow-y: auto; margin: 0; padding: 6px 0; list-style: none; }
+  .wishlist-drawer-item { display: flex; align-items: center; gap: 10px; padding: 12px 24px; border-bottom: 1px solid var(--line); }
+  .wishlist-drawer-link { display: flex; align-items: center; gap: 13px; flex: 1; min-width: 0; color: var(--ink); }
+  .wishlist-drawer-link img, .wishlist-drawer-ph { width: 56px; height: 56px; flex-shrink: 0; object-fit: cover; display: grid; place-items: center; background: var(--paper-deep); color: var(--cinnabar); font-size: 26px; border: 1px solid var(--line); }
+  .wishlist-drawer-copy { display: grid; gap: 2px; min-width: 0; }
+  .wishlist-drawer-copy strong { font-size: 15px; font-weight: 500; }
+  .wishlist-drawer-copy small { font: 13px var(--font-display-en), Georgia, serif; color: var(--ink-soft); }
+  .wishlist-drawer-copy em { font-style: normal; font-size: 13px; color: var(--cinnabar-deep); }
+  .wishlist-drawer-remove { flex-shrink: 0; min-height: 34px; padding: 5px 10px; border: 1px solid var(--line); background: transparent; color: var(--ink-soft); font: inherit; font-size: 12px; cursor: pointer; }
+  .wishlist-drawer-remove:hover { border-color: var(--cinnabar); color: var(--cinnabar); }
+</style>

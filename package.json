@@ -5,11 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "node scripts/gen-webp.mjs && astro build",
+    "build": "node scripts/gen-webp.mjs && astro build && node scripts/build-search.mjs",
     "assets:webp": "node scripts/gen-webp.mjs",
     "check:sitemap": "node scripts/check-sitemap.mjs",
     "preview": "astro preview",
     "check": "astro check",
+    "search:index": "node scripts/build-search.mjs",
     "deploy": "npm run build && wrangler pages deploy dist --project-name=xiaominart --branch=main"
   },
   "dependencies": {
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@types/node": "^26.6.2",
+    "pagefind": "^1.5.2",
     "wrangler": "4.143.0"
   },
   "overrides": {

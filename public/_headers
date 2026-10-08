@@ -15,6 +15,12 @@
 /assets/*
   Cache-Control: public, max-age=1209600, stale-while-revalidate=604800
 
+# 站内搜索索引（Pagefind，构建产物，随每次部署整体更新）
+# 不能沿用 /_astro/* 的 immutable —— 索引按 URL 而非内容哈希命名，
+# 长缓存会让用户一直搜到旧版索引（新发的商品搜不出来）。
+/pagefind/*
+  Cache-Control: public, max-age=600, must-revalidate
+
 # ── 全站安全基线 + CSP（2026-10-07 正式强制，T-10）──
 # 原为 Report-Only 观察期；因站点零外部依赖（字体自托管、无第三方 CDN/统计/广告）、
 # 且未配置 report-uri（观察期实际收不到任何报告），直接转正，风险可控。
@@ -26,6 +32,11 @@
 #    （2026-10-08 修复：此前 font-src 'self' 把 Noto Serif SC 的内嵌子集全部拦掉，
 #    标题衬线字静默回退为系统字体）。data: URI 字体无外联风险，放行安全。
 # 注意：_headers 只作用于静态资源，functions/ 下的 /api/* 需在代码里设头（已设）。
+# ── 站内搜索（Pagefind，2026-10-08 WO-P0-03）──
+# 索引与运行时都在同源 /pagefind/ 下，现有 CSP 已覆盖，**无需新增任何域**。
+# 唯一需要留意的是 WebAssembly：Pagefind 的可选分词器会用到 wasm，
+# 若将来开启 wasm 分片，需在 script-src 加 'wasm-unsafe-eval'。
+# 当前构建未启用，故不加。
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
