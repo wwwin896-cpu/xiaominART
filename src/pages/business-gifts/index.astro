@@ -63,6 +63,7 @@ const faqJsonLd = {
       submitButton.disabled = false;
       if (result.ok) {
         // B3：企业需求回复周期更长，成功态必须写明时限，避免对方反复追问
+        // innerHTML 用于渲染带结构的成功卡；入参为本行写死的字面量，非用户输入
         status.innerHTML = successHtml('<strong>两个工作日内</strong>我们会通过你留下的联系方式回复。', '如果时间比较紧，可以在微信里补一句期望日期，我们会优先看。');
         form.reset();
       } else {

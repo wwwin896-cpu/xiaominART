@@ -78,6 +78,9 @@ const stages = [
   const getKey = () => { try { return localStorage.getItem(KEY_STORE) || ''; } catch { return ''; } };
   const setKey = (v: string) => { try { v ? localStorage.setItem(KEY_STORE, v) : localStorage.removeItem(KEY_STORE); } catch { /* ignore */ } };
 
+  // 转义工具：本项目渲染用户/委托方数据的唯一入口。
+  // ⚠ 任何来自接口或用户输入的字符串在拼进 innerHTML 前，**必须**逐个过 esc()，
+  //   包括 data-* 属性值（属性同样会被解析）。新增字段时不要遗漏。
   const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] as string));
 
   async function loadList() {
@@ -94,6 +97,8 @@ const stages = [
       }
       const items = data.items ?? [];
       listEmpty.hidden = items.length > 0;
+      // 列表渲染：items 来自 /api/admin/progress（数据库中的委托方数据）。
+      // 每一处插值——含 data-* 属性——都已过 esc()，新增字段务必保持一致。
       listEl.innerHTML = items.map((it) => `<article class="admin-item">
         <div class="item-main">
           <div class="item-top"><code class="item-code">${esc(it.code || '')}</code><span class="item-stage">${esc(STAGE_ZH[it.stage] || it.stage || '')}</span></div>
@@ -167,7 +172,13 @@ const stages = [
       const out = (await res.json().catch(() => null)) as { ok?: boolean; item?: { code?: string }; message?: string } | null;
       if (res.ok && out?.ok) {
         const code = out.item?.code || payload.code;
-        status.innerHTML = `已保存 ✓ 查询码 <code>${esc(code)}</code>（直接发给委托方）。`;
+        // 用 DOM 构建替代 innerHTML：code 来自接口返回，走 textContent 彻底规避注入
+        if (status) {
+          status.textContent = '已保存 ✓ 查询码 ';
+          const codeEl = document.createElement('code');
+          codeEl.textContent = code;
+          status.append(codeEl, '（直接发给委托方）。');
+        }
         form.reset();
         void loadList();
       } else {

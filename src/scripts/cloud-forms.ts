@@ -14,15 +14,56 @@ export const CONTACT_FALLBACK = `如持续失败，最快是加微信：在「�
 const WECHAT_QR = '/assets/images/wechat-qr.jpg';
 
 /**
+ * 把文本中的 HTML 元字符转义为实体。
+ * 用于任何**可能来自外部（用户输入 / 接口返回）**的字符串在拼进 HTML 之前。
+ */
+export function escapeHtml(value: string): string {
+  return value.replace(/[&<>"']/g, (c) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] as string,
+  );
+}
+
+/**
+ * HTML 注入白名单校验：只放行本模块自己用到的两类标签。
+ *
+ * 背景：`successHtml()` 的两个参数历史上是各页面写死的字面量（含 `<strong>` 强调），
+ * 因此实现里直接做了字符串插值。为防止后续有人把用户数据传进来造成 XSS，
+ * 这里在拼接前做一次「只允许既定标签」的校验，把「约定」升级为「机制」。
+ */
+const ALLOWED_TAGS = new Set(['strong', 'b', 'em']);
+function assertSafeMarkup(value: string, param: string): void {
+  // 任何标签都必须落在白名单内，且不允许事件处理器 / javascript: 协议
+  const tagPattern = /<\/?([a-zA-Z][a-zA-Z0-9]*)\b[^>]*>/g;
+  let match: RegExpExecArray | null;
+  while ((match = tagPattern.exec(value)) !== null) {
+    if (!ALLOWED_TAGS.has(match[1].toLowerCase())) {
+      throw new Error(`successHtml(${param}) 含未授权标签 <${match[1]}>——该参数只接受内部字面量，若需传入外部数据请先 escapeHtml()`);
+    }
+  }
+  if (/\son[a-z]+\s*=/i.test(value) || /javascript:/i.test(value)) {
+    throw new Error(`successHtml(${param}) 含可疑属性或协议——该参数只接受内部字面量`);
+  }
+}
+
+/**
  * 表单提交成功后的统一收尾：明确回复时效 + 就地给出微信二维码。
  * 2026-10-07（B3）：此前成功态只有一句「已收到」，用户不知道要等多久、也拿不到更快的通道，
  * 容易在等待期流失。这里把「多久回复」和「想更快就扫码」一次性讲清。
+ *
+ * ⚠ 参数约束：`note` / `hint` 会**未经转义**拼进 HTML，只接受模块内调用点写死的字面量
+ * （允许 `<strong>` `<b>` `<em>`）。**不要把用户输入、接口返回值直接传进来**——
+ * 需要传外部数据时，先 `escapeHtml()` 再传，或改用 DOM 构建。
+ * 违反约束会在开发阶段直接抛错（见 assertSafeMarkup），不会静默生成不安全 HTML。
  *
  * @param note 各页可自定义的时效说明，默认按工作日 1 个工作日内回复
  * @param hint 补充提示（如企业需求的批量说明、定制可发参考图）
  */
 export function successHtml(note?: string, hint?: string): string {
   const timing = note || '工作日通常 <strong>当天或次日</strong>回复你。';
+  if (import.meta.env.DEV) {
+    assertSafeMarkup(timing, 'note');
+    if (hint) assertSafeMarkup(hint, 'hint');
+  }
   const tip = hint ? `<p class="form-success-tip">${hint}</p>` : '';
   return `<div class="form-success">
     <p class="form-success-lead"><strong>已经收到你的消息了。</strong>${timing}</p>

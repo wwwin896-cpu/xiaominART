@@ -15,7 +15,7 @@
     if (!quickDialog) return;
     // 每次重新打开都回到干净的填表态（上次的成功卡不要留到这一次）
     if (quickForm) quickForm.hidden = false;
-    if (quickSuccess) { quickSuccess.hidden = true; quickSuccess.innerHTML = ''; }
+    if (quickSuccess) { quickSuccess.hidden = true; quickSuccess.textContent = ''; }
     if (quickNote) quickNote.textContent = '提交后我们会尽快回复你。';
     quickDialog.hidden = false; quickTrigger.setAttribute('aria-expanded','true'); trackEvent('consultation_start', { source: 'floating_quick_message', page: window.location.pathname }); quickDialog.querySelector<HTMLInputElement>('input')?.focus();
   });
@@ -42,6 +42,7 @@
     if (result.ok) {
       // B3：成功态把「多久回复 + 立即加微信」讲清，表单收起后不留下空等
       if (quickSuccess) {
+        // innerHTML 用于渲染带结构的成功卡；入参是下方写死的字面量，非用户输入（successHtml 内部另有白名单校验）
         quickSuccess.innerHTML = successHtml('工作日通常 <strong>当天或次日</strong>回复你。', '如果你留的是邮箱，回复可能进垃圾箱——顺手看一眼。');
         quickSuccess.hidden = false;
       }

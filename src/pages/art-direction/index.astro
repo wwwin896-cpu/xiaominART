@@ -5,7 +5,7 @@ import { directionQuiz, artists, inspirations } from '../../data/content';
 <Layout title="3分钟理清你的送礼方向｜XIAOMINART" description="通过几个轻量问题梳理对象、风格、预算与时间，再带着透明的方向建议与我们聊聊。">
   <section class="container page-head"><span class="eyebrow">Direction finder / 送礼方向工具</span><h1 class="serif">3分钟理清你的送礼方向。</h1><p lang="en">A short way to name the direction you are looking for.</p><p>这不是自动匹配或报价工具。你的选择只帮助我们把第一次沟通说得更具体，结果会标注为方向建议。</p></section>
   <section class="container quiz-wrap"><form id="direction-quiz">{directionQuiz.map((question, index) => <fieldset data-question={question.id}><legend><span class="mono">0{index + 1}</span><strong>{question.question}</strong><small lang="en">{question.en}</small></legend><div class="quiz-options">{question.options.map((option) => <label><input type="radio" name={question.id} value={option} required /><span>{option}</span></label>)}</div></fieldset>)}<button class="btn btn-primary" type="submit">查看方向建议 <span>→</span></button></form></section>
-  <div id="direction-data" hidden data-artists={JSON.stringify(artists)} data-inspirations={JSON.stringify(inspirations)}></div><section class="container section result" hidden aria-live="polite"><span class="eyebrow">A transparent suggestion / 方向建议</span><h2 class="serif">你的选择，指向一条可以继续讨论的路。</h2><div class="result-copy"></div><div class="suggestion-grid"><div><span class="eyebrow">艺术家方向</span><a class="artist-suggestion" href="/artists/">查看艺术家档案 →</a></div><div><span class="eyebrow">小民好礼</span><a class="inspiration-suggestion" href="/gifts/">看对应的小民好礼 →</a></div></div><div class="result-actions"><a class="btn btn-primary result-cta" href="/custom-commission/">与我们聊聊 <span>→</span></a><button class="btn btn-secondary poster-cta" type="button">生成我的艺术方向海报 / Save direction</button></div><canvas class="direction-poster" width="1080" height="1080" aria-hidden="true"></canvas></section>
+  <div id="direction-data" hidden data-artists={JSON.stringify(artists)} data-inspirations={JSON.stringify(inspirations)} data-options={JSON.stringify(Object.fromEntries(directionQuiz.map((q) => [q.id, q.options])))}></div><section class="container section result" hidden aria-live="polite"><span class="eyebrow">A transparent suggestion / 方向建议</span><h2 class="serif">你的选择，指向一条可以继续讨论的路。</h2><div class="result-copy"></div><div class="suggestion-grid"><div><span class="eyebrow">艺术家方向</span><a class="artist-suggestion" href="/artists/">查看艺术家档案 →</a></div><div><span class="eyebrow">小民好礼</span><a class="inspiration-suggestion" href="/gifts/">看对应的小民好礼 →</a></div></div><div class="result-actions"><a class="btn btn-primary result-cta" href="/custom-commission/">与我们聊聊 <span>→</span></a><button class="btn btn-secondary poster-cta" type="button">生成我的艺术方向海报 / Save direction</button></div><canvas class="direction-poster" width="1080" height="1080" aria-hidden="true"></canvas></section>
 </Layout>
 <script>
   const dataNode = document.querySelector<HTMLElement>('#direction-data');
@@ -20,11 +20,19 @@ import { directionQuiz, artists, inspirations } from '../../data/content';
   form?.addEventListener('submit', (event) => {
     event.preventDefault();
     const data = new FormData(form);
-    const space = String(data.get('space') || '其他');
-    const style = String(data.get('style') || '尚未确定');
-    const medium = String(data.get('medium') || '尚未确定');
-    const budget = String(data.get('budget') || '尚未确定');
-    const timeline = String(data.get('timeline') || '不急');
+    // 取值只接受 data-* / JSON 里声明的合法选项。radio 的 value 在浏览器里可被脚本改写，
+    // 直接透传会把任意文本渲染进下面的 innerHTML——这里用白名单把口子收死。
+    const optionSet = JSON.parse(dataNode?.dataset.options || '{}') as Record<string, string[]>;
+    const pick = (field: string, fallback: string): string => {
+      const raw = String(data.get(field) || '');
+      const allowed = optionSet[field] || [];
+      return allowed.includes(raw) ? raw : fallback;
+    };
+    const space = pick('space', '其他');
+    const style = pick('style', '尚未确定');
+    const medium = pick('medium', '尚未确定');
+    const budget = pick('budget', '尚未确定');
+    const timeline = pick('timeline', '不急');
     const artist = artists.find((item) => item.styles.includes(style)) || artists[0];
     const inspiration = inspirations.find((item) => item.spaces.includes(space) && item.style.includes(style)) || inspirations.find((item) => item.spaces.includes(space)) || inspirations[0];
     if (result) result.hidden = false;

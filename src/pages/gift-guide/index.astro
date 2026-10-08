@@ -89,7 +89,7 @@ const decisionData = { products, recipients: recipientOptions, occasions: occasi
     const hasRecipient = Boolean(state.recipient);
     placeholder && (placeholder.hidden = hasRecipient);
     resultActions && (resultActions.hidden = !hasRecipient);
-    if (!hasRecipient) { resultList.hidden = true; resultList.innerHTML = ''; emptyNote && (emptyNote.hidden = true); return; }
+    if (!hasRecipient) { resultList.hidden = true; resultList.textContent = ''; emptyNote && (emptyNote.hidden = true); return; }
     const recipientScenes = state.recipient?.scenes ?? [];
     const occasionScenes = state.occasion?.scenes ?? [];
     // 对象场景必选其一；若已选场合，则取两者交集，交集为空时退回对象场景
@@ -99,6 +99,8 @@ const decisionData = { products, recipients: recipientOptions, occasions: occasi
       if (narrowed.length) pool = narrowed;
     }
     const picks = pool.slice(0, 3);
+    // picks 全部来自构建期注入的 [data-decision-data]（见页面顶部 <script type="application/json">），
+    // 内容随站点一起构建、不接受运行时输入，因此这里直接插值。若将来改为接口拉取，需先 escapeHtml。
     resultList.innerHTML = picks.map((product) => `
       <article class="result-card">
         <span class="eyebrow">${product.sceneLabel} · ${product.tier}</span>

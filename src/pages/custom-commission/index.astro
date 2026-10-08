@@ -60,6 +60,7 @@ import { processSteps, artists } from '../../data/content';
       submitButton.disabled = false;
       if (result.ok) {
         // B3：成功态给出时效与更快的微信通道
+        // innerHTML 用于渲染带结构的成功卡；入参为本行写死的字面量，非用户输入
         status.innerHTML = successHtml('工作日通常 <strong>当天或次日</strong>回复你。', '参考图片、空间照片可以直接在微信里发给我们，沟通会快很多。');
         commissionForm.reset();
       } else {

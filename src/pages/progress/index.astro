@@ -78,6 +78,8 @@ const stages = [
     nameEl.textContent = project.name;
     const updated = project.updatedAt ? new Date(project.updatedAt).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
     metaEl.textContent = [project.contactHint && `联系方式 ${project.contactHint}`, updated && `最近更新 ${updated}`].filter(Boolean).join(' · ');
+    // STAGES 是本文件顶部的硬编码常量（进度节点名），无外部输入；
+    // 委托方真实数据（name / contactHint / note）走上方 textContent，不参与这里的拼接。
     stagesEl.innerHTML = STAGES.map(([key, no, zh], index) => {
       const state = index < current ? 'done' : index === current ? 'current' : 'todo';
       const tag = state === 'done' ? '已完成' : state === 'current' ? '当前节点' : '待进入';

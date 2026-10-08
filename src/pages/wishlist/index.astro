@@ -127,6 +127,7 @@ const products = giftProducts;
     if (button) button.disabled = false;
     if (result.ok) {
       // B3：心愿单是「还在犹豫」的清单，成功态重点讲清我们会逐件答复
+      // innerHTML 用于渲染带结构的成功卡；入参为本行写死的字面量，非用户输入
       msg.innerHTML = successHtml('工作日通常 <strong>当天或次日</strong>回复你。', '我们会一件一件告诉你：适不适合对方、怎么包装、什么时候能到。');
       form.reset();
     } else {
