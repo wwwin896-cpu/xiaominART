@@ -28,8 +28,9 @@ import { directionQuiz, artists, inspirations } from '../../data/content';
       const allowed = optionSet[field] || [];
       return allowed.includes(raw) ? raw : fallback;
     };
+    // fallback 与 content.ts 中 directionQuiz 各项的「未确定」选项保持语义一致
     const space = pick('space', '其他');
-    const style = pick('style', '尚未确定');
+    const style = pick('style', '其他');
     const medium = pick('medium', '尚未确定');
     const budget = pick('budget', '尚未确定');
     const timeline = pick('timeline', '不急');
