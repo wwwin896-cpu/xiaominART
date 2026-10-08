@@ -137,7 +137,7 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_ID as string | undefined;
     <footer class="site-footer" data-component="site-footer">
       <div class="container footer-grid">
         <div><p class="eyebrow">XIAOMINART / 日常之礼</p><p class="footer-claim serif">愿你在这方寸之间，<br />找到属于自己的定制心意。</p></div>
-        <div class="footer-contact"><p class="eyebrow">Contact / 联系</p><a href={`mailto:${siteContact.email}`}>{siteContact.email}</a>{siteContact.wechatId ? <p>微信 / 企业微信：<strong>{siteContact.wechatId}</strong>（备注来意，尽快回复）</p> : siteContact.wechatQr ? <p>微信 / 企业微信：扫码添加（备注来意，尽快回复）</p> : <p>微信 / 企业微信：提交<a href="/custom-commission/">定制咨询表单</a>并留下你的微信号，我们会主动添加你。</p>}{siteContact.wechatQr ? <a class="wechat-qr-link" href={siteContact.wechatQr} target="_blank" rel="noopener" title="点击查看大图，长按识别添加"><img class="wechat-qr" src={siteContact.wechatQr} width="112" height="112" alt="小民艺术微信二维码" loading="lazy" /></a> : null}<p>送礼问题可先从送礼指南开始；需要个性化建议，可提交咨询。</p><button class="ink-seek footer-seek" type="button" aria-controls="quick-message" aria-expanded="false">或先说一句想说的话 →</button></div>
+        <div class="footer-contact"><p class="eyebrow">Contact / 联系</p><a href={`mailto:${siteContact.email}`}>{siteContact.email}</a>{siteContact.wechatId ? <p>微信 / 企业微信：<strong>{siteContact.wechatId}</strong>（备注来意，尽快回复）</p> : siteContact.wechatQr ? <p>微信 / 企业微信：扫码添加（备注来意，尽快回复）</p> : <p>微信 / 企业微信：提交<a href="/custom-commission/">定制咨询表单</a>并留下你的微信号，我们会主动添加你。</p>}{siteContact.wechatQr ? <a class="wechat-qr-link" href={siteContact.wechatQr} target="_blank" rel="noopener" title="点击查看大图，长按识别添加"><img class="wechat-qr" src={siteContact.wechatQr} width="112" height="112" alt="小民艺术微信二维码" loading="lazy" /></a> : null}<p>送礼问题可先从送礼指南开始；需要个性化建议，可提交咨询。</p><p class="footer-policy"><a href="/help/#after-sales">售后保障与退换须知 →</a></p><button class="ink-seek footer-seek" type="button" aria-controls="quick-message" aria-expanded="false">或先说一句想说的话 →</button></div>
       </div>
       <div class="container trust-signals" aria-label="信息边界 / Information boundaries"><div><span class="eyebrow">Artist / 艺术家</span><strong>由具体创作方向与沟通内容开始</strong></div><div><span class="eyebrow">Projects / 项目</span><strong>已确认内容才会公开呈现</strong></div><div class="trust-privacy"><span class="eyebrow">Privacy / 隐私</span><strong>客户故事与图像获得授权后发布</strong></div><p>我们不使用未经核验的客户数量、媒体曝光或合作机构作为背书。</p></div>
       <div class="container footer-newsletter"><Newsletter /></div>
@@ -272,6 +272,8 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_ID as string | undefined;
   .footer-grid a { display: flex; flex-direction: column; gap: 2px; margin: 10px 0; color: var(--ink-soft); min-height: 44px; justify-content: center; }
   .footer-contact p { color: var(--ink-soft); font-size: 13px; line-height: 1.8; }
   .footer-contact a[href^="/custom-commission"] { color: var(--cinnabar); border-bottom: 1px solid var(--cinnabar); }
+  .footer-policy { margin-top: 10px; }
+  .footer-policy a { color: var(--cinnabar); font-size: 13px; border-bottom: 1px solid var(--cinnabar); }
   .footer-contact .wechat-qr { display: block; border: 1px solid var(--line); background: var(--paper-light); padding: 4px; }
   .footer-contact .wechat-qr-link { display: inline-block; margin: 10px 0 0; min-height: 0; line-height: 0; }
   .footer-contact small { color: var(--muted); font-size: 11px; }
