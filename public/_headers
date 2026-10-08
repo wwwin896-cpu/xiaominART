@@ -16,8 +16,17 @@
   Cache-Control: public, max-age=1209600, stale-while-revalidate=604800
 
 # 站内搜索索引（Pagefind，构建产物，随每次部署整体更新）
-# 不能沿用 /_astro/* 的 immutable —— 索引按 URL 而非内容哈希命名，
-# 长缓存会让用户一直搜到旧版索引（新发的商品搜不出来）。
+# 不能沿用 /_astro/* 的 immutable —— 索引入口 pagefind-entry.json 按固定 URL 命名，
+# 长缓存会让用户拿着旧入口去找已被删除的分片（新发的商品搜不出来）。
+#
+# ⚠️ 实测（2026-10-08 线上抓头）Cloudflare Pages 对 /pagefind/*.js 会套用**平台默认**
+#    max-age=14400，本条规则对 .js 不生效；非 .js 产物（entry.json 等）才真正命中 600。
+#    这不构成问题，原因是 Pagefind 的分层设计：
+#      · entry.json（600s，会被本条命中）—— 索引清单与分片文件名，真正的时效瓶颈
+#      · *.pf_index / *.pf_fragment —— 文件名带内容哈希，且实际响应 no-store
+#      · pagefind.js 运行时 —— 仅随依赖版本变化，4 小时缓存无副作用
+#    即「入口新鲜 + 分片按哈希寻址 + 分片不缓存」已保证不会搜到旧数据，
+#    .js 被平台覆盖不影响正确性。若将来 Pagefind 改为按固定 URL 命名分片，需重新评估。
 /pagefind/*
   Cache-Control: public, max-age=600, must-revalidate
 
