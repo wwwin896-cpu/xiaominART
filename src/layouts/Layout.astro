@@ -100,11 +100,22 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_ID as string | undefined;
     <main id="main"><slot /></main>
     <FloatingConsultation />
     <ShareButton />
-    <nav class="mobile-shopping-bar" aria-label="移动端底部导航"><a href="/gifts/" aria-label="浏览小民好礼"><span class="bar-zh">礼物</span><small lang="en">Gifts</small></a><a href="/wishlist/" aria-label="查看我的心愿单"><span class="bar-zh">心愿单</span><small lang="en">Saved <span data-wishlist-count></span></small></a><button class="ink-seek" type="button" aria-controls="quick-message" aria-expanded="false" aria-label="寻墨 · 与我们留言"><span class="bar-zh">寻墨</span><small lang="en">Ink</small></button><button class="bar-share" type="button" data-share-button data-event="share_click" aria-label="分享本页给微信好友或朋友圈"><span class="bar-zh">分享</span><small lang="en">Share</small></button></nav>
+    <nav class="mobile-shopping-bar" aria-label="移动端底部导航"><a href="/gifts/" aria-label="浏览小民好礼"><span class="bar-zh">礼物</span><small lang="en">Gifts</small></a><a href="/wishlist/" aria-label="查看我的心愿单"><span class="bar-zh">心愿单</span><small lang="en">Saved <span data-wishlist-count></span></small></a><button class="wechat-link" type="button" aria-controls="wechat-sheet" aria-expanded="false" aria-label="加微信直接聊"><span class="bar-zh">微信直联</span><small lang="en">WeChat</small></button><button class="bar-share" type="button" data-share-button data-event="share_click" aria-label="分享本页给微信好友或朋友圈"><span class="bar-zh">分享</span><small lang="en">Share</small></button></nav>
+    <div class="wechat-sheet" id="wechat-sheet" role="dialog" aria-modal="true" aria-labelledby="wechat-sheet-title" hidden>
+      <div class="wechat-sheet-card">
+        <button class="wechat-sheet-close" type="button" aria-label="关闭">×</button>
+        <span class="eyebrow">WeChat / 微信直联</span>
+        <h2 id="wechat-sheet-title" class="serif">想快点聊上，加微信最快。</h2>
+        <a class="wechat-sheet-qr" href={siteContact.wechatQr} target="_blank" rel="noopener" title="点击查看大图，长按识别添加"><img src={siteContact.wechatQr} width="176" height="176" alt="小民艺术微信二维码" loading="lazy" /></a>
+        <p class="wechat-sheet-hint">长按上方二维码识别添加，备注一句来意即可。</p>
+        {siteContact.wechatId ? <div class="wechat-sheet-id"><code data-wechat-id>{siteContact.wechatId}</code><button class="btn btn-secondary btn-sm" type="button" data-copy-wechat>复制微信号</button></div> : null}
+        <p class="wechat-sheet-note">不方便加微信也可以<a href="/custom-commission/">提交定制咨询</a>，留下联系方式，我们主动找你。</p>
+      </div>
+    </div>
     <footer class="site-footer" data-component="site-footer">
       <div class="container footer-grid">
         <div><p class="eyebrow">XIAOMINART / 日常之礼</p><p class="footer-claim serif">愿你在这方寸之间，<br />找到属于自己的定制心意。</p></div>
-        <div class="footer-contact"><p class="eyebrow">Contact / 联系</p><a href={`mailto:${siteContact.email}`}>{siteContact.email}</a>{siteContact.wechatId ? <p>微信 / 企业微信：<strong>{siteContact.wechatId}</strong>（备注来意，尽快回复）</p> : siteContact.wechatQr ? <p>微信 / 企业微信：扫码添加（备注来意，尽快回复）</p> : <p>微信 / 企业微信：提交<a href="/custom-commission/">定制咨询表单</a>并留下你的微信号，我们会主动添加你。</p>}{siteContact.wechatQr ? <a class="wechat-qr-link" href={siteContact.wechatQr} target="_blank" rel="noopener" title="点击查看大图，长按识别添加"><img class="wechat-qr" src={siteContact.wechatQr} width="112" height="112" alt="小民艺术微信二维码" loading="lazy" /></a> : null}<p>送礼问题可先从送礼指南开始；需要个性化建议，可提交咨询。</p></div>
+        <div class="footer-contact"><p class="eyebrow">Contact / 联系</p><a href={`mailto:${siteContact.email}`}>{siteContact.email}</a>{siteContact.wechatId ? <p>微信 / 企业微信：<strong>{siteContact.wechatId}</strong>（备注来意，尽快回复）</p> : siteContact.wechatQr ? <p>微信 / 企业微信：扫码添加（备注来意，尽快回复）</p> : <p>微信 / 企业微信：提交<a href="/custom-commission/">定制咨询表单</a>并留下你的微信号，我们会主动添加你。</p>}{siteContact.wechatQr ? <a class="wechat-qr-link" href={siteContact.wechatQr} target="_blank" rel="noopener" title="点击查看大图，长按识别添加"><img class="wechat-qr" src={siteContact.wechatQr} width="112" height="112" alt="小民艺术微信二维码" loading="lazy" /></a> : null}<p>送礼问题可先从送礼指南开始；需要个性化建议，可提交咨询。</p><button class="ink-seek footer-seek" type="button" aria-controls="quick-message" aria-expanded="false">或先说一句想说的话 →</button></div>
       </div>
       <div class="container trust-signals" aria-label="信息边界 / Information boundaries"><div><span class="eyebrow">Artist / 艺术家</span><strong>由具体创作方向与沟通内容开始</strong></div><div><span class="eyebrow">Projects / 项目</span><strong>已确认内容才会公开呈现</strong></div><div class="trust-privacy"><span class="eyebrow">Privacy / 隐私</span><strong>客户故事与图像获得授权后发布</strong></div><p>我们不使用未经核验的客户数量、媒体曝光或合作机构作为背书。</p></div>
       <div class="container footer-newsletter"><Newsletter /></div>
@@ -145,6 +156,47 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_ID as string | undefined;
     Object.entries(detail).forEach(([key, value]) => { if (key !== 'name' && value) data[key] = value; });
     trackEvent(name, data);
   });
+  // 移动端「微信直联」弹层（WO-P0-04）
+  // 触点：底栏按钮 → 弹出二维码 + 可选微信号复制。微信内打开时提示「长按识别」，
+  // 其他浏览器补一句「截图后用微信扫一扫」，因为站内无法直接唤起微信加好友。
+  const wechatTrigger = document.querySelector<HTMLButtonElement>('.wechat-link');
+  const wechatSheet = document.querySelector<HTMLElement>('#wechat-sheet');
+  const closeWechat = () => { if (!wechatSheet || !wechatTrigger) return; wechatSheet.hidden = true; wechatTrigger.setAttribute('aria-expanded', 'false'); };
+  wechatTrigger?.addEventListener('click', () => {
+    if (!wechatSheet) return;
+    wechatSheet.hidden = false;
+    wechatTrigger.setAttribute('aria-expanded', 'true');
+    window.dispatchEvent(new CustomEvent('xiaominart:event', { detail: { name: 'wechat_direct_open', path: window.location.pathname } }));
+    wechatSheet.querySelector<HTMLButtonElement>('.wechat-sheet-close')?.focus();
+  });
+  wechatSheet?.querySelector('.wechat-sheet-close')?.addEventListener('click', closeWechat);
+  wechatSheet?.addEventListener('click', (event) => { if (event.target === wechatSheet) closeWechat(); });
+  document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeWechat(); });
+  // 一键复制微信号：成功与否都给明确反馈（失败时回退为选中文本，方便手动复制）
+  const copyWechatBtn = document.querySelector<HTMLButtonElement>('[data-copy-wechat]');
+  copyWechatBtn?.addEventListener('click', async () => {
+    const id = document.querySelector<HTMLElement>('[data-wechat-id]')?.textContent?.trim() || '';
+    if (!id) return;
+    const restore = () => setTimeout(() => { if (copyWechatBtn) copyWechatBtn.textContent = '复制微信号'; }, 1800);
+    try {
+      await navigator.clipboard.writeText(id);
+      copyWechatBtn.textContent = '已复制 ✓';
+      window.dispatchEvent(new CustomEvent('xiaominart:event', { detail: { name: 'wechat_id_copy', path: window.location.pathname } }));
+      restore();
+    } catch {
+      // 剪贴板不可用（非 HTTPS 或权限被拒）时，选中文本让用户手动复制，不留死路
+      const node = document.querySelector<HTMLElement>('[data-wechat-id]');
+      if (node) {
+        const range = document.createRange();
+        range.selectNodeContents(node);
+        const selection = window.getSelection();
+        selection?.removeAllRanges();
+        selection?.addRange(range);
+      }
+      copyWechatBtn.textContent = '长按上方号码复制';
+      restore();
+    }
+  });
   const wishlistKey = 'xiaominart-wishlist';
   const readWishlist = (): string[] => { try { return JSON.parse(localStorage.getItem(wishlistKey) || '[]'); } catch { return []; } };
   const updateWishlistCount = () => document.querySelectorAll<HTMLElement>('[data-wishlist-count]').forEach((node) => { node.textContent = String(readWishlist().length); });
@@ -184,6 +236,10 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_ID as string | undefined;
   .footer-contact .wechat-qr { display: block; border: 1px solid var(--line); background: var(--paper-light); padding: 4px; }
   .footer-contact .wechat-qr-link { display: inline-block; margin: 10px 0 0; min-height: 0; line-height: 0; }
   .footer-contact small { color: var(--muted); font-size: 11px; }
+  /* 页脚「先说一句」入口：接回 FloatingConsultation 弹层（2026-10-08 移动端底栏改为微信直联后，
+     留言表单在桌面端也需要一个入口，否则整块弹层无触发点） */
+  .footer-seek { display: inline-block; margin-top: 12px; padding: 0; border: 0; background: transparent; color: var(--cinnabar); font: inherit; font-size: 13px; text-align: left; cursor: pointer; border-bottom: 1px solid transparent; }
+  .footer-seek:hover { border-bottom-color: var(--cinnabar); }
   .social-pending { display: block; min-height: 44px; padding: 10px 0; color: var(--muted); font-size: 12px; border-top: 1px solid var(--line-soft); }
   .trust-signals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--line); }
   .trust-signals div { display: flex; flex-direction: column; gap: 8px; }
@@ -234,7 +290,20 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_ID as string | undefined;
      .mobile-shopping-bar small { font-size: 9px; color: var(--muted); font-family: var(--font-body-en), sans-serif; letter-spacing: .1em; text-transform: uppercase; }
      .mobile-shopping-bar a:first-child .bar-zh { color: var(--cinnabar); }
      .mobile-shopping-bar span[data-wishlist-count] { color: var(--cinnabar); font-family: var(--font-mono); }
-     .mobile-shopping-bar .ink-seek { justify-self: center; }
-     .mobile-shopping-bar .ink-seek:active .bar-zh, .mobile-shopping-bar .ink-seek[aria-expanded="true"] .bar-zh { color: var(--cinnabar); }
+     .mobile-shopping-bar .wechat-link { justify-self: center; }
+     .mobile-shopping-bar .wechat-link:active .bar-zh, .mobile-shopping-bar .wechat-link[aria-expanded="true"] .bar-zh { color: var(--cinnabar); }
   }
+  /* 微信直联弹层：仅移动端底栏触发，沿用弹层视觉基调 */
+  .wechat-sheet { position: fixed; inset: 0; z-index: 16; display: grid; place-items: center; padding: 18px; background: rgba(24, 22, 19, .5); }
+  .wechat-sheet[hidden] { display: none; }
+  .wechat-sheet-card { position: relative; width: min(420px, 100%); max-height: calc(100vh - 36px); overflow: auto; padding: 30px 26px 26px; background: var(--paper-light); border: 1px solid var(--line); box-shadow: var(--shadow); text-align: center; }
+  .wechat-sheet-close { position: absolute; right: 14px; top: 10px; border: 0; background: transparent; font-size: 26px; line-height: 1; color: var(--ink); cursor: pointer; }
+  .wechat-sheet-card h2 { font-size: 24px; font-weight: 500; margin: 14px 0 18px; }
+  .wechat-sheet-qr { display: inline-block; line-height: 0; }
+  .wechat-sheet-qr img { display: block; width: 176px; height: 176px; border: 1px solid var(--line); }
+  .wechat-sheet-hint { font-size: 13px; color: var(--ink-soft); margin: 14px 0 0; }
+  .wechat-sheet-id { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); }
+  .wechat-sheet-id code { font-family: var(--font-mono); font-size: 15px; color: var(--ink); background: var(--paper); padding: 5px 12px; border: 1px solid var(--line); }
+  .wechat-sheet-note { font-size: 13px; color: var(--muted); margin: 16px 0 0; line-height: 1.8; }
+  .wechat-sheet-note a { color: var(--cinnabar); }
 </style>

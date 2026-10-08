@@ -5,8 +5,35 @@ import ProductDeepDive from './ProductDeepDive.astro';
 const { product } = Astro.props as { product: GiftProduct };
 const tier = giftTierLabels[product.tier];
 const canOrder = product.miniProgramStatus === 'ready' && Boolean(product.miniProgramUrl);
+
+// 交付模式判定（WO-P0-02）：按 dispatch 文本自动识别，而不是给每个产品硬编码一个字段。
+// 理由：`giftProducts` 现存 5 款**全部是定制**，现货是另一套体系
+// （`readyMadeWorks` 十二幅 + Keystatic `readyMadeStatus` 集合），不走这个组件。
+// 将来若真出现现货款，其 dispatch 会含「现货 / 48 小时」等词，这里能自动接住，不需要回头改组件。
+//
+// ⚠ 标签里的周期**必须取自 product.dispatch**，不能硬编码 ——
+// 5 款产品的实际周期是 7–10 / 10–14 / 14–21 工作日不等，
+// 写死「10–14 工作日」会对「案上有山」等产品给出错误的交付承诺。
+const dispatchText = product.dispatch || '';
+const isReadyStock = /现货|48\s*小时|顺丰直发/.test(dispatchText);
+const deliveryMode = isReadyStock
+  ? { key: 'ready', label: '现货顺丰直发（48 小时内发货）', cta: '立即获取送礼方案', note: '将前往微信小程序完成商品购买、支付和订单服务。' }
+  : {
+      key: 'custom',
+      // 优先用产品自身的 dispatch 周期，取不到时退回中性表述（不编造具体天数）。
+      // dispatch 原文形如「预计确认后 7–10 个工作日发出」，这里去掉「预计」前缀与「发出」后缀，
+      // 只保留周期部分，避免与外层「手泽定制（…）」括号产生「发出。）」这类重复语义。
+      label: `手泽定制（${dispatchText.replace(/^预计/, '').replace(/发出。?$/, '').trim() || '确认方案后按作品周期发出'}）`,
+      cta: '预约定制共创',
+      note: '想直接带走这一件？点「预约定制共创」留下联系方式，我们会把作品的细节、包装与交付时间，在沟通时一并讲给你。',
+    };
+// 首屏规格表：从 deepDive 里已有的「规格」章节抽取前若干项，让关键尺寸不必翻到页面中部。
+// 数据源不变（仍是 content.ts 的 specs），因此不存在两处维护不一致的问题。
+const specChapter = (product.deepDive || []).find((chapter) => chapter.specs?.length);
+const headlineSpecs = (specChapter?.specs || []).slice(0, 5);
 ---
-<section class="container detail-head"><div class="detail-visual">{product.image ? <img src={product.image} alt={`${product.name}｜${product.sceneLabel}场景`} /> : <span class="serif">{product.visual}</span>}<small>{product.sceneLabel} · {tier.name}</small></div><div class="detail-copy"><span class="eyebrow">Xiaomin Gifts / 小民好礼</span><h1 class="serif">{product.name}</h1><p lang="en">{product.en}</p><strong class="price">{product.price}</strong><p>{product.meaning}</p><dl class="decision-summary"><div><dt>适合谁</dt><dd>{product.recipient}</dd></div><div><dt>形式</dt><dd>{tier.name} · {product.sceneLabel}</dd></div><div><dt>价格</dt><dd>{product.price} <small>参考区间，具体以确认单为准</small></dd></div><div><dt>时间</dt><dd>{product.dispatch}</dd></div><div><dt>得到什么</dt><dd>{product.packaging}</dd></div></dl><div class="detail-actions"><button class="btn btn-secondary wishlist-button" type="button" data-wishlist={product.slug} aria-pressed="false">♡ 加入礼物清单</button>{canOrder ? <a class="btn btn-primary" href={product.miniProgramUrl} target="_blank" rel="noreferrer" data-event="mini_program_click">微信小程序下单 →</a> : <a class="btn btn-primary" href={`/custom-commission/?context=送礼建议&inspiration=${encodeURIComponent(product.name)}`} data-event="gift_advice_click">获取送礼建议 →</a>}</div><p class="detail-note">{canOrder ? '将前往微信小程序完成商品购买、支付和订单服务。' : '想直接带走这一件？点「获取送礼建议」留下联系方式，我们会把作品的细节、包装与交付时间，在沟通时一并讲给你。'}</p></div></section>
+
+<section class="container detail-head"><div class="detail-visual">{product.image ? <img src={product.image} alt={`${product.name}｜${product.sceneLabel}场景`} /> : <span class="serif">{product.visual}</span>}<small>{product.sceneLabel} · {tier.name}</small></div><div class="detail-copy"><span class="eyebrow">Xiaomin Gifts / 小民好礼</span><h1 class="serif">{product.name}</h1><p lang="en">{product.en}</p><p class={`delivery-badge is-${deliveryMode.key}`}><span class="badge-dot" aria-hidden="true"></span>{deliveryMode.label}</p><strong class="price">{product.price}</strong><p>{product.meaning}</p><dl class="decision-summary"><div><dt>适合谁</dt><dd>{product.recipient}</dd></div><div><dt>形式</dt><dd>{tier.name} · {product.sceneLabel}</dd></div><div><dt>价格</dt><dd>{product.price} <small>参考区间，具体以确认单为准</small></dd></div><div><dt>时间</dt><dd>{product.dispatch}</dd></div><div><dt>得到什么</dt><dd>{product.packaging}</dd></div></dl>{headlineSpecs.length > 0 ? <dl class="spec-table" aria-label="规格参数"><div class="spec-head"><dt>规格参数 <small>最终以随附作品档案为准</small></dt></div>{headlineSpecs.map((spec) => <div><dt>{spec.label}</dt><dd>{spec.value}</dd></div>)}</dl> : null}<div class="detail-actions"><button class="btn btn-secondary wishlist-button" type="button" data-wishlist={product.slug} aria-pressed="false">♡ 加入礼物清单</button>{canOrder ? <a class="btn btn-primary" href={product.miniProgramUrl} target="_blank" rel="noreferrer" data-event="mini_program_click">{deliveryMode.cta} →</a> : <a class="btn btn-primary" href={`/custom-commission/?context=送礼建议&inspiration=${encodeURIComponent(product.name)}`} data-event="gift_advice_click">{deliveryMode.cta} →</a>}</div><p class="detail-note">{deliveryMode.note}</p></div></section>
 <ProductDeepDive product={product} />
 <section class="container detail-info"><article><span class="eyebrow">Meaning / 礼物寓意</span><h2 class="serif">送出一份有分量的安静。</h2><p>{product.meaning}</p></article><article><span class="eyebrow">Packaging / 礼品包装</span><h2 class="serif">把仪式感也准备好。</h2><p>{product.packaging}。如需直寄给收礼人，请在咨询时备注，我们会说明可行的配送和价格信息。</p></article><article><span class="eyebrow">Dispatch / 预计发货</span><h2 class="serif">时间提前说清楚。</h2><p>{product.dispatch}。页面为当前参考范围，不等同于未确认的交付承诺；急件请先咨询。</p></article></section>
 <section class="container section card-faq"><span class="eyebrow">Gift FAQ / 礼物常见问题</span><h2 class="serif">还有几个问题，直接在这里看。</h2><div class="faq-grid"><details><summary>可以写贺卡吗？</summary><p>可以。咨询时提交贺卡文字，我们会在确认礼物方向时一起确认字数、版式与包装。</p></details><details><summary>可以直接寄给收礼人吗？</summary><p>可以提出直寄需求；收件信息、是否去除价格信息和物流时效需根据具体方案确认。</p></details><details><summary>这件礼物可以退换吗？</summary><p>个性化内容和包装方案的售后边界不同。确认前会说明可退换范围，再决定是否进入下一步。</p></details><details><summary>如何开始？</summary><p>点击“获取送礼建议”，告诉我们送给谁、什么场景、预算和时间，我们会先阅读再回复。</p></details></div></section>
@@ -24,10 +51,23 @@ const canOrder = product.miniProgramStatus === 'ready' && Boolean(product.miniPr
   .detail-head { display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1fr); gap: 70px; align-items: center; padding: 90px 0 80px; } .detail-visual { aspect-ratio: 1.05; background: var(--paper-deep); display: grid; place-items: center; align-content: center; gap: 10px; color: var(--cinnabar); position: relative; overflow: hidden; } .detail-visual img { width: 100%; height: 100%; object-fit: cover; display: block; } .detail-visual span { font-size: clamp(130px, 20vw, 240px); } .detail-visual small { position: absolute; left: 16px; bottom: 14px; z-index: 1; color: var(--paper-light); text-shadow: 0 1px 5px rgba(0,0,0,.55); font: 11px var(--font-mono); }
   .detail-copy h1 { font-size: clamp(28px, 3.6vw, 48px); line-height: 1.3; font-weight: 500; margin: 18px 0 4px; } .detail-copy p { max-width: 580px; color: var(--ink-soft); font-size: 17px; } .detail-copy p[lang='en'] { font: 24px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); } .price { display: block; margin: 22px 0 4px; font: 26px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); } .detail-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; } .detail-note { border-left: 2px solid var(--line); padding-left: 14px; font-size: 12px !important; } .wishlist-button.is-saved { background: var(--cinnabar); color: var(--paper-light); border-color: var(--cinnabar); }
   .detail-info { display: grid; grid-template-columns: repeat(3, 1fr); border-block: 1px solid var(--line); padding: 0; } .detail-info article { padding: 28px 22px 34px 0; } .detail-info article + article { padding-left: 22px; border-left: 1px solid var(--line); } .detail-info h2 { font-size: 24px; font-weight: 500; line-height: 1.3; margin: 20px 0 12px; } .detail-info p, .faq-grid p { color: var(--ink-soft); font-size: 14px; } .card-faq { border-top: 1px solid var(--line); } .card-faq h2 { font-size: clamp(26px, 3vw, 40px); font-weight: 500; margin: 18px 0 30px; } .faq-grid { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid var(--line); } .faq-grid details { padding: 18px 20px 18px 0; border-bottom: 1px solid var(--line); } .faq-grid details:nth-child(even) { padding-left: 20px; border-left: 1px solid var(--line); } .faq-grid summary { cursor: pointer; min-height: 44px; font-weight: 500; }
-  @media (max-width: 767px) { .detail-head { display: block; padding: 54px 0; } .detail-copy { padding-top: 32px; } .detail-copy h1 { font-size: 28px; } .detail-copy p { font-size: 16px; } .detail-actions { display: grid; } .detail-actions .btn { width: 100%; } .detail-info, .faq-grid { grid-template-columns: 1fr; } .detail-info article, .detail-info article + article { padding: 22px 0; border-left: 0; border-bottom: 1px solid var(--line); } .detail-info article:last-child { border-bottom: 0; } .faq-grid details, .faq-grid details:nth-child(even) { padding: 16px 0; border-left: 0; } }
+  @media (max-width: 767px) { .detail-head { display: block; padding: 54px 0; } .detail-copy { padding-top: 32px; } .detail-copy h1 { font-size: 28px; } .detail-copy p { font-size: 16px; } .detail-actions { display: grid; } .detail-actions .btn { width: 100%; } .detail-info, .faq-grid { grid-template-columns: 1fr; } .detail-info article, .detail-info article + article { padding: 22px 0; border-left: 0; border-bottom: 1px solid var(--line); } .detail-info article:last-child { border-bottom: 0; } .faq-grid details, .faq-grid details:nth-child(even) { padding: 16px 0; border-left: 0; } .spec-table > div:not(.spec-head) { grid-template-columns: 76px 1fr; gap: 10px; } }
   .decision-summary { display: grid; gap: 0; margin: 24px 0 0; border-top: 1px solid var(--line); }
   .decision-summary > div { display: grid; grid-template-columns: 88px 1fr; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line-soft); }
   .decision-summary dt { color: var(--muted); font-size: 12px; letter-spacing: .1em; }
   .decision-summary dd { margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.8; }
   .decision-summary dd small { display: block; color: var(--meta); font-size: 11px; }
+  /* 交付模式标识（WO-P0-02）：现货为朱砂实心点，定制为墨色空心点——
+     不用颜色单独承载语义，色盲用户也能靠点状/文案区分 */
+  .delivery-badge { display: inline-flex; align-items: center; gap: 8px; margin: 16px 0 0; padding: 7px 14px; border: 1px solid var(--line); background: var(--paper-deep); color: var(--ink); font-size: 13px !important; letter-spacing: .02em; }
+  .delivery-badge.is-ready { border-color: var(--cinnabar); color: var(--cinnabar-deep); }
+  .badge-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ink-soft); flex: none; }
+  .delivery-badge.is-ready .badge-dot { background: var(--cinnabar); }
+  /* 首屏规格表：数据来自 content.ts 的 deepDive.specs，不新增数据源 */
+  .spec-table { margin: 22px 0 0; border-top: 1px solid var(--line); }
+  .spec-table .spec-head dt { display: flex; align-items: baseline; gap: 10px; padding: 12px 0 8px; color: var(--ink); font-size: 13px; letter-spacing: .1em; border-bottom: 1px solid var(--line-soft); }
+  .spec-table .spec-head dt small { color: var(--meta); font-size: 11px; letter-spacing: 0; }
+  .spec-table > div:not(.spec-head) { display: grid; grid-template-columns: 92px 1fr; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line-soft); }
+  .spec-table dt { color: var(--muted); font-size: 12px; letter-spacing: .08em; }
+  .spec-table dd { margin: 0; color: var(--ink-soft); font-size: 13px; line-height: 1.7; }
 </style>
