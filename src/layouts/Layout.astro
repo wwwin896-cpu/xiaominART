@@ -88,6 +88,10 @@ const baiduId = trackPage ? BAIDU_TONGJI_ID : undefined;
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={new URL(image, Astro.site ?? Astro.url).href} />
     <meta name="theme-color" content="#f4efe5" />
+    {/* 百度站长平台站点所有权验证（2026-10-09）——
+        放在 Layout 里而非仅首页：站长平台支持验证任意页面，全站携带更稳妥，
+        且不影响 SEO（该 meta 对搜索引擎无索引语义）。 */}
+    <meta name="baidu-site-verification" content="codeva-7eloyNvWJI" />
     <script type="application/ld+json" is:inline set:html={JSON.stringify({ '@context': 'https://schema.org', '@graph': [ { '@type': 'LocalBusiness', name: '小民艺术', alternateName: 'Xiaomin Art', description, url: new URL('/', Astro.site ?? Astro.url).href, logo: new URL('/assets/brand/xiaominart-logo.png', Astro.site ?? Astro.url).href, email: 'hi@xiaominart.com', priceRange: '咨询制', areaServed: 'CN' }, { '@type': 'WebSite', name: '小民艺术 XIAOMINART', alternateName: 'XIAOMINART', url: new URL('/', Astro.site ?? Astro.url).href, inLanguage: 'zh-CN' } ] })} />
     {effectiveBreadcrumbs.length > 0 && <script type="application/ld+json" is:inline set:html={JSON.stringify({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: effectiveBreadcrumbs.map((item: { name: string; href: string }, i: number) => ({ '@type': 'ListItem', position: i + 1, name: item.name, item: new URL(item.href, Astro.site ?? Astro.url).href })) })} />}
     {gaId && <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>}
