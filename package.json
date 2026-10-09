@@ -8,6 +8,8 @@
     "build": "node scripts/gen-webp.mjs && astro build && node scripts/build-search.mjs",
     "assets:webp": "node scripts/gen-webp.mjs",
     "check:sitemap": "node scripts/check-sitemap.mjs",
+    "push:baidu": "node scripts/baidu-push.mjs",
+    "push:baidu:dry": "node scripts/baidu-push.mjs --dry-run",
     "preview": "astro preview",
     "check": "astro check",
     "search:index": "node scripts/build-search.mjs",

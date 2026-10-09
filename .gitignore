@@ -23,3 +23,6 @@ dist-vercel-test/
 
 # Pages Functions 运行时变量临时文件（CI 生成，含密钥，禁止入库）
 .env.pages-runtime
+
+# 百度主动推送 token（本地调试用；CI 走 Repository Secrets）
+.env.baidu

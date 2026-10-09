@@ -88,3 +88,26 @@ jobs:
           # 敏感值存 Repository Secrets，非敏感值用 vars，构建时写入临时 env 文件。
           # 文件在 CI 临时工作区生成、随 run 结束销毁，不落入仓库。
           command: pages deploy dist --project-name=xiaominart --branch=main --commit-dirty=true --env-file=.env.pages-runtime
+
+      # 百度「主动推送」：把本次构建出的 sitemap URL 推给百度，加快收录。
+      # 为什么不用 sitemap 提交：百度对新验证站点的 sitemap 配额会显示「今日上限 0 条」
+      # 且需 1-3 天释放；主动推送配额独立、当天可用、实时进入抓取队列（实测总配额 10 条/天）。
+      #
+      # ⚠️ 必须放在 Deploy 之后：宁可站点没更新也不要把用户导向 404 的 URL。
+      # 注意 pages deploy 是即时生效的（不像 Worker 有传播延迟），此处顺序仅为语义正确。
+      #
+      # 设计取舍：本步骤失败**不会**让整个 workflow 标红（continue-on-error: true）——
+      # 推送失败的原因都在百度侧（配额用尽、接口抖动），与站点质量无关，
+      # 不该阻塞、也不该掩盖真正的构建/部署失败。详情看步骤日志。
+      - name: Push URLs to Baidu (active submit)
+        if: ${{ github.ref == 'refs/heads/main' }}
+        continue-on-error: true
+        env:
+          BAIDU_PUSH_TOKEN: ${{ secrets.BAIDU_PUSH_TOKEN }}
+        run: |
+          if [ -z "${BAIDU_PUSH_TOKEN}" ]; then
+            echo "⚠ BAIDU_PUSH_TOKEN 未配置，跳过百度主动推送。"
+            echo "  启用方法：GitHub → Settings → Secrets and variables → Actions → Secrets → 添加 BAIDU_PUSH_TOKEN"
+            exit 0
+          fi
+          npm run push:baidu
