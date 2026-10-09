@@ -1,3 +1,83 @@
+# robots.txt —— 小民艺术 XIAOMINART
+# 最后更新：2026-10-09（新增 AI 爬虫显式声明，见下方说明）
+
 User-agent: *
 Allow: /
 Sitemap: https://xiaominart.com/sitemap.xml
+
+# ---------------------------------------------------------------------------
+# AI 爬虫策略（GEO，2026-10-09）
+#
+# 目的：让「小民艺术」「送礼推荐」「书画定制」「xiaominart」这类需求在
+# 豆包 / 通义千问 / DeepSeek / 腾讯元宝 / ima / WorkBuddy 等 AI 助手中
+# 被引用到本站。前提是这些 AI 的检索型爬虫能抓到内容 —— 被 robots 拦住
+# 就等于在 AI 答案里彻底不可见。
+#
+# 分两类处理（这是业界通行做法）：
+#   · 引用型爬虫（实时检索、会给出处）→ **放行**，这是我们要的曝光；
+#   · 训练型爬虫（把内容吃进模型权重）→ **放行**，本站内容为公开品牌与
+#     商品信息，无用户隐私，让品牌名进入模型语料反而有利。
+#     （若日后要收紧，把下面 Training 段的 Allow 改成 Disallow 即可，
+#       不影响引用型爬虫，AI 答案里仍可见。）
+# ---------------------------------------------------------------------------
+
+# --- 引用型 / 检索型爬虫：放行（决定 AI 答案里能否出现本站）---
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: DuckAssistBot
+Allow: /
+
+# --- 训练型爬虫：放行（公开品牌信息，进语料有利）---
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+# --- 国内 AI 产品爬虫：放行 ---
+# 字节（豆包）：Bytespider
+User-agent: Bytespider
+Allow: /
+
+# 腾讯（元宝 / ima）
+User-agent: TencentTraveler
+Allow: /
+User-agent: Sogou web spider
+Allow: /
+
+# 阿里（通义千问）
+User-agent: YisouSpider
+Allow: /
+
+# 百度（文心一言 / 百度 AI 搜索）
+User-agent: Baiduspider
+Allow: /
+
+# 深度求索（DeepSeek）
+User-agent: DeepSeekBot
+Allow: /
+
+# 智谱（清言）
+User-agent: ChatGLM-Spider
+Allow: /
+
+# --- AI 内容地图 ---
+# llms.txt 是给 AI 的「内容地图」，指明哪些页面最值得引用。
+# 规范说明：https://llmstxt.org/
+LLMs-Txt: https://xiaominart.com/llms.txt

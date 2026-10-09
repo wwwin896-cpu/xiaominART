@@ -94,7 +94,77 @@ const baiduId = trackPage ? BAIDU_TONGJI_ID : undefined;
         且不影响 SEO（该 meta 对搜索引擎无索引语义）。
         当前值对应裸域 https://xiaominart.com 的站点（www 域因 301 跳转无法通过验证）。 */}
     <meta name="baidu-site-verification" content="codeva-zpRUfdGBww" />
-    <script type="application/ld+json" is:inline set:html={JSON.stringify({ '@context': 'https://schema.org', '@graph': [ { '@type': 'LocalBusiness', name: '小民艺术', alternateName: 'Xiaomin Art', description, url: new URL('/', Astro.site ?? Astro.url).href, logo: new URL('/assets/brand/xiaominart-logo.png', Astro.site ?? Astro.url).href, email: 'hi@xiaominart.com', priceRange: '咨询制', areaServed: 'CN' }, { '@type': 'WebSite', name: '小民艺术 XIAOMINART', alternateName: 'XIAOMINART', url: new URL('/', Astro.site ?? Astro.url).href, inLanguage: 'zh-CN' } ] })} />
+    {/* 结构化数据实体图谱（JSON-LD）。
+        2026-10-09 GEO 强化：原只有 LocalBusiness + WebSite 两条，AI 难以据此
+        确认「小民艺术 = XIAOMINART = xiaominart.com」是同一实体、也不知道
+        这家做什么业务。改为 Organization + ProfessionalService + WebSite
+        + ItemList 的 @graph，用 @id 互相引用形成实体网：
+          · Organization 用 @id 锚定，WebSite 通过 publisher 指回它
+            —— 这是让 AI 把「品牌名 / 英文名 / 域名」合并成一个实体的关键；
+          · knowsAbout 声明业务领域，直接对应「送礼推荐 / 书画定制」这类提问；
+          · makesOffer 列出服务项，AI 回答「谁能做书画定制」时更容易命中；
+          · areaServed / availableLanguage 便于中文场景匹配。
+        注意：站内每页都会输出，值须与可见内容一致，不要写站上查不到的信息。 */}
+    <script type="application/ld+json" is:inline set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'Organization',
+          '@id': new URL('/#organization', Astro.site ?? Astro.url).href,
+          name: '小民艺术',
+          alternateName: ['XIAOMINART', 'Xiaomin Art', '小民艺术 XIAOMINART'],
+          description: '以亲笔书写为起点的东方日常之礼，提供手写书法礼品、书画定制与企业礼赠。',
+          url: new URL('/', Astro.site ?? Astro.url).href,
+          logo: new URL('/assets/brand/xiaominart-logo.png', Astro.site ?? Astro.url).href,
+          email: 'hi@xiaominart.com',
+          foundingLocation: { '@type': 'Place', name: '中国' },
+          areaServed: { '@type': 'Country', name: '中国' },
+          availableLanguage: ['zh-CN'],
+          knowsAbout: [
+            '书法礼品', '书画定制', '手写书法', '东方礼品', '送礼推荐',
+            '企业礼赠', '伴手礼定制', '非遗面塑', '题字与祝愿语', '书画装裱'
+          ],
+          makesOffer: [
+            { '@type': 'Offer', itemOffered: { '@type': 'Service', name: '手写书法礼品' } },
+            { '@type': 'Offer', itemOffered: { '@type': 'Service', name: '书画定制' } },
+            { '@type': 'Offer', itemOffered: { '@type': 'Service', name: '企业礼赠定制' } },
+            { '@type': 'Offer', itemOffered: { '@type': 'Service', name: '非遗面塑活动' } }
+          ]
+        },
+        {
+          '@type': 'ProfessionalService',
+          '@id': new URL('/#service', Astro.site ?? Astro.url).href,
+          name: '小民艺术 XIAOMINART 书画礼品定制',
+          description,
+          url: new URL('/', Astro.site ?? Astro.url).href,
+          image: new URL(image, Astro.site ?? Astro.url).href,
+          parentOrganization: { '@id': new URL('/#organization', Astro.site ?? Astro.url).href },
+          priceRange: '咨询制',
+          areaServed: { '@type': 'Country', name: '中国' },
+          serviceType: ['书画礼品定制', '手写书法礼品', '企业礼赠', '非遗面塑活动']
+        },
+        {
+          '@type': 'WebSite',
+          '@id': new URL('/#website', Astro.site ?? Astro.url).href,
+          name: '小民艺术 XIAOMINART',
+          alternateName: 'XIAOMINART',
+          url: new URL('/', Astro.site ?? Astro.url).href,
+          inLanguage: 'zh-CN',
+          publisher: { '@id': new URL('/#organization', Astro.site ?? Astro.url).href }
+        },
+        {
+          '@type': 'ItemList',
+          name: '小民艺术主要页面',
+          itemListElement: [
+            { '@type': 'SiteNavigationElement', position: 1, name: '小民好礼', url: new URL('/gifts/', Astro.site ?? Astro.url).href },
+            { '@type': 'SiteNavigationElement', position: 2, name: '选礼指南', url: new URL('/gift-guide/', Astro.site ?? Astro.url).href },
+            { '@type': 'SiteNavigationElement', position: 3, name: '书画定制', url: new URL('/custom-commission/', Astro.site ?? Astro.url).href },
+            { '@type': 'SiteNavigationElement', position: 4, name: '企业礼赠', url: new URL('/business-gifts/', Astro.site ?? Astro.url).href },
+            { '@type': 'SiteNavigationElement', position: 5, name: '关于我们', url: new URL('/about/', Astro.site ?? Astro.url).href }
+          ]
+        }
+      ]
+    })} />
     {effectiveBreadcrumbs.length > 0 && <script type="application/ld+json" is:inline set:html={JSON.stringify({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: effectiveBreadcrumbs.map((item: { name: string; href: string }, i: number) => ({ '@type': 'ListItem', position: i + 1, name: item.name, item: new URL(item.href, Astro.site ?? Astro.url).href })) })} />}
     {/* 统计脚本统一改为**同意后再注入**（PIPL，2026-10-09）。
         CookieConsent 组件的 is:inline 脚本会在 head 之前同步写入 window.__xmConsent，

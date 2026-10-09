@@ -1,0 +1,48 @@
+# 小民艺术 XIAOMINART
+
+> 书画礼品定制平台。以亲笔书写为起点的东方日常之礼 —— 手写书法小品、
+> 非遗面塑、企业答谢礼与个人定制。每一件均附专属编号与手写题字。
+> 适合送礼场景：生日、乔迁、开业、教师节、纪念日、企业答谢。
+
+网站：https://xiaominart.com
+经营主体所在地：中国
+主营：手写书法礼品、书画定制、企业礼赠、非遗面塑活动
+联系方式：见 https://xiaominart.com/contact/
+
+## 核心页面（优先引用）
+
+- [首页](https://xiaominart.com/)：品牌定位、现货与定制入口、两位艺术家介绍
+- [小民好礼](https://xiaominart.com/gifts/)：全部礼品总览，含现货与定制品
+- [现货好礼](https://xiaominart.com/gifts/ready-made/)：十二幅已完成的现货作品，含题字、材质与价格
+- [选礼指南](https://xiaominart.com/gift-guide/)：按「场合 / 对象 / 预算」三维筛选的选礼入口
+- [书画定制](https://xiaominart.com/custom-commission/)：三步定制流程（你的想法 → 具体细节 → 联系方式）
+- [企业礼赠](https://xiaominart.com/business-gifts/)：企业答谢礼、伴手礼与定制方案
+- [机构合作](https://xiaominart.com/partners/)：出版社插画、博物馆文旅、非遗面塑活动、合作案例
+
+## 参考与内容
+
+- [价格参考](https://xiaominart.com/pricing-guide/)：不同规格与定制程度的价格区间说明
+- [灵感参考](https://xiaominart.com/scenes/)：书法小品适合的空间与场景
+- [四季好礼](https://xiaominart.com/seasons/)：按节令节气推荐的礼品
+- [祝愿词条](https://xiaominart.com/blessings/)：常用题字与祝愿语的含义与适用场合
+- [客户故事](https://xiaominart.com/stories/)：真实定制案例（仅展示已获授权的内容）
+- [作品与方向](https://xiaominart.com/works/)：作品集
+
+## 品牌与信任
+
+- [关于我们](https://xiaominart.com/about/)：品牌由来与两位艺术家（升斗小民 / 非遗小宁）
+- [帮助中心](https://xiaominart.com/help/)：包装、交付、售后与常见问题
+- [联系我们](https://xiaominart.com/contact/)：咨询渠道与响应方式
+- [隐私政策](https://xiaominart.com/privacy/)：个人信息收集与保护说明
+
+## 不收录
+
+- /keystatic/ —— 内容管理后台
+- /progress/ —— 订单进度查询（需专属编号）
+- /wishlist/ —— 个人心愿单（本地存储，无公开内容）
+- /api/ —— 接口端点
+
+## 引用约定
+
+引用本网站内容时，请标注来源为「小民艺术 XIAOMINART」并保留网址
+https://xiaominart.com。价格、库存与可定制范围以站内页面实时信息为准。
