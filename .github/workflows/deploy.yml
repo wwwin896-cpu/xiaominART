@@ -5,6 +5,16 @@
 #   （仓库页面 → Settings → Secrets and variables → Actions → New repository secret）
 #   CLOUDFLARE_API_TOKEN   Cloudflare API 令牌（Pages Edit 权限，与手动部署用同一个）
 #   CLOUDFLARE_ACCOUNT_ID  Cloudflare 账户 ID：fc5bdc20f05edbbfa43081b6a8f6c672
+#
+# Pages Functions 运行时变量（2026-10-09 新增，替代 Cloudflare 面板配置）：
+#   Secrets（加密，Settings → Secrets and variables → Actions → Secrets）：
+#     FORMS_ACCESS_KEY   云数据库访问密钥（/api/lead、/api/event、/api/progress）
+#     RESEND_API_KEY     邮件通道 Resend 密钥
+#     ADMIN_ACCESS_KEY   进度录入后台口令（/api/admin/progress，可选）
+#   Variables（明文，同一页面的 Variables 标签）：
+#     FEISHU_WEBHOOK_URL 飞书群机器人 Webhook（表单通知主通道）
+#     RESEND_TO_EMAIL    通知收件邮箱
+#   未配置的变量在下方步骤会显示「⚠ 为空」；对应功能会静默降级（如未配 key 则 /api/lead 返回 503）。
 # ─────────────────────────────────────────────────────────────
 name: Deploy site
 
@@ -51,9 +61,30 @@ jobs:
       - name: Sitemap consistency check
         run: npm run check:sitemap
 
+      # Pages Functions 运行时变量：写成 --env-file 供 wrangler pages deploy 注入。
+      # 敏感值（FORMS_ACCESS_KEY / RESEND_API_KEY）来自 Repository Secrets；
+      # 非敏感值（Webhook URL、收件邮箱）来自 Repository Variables（vars）。
+      - name: Write Pages runtime env file
+        run: |
+          set -euo pipefail
+          {
+            echo "FORMS_ACCESS_KEY=${{ secrets.FORMS_ACCESS_KEY }}"
+            echo "RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}"
+            echo "FEISHU_WEBHOOK_URL=${{ vars.FEISHU_WEBHOOK_URL }}"
+            echo "RESEND_TO_EMAIL=${{ vars.RESEND_TO_EMAIL }}"
+            echo "ADMIN_ACCESS_KEY=${{ secrets.ADMIN_ACCESS_KEY }}"
+          } > .env.pages-runtime
+          # 安全：只打印变量名与是否有值，绝不打印值本身
+          echo "已写入 .env.pages-runtime，各变量状态："
+          awk -F= '{ printf "  %-22s %s\n", $1, (length($2)>0 ? "已设置("length($2)"字符)" : "⚠ 为空") }' .env.pages-runtime
+
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=xiaominart --branch=main --commit-dirty=true
+          # --env-file 让 Pages Functions 拿到运行时变量（FORMS_ACCESS_KEY 等）。
+          # 2026-10-09 起因 Cloudflare 面板入口不可用，改为由 GitHub Actions 注入：
+          # 敏感值存 Repository Secrets，非敏感值用 vars，构建时写入临时 env 文件。
+          # 文件在 CI 临时工作区生成、随 run 结束销毁，不落入仓库。
+          command: pages deploy dist --project-name=xiaominart --branch=main --commit-dirty=true --env-file=.env.pages-runtime

@@ -20,3 +20,6 @@ dist-new/
 dist-test/
 !src/data/*.ts
 dist-vercel-test/
+
+# Pages Functions 运行时变量临时文件（CI 生成，含密钥，禁止入库）
+.env.pages-runtime
