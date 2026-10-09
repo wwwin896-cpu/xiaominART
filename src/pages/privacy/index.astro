@@ -1,0 +1,176 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+// 《隐私政策》正文（WO-P1-04 收尾）。
+// 条款为业主 2026-10-09 定稿并提供的法律文本（源文件：《小民艺术_XIAOMINART_隐私政策.docx》）。
+// ⚠ 此处为**忠实转录**：不改写措辞、不增删条款、不调整承诺范围。
+//    需要修订时请业主在原 docx 上改并重新提供，不要在本文件里临时发挥。
+const effectiveDate = '2026年10月9日';
+const updatedDate = '2026年10月9日';
+
+const sections: Array<{ title: string; blocks: string[] }> = [
+  {
+    title: '一、我们如何收集和使用您的个人信息',
+    blocks: [
+      '1、您在使用本网站服务过程中，我们可能会收集以下类型的个人信息：',
+      '（1）账户与联系信息：当您通过本网站的"与我们聊聊"表单提交定制咨询时，我们会收集您主动提供的称呼、联系方式（邮箱地址或微信号）以及您想表达的内容。这些信息用于与您沟通定制需求、提供客户服务。',
+      '（2）订单信息：当您购买本网站的书画礼品（包括现货好礼和定制好礼）时，我们会收集您的收货地址、联系电话、收件人姓名等必要的订单履约信息，用于完成商品配送和售后服务。',
+      '（3）订阅信息：当您订阅本网站的创作笔记时，我们会收集您的邮箱地址，用于向您发送最新的案例分享与艺术灵感内容。您随时可以通过邮件中的退订链接取消订阅。',
+      '（4）浏览信息：在您浏览本网站时，我们的服务器会自动记录一些与您访问相关的信息，包括您的IP地址、浏览器类型、操作系统、访问页面、访问时间、停留时长等日志信息。这些信息用于分析网站使用情况、优化用户体验和保障网站安全。',
+      '（5）心愿单信息：本网站提供心愿单功能，方便您收藏感兴趣的商品。需要特别说明的是，心愿单数据仅保存在您自己的浏览器本地，不会上传至我们的服务器，也不会同步给任何第三方。',
+      '2、我们收集和使用您个人信息的目的包括但不限于：',
+      '（1）为您提供书画礼品定制咨询和购买服务；',
+      '（2）处理您的订单、配送商品及提供售后服务；',
+      '（3）向您发送您订阅的创作笔记和最新资讯；',
+      '（4）改善本网站的功能和用户体验；',
+      '（5）保障本网站的安全运行和防范欺诈行为；',
+      '（6）其他经您同意或法律法规允许的目的。',
+    ],
+  },
+  {
+    title: '二、我们如何存储您的个人信息',
+    blocks: [
+      '1、我们会将收集的个人信息存储在中华人民共和国境内的服务器上。',
+      '2、我们仅会在实现本隐私政策所述目的所需的最短期限内留存您的个人信息，除非法律法规要求或允许更长的留存期限。超出留存期限后，我们将对您的个人信息进行删除或匿名化处理。',
+      '3、对于您通过本网站心愿单功能产生的数据，由于该数据仅保存在您本地浏览器中，其存储期限由您的浏览器设置决定，我们不对此承担存储责任。',
+    ],
+  },
+  {
+    title: '三、我们如何共享、转让和公开披露您的个人信息',
+    blocks: [
+      '1、共享：我们不会将您的个人信息出售给任何第三方。在以下情况下，我们可能会与第三方共享您的个人信息：',
+      '（1）为实现您订单的配送和售后服务，我们需要与物流服务商共享您的收货地址和联系电话；',
+      '（2）为处理网站技术维护、数据分析等事务，我们可能会委托第三方服务商处理必要的个人信息，但会要求其严格遵守本隐私政策并采取保密措施；',
+      '（3）经您明确同意后，我们可能会与您指定的第三方共享您授权的信息。',
+      '2、转让：我们不会将您的个人信息转让给任何公司、组织或个人，除非在涉及合并、收购或资产转让时，我们会要求新的持有方继续受本隐私政策的约束。',
+      '3、公开披露：我们仅会在以下情况下公开披露您的个人信息：',
+      '（1）获得您的单独同意；',
+      '（2）基于法律法规、法律程序、诉讼或政府主管部门的强制性要求；',
+      '（3）为维护小民艺术的合法权益、用户或公众的合法权益免受侵害。',
+      '关于客户分享：本网站展示的"客户分享"内容（包括客户故事和作品图片），均已在获得客户明确授权后发布。如您发现未经授权的个人信息展示，请及时联系我们要求删除。',
+    ],
+  },
+  {
+    title: '四、我们如何使用Cookies及同类技术',
+    blocks: [
+      '1、本网站可能会使用Cookies或类似技术来改善您的浏览体验。Cookies是一种小型数据文件，可存储在您的设备上，用于记住您的偏好设置、维持登录状态、分析网站使用情况等。',
+      '2、您可以通过浏览器设置管理或禁用Cookies。但请注意，禁用Cookies可能会影响本网站部分功能的正常使用。',
+      '3、我们不会利用Cookies收集您的敏感个人信息。',
+    ],
+  },
+  {
+    title: '五、我们如何保护您的个人信息',
+    blocks: [
+      '1、我们已采取符合业界标准的安全防护措施来保护您提供的个人信息，防止数据遭到未经授权访问、公开披露、使用、修改、损坏或丢失。',
+      '2、我们会采取一切合理可行的措施，确保未授权的访问权限和个人信息的泄露控制在最低限度。',
+      '3、请您知悉并理解，互联网环境并非百分之百安全，我们将尽力确保或担保您发送给我们的任何信息的安全性。如果我们的物理、技术或管理防护设施遭到破坏，导致信息被非授权访问、公开披露、篡改或毁坏，导致您的合法权益受损，我们将承担相应的法律责任。',
+      '4、在不幸发生个人信息安全事件后，我们将依照法律法规的要求，及时向您告知安全事件的基本情况和可能的影响、我们已采取或将要采取的处置措施、您可自主防范和降低风险的建议、对您的补救措施等，并通过网站公告、邮件通知等方式告知您。',
+    ],
+  },
+  {
+    title: '六、您的权利',
+    blocks: [
+      '根据《中华人民共和国个人信息保护法》等相关法律法规，您对自己的个人信息享有以下权利：',
+      '1、知情权：您有权了解我们如何处理您的个人信息，包括处理的目的、方式、范围等。',
+      '2、访问和复制权：您有权访问和复制我们持有的您的个人信息。',
+      '3、更正和补充权：当您发现我们持有的关于您的个人信息有错误时，您有权要求我们更正或补充。',
+      '4、删除权：在特定情形下，您有权要求我们删除您的个人信息。',
+      '5、撤回同意权：您有权随时撤回我们对您个人信息的处理同意。撤回同意不影响此前基于同意已进行的个人信息处理活动的效力。',
+      '6、约束自动化决策权：您有权要求我们对通过自动化决策方式作出的决定进行解释，并有权拒绝仅通过自动化决策方式作出的决定。',
+      '7、注销账户权：您有权注销您在本网站的账户，我们将在收到请求后及时处理。',
+      '如您希望行使上述权利，请通过本隐私政策第九条披露的联系方式与我们联系。我们将在15个工作日内响应您的请求。为保障安全，我们可能会先要求您验证身份，然后再处理您的请求。',
+    ],
+  },
+  {
+    title: '七、未成年人保护',
+    blocks: [
+      '1、本网站面向一般公众提供书画礼品定制服务，不专门面向未成年人。',
+      '2、如果我们发现在未事先获得可证实的监护人同意的情况下收集了未成年人的个人信息，我们将设法尽快删除相关数据。',
+      '3、建议未成年人的监护人对未成年人的网络活动进行指导和监督。',
+    ],
+  },
+  {
+    title: '八、本隐私政策如何更新',
+    blocks: [
+      '1、我们可能会根据法律法规变化、业务发展、技术改进等因素适时更新本隐私政策。',
+      '2、更新后的隐私政策将在本网站显著位置公布。我们建议您定期查看本政策，以了解最新的个人信息处理规则。',
+      '3、若您在使用更新后的本网站时未提出异议，视为您已接受更新后的隐私政策。',
+    ],
+  },
+  {
+    title: '九、如何联系我们',
+    blocks: [
+      '如果您对本隐私政策有任何疑问、意见或投诉，请通过以下方式与我们联系：',
+      '邮箱：hi@xiaominart.com',
+      '微信：17761888727（备注来意，我们会尽快回复）',
+      '我们将尽快对您的请求予以回复。',
+    ],
+  },
+];
+
+const lastName = '小民艺术 XIAOMINART';
+---
+<Layout
+  title="隐私政策｜个人信息收集与保护｜小民艺术"
+  description="小民艺术隐私政策：说明我们如何收集、使用、存储和保护您的个人信息，以及您依据《中华人民共和国个人信息保护法》享有的权利。"
+  canonical="https://xiaominart.com/privacy/"
+>
+  <section class="container privacy-hero">
+    <span class="eyebrow">Privacy / 隐私政策</span>
+    <p class="privacy-doc-title serif">小民艺术 XIAOMINART 隐私政策</p>
+    <h1 class="serif">您的信息，<br />我们怎么对待。</h1>
+    <p>小民艺术（以下简称"我们"或"小民艺术"）运营网站 https://xiaominart.com/（以下简称"本网站"）。我们深知个人信息对您的重要性，并会尽全力保护您的个人信息安全。本隐私政策旨在向您说明我们如何收集、使用、存储和保护您的个人信息，以及您享有的相关权利。请您在使用本网站前，仔细阅读并了解本隐私政策的全部内容。您继续使用本网站即表示您同意我们按照本隐私政策处理您的相关信息。</p>
+    <dl class="privacy-meta">
+      <div><dt>生效日期</dt><dd>{effectiveDate}</dd></div>
+      <div><dt>更新日期</dt><dd>{updatedDate}</dd></div>
+    </dl>
+  </section>
+
+  <section class="container section privacy-body">
+    {sections.map((section) => (
+      <article class="privacy-section">
+        <h2 class="serif">{section.title}</h2>
+        <div class="privacy-blocks">
+          {section.blocks.map((block) => (
+            // 条款内「（N）」「N、」开头的条目与普通叙述段分开排版：
+            // 前者缩进成条目，后者保持整行，读起来更接近原件的层级。
+            <p class={/^（[一二三四五六七八九十\d]+）|^\d+、|^关于/.test(block) ? 'is-item' : 'is-lead'}>{block}</p>
+          ))}
+        </div>
+      </article>
+    ))}
+    <p class="privacy-thanks">感谢您对小民艺术的信任与支持。我们珍视每一位用户的信任，将持续努力保护您的个人信息安全。</p>
+    <p class="privacy-sign serif">{lastName}</p>
+    <p class="privacy-sign-date">{effectiveDate}</p>
+  </section>
+</Layout>
+<style>
+  .privacy-hero { padding: 96px 0 60px; border-bottom: 1px solid var(--line); }
+  /* 原件标题（「小民艺术 XIAOMINART 隐私政策」）原样保留；上方主标题是版式化的呈现 */
+  .privacy-doc-title { margin: 18px 0 0; color: var(--cinnabar-deep); font-size: 15px; letter-spacing: .14em; }
+  .privacy-hero h1 { font-size: clamp(46px, 6.4vw, 80px); font-weight: 500; line-height: 1.2; margin: 20px 0; }
+  .privacy-hero > p { max-width: 760px; color: var(--ink-soft); font-size: 16px; line-height: 1.95; }
+  .privacy-meta { display: flex; flex-wrap: wrap; gap: 12px 40px; margin: 26px 0 0; }
+  .privacy-meta > div { display: flex; align-items: baseline; gap: 10px; }
+  .privacy-meta dt { color: var(--muted); font-size: 12px; letter-spacing: .1em; }
+  .privacy-meta dd { margin: 0; color: var(--ink); font-size: 13px; font-family: var(--font-mono); }
+
+  .privacy-body { max-width: 860px; }
+  .privacy-section { padding: 34px 0; border-bottom: 1px solid var(--line-soft); }
+  .privacy-section h2 { font-size: clamp(21px, 2.4vw, 28px); font-weight: 500; margin: 0 0 18px; }
+  .privacy-blocks { display: flex; flex-direction: column; gap: 10px; }
+  .privacy-blocks p { margin: 0; color: var(--ink-soft); font-size: 15px; line-height: 1.95; }
+  /* 条目行（（N）/ N、/ 关于…）：左侧留出索引宽度，与叙述段形成层级差 */
+  .privacy-blocks p.is-item { padding-left: 22px; text-indent: -22px; }
+  .privacy-blocks p.is-lead { color: var(--ink); font-weight: 500; margin-top: 8px; }
+  .privacy-thanks { margin: 40px 0 0; color: var(--ink-soft); font-size: 15px; line-height: 1.95; }
+  .privacy-sign { margin: 26px 0 0; font-size: 18px; letter-spacing: .04em; }
+  .privacy-sign-date { margin: 6px 0 0; color: var(--muted); font-size: 13px; font-family: var(--font-mono); }
+
+  @media (max-width: 767px) {
+    .privacy-hero { padding: 56px 0 44px; }
+    .privacy-hero h1 { font-size: 44px; }
+    .privacy-hero > p { font-size: 15px; }
+    .privacy-section { padding: 26px 0; }
+  }
+</style>

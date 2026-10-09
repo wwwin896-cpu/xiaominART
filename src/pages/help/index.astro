@@ -47,6 +47,7 @@ const faqJsonLd = {
       ))}
     </div>
     <p class="after-sales-tip">收货时建议当场验件；若外包装有明显破损，先拍照留存再拆件，联系我们时一并提供，处理会更快。</p>
+    <p class="after-sales-tip">我们如何收集与保护你的个人信息，见<a href="/privacy/">《隐私政策》</a>。</p>
   </section>
 
   <section class="container section faq-sections">{faqGroups.map((group) => <section><span class="eyebrow">{group.title}</span><div class="faq-list">{group.items.map(([question, answer]) => <details><summary>{question}</summary><p>{answer}</p></details>)}</div></section>)}</section>
@@ -64,5 +65,6 @@ const faqJsonLd = {
   .policy-item h3 { font-size: 20px; font-weight: 500; margin: 4px 0 8px; }
   .policy-item p { color: var(--ink-soft); font-size: 15px; line-height: 1.9; margin: 0; max-width: 720px; }
   .after-sales-tip { color: var(--muted); font-size: 12.5px; line-height: 1.8; margin: 18px 0 0; }
+  .after-sales-tip a { color: var(--cinnabar); border-bottom: 1px solid var(--cinnabar); }
   .faq-sections { border-top: 1px solid var(--line); } .faq-sections > section { padding: 28px 0 40px; border-bottom: 1px solid var(--line); } .faq-list { max-width: 820px; margin-top: 20px; border-top: 1px solid var(--line); } details { padding: 18px 0; border-bottom: 1px solid var(--line); } summary { cursor: pointer; min-height: 44px; font-weight: 500; } details p { max-width: 680px; color: var(--ink-soft); line-height: 1.8; } @media (max-width: 767px) { .help-hero { padding: 56px 0 46px; } .help-hero h1 { font-size: 50px; } .help-hero p { font-size: 16px; } .policy-item { gap: 16px; padding: 20px 0; } }
 </style>

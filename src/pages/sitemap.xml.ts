@@ -55,6 +55,8 @@ const staticRoutes: { path: string; files: string[] }[] = [
   { path: 'custom-commission/', files: [P('custom-commission/index.astro')] },
   { path: 'contact/', files: [P('contact/index.astro')] },
   { path: 'help/', files: [P('help/index.astro')] },
+  // 隐私政策（P1-04 收尾，2026-10-09）：页脚常驻入口，合规必备页
+  { path: 'privacy/', files: [P('privacy/index.astro')] },
   // 内容与参考
   { path: 'art-direction/', files: [P('art-direction/index.astro')] },
   { path: 'pricing-guide/', files: [P('pricing-guide/index.astro')] },
