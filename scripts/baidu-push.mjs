@@ -128,19 +128,40 @@ async function pushBatch(urls) {
   return { status: res.status, json };
 }
 
-/** 把接口返回翻译成人话，便于 CI 日志阅读
+/** 配额类错误：属于软失败（改天自动恢复），不该报成「配置错误」误导排查
  * @param {Record<string, any>} json */
+function isQuotaError(json) {
+  if (!json.error) return false;
+  const msg = String(json.message ?? '').toLowerCase();
+  return msg.includes('over quota') || msg.includes('quota') || json.error === 429;
+}
+
+/** 把接口返回翻译成人话，便于 CI 日志阅读
+ * @param {Record<string, any>} json
+ * @returns {{ text: string, quota: boolean }} */
 function explain(json) {
   if (json.error) {
+    // ⚠️ 百度把「配额用尽」也塞进 error:400，message 才是真原因。
+    // 早先只按 error 码翻译，把 over quota 误报成「站点域名或 token 格式错误」，
+    // 会让人去反复检查 token —— 先判 message，别只看码。
+    if (isQuotaError(json)) {
+      return {
+        quota: true,
+        text: `⚠ 推送被拒绝：今日配额已用尽（${json.message}）—— 属正常限流，改日重跑即可，无需改配置`,
+      };
+    }
     /** @type {Record<number, string>} */
     const table = {
-      400: '站点域名或 token 格式错误',
+      400: '请求格式错误（若 message 为 site init fail，多为 site 参数被 URL 编码）',
       401: 'token 无效（请核对站长平台的准入密钥）',
       403: '站点未验证或 token 与站点不匹配',
       404: '接口地址错误',
       500: '百度服务端异常，稍后重试',
     };
-    return `✗ 推送被拒绝：${json.message ?? '未知原因'}（${table[Number(json.error)] ?? 'HTTP ' + json.error}）`;
+    return {
+      quota: false,
+      text: `✗ 推送被拒绝：${json.message ?? '未知原因'}（${table[Number(json.error)] ?? 'HTTP ' + json.error}）`,
+    };
   }
   const parts = [];
   if (typeof json.success === 'number') parts.push(`成功 ${json.success} 条`);
@@ -151,7 +172,7 @@ function explain(json) {
   if (Array.isArray(json.not_valid) && json.not_valid.length) {
     parts.push(`⤫ 格式非法被忽略 ${json.not_valid.length} 条：${json.not_valid.slice(0, 3).join(', ')}`);
   }
-  return `✓ ${parts.join('，') || '推送完成'}`;
+  return { quota: false, text: `✓ ${parts.join('，') || '推送完成'}` };
 }
 
 /** 已提交但超配额/未通过校验的 URL，接口会回传，用于提示业主
@@ -176,6 +197,7 @@ console.log('');
 let totalSuccess = 0;
 let lastRemain = null;
 let hardFailure = false;
+let quotaHit = false;
 const rejected = [];
 
 for (const [i, batch] of batches.entries()) {
@@ -190,21 +212,28 @@ for (const [i, batch] of batches.entries()) {
     break;
   }
 
-  console.log(explain(result.json));
+  const verdict = explain(result.json);
+  console.log(verdict.text);
   totalSuccess += Number(result.json.success ?? 0);
   if (typeof result.json.remain === 'number') lastRemain = result.json.remain;
   rejected.push(...leftovers(result.json));
 
-  // 配额耗尽：继续推只会被拒，提前收工。
-  // 注意 remain=0 不是配置错误，但至少有一批被拒 → 仍标红，让 CI 里能看见「今天没推完」。
-  if (lastRemain === 0) {
+  // 配额用尽：软失败。百度把 over quota 也塞进 error:400，
+  // 若按硬失败处理会让 CI 每次配额到期都标红（属正常限流，非缺陷）。
+  if (verdict.quota) {
+    quotaHit = true;
     console.log('  ⚠ 今日配额已用尽，剩余 URL 请改日再推（脚本可重复执行，已收录的重复推送不影响）');
-    if (Number(result.json.success ?? 0) === 0) hardFailure = true;
     break;
   }
-  // 接口报 error：一律视为硬失败并止损（400 site init fail / 401 token 无效 /
-  // 403 站点未验证 / 404 接口错误 —— 都是配置问题，后续批次必然同样失败，重试无意义）。
-  // 早先只判 [401,403,404] 把 400 放过了，导致 token 配错时退出码仍为 0、CI 不标红，已修正。
+  // remain 归零但本批仍有成功：配额刚好用完，同样按软失败收工
+  if (lastRemain === 0) {
+    quotaHit = true;
+    console.log('  ⚠ 今日配额已用尽，剩余 URL 请改日再推');
+    break;
+  }
+  // 真·配置错误（token 无效 / 站点未验证 / 接口地址错 / site 参数被编码）：
+  // 后续批次必然同样失败，重试无意义 → 立即止损并 exit=1 让 CI 标红。
+  // 早先只判 [401,403,404] 把 400 放过了，导致 token 配错时退出码仍为 0，已修正。
   if (result.json.error) {
     hardFailure = true;
     break;
@@ -213,6 +242,9 @@ for (const [i, batch] of batches.entries()) {
 
 console.log('');
 console.log(`汇总：成功推送 ${totalSuccess} / ${target.length} 条` + (lastRemain !== null ? `，今日剩余配额 ${lastRemain} 条` : ''));
+if (quotaHit) {
+  console.log('说明：本次未推完的 URL 不是错误，明天配额重置后重跑本脚本即可（重复推送幂等，不会产生副作用）。');
+}
 if (rejected.length > 0) {
   console.log(`未被接受 ${rejected.length} 条（多为超出配额，可改日重推）：`);
   rejected.slice(0, 10).forEach((u) => console.log(`   ${u}`));
