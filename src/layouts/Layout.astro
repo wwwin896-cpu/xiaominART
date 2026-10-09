@@ -51,10 +51,20 @@ const effectiveBreadcrumbs = breadcrumbs.length > 0 ? breadcrumbs : autoBreadcru
 // ── 数据分析脚手架（T-05，2026-10-07）──
 // 三套分析工具都在 Cloudflare Pages 环境变量里配 PUBLIC_* 值即生效，不配则零注入（现状）。
 // 接入步骤、UTM 规范与 CSP 域名要求见 docs/数据分析接入指南.md。
-const gaId = import.meta.env.PUBLIC_GA4_ID as string | undefined;
-const umamiSrc = import.meta.env.PUBLIC_UMAMI_SRC as string | undefined;
-const umamiId = import.meta.env.PUBLIC_UMAMI_ID as string | undefined;
-const clarityId = import.meta.env.PUBLIC_CLARITY_ID as string | undefined;
+//
+// 2026-10-09（WO-P2-03 埋点）：统一加 `!noindex` 闸门 —— 功能页与内部后台
+// （/wishlist/、/progress/、/admin/*）本身带 noindex，不应进任何统计口径，
+// 否则后台访问会污染「访客数 / 转化率」。此处一并修正既有三家的遗漏。
+const trackPage = !noindex;
+const gaId = trackPage ? (import.meta.env.PUBLIC_GA4_ID as string | undefined) : undefined;
+const umamiSrc = trackPage ? (import.meta.env.PUBLIC_UMAMI_SRC as string | undefined) : undefined;
+const umamiId = trackPage ? (import.meta.env.PUBLIC_UMAMI_ID as string | undefined) : undefined;
+const clarityId = trackPage ? (import.meta.env.PUBLIC_CLARITY_ID as string | undefined) : undefined;
+
+// 百度统计（2026-10-09 接入）：ID 固定写死 —— 它本就是公开的站点标识，
+// 不构成密钥（与 GA4 measurement id 同性质）。同样受 noindex 闸门约束。
+const BAIDU_TONGJI_ID = 'ecd08d2b5b02b8982ae7fdf7836e8a3b';
+const baiduId = trackPage ? BAIDU_TONGJI_ID : undefined;
 ---
 <html lang="zh-CN">
   <head>
@@ -84,6 +94,9 @@ const clarityId = import.meta.env.PUBLIC_CLARITY_ID as string | undefined;
     {gaId && <script is:inline set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${gaId}');`}></script>}
     {umamiSrc && umamiId && <script is:inline defer data-website-id={umamiId} src={umamiSrc}></script>}
     {clarityId && <script is:inline set:html={`(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];if(y&&y.parentNode){y.parentNode.insertBefore(t,y);}})(window,document,"clarity","script","${clarityId}");`}></script>}
+    {/* 百度统计：官方 snippet 原样保留（只加 hm.async=1 避免阻塞首屏）。
+        CSP 已同步放行 hm.baidu.com —— 见 public/_headers 的 script-src / img-src。 */}
+    {baiduId && <script is:inline set:html={`var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.async=1;hm.src="https://hm.baidu.com/hm.js?${baiduId}";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();`}></script>}
     <link rel="icon" href="/assets/brand/xiaominart-logo-icon.svg" />
     <title>{seoTitle}</title>
   </head>

@@ -33,10 +33,16 @@
 # ── 全站安全基线 + CSP（2026-10-07 正式强制，T-10）──
 # 原为 Report-Only 观察期；因站点零外部依赖（字体自托管、无第三方 CDN/统计/广告）、
 # 且未配置 report-uri（观察期实际收不到任何报告），直接转正，风险可控。
-# ⚠️ 接入第三方分析（GA4 / Umami / Clarity）时必须同步扩 CSP：
+# ⚠️ 接入第三方分析时必须同步扩 CSP：
 #    script-src 加 https://www.googletagmanager.com（GA4）或 Umami 域 / https://www.clarity.ms，
 #    connect-src 加 https://*.google-analytics.com https://region1.google-analytics.com（GA4）
 #    详见 docs/数据分析接入指南.md。
+# ── 百度统计（2026-10-09 WO-P2-03 接入，ID ecd08d2b…）──
+#    脚本：https://hm.baidu.com/hm.js  → script-src 放行 https://hm.baidu.com
+#    上报：hm.gif 等打点走 https://hm.baidu.com，另有 https://*.baidu.com 备用域，
+#          且以 <img>/beacon 形式发出 → connect-src 与 img-src 同时放行
+#          https://hm.baidu.com https://*.baidu.com
+#    （百度统计不上报跨站 cookie，也不需要 frame，故 frame-src 不动）
 # font-src 需含 data:：@fontsource 的 CSS 经 Vite 内联后，部分字体子集是 data: URI
 #    （2026-10-08 修复：此前 font-src 'self' 把 Noto Serif SC 的内嵌子集全部拦掉，
 #    标题衬线字静默回退为系统字体）。data: URI 字体无外联风险，放行安全。
@@ -51,4 +57,4 @@
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), interest-cohort=()
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; form-action 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://hm.baidu.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://hm.baidu.com https://*.baidu.com; font-src 'self' data:; connect-src 'self' https://hm.baidu.com https://*.baidu.com; form-action 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'
