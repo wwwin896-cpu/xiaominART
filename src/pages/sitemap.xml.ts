@@ -59,7 +59,7 @@ const staticRoutes: { path: string; files: string[] }[] = [
   { path: 'privacy/', files: [P('privacy/index.astro')] },
   // 内容与参考
   { path: 'art-direction/', files: [P('art-direction/index.astro')] },
-  { path: 'pricing-guide/', files: [P('pricing-guide/index.astro')] },
+  { path: 'pricing-guide/', files: [P('pricing-guide/index.astro'), ...CONTENT] },
   // 独立页面
   { path: 'works/', files: [P('works/index.astro'), ...CONTENT] },
   { path: 'stories/', files: [P('stories/index.astro')] },

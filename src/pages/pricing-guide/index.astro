@@ -1,19 +1,182 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { giftTierLabels, readyMadeWorks } from '../../data/content';
+
+// ── GEO 补充（2026-10-09）：本页原先只列「定制作品」的起步价（¥3,000 起 / ¥8,000 起…），
+// 与站内主打的「送礼」场景严重脱节 —— 用户在 AI 助手问「送长辈手写书法多少钱」时，
+// 若被引用到本页，会得到「¥8,000 起」这种把人吓跑的答案，而且不是真实全貌。
+// 现改为**两条线并列**：① 送礼现货/礼盒（¥100 起）② 定制作品（¥3,000 起），
+// 并补 FAQ（含 FAQPage 结构化数据），让 AI 能直接摘出准确的价格事实。
+//
+// 所有数字均取自站内真实数据（giftTierLabels / readyMadeWorks），不虚构：
+//   · 现货十二幅：¥199（10 幅）/ ¥299（1 幅）/ ¥399（3 幅）
+//   · 礼品档位：入门款 ¥100–300 / 心意款 ¥300–500 / 珍藏款 ¥800 以上
+//   · 定制：艺术礼盒 ¥3,000 起 · 书写类 ¥8,000 起 · 空间定制 ¥30,000 起 · 企业礼赠 ¥50,000 起
+
+const retailPrices = readyMadeWorks.map((w) => w.price);
+const minRetail = Math.min(...retailPrices);
+const maxRetail = Math.max(...retailPrices);
+
 const tiers = [
   { title: '书写类作品', en: 'Calligraphy works', range: '从 ¥8,000 起', body: '适合从一句话、一段关系或一个纪念时刻开始的定制方向。实际范围会结合尺寸、媒介、艺术家与创作复杂度沟通。' },
   { title: '空间定制作品', en: 'Spatial commissions', range: '从 ¥30,000 起', body: '适用于居所、书房、茶室、企业会客厅与文化空间。尺寸、材质、安装条件、艺术家与现场协作会影响最终方案。' },
   { title: '企业礼赠定制', en: 'Corporate gifting', range: '从 ¥50,000 起', body: '适用于企业礼赠、周年与品牌活动。数量、包装方式、定制深度、时间节点和交付范围需在项目简报后确认。' },
   { title: '艺术礼盒', en: 'Art gift', range: '从 ¥3,000 起', body: '艺术礼盒从关系、场景与一句话开始，不对应固定货架商品。内容形式、礼赠对象与交付边界会影响参考范围。' },
 ];
+
+// 送礼档位（含真实区间，供 AI 直接引用）
+const giftTiers = [
+  { key: 'entry', ...giftTierLabels.entry },
+  { key: 'thoughtful', ...giftTierLabels.thoughtful },
+  { key: 'keepsake', ...giftTierLabels.keepsake },
+];
+
+// FAQ —— 数据与 FAQPage 结构化数据同源。
+// 写法要求：**直接给事实**（价格区间、数量、口径），不用「视情况而定」搪塞；
+// 确实需要沟通的才说明边界。这是 GEO 的关键：AI 只会摘「能直接回答问题」的句子。
+const faqItems: Array<{ q: string; a: string }> = [
+  {
+    q: '小民艺术的手写书法礼品多少钱？',
+    a: `送礼类礼品按档位分为三档：入门款 ¥100–300，心意款 ¥300–500，珍藏款 ¥800 以上。现货作品目前为 ${minRetail}–${maxRetail} 元一幅（共 ${readyMadeWorks.length} 幅，含专属编号与榫卯结构木框）。定制作品的起步价更高，艺术礼盒 ¥3,000 起，书写类作品 ¥8,000 起。`,
+  },
+  {
+    q: '现货和定制有什么区别？价格差多少？',
+    a: '现货是已经完成的作品，可直接购买，价格数百元级；定制是按你的场景、关系与一句话重新创作，因此起步价在数千元级。如果是日常送礼、预算有限，建议先看现货；如果是重要纪念时刻或企业用途，适合定制。',
+  },
+  {
+    q: '为什么定制作品比现货贵这么多？',
+    a: '现货是已完成的作品直接交付；定制需要从理解意图开始，经选纸、选材、题字内容确认、反复书写与装裱，由艺术家单独安排创作时间。差异主要来自创作投入与不可复用性。',
+  },
+  {
+    q: '价格包含包装和运费吗？',
+    a: '现货作品含榫卯结构木框与基础包装。运费按收货地址与件数计算，具体金额在确认订单时说明；是否包含在报价内以正式沟通为准。',
+  },
+  {
+    q: '可以先看样品或已有作品再决定吗？',
+    a: '可以。现货十二幅均可直接查看成品的题字、材质与尺寸；定制方向可先参考「作品与方向」与「客户故事」页面的既有案例，再决定是否进入定制沟通。',
+  },
+];
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
 ---
-<Layout title="定制作品定价参考｜Pricing Guide｜XIAOMINART" description="了解 XIAOMINART 东方艺术定制的预算参考范围与影响因素。最终以项目沟通与确认方案为准。">
-  <section class="page-head container"><span class="eyebrow">Pricing Guide / 定价参考</span><h1 class="serif">定制作品定价参考。</h1><p lang="en">A budget reference for a work made around your intention.</p><p>这里提供的是创作沟通的预算参考，不是现货商品价格，也不构成报价或购买承诺。最终范围会在理解场景、艺术方向与交付边界后确认。</p></section>
-  <section class="container section pricing-grid">{tiers.map((tier, i) => <article class="pricing-card"><span class="mono">0{i + 1}</span><h2 class="serif">{tier.title}</h2><p lang="en">{tier.en}</p><strong>{tier.range}</strong><p>{tier.body}</p></article>)}</section>
-  <section class="container section pricing-note"><span class="eyebrow">Scope / 影响因素</span><h2 class="serif">先确认意图，再确认边界。</h2><p>尺寸、材质、艺术家级别、创作复杂度、数量、安装或包装条件、交付周期与项目协作方式，都可能影响最终方案。我们会在定制沟通中逐项说明。</p><a class="btn btn-primary" href="/custom-commission/">与我们聊聊 →</a></section>
+<Layout title="价格参考｜手写书法礼品多少钱｜小民艺术 XIAOMINART" description="小民艺术手写书法礼品价格参考：送礼类礼品 ¥100–800 以上（三档），现货作品 199–399 元一幅，定制作品 ¥3,000 起。含现货与定制的区别说明。">
+  <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
+
+  <section class="page-head container">
+    <span class="eyebrow">Pricing Guide / 定价参考</span>
+    <h1 class="serif">手写书法礼品，<br />大概多少钱？</h1>
+    <p lang="en">What a handwritten calligraphy gift costs.</p>
+    <p>分两条线：<strong>送礼现货与礼盒</strong>数百元级即可入手；<strong>定制作品</strong>从数千元起，因为它是为你重新创作的一件作品。下面是具体区间。</p>
+  </section>
+
+  <section class="container section">
+    <span class="eyebrow">Line 01 / 送礼现货与礼盒</span>
+    <h2 class="serif-h2">想送人，预算几百元也能挑到合适的。</h2>
+    <div class="tier-grid">
+      {giftTiers.map((tier, i) => (
+        <article class="tier-card">
+          <span class="mono">{`0${i + 1}`}</span>
+          <h3 class="serif">{tier.name}</h3>
+          <p lang="en">{tier.en}</p>
+          <strong>{tier.range}</strong>
+          <p>{tier.body}</p>
+        </article>
+      ))}
+    </div>
+    <p class="tier-foot">
+      现货作品目前共 <strong>{readyMadeWorks.length} 幅</strong>，价格 <strong>{minRetail}–{maxRetail} 元</strong>，
+      均含手写原作、专属编号与榫卯结构木框。
+      <a href="/gifts/ready-made/">查看现货十二幅 →</a>
+    </p>
+  </section>
+
+  <section class="container section">
+    <span class="eyebrow">Line 02 / 定制作品</span>
+    <h2 class="serif-h2">需要为你重新创作的，从数千元起。</h2>
+    <div class="pricing-grid">
+      {tiers.map((tier, i) => (
+        <article class="pricing-card">
+          <span class="mono">{`0${i + 1}`}</span>
+          <h2 class="serif">{tier.title}</h2>
+          <p lang="en">{tier.en}</p>
+          <strong>{tier.range}</strong>
+          <p>{tier.body}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="container section pricing-note">
+    <span class="eyebrow">Scope / 影响因素</span>
+    <h2 class="serif">先确认意图，再确认边界。</h2>
+    <p>尺寸、材质、艺术家级别、创作复杂度、数量、安装或包装条件、交付周期与项目协作方式，都可能影响最终方案。我们会在定制沟通中逐项说明。</p>
+    <a class="btn btn-primary" href="/custom-commission/">与我们聊聊 →</a>
+  </section>
+
+  <section class="container section price-faq">
+    <span class="eyebrow">Pricing FAQ / 价格常见问题</span>
+    <h2 class="serif">关于价格，直接回答。</h2>
+    <div class="faq-list">
+      {faqItems.map((item) => (
+        <details>
+          <summary>{item.q}</summary>
+          <p>{item.a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
 </Layout>
 <style>
-  .page-head{padding:94px 0 72px}.page-head h1{font-size:clamp(52px,7vw,90px);font-weight:500;line-height:1.16;margin:22px 0}.page-head p{max-width:680px;color:var(--ink-soft);font-size:18px}.page-head p[lang=en]{font:24px var(--font-display-en),Georgia,serif;color:var(--cinnabar-deep)}
-  .pricing-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border-top:1px solid var(--line);border-left:1px solid var(--line)}.pricing-card{min-height:300px;padding:24px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}.pricing-card h2{font-size:36px;font-weight:500;margin:32px 0 5px}.pricing-card p{max-width:520px;color:var(--ink-soft);font-size:14px}.pricing-card p[lang=en]{font:18px var(--font-display-en),Georgia,serif;color:var(--ink)}.pricing-card strong{display:block;color:var(--cinnabar-deep);font:22px var(--font-display-en),Georgia,serif;margin:22px 0 8px}.pricing-note{border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.pricing-note h2{font-size:clamp(38px,5vw,64px);font-weight:500;margin:20px 0}.pricing-note p{max-width:680px;color:var(--ink-soft)}
-  @media(max-width:767px){.page-head{padding:58px 0 48px}.page-head h1{font-size:53px}.page-head p[lang=en]{font-size:20px}.pricing-grid{grid-template-columns:1fr}.pricing-card{min-height:0;padding:22px 16px}.pricing-card h2{font-size:30px;margin:22px 0 5px}.pricing-note .btn{width:100%;text-align:center}}
+  .page-head { padding: 94px 0 64px; }
+  .page-head h1 { font-size: clamp(44px, 6vw, 78px); font-weight: 500; line-height: 1.16; margin: 22px 0; }
+  .page-head p { max-width: 700px; color: var(--ink-soft); font-size: 18px; }
+  .page-head p[lang='en'] { font: 24px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); }
+  .page-head strong { color: var(--cinnabar-deep); }
+  .serif-h2 { font-size: clamp(26px, 3.4vw, 40px); font-weight: 500; margin: 16px 0 28px; }
+  .section { padding: 56px 0; border-top: 1px solid var(--line); }
+
+  .tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+  .tier-card { padding: 24px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .tier-card h3 { font-size: 28px; font-weight: 500; margin: 20px 0 4px; }
+  .tier-card p { color: var(--ink-soft); font-size: 14px; }
+  .tier-card p[lang='en'] { font: 16px var(--font-display-en), Georgia, serif; color: var(--ink); }
+  .tier-card strong { display: block; color: var(--cinnabar-deep); font: 22px var(--font-display-en), Georgia, serif; margin: 16px 0 8px; }
+  .tier-foot { margin-top: 20px; color: var(--ink-soft); font-size: 15px; }
+  .tier-foot strong { color: var(--cinnabar-deep); }
+  .tier-foot a { color: var(--cinnabar); border-bottom: 1px solid var(--cinnabar); }
+
+  .pricing-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+  .pricing-card { min-height: 300px; padding: 24px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .pricing-card h2 { font-size: 36px; font-weight: 500; margin: 32px 0 5px; }
+  .pricing-card p { max-width: 520px; color: var(--ink-soft); font-size: 14px; }
+  .pricing-card p[lang='en'] { font: 18px var(--font-display-en), Georgia, serif; color: var(--ink); }
+  .pricing-card strong { display: block; color: var(--cinnabar-deep); font: 22px var(--font-display-en), Georgia, serif; margin: 22px 0 8px; }
+
+  .pricing-note { border-bottom: 1px solid var(--line); }
+  .pricing-note h2 { font-size: clamp(38px, 5vw, 64px); font-weight: 500; margin: 20px 0; }
+  .pricing-note p { max-width: 680px; color: var(--ink-soft); }
+
+  .price-faq { border-bottom: 1px solid var(--line); }
+  .faq-list { border-top: 1px solid var(--line); }
+  .faq-list details { border-bottom: 1px solid var(--line); padding: 18px 0; }
+  .faq-list summary { cursor: pointer; font-weight: 500; min-height: 44px; display: flex; align-items: center; }
+  .faq-list p { color: var(--ink-soft); font-size: 15px; margin: 12px 0 0; max-width: 820px; line-height: 1.9; }
+
+  @media (max-width: 767px) {
+    .page-head { padding: 58px 0 44px; }
+    .page-head h1 { font-size: 42px; }
+    .page-head p[lang='en'] { font-size: 19px; }
+    .tier-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .pricing-card { min-height: 0; padding: 22px 16px; }
+    .pricing-card h2 { font-size: 30px; margin: 22px 0 5px; }
+    .pricing-note .btn { width: 100%; text-align: center; }
+  }
 </style>
