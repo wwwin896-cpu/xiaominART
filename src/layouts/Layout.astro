@@ -183,11 +183,18 @@ const baiduId = trackPage ? BAIDU_TONGJI_ID : undefined;
     revealItems.forEach((item) => revealObserver.observe(item));
   } else revealItems.forEach((item) => item.classList.add('is-visible'));
   document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeMenu(); });
-  document.querySelectorAll<HTMLElement>('[data-event]').forEach((element) => element.addEventListener('click', () => {
+  // 2026-10-09：由「逐个节点绑 addEventListener」改为**事件委托**。
+  // 原写法只在页面加载时对既有 [data-event] 节点绑定一次，之后由组件动态插入的节点
+  // （搜索结果项、心愿单抽屉条目、选礼器选项卡）**永远收不到监听** —— 表现是这些交互
+  // 的埋点全部为空，且没有任何报错，极难发现。委托到 document 后，动态节点自动生效。
+  document.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement | null;
+    const element = target?.closest<HTMLElement>('[data-event]');
+    if (!element) return;
     const eventName = element.dataset.event;
     if (!eventName) return;
     window.dispatchEvent(new CustomEvent('xiaominart:event', { detail: { name: eventName, path: window.location.pathname, slot: element.dataset.slot, channel: element.dataset.channel } }));
-  }));
+  });
   // 站内所有交互事件统一在这里汇入上报（只上报核心漏斗的 6 个，服务端另有白名单）
   window.addEventListener('xiaominart:event', (event) => {
     const detail = ((event as CustomEvent).detail || {}) as Record<string, unknown>;

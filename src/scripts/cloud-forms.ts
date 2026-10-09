@@ -171,6 +171,13 @@ const TRACKED_EVENTS = new Set([
   'wish_stories_click',
   'wish_commission_click',
   'share_click',
+  // 2026-10-09 补录：第 2/1 批工单（P0-03 搜索、P1-02 心愿单抽屉、P0-04 微信直联）
+  // 上线时漏登白名单，导致这几个新交互的埋点被静默丢弃。
+  'search_open',
+  'search_result_click',
+  'wishlist_drawer_open',
+  'wechat_direct_open',
+  'wechat_id_copy',
 ]);
 
 const EVENT_URL = '/api/event';
