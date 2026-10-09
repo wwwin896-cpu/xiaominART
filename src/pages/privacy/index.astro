@@ -140,9 +140,32 @@ const lastName = '小民艺术 XIAOMINART';
       </article>
     ))}
     <p class="privacy-thanks">感谢您对小民艺术的信任与支持。我们珍视每一位用户的信任，将持续努力保护您的个人信息安全。</p>
+    {/* 同意可撤回（PIPL 第 15 条）：清除记录后重新载入，横幅会再次出现 */}
+    <p class="privacy-consent-reset">
+      想更改统计 Cookie 的选择？<button type="button" class="link-btn" id="consent-reset">重新选择</button>
+      <span class="privacy-consent-note" id="consent-reset-note" hidden>已重置，刷新页面后即可重新选择。</span>
+    </p>
     <p class="privacy-sign serif">{lastName}</p>
     <p class="privacy-sign-date">{effectiveDate}</p>
   </section>
+  <script is:inline>
+    // 「重新选择」：只清本站的同意记录（不动其他 localStorage），
+    // 然后刷新让横幅重新出现。若因隐私模式无法写入，给出明确提示而非静默失败。
+    (function () {
+      var btn = document.getElementById('consent-reset');
+      var note = document.getElementById('consent-reset-note');
+      if (!btn) return;
+      btn.addEventListener('click', function () {
+        try {
+          localStorage.removeItem('xiaominart-consent');
+          if (note) { note.hidden = false; }
+          setTimeout(function () { location.reload(); }, 900);
+        } catch (e) {
+          if (note) { note.hidden = false; note.textContent = '浏览器阻止了本地存储，请在浏览器设置中清除本网站数据。'; }
+        }
+      });
+    })();
+  </script>
 </Layout>
 <style>
   .privacy-hero { padding: 96px 0 60px; border-bottom: 1px solid var(--line); }
@@ -164,6 +187,9 @@ const lastName = '小民艺术 XIAOMINART';
   .privacy-blocks p.is-item { padding-left: 22px; text-indent: -22px; }
   .privacy-blocks p.is-lead { color: var(--ink); font-weight: 500; margin-top: 8px; }
   .privacy-thanks { margin: 40px 0 0; color: var(--ink-soft); font-size: 15px; line-height: 1.95; }
+  .privacy-consent-reset { margin: 26px 0 0; padding: 16px 0; border-top: 1px solid var(--line-soft); color: var(--ink-soft); font-size: 14px; }
+  .link-btn { background: none; border: 0; padding: 0; color: var(--cinnabar); font: inherit; cursor: pointer; border-bottom: 1px solid var(--cinnabar); }
+  .privacy-consent-note { margin-left: 10px; color: var(--muted); font-size: 12.5px; }
   .privacy-sign { margin: 26px 0 0; font-size: 18px; letter-spacing: .04em; }
   .privacy-sign-date { margin: 6px 0 0; color: var(--muted); font-size: 13px; font-family: var(--font-mono); }
 

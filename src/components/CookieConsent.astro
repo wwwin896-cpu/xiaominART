@@ -1,0 +1,83 @@
+---
+// Cookie / 统计同意横幅（PIPL 合规，2026-10-09）。
+//
+// 为什么需要：本站用百度统计（hm.baidu.com）做访问分析，属「非必要 Cookie / 同类技术」。
+// PIPL 与《个人信息保护法》第 13/14 条要求取得**单独同意**，隐私政策第四条也已声明
+// 「我们可能使用 Cookies」—— 有声明而无同意入口，是合规缺口。
+//
+// 设计要点：
+//   · **默认不统计**：用户点「同意」前，统计脚本不加载（不是加载后再屏蔽）。
+//     沿用 Layout.astro 已有的 trackPage 闸门 —— 横幅把同意状态写进
+//     window.__xmConsent，统计注入前先读它。
+//   · 无 JS 时：横幅是纯 CSS 定位的静态块，按钮为链接式兜底（不阻塞内容）。
+//   · 拒绝与同意**同等显眼**（同为 btn 级），不做暗黑模式：这是合规硬要求。
+//   · 选择存 localStorage（键 xiaominart-consent），不设 Cookie 本身，避免「用 Cookie 记 Cookie」。
+//   · 已选择过的不再打扰；隐私政策页提供「重新选择」入口（见 /privacy/）。
+const CONSENT_KEY = 'xiaominart-consent';
+---
+<div class="cookie-banner" id="cookie-banner" role="region" aria-label="Cookie 与统计同意" hidden>
+  <div class="cookie-inner">
+    <p class="cookie-text">
+      <span class="eyebrow">Cookies / 统计</span>
+      我们使用百度统计了解访问情况，用于改进网站。这属于非必要 Cookie，需要你的同意才会启用。
+      详见<a href="/privacy/">《隐私政策》</a>第四条。
+    </p>
+    <div class="cookie-actions">
+      <button class="btn btn-primary btn-sm" type="button" data-consent="accept">同意并启用</button>
+      <button class="btn btn-ghost btn-sm" type="button" data-consent="reject">仅必要</button>
+    </div>
+  </div>
+</div>
+<script is:inline>
+  // 必须在统计脚本之前同步执行：Layout 的统计注入读 window.__xmConsent。
+  // 用 is:inline 保证不被 Astro 打包/延迟，避免竞态。
+  // @ts-nocheck —— 本脚本刻意保持 ES5 裸写法（不加打包、不做转译），
+  // 由 astro check 做类型检查只会引入噪音，故整体豁免。
+  (function () {
+    var KEY = 'xiaominart-consent';
+    var stored = null;
+    try { stored = localStorage.getItem(KEY); } catch (e) { /* 隐私模式 */ }
+    // 只认 'accept' 才放行统计；其余（含未选择、reject）一律不放行
+    window.__xmConsent = stored === 'accept';
+    var banner = document.getElementById('cookie-banner');
+    // 已做出选择就不再展示
+    if (stored === 'accept' || stored === 'reject' || !banner) return;
+    banner.hidden = false;
+    // 移动端底栏固定在 bottom:0，横幅也固定在底部 → 会被盖住。
+    // 挂 body 类，并把横幅实测高度写进 --consent-h，由 Layout 用它顶起底栏
+    // （写死高度在文案换行/字号变化时会失准，所以实测）。
+    var syncHeight = function () {
+      document.documentElement.style.setProperty('--consent-h', banner.offsetHeight + 'px');
+    };
+    document.body.classList.add('consent-open');
+    syncHeight();
+    window.addEventListener('resize', syncHeight);
+    banner.addEventListener('click', function (event) {
+      var btn = event.target && event.target.closest ? event.target.closest('[data-consent]') : null;
+      if (!btn) return;
+      var choice = btn.getAttribute('data-consent');
+      try { localStorage.setItem(KEY, choice); } catch (e) { /* 忽略 */ }
+      banner.hidden = true;
+      document.body.classList.remove('consent-open');
+      if (choice === 'accept') {
+        // 同意后立即补加载统计，无需刷新页面
+        window.__xmConsent = true;
+        if (typeof window.__xmLoadAnalytics === 'function') window.__xmLoadAnalytics();
+      }
+    });
+  })();
+</script>
+<style>
+  .cookie-banner { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; background: var(--paper-light); border-top: 1px solid var(--line); box-shadow: 0 -10px 30px rgba(77, 56, 34, .12); padding: 16px 0 calc(16px + env(safe-area-inset-bottom)); }
+  .cookie-inner { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 24px; justify-content: space-between; width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
+  .cookie-text { margin: 0; max-width: 720px; color: var(--ink-soft); font-size: 13px; line-height: 1.8; }
+  .cookie-text .eyebrow { display: block; margin-bottom: 4px; }
+  .cookie-text a { color: var(--cinnabar); border-bottom: 1px solid var(--cinnabar); }
+  .cookie-actions { display: flex; gap: 10px; flex: none; }
+  .cookie-actions .btn { min-height: 40px; }
+  @media (max-width: 639px) {
+    .cookie-inner { width: calc(100% - 32px); }
+    .cookie-actions { width: 100%; }
+    .cookie-actions .btn { flex: 1; }
+  }
+</style>

@@ -14,6 +14,7 @@ import FloatingConsultation from '../components/FloatingConsultation.astro';
 import ShareButton from '../components/ShareButton.astro';
 import WishlistDrawer from '../components/WishlistDrawer.astro';
 import SearchModal from '../components/SearchModal.astro';
+import CookieConsent from '../components/CookieConsent.astro';
 const { title = '小民艺术｜日常之礼', description = '小民艺术，以亲笔书写为起点的东方日常之礼。见字如面，心意表达。', canonical, image = '/assets/images/og-image.png', noindex = false, breadcrumbs = [] } = Astro.props;
 const seoTitle = title.replace(/xiaominart/gi, 'XIAOMINART');
 const url = canonical ?? Astro.url.href;
@@ -95,13 +96,27 @@ const baiduId = trackPage ? BAIDU_TONGJI_ID : undefined;
     <meta name="baidu-site-verification" content="codeva-zpRUfdGBww" />
     <script type="application/ld+json" is:inline set:html={JSON.stringify({ '@context': 'https://schema.org', '@graph': [ { '@type': 'LocalBusiness', name: '小民艺术', alternateName: 'Xiaomin Art', description, url: new URL('/', Astro.site ?? Astro.url).href, logo: new URL('/assets/brand/xiaominart-logo.png', Astro.site ?? Astro.url).href, email: 'hi@xiaominart.com', priceRange: '咨询制', areaServed: 'CN' }, { '@type': 'WebSite', name: '小民艺术 XIAOMINART', alternateName: 'XIAOMINART', url: new URL('/', Astro.site ?? Astro.url).href, inLanguage: 'zh-CN' } ] })} />
     {effectiveBreadcrumbs.length > 0 && <script type="application/ld+json" is:inline set:html={JSON.stringify({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: effectiveBreadcrumbs.map((item: { name: string; href: string }, i: number) => ({ '@type': 'ListItem', position: i + 1, name: item.name, item: new URL(item.href, Astro.site ?? Astro.url).href })) })} />}
-    {gaId && <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>}
-    {gaId && <script is:inline set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${gaId}');`}></script>}
-    {umamiSrc && umamiId && <script is:inline defer data-website-id={umamiId} src={umamiSrc}></script>}
-    {clarityId && <script is:inline set:html={`(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];if(y&&y.parentNode){y.parentNode.insertBefore(t,y);}})(window,document,"clarity","script","${clarityId}");`}></script>}
-    {/* 百度统计：官方 snippet 原样保留（只加 hm.async=1 避免阻塞首屏）。
-        CSP 已同步放行 hm.baidu.com —— 见 public/_headers 的 script-src / img-src。 */}
-    {baiduId && <script is:inline set:html={`var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.async=1;hm.src="https://hm.baidu.com/hm.js?${baiduId}";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();`}></script>}
+    {/* 统计脚本统一改为**同意后再注入**（PIPL，2026-10-09）。
+        CookieConsent 组件的 is:inline 脚本会在 head 之前同步写入 window.__xmConsent，
+        因此这里读到的值一定是「用户已有选择」的结果（默认 false = 未同意）。
+        `__xmLoadAnalytics` 挂到 window，供用户在横幅上点「同意」后即时补加载，无需刷新。
+        ⚠ 关键：未同意时**脚本根本不下发**，而不是先加载再屏蔽 —— 后者不合规。 */}
+    <script is:inline set:html={`(function(){
+      var consent=window.__xmConsent===true;
+      var BAIDU=${baiduId ? JSON.stringify(baiduId) : 'null'};
+      var GA=${gaId ? JSON.stringify(gaId) : 'null'};
+      var UMAMI_SRC=${umamiSrc ? JSON.stringify(umamiSrc) : 'null'};
+      var UMAMI_ID=${umamiId ? JSON.stringify(umamiId) : 'null'};
+      var CLARITY=${clarityId ? JSON.stringify(clarityId) : 'null'};
+      function load(){
+        if(BAIDU&&!window.__xmBaidu){window.__xmBaidu=1;var _hmt=window._hmt=window._hmt||[];(function(){var hm=document.createElement('script');hm.async=1;hm.src='https://hm.baidu.com/hm.js?'+BAIDU;var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(hm,s);})();}
+        if(GA&&!window.__xmGa){window.__xmGa=1;var s1=document.createElement('script');s1.async=1;s1.src='https://www.googletagmanager.com/gtag/js?id='+GA;document.head.appendChild(s1);window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments);};gtag('js',new Date());gtag('config',GA);}
+        if(UMAMI_SRC&&UMAMI_ID&&!window.__xmUmami){window.__xmUmami=1;var s2=document.createElement('script');s2.defer=1;s2.setAttribute('data-website-id',UMAMI_ID);s2.src=UMAMI_SRC;document.head.appendChild(s2);}
+        if(CLARITY&&!window.__xmClarity){window.__xmClarity=1;(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src='https://www.clarity.ms/tag/'+i;y=l.getElementsByTagName(r)[0];if(y&&y.parentNode){y.parentNode.insertBefore(t,y);}})(window,document,'clarity','script',CLARITY);}
+      }
+      window.__xmLoadAnalytics=load;
+      if(consent)load();
+    })();`} />
     <link rel="icon" href="/assets/brand/xiaominart-logo-icon.svg" />
     <title>{seoTitle}</title>
   </head>
@@ -140,6 +155,7 @@ const baiduId = trackPage ? BAIDU_TONGJI_ID : undefined;
     <ShareButton />
     <WishlistDrawer />
     <SearchModal />
+    <CookieConsent />
     <nav class="mobile-shopping-bar" aria-label="移动端底部导航"><a href="/gifts/" aria-label="浏览小民好礼"><span class="bar-zh">礼物</span><small lang="en">Gifts</small></a><button class="wishlist-bar" type="button" data-wishlist-open aria-label="打开心愿单"><span class="bar-zh">心愿单</span><small lang="en">Saved <span data-wishlist-count></span></small></button><button class="wechat-link" type="button" aria-controls="wechat-sheet" aria-expanded="false" aria-label="加微信直接聊"><span class="bar-zh">微信直联</span><small lang="en">WeChat</small></button><button class="bar-share" type="button" data-share-button data-event="share_click" aria-label="分享本页给微信好友或朋友圈"><span class="bar-zh">分享</span><small lang="en">Share</small></button></nav>
     <div class="wechat-sheet" id="wechat-sheet" role="dialog" aria-modal="true" aria-labelledby="wechat-sheet-title" hidden>
       <div class="wechat-sheet-card">
@@ -350,6 +366,10 @@ const baiduId = trackPage ? BAIDU_TONGJI_ID : undefined;
      .footer-bottom span { display: block; margin-top: 8px; }
      .site-footer { padding-top: 56px; padding-bottom: 92px; }
      .mobile-shopping-bar { position: fixed; top: auto; display: grid; grid-template-columns: repeat(4, 1fr); left: 0; right: 0; bottom: 0; z-index: 8; background: rgba(250, 247, 240, .98); border-top: 1px solid var(--line); box-shadow: 0 -8px 24px rgba(77, 56, 34, .08); padding: 7px 8px calc(7px + env(safe-area-inset-bottom)); }
+     /* Cookie 横幅展示期间（body.consent-open）：把移动底栏整体顶到横幅之上，
+        否则两者都固定 bottom:0 会重叠、横幅盖住底栏。
+        横幅实际高度由内容决定，这里用一个保守估高 + 变量兜底。 */
+     body.consent-open .mobile-shopping-bar { bottom: var(--consent-h, 168px); }
      .mobile-shopping-bar a, .mobile-shopping-bar button { min-height: 50px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--ink-soft); font: inherit; }
      .mobile-shopping-bar button { background: transparent; border: 0; padding: 0; cursor: pointer; }
      .mobile-shopping-bar .bar-zh { font-size: 13px; letter-spacing: .12em; }
