@@ -1,3 +1,0 @@
-{{- /* Keep the preparation site out of search until release approval. */ -}}
-User-agent: *
-Disallow: /
