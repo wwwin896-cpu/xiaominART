@@ -23,6 +23,8 @@ const ALLOWED_EVENTS = new Set([
   'hero_cta_click',
   'gift_guide_select',
   'consultation_start',
+  // 分步表单（P1-03）：每步点「下一步」时上报 { step, total }，用于定位流失步骤
+  'consultation_step',
   'consultation_submit',
   'business_brief_submit',
   'contact_channel_click',

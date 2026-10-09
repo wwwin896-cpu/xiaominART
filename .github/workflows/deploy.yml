@@ -11,10 +11,17 @@
 #     FORMS_ACCESS_KEY   云数据库访问密钥（/api/lead、/api/event、/api/progress）
 #     RESEND_API_KEY     邮件通道 Resend 密钥
 #     ADMIN_ACCESS_KEY   进度录入后台口令（/api/admin/progress，可选）
+#     BAIDU_PUSH_TOKEN   百度「主动推送」准入密钥（可选，未配置则跳过推送）
+#                        取处：百度搜索资源平台 → 普通收录 → API 提交
 #   Variables（明文，同一页面的 Variables 标签）：
 #     FEISHU_WEBHOOK_URL 飞书群机器人 Webhook（表单通知主通道）
 #     RESEND_TO_EMAIL    通知收件邮箱
 #   未配置的变量在下方步骤会显示「⚠ 为空」；对应功能会静默降级（如未配 key 则 /api/lead 返回 503）。
+#
+# 百度收录策略（2026-10-09）：
+#   sitemap 提交对新验证站点有配额释放期（面板显示「今日上限 0 条」，需 1-3 天），
+#   故改用「主动推送」（快速收录 API）——当天可用、实时进抓取队列，本站配额 10 条/天。
+#   因配额有限，单次部署通常只能推一部分 URL，剩余的在后续部署中滚动补推（重复推送幂等）。
 # ─────────────────────────────────────────────────────────────
 name: Deploy site
 

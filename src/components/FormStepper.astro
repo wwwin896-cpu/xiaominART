@@ -1,0 +1,146 @@
+---
+/**
+ * 分步表单进度指示器（服务端渲染骨架，交互由页面脚本驱动）。
+ *
+ * 设计意图：不依赖 JS 也能看到「共 3 步」的语义（progressbar 角色 + 文本），
+ * 脚本负责切换 aria-current 与进度条宽度。
+ *
+ * 用法：
+ *   <FormStepper steps={[{ zh: '需求', en: 'Brief' }, ...]} />
+ * 页面脚本通过 [data-stepper] 上的 data-active 属性驱动高亮。
+ */
+interface Step {
+  zh: string;
+  en: string;
+  hint?: string;
+}
+
+const { steps = [] }: { steps?: Step[] } = Astro.props;
+---
+<div class="form-stepper" data-stepper data-active="1">
+  <div class="stepper-head">
+    <span class="stepper-count" data-stepper-count>第 1 步 / 共 {steps.length} 步</span>
+    <span class="stepper-hint" data-stepper-hint></span>
+  </div>
+
+  <ol class="stepper-track" role="list">
+    {steps.map((step, i) => (
+      <li class="stepper-item" data-stepper-item={i + 1}>
+        <span class="stepper-dot" aria-hidden="true">{i + 1}</span>
+        <span class="stepper-label">
+          <strong>{step.zh}</strong>
+          <em lang="en">{step.en}</em>
+        </span>
+      </li>
+    ))}
+  </ol>
+
+  <div class="stepper-bar" role="progressbar" aria-valuemin="1" aria-valuemax={steps.length} aria-valuenow="1" aria-label="填写进度">
+    <span class="stepper-bar-fill" data-stepper-fill></span>
+  </div>
+</div>
+
+<style>
+  .form-stepper { margin-bottom: 26px; }
+
+  .stepper-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .stepper-count {
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--cinnabar-deep);
+  }
+  .stepper-hint { font-size: 12px; color: var(--ink-soft); }
+
+  .stepper-track {
+    display: flex;
+    gap: 0;
+    list-style: none;
+    margin: 0 0 12px;
+    padding: 0;
+  }
+
+  .stepper-item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 0;
+    color: var(--ink-soft);
+    transition: color 0.25s ease;
+  }
+  /* 相邻项之间画连接线，最后一项不画 */
+  .stepper-item + .stepper-item::before {
+    content: '';
+    flex: 0 0 14px;
+    height: 1px;
+    margin-right: 9px;
+    background: var(--line);
+  }
+
+  .stepper-dot {
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 11px;
+    line-height: 1;
+    background: var(--paper-light);
+    transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+  }
+
+  .stepper-label { display: flex; flex-direction: column; min-width: 0; }
+  .stepper-label strong { font-size: 13px; font-weight: 500; white-space: nowrap; }
+  .stepper-label em {
+    font: 13px var(--font-display-en, Georgia, serif);
+    font-style: normal;
+    opacity: 0.62;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* 已完成 / 当前项高亮 */
+  .stepper-item[data-state='done'] { color: var(--ink); }
+  .stepper-item[data-state='done'] .stepper-dot {
+    border-color: var(--cinnabar);
+    color: var(--cinnabar-deep);
+  }
+  .stepper-item[data-state='current'] { color: var(--ink); }
+  .stepper-item[data-state='current'] .stepper-dot {
+    background: var(--cinnabar);
+    border-color: var(--cinnabar);
+    color: var(--paper-light);
+  }
+  .stepper-item[data-state='current'] .stepper-label strong { font-weight: 600; }
+
+  .stepper-bar {
+    height: 2px;
+    background: var(--line);
+    overflow: hidden;
+  }
+  .stepper-bar-fill {
+    display: block;
+    height: 100%;
+    width: 33.333%;
+    background: var(--cinnabar);
+    transition: width 0.3s ease;
+  }
+
+  /* 窄屏：隐藏英文与连接线，只留序号 + 中文，避免挤压变形 */
+  @media (max-width: 640px) {
+    .stepper-label em { display: none; }
+    .stepper-item + .stepper-item::before { flex-basis: 8px; margin-right: 6px; }
+    .stepper-label strong { font-size: 12px; }
+  }
+</style>

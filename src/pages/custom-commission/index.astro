@@ -2,13 +2,45 @@
 import Layout from '../../layouts/Layout.astro';
 import FactBoundary from '../../components/FactBoundary.astro';
 import CommissionGuidance from '../../components/CommissionGuidance.astro';
+import FormStepper from '../../components/FormStepper.astro';
 import { processSteps, artists } from '../../data/content';
+
+// 三步划分（P1-03）：先谈意图 → 再谈细节 → 最后留联系方式。
+// 联系方式刻意放在最后：让用户在投入表达之后再被要求留信息，转化率更稳。
+// 无 JS 时三个 fieldset 全部可见可填，表单仍能一次性提交（渐进增强）。
+const steps = [
+  { zh: '你的想法', en: 'Your intention', hint: '只需要一段话，说说你想表达什么' },
+  { zh: '具体细节', en: 'Details', hint: '有偏好就填，拿不准的留空也可以' },
+  { zh: '联系方式', en: 'How to reach you', hint: '方便我们工作日回复你' },
+];
 ---
-<Layout title="定制创作｜手写书法字画定制流程与价格｜小民艺术" description="从一个人、一处空间或一句话开始，共同创作一件东方艺术作品。"><section class="page-head container"><span class="eyebrow">Custom Commission / 定制创作</span><h1 class="serif">在形式之前，<br />先把你的意图说清楚。</h1><p lang="en">A commission begins with an intention, not an inventory.</p><p>这里不是商品下单页，而是一次低压力的创作前沟通。你可以带来一个场景、一段关系或一个还没有成形的想法。</p></section><section class="container section commission-steps"><div class="step-list">{processSteps.map((step) => <div><span class="mono">{step.no}</span><h2 class="serif">{step.zh}</h2><p lang="en">{step.en}</p><p>{step.body}</p></div>)}</div></section><section class="container section form-section"><div><span class="eyebrow">Commission brief / 定制意向</span><h2 class="serif">写给我们，<br />你希望作品留下什么。</h2><p>提交后仅用于初步沟通，不代表项目确认。我们会先阅读内容，再回复是否适合进入下一次交流。</p><CommissionGuidance /><FactBoundary /></div><form class="commission-form" aria-labelledby="commission-form-title" data-commission-form><h3 id="commission-form-title" class="sr-only">定制咨询表单 / Commission consultation form</h3><div class="form-prep"><strong>填写建议 / Before you start</strong><span>准备你的想法描述、空间照片或尺寸（如有）、期望交付时间与预算区间，可加快沟通效率。</span></div><label for="commission-name">你的称呼 / Your name<input id="commission-name" name="name" autocomplete="name" placeholder="怎么称呼你？" required /></label><label for="commission-contact">联系方式 / Contact<input id="commission-contact" name="contact" autocomplete="email" placeholder="微信优先，邮箱备选" required /></label><label for="commission-inspiration">灵感来源 / Inspiration source<input id="commission-inspiration" name="inspiration" placeholder="从案例或作品方向开始时可自动带入" /></label><label for="commission-context">作品所在的场景 / Context<select id="commission-context" name="context"><option>家居空间 / Home</option><option>企业或文化空间 / Business or cultural space</option><option>礼赠或纪念 / Gift or milestone</option><option>艺术礼盒 / Art gift</option><option>其他 / Other</option></select></label><label for="commission-use">作品用途 / Intended use<select id="commission-use" name="use"><option>居家装饰 / Home decor</option><option>礼赠 / Gift</option><option>其他 / Other</option></select></label><label for="commission-size">期望尺寸 / 媒介<input id="commission-size" name="size" placeholder="如有偏好可填写，暂不确定也可以" /></label><label for="commission-budget">预算区间 / Budget range<select id="commission-budget" name="budget"><option>无需限定 / No fixed range</option><option>5k 以内 / Under 5k</option><option>5k–2w</option><option>2w–10w</option><option>10w 以上 / Above 100k</option></select></label><label for="commission-display-space">陈设空间（可选） / Display space (optional)<select id="commission-display-space" name="displaySpace"><option value="">请选择 / Select a space</option><option>玄关</option><option>客厅</option><option>茶室</option><option>书房</option><option>办公室</option><option>企业会客厅</option><option>民宿空间</option><option>其他 / Other</option></select></label><label class="custom-space" for="commission-display-space-other">其他空间 / Other space<input id="commission-display-space-other" name="displaySpaceOther" placeholder="如有需要，请补充具体空间" /></label><label for="commission-intention">你想表达的意图 / Intention<textarea id="commission-intention" name="intention" rows="5" placeholder="写给谁、在哪里被看见、希望它带来怎样的气息？" required></textarea></label><label for="commission-direction">希望的艺术方向 / Artistic direction<input id="commission-direction" name="direction" placeholder="书写、器物、空间、色彩，或还不确定" /></label><label for="commission-artist">意向合作艺术家（可选） / Preferred artist<select id="commission-artist" name="artist"><option value="">暂不确定 / Not sure yet</option>{artists.map((artist) => <option value={artist.name}>{artist.name} / {artist.en}</option>)}</select></label><div class="images-note" role="note"><strong>空间照片 / 参考图（可选）</strong><span>此表单暂不收集文件。提交后可在微信沟通时直接发送参考图片，更快也更安全。</span></div><label for="commission-timeline">期望交付时间 / Desired timeline<input id="commission-timeline" name="timeline" placeholder="例如：今年秋季，或暂不确定" /></label><label class="consent"><input type="checkbox" name="private" checked /> 默认私密，仅用于沟通 / Keep my brief private by default</label><button class="btn btn-primary" type="submit">提交定制意向 / Send brief →</button><input type="text" name="website" value="" tabindex="-1" autocomplete="off" aria-hidden="true" class="honeypot" /><p class="form-note">提交内容仅用于创作前沟通，默认私密，不会公开展示。</p><p class="form-feedback" data-form-status aria-live="polite">提交后我们会尽快通过你留下的联系方式回复。</p></form></section></Layout>
+<Layout title="定制创作｜手写书法字画定制流程与价格｜小民艺术" description="从一个人、一处空间或一句话开始，共同创作一件东方艺术作品。"><section class="page-head container"><span class="eyebrow">Custom Commission / 定制创作</span><h1 class="serif">在形式之前，<br />先把你的意图说清楚。</h1><p lang="en">A commission begins with an intention, not an inventory.</p><p>这里不是商品下单页，而是一次低压力的创作前沟通。你可以带来一个场景、一段关系或一个还没有成形的想法。</p></section><section class="container section commission-steps"><div class="step-list">{processSteps.map((step) => <div><span class="mono">{step.no}</span><h2 class="serif">{step.zh}</h2><p lang="en">{step.en}</p><p>{step.body}</p></div>)}</div></section><section class="container section form-section"><div><span class="eyebrow">Commission brief / 定制意向</span><h2 class="serif">写给我们，<br />你希望作品留下什么。</h2><p>提交后仅用于初步沟通，不代表项目确认。我们会先阅读内容，再回复是否适合进入下一次交流。</p><CommissionGuidance /><FactBoundary /></div><form class="commission-form" aria-labelledby="commission-form-title" data-commission-form><h3 id="commission-form-title" class="sr-only">定制咨询表单 / Commission consultation form</h3><FormStepper steps={steps} /><div class="form-prep"><strong>填写建议 / Before you start</strong><span>准备你的想法描述、空间照片或尺寸（如有）、期望交付时间与预算区间，可加快沟通效率。</span></div><fieldset class="form-step" data-step="1" aria-labelledby="step-1-title"><legend id="step-1-title"><span class="step-no mono">01</span>你的想法<span class="step-hint">只需要一段话，说说你想表达什么</span></legend><label for="commission-intention">你想表达的意图 / Intention<span class="req" aria-hidden="true">*</span><textarea id="commission-intention" name="intention" rows="5" placeholder="写给谁、在哪里被看见、希望它带来怎样的气息？" required aria-describedby="intention-help"></textarea></label><p id="intention-help" class="field-help">这是最重要的一栏。一两句话就够，不用写得完整。</p><label for="commission-inspiration">灵感来源 / Inspiration source<input id="commission-inspiration" name="inspiration" placeholder="从案例或作品方向开始时可自动带入" /></label><label for="commission-context">作品所在的场景 / Context<select id="commission-context" name="context"><option>家居空间 / Home</option><option>企业或文化空间 / Business or cultural space</option><option>礼赠或纪念 / Gift or milestone</option><option>艺术礼盒 / Art gift</option><option>其他 / Other</option></select></label><label for="commission-use">作品用途 / Intended use<select id="commission-use" name="use"><option>居家装饰 / Home decor</option><option>礼赠 / Gift</option><option>其他 / Other</option></select></label><div class="step-nav"><button class="btn btn-primary" type="button" data-step-next>下一步：具体细节 / Next →</button></div></fieldset><fieldset class="form-step" data-step="2" aria-labelledby="step-2-title" hidden><legend id="step-2-title"><span class="step-no mono">02</span>具体细节<span class="step-hint">有偏好就填，拿不准的留空也可以</span></legend><label for="commission-size">期望尺寸 / 媒介<input id="commission-size" name="size" placeholder="如有偏好可填写，暂不确定也可以" /></label><label for="commission-display-space">陈设空间（可选） / Display space (optional)<select id="commission-display-space" name="displaySpace"><option value="">请选择 / Select a space</option><option>玄关</option><option>客厅</option><option>茶室</option><option>书房</option><option>办公室</option><option>企业会客厅</option><option>民宿空间</option><option>其他 / Other</option></select></label><label class="custom-space" for="commission-display-space-other">其他空间 / Other space<input id="commission-display-space-other" name="displaySpaceOther" placeholder="如有需要，请补充具体空间" /></label><label for="commission-budget">预算区间 / Budget range<select id="commission-budget" name="budget"><option>无需限定 / No fixed range</option><option>5k 以内 / Under 5k</option><option>5k–2w</option><option>2w–10w</option><option>10w 以上 / Above 100k</option></select></label><label for="commission-direction">希望的艺术方向 / Artistic direction<input id="commission-direction" name="direction" placeholder="书写、器物、空间、色彩，或还不确定" /></label><label for="commission-artist">意向合作艺术家（可选） / Preferred artist<select id="commission-artist" name="artist"><option value="">暂不确定 / Not sure yet</option>{artists.map((artist) => <option value={artist.name}>{artist.name} / {artist.en}</option>)}</select></label><label for="commission-timeline">期望交付时间 / Desired timeline<input id="commission-timeline" name="timeline" placeholder="例如：今年秋季，或暂不确定" /></label><div class="images-note" role="note"><strong>空间照片 / 参考图（可选）</strong><span>此表单暂不收集文件。提交后可在微信沟通时直接发送参考图片，更快也更安全。</span></div><div class="step-nav"><button class="btn btn-ghost" type="button" data-step-prev>← 上一步 / Back</button><button class="btn btn-primary" type="button" data-step-next>下一步：联系方式 / Next →</button></div></fieldset><fieldset class="form-step" data-step="3" aria-labelledby="step-3-title" hidden><legend id="step-3-title"><span class="step-no mono">03</span>联系方式<span class="step-hint">方便我们工作日回复你</span></legend><label for="commission-name">你的称呼 / Your name<span class="req" aria-hidden="true">*</span><input id="commission-name" name="name" autocomplete="name" placeholder="怎么称呼你？" required /></label><label for="commission-contact">联系方式 / Contact<span class="req" aria-hidden="true">*</span><input id="commission-contact" name="contact" autocomplete="email" placeholder="微信优先，邮箱备选" required /></label><label class="consent"><input type="checkbox" name="private" checked /> 默认私密，仅用于沟通 / Keep my brief private by default</label><div class="step-nav"><button class="btn btn-ghost" type="button" data-step-prev>← 上一步 / Back</button><button class="btn btn-primary" type="submit">提交定制意向 / Send brief</button></div></fieldset><input type="text" name="website" value="" tabindex="-1" autocomplete="off" aria-hidden="true" class="honeypot" /><p class="form-note">提交内容仅用于创作前沟通，默认私密，不会公开展示。</p><p class="form-feedback" data-form-status aria-live="polite">提交后我们会尽快通过你留下的联系方式回复。</p></form></section></Layout>
 <script>
   import { submitLead, isHoneypotFilled, CONTACT_FALLBACK, trackEvent, successHtml } from '../../scripts/cloud-forms';
+
+  // ── URL query 预填（P1-01 案例 CTA / 方向工具带参直达，必须保持兼容）──
   const params = new URLSearchParams(window.location.search);
-  const setValue = (name: string, value: string | null) => { const field = document.querySelector<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(`[name="${name}"]`); if (field && value) field.value = value; };
+
+  /**
+   * 给输入框赋值。对 <select> 做特殊处理：赋值失败（值不在选项里）时插入一个临时选项。
+   *
+   * 为什么需要：站内 8 处 CTA 用 `?context=xxx` 带参（送礼建议 / 主页心意卡 / 场合对象标题等），
+   * 但这些值都不是 select 的预设选项 —— 原生 `select.value = v` 遇到不匹配会**静默落空**，
+   * 导致用户从 CTA 点进来后这个字段是空的、上下文丢失。
+   * 插入临时选项后上下文能真正传到后台；用户仍可在下拉里改选其它选项。
+   */
+  const setValue = (name: string, value: string | null) => {
+    const field = document.querySelector<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(`[name="${name}"]`);
+    if (!field || !value) return;
+    field.value = value;
+    if (field instanceof HTMLSelectElement && field.value !== value) {
+      const option = new Option(value, value, true, true);
+      option.dataset.fromQuery = '1';
+      field.add(option);
+      field.value = value;
+    }
+  };
+
   setValue('inspiration', params.get('inspiration') ? `${params.get('inspiration')}${params.get('tag') ? ` / ${params.get('tag')}` : ''}` : null);
   setValue('direction', params.get('direction'));
   setValue('artist', params.get('artist'));
@@ -16,30 +48,141 @@ import { processSteps, artists } from '../../data/content';
   setValue('context', contextParam === '艺术礼盒' ? '艺术礼盒 / Art gift' : contextParam);
   setValue('displaySpace', params.get('space'));
   setValue('intention', params.get('style') ? `方向工具选择：${params.get('style')}；预算：${params.get('budget') || '尚未确定'}；时间：${params.get('timeline') || '不急'}` : null);
-  const displaySpace = document.querySelector<HTMLSelectElement>('select[name="displaySpace"]');
-  const customSpace = document.querySelector<HTMLElement>('.custom-space');
-  if (customSpace) customSpace.style.display = displaySpace?.value.includes('其他') ? 'block' : 'none';
-  displaySpace?.addEventListener('change', () => { if (customSpace) customSpace.style.display = displaySpace.value.includes('其他') ? 'block' : 'none'; });
+
   const commissionForm = document.querySelector<HTMLFormElement>('.commission-form');
   if (commissionForm) {
-    const status = document.querySelector<HTMLElement>('[data-form-status]');
-    const submitButton = commissionForm.querySelector<HTMLButtonElement>('button[type="submit"]');
-    commissionForm.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>('input, select, textarea').forEach((field) => field.addEventListener('invalid', () => {
-      field.setCustomValidity('请先填写或选择这一项，再继续提交。 / Please complete this field before continuing.');
-    }));
-    commissionForm.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>('input, select, textarea').forEach((field) => field.addEventListener('input', () => field.setCustomValidity('')));
-    // 首次填写即视为「开始咨询」，用于衡量首屏到表单的流失
-    commissionForm.addEventListener('input', () => trackEvent('consultation_start', { source: 'commission_form', page: window.location.pathname }), { once: true });
+    const status = commissionForm.querySelector<HTMLElement>('[data-form-status]');
+    const steps = [...commissionForm.querySelectorAll<HTMLFieldSetElement>('.form-step')];
+    const stepper = commissionForm.querySelector<HTMLElement>('[data-stepper]');
+    const stepperItems = stepper ? [...stepper.querySelectorAll<HTMLElement>('[data-stepper-item]')] : [];
+    const stepperCount = stepper?.querySelector<HTMLElement>('[data-stepper-count]');
+    const stepperHint = stepper?.querySelector<HTMLElement>('[data-stepper-hint]');
+    const stepperFill = stepper?.querySelector<HTMLElement>('[data-stepper-fill]');
+    const stepperBar = stepper?.querySelector<HTMLElement>('.stepper-bar');
+    const stepHints = ['只需要一段话，说说你想表达什么', '有偏好就填，拿不准的留空也可以', '方便我们工作日回复你'];
+    let current = 0;
+
+    // 陈设空间选「其他」时展开补充输入；隐藏时清空，避免残值混进提交
+    const displaySpace = commissionForm.querySelector<HTMLSelectElement>('select[name="displaySpace"]');
+    const customSpace = commissionForm.querySelector<HTMLElement>('.custom-space');
+    const customSpaceInput = commissionForm.querySelector<HTMLInputElement>('input[name="displaySpaceOther"]');
+    const syncCustomSpace = () => {
+      const show = !!displaySpace?.value.includes('其他');
+      if (customSpace) customSpace.style.display = show ? 'block' : 'none';
+      if (!show && customSpaceInput) customSpaceInput.value = '';
+    };
+    syncCustomSpace();
+    displaySpace?.addEventListener('change', syncCustomSpace);
+
+    // ── 分步切换 ──
+    const render = () => {
+      steps.forEach((field, i) => {
+        const isCurrent = i === current;
+        field.hidden = !isCurrent;
+        // 非当前步的控件退出 tab 顺序，键盘用户不会 Tab 到看不见的字段
+        field.inert = !isCurrent;
+      });
+      if (stepper) {
+        stepper.dataset.active = String(current + 1);
+        if (stepperCount) stepperCount.textContent = `第 ${current + 1} 步 / 共 ${steps.length} 步`;
+        if (stepperHint) stepperHint.textContent = stepHints[current] ?? '';
+        if (stepperFill) stepperFill.style.width = `${((current + 1) / steps.length) * 100}%`;
+        if (stepperBar) stepperBar.setAttribute('aria-valuenow', String(current + 1));
+      }
+      stepperItems.forEach((item, i) => {
+        item.dataset.state = i < current ? 'done' : i === current ? 'current' : 'todo';
+      });
+    };
+
+    const goTo = (index: number) => {
+      current = Math.max(0, Math.min(steps.length - 1, index));
+      render();
+      // 切换后把焦点移到该步第一个可聚焦控件，读屏用户能立刻知道到了新步骤
+      const first = steps[current].querySelector<HTMLElement>('input, select, textarea, button');
+      first?.focus({ preventScroll: true });
+      const top = stepper?.getBoundingClientRect().top ?? 0;
+      if (top < 0) stepper?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    /** 只校验当前步。用 reportValidity() 让浏览器给出原生提示与滚动定位。 */
+    const validateStep = () => {
+      const fields = [...steps[current].querySelectorAll<HTMLElement>('input, select, textarea')]
+        .filter((el) => !el.classList.contains('honeypot') && !(el as HTMLInputElement).disabled);
+      for (const field of fields) {
+        if (!(field as HTMLInputElement).checkValidity()) {
+          (field as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement).reportValidity();
+          return false;
+        }
+      }
+      return true;
+    };
+
+    commissionForm.querySelectorAll<HTMLElement>('[data-step-next]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        if (!validateStep()) return;
+        trackEvent('consultation_step', { step: current + 1, total: steps.length, page: window.location.pathname });
+        goTo(current + 1);
+      });
+    });
+    commissionForm.querySelectorAll<HTMLElement>('[data-step-prev]').forEach((btn) => {
+      btn.addEventListener('click', () => goTo(current - 1));
+    });
+
+    // 回车（非 textarea 内）等同点「下一步」，符合单页表单的直觉
+    commissionForm.addEventListener('keydown', (event) => {
+      const e = event as KeyboardEvent;
+      if (e.key !== 'Enter') return;
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'TEXTAREA' || target.getAttribute('type') === 'submit') return;
+      if (steps[current]?.querySelector('[data-step-next]')) {
+        e.preventDefault();
+        (steps[current].querySelector<HTMLElement>('[data-step-next]'))?.click();
+      }
+    });
+
+    // 原生校验文案中文化：仅在提交时启用（分步导航时保持静默，交由 reportValidity 提示）
+    commissionForm.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>('input, select, textarea').forEach((field) => {
+      field.addEventListener('invalid', () => {
+        field.setCustomValidity('请先填写或选择这一项，再继续提交。 / Please complete this field before continuing.');
+      });
+      field.addEventListener('input', () => field.setCustomValidity(''));
+      field.addEventListener('change', () => field.setCustomValidity(''));
+    });
+
+    // 首次填写即视为「开始咨询」，用于衡量首屏到表单的流失。
+    // 注意：不能再用 { once: true } 挂 input —— 分步后第 2/3 步的输入不会再触发。
+    let startedTracked = false;
+    commissionForm.addEventListener('input', () => {
+      if (startedTracked) return;
+      startedTracked = true;
+      trackEvent('consultation_start', { source: 'commission_form', page: window.location.pathname });
+    });
+
     commissionForm.addEventListener('submit', async (event) => {
       event.preventDefault();
-      if (!status || !submitButton) return;
+      if (!status) return;
+
+      // 提交时兜底：逐步校验全部通过才放行（防止用户用脚本绕过某一步）
+      for (let i = 0; i < steps.length; i += 1) {
+        if (current === i) continue;
+        const field = [...steps[i].querySelectorAll<HTMLElement>('input, select, textarea')]
+          .find((el) => !el.classList.contains('honeypot') && !(el as HTMLInputElement).checkValidity());
+        if (field) {
+          goTo(i);
+          (field as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement).reportValidity();
+          return;
+        }
+      }
+      if (!validateStep()) return;
+
       if (isHoneypotFilled(commissionForm)) { status.textContent = '定制意向已收到。我们会尽快回复。'; return; }
       const data = new FormData(commissionForm);
       const name = String(data.get('name') || '').trim();
       const contact = String(data.get('contact') || '').trim();
-      if (!name || !contact) { status.textContent = '请补全称呼与联系方式后再提交。'; return; }
+      if (!name || !contact) { goTo(steps.length - 1); status.textContent = '请补全称呼与联系方式后再提交。'; return; }
       const pick = (key: string) => String(data.get(key) || '').trim();
-      submitButton.disabled = true;
+      const submitButton = commissionForm.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if (submitButton) submitButton.disabled = true;
       status.textContent = '正在提交…';
       const result = await submitLead('commission', name, contact, {
         inspiration: pick('inspiration'),
@@ -57,22 +200,46 @@ import { processSteps, artists } from '../../data/content';
         page: window.location.pathname,
         referrer: document.referrer || null,
       });
-      submitButton.disabled = false;
+      if (submitButton) submitButton.disabled = false;
       if (result.ok) {
         // B3：成功态给出时效与更快的微信通道
         // innerHTML 用于渲染带结构的成功卡；入参为本行写死的字面量，非用户输入
         status.innerHTML = successHtml('工作日通常 <strong>当天或次日</strong>回复你。', '参考图片、空间照片可以直接在微信里发给我们，沟通会快很多。');
         commissionForm.reset();
+        syncCustomSpace();
+        goTo(0);
       } else {
         status.textContent = `提交失败，请稍后重试；${CONTACT_FALLBACK}`;
       }
     });
+
+    // 校验策略：JS 正常时由「下一步」按钮调 reportValidity() 做逐步校验，
+    // 提交时再做一次全量兜底（见 submit 处理）。不使用 novalidate ——
+    // 保留浏览器原生校验作为无 JS 场景的兜底。
+    render();
+  } else {
+    // 脚本异常时兜底：确保所有步骤可见，表单仍可用
+    document.querySelectorAll<HTMLFieldSetElement>('.form-step').forEach((field) => { field.hidden = false; field.inert = false; });
   }
 </script>
 <style>
-.page-head{padding:94px 0 72px;max-width:1200px}.page-head h1{font-size:clamp(52px,7vw,92px);line-height:1.16;font-weight:500;letter-spacing:var(--tracking-display);margin:22px 0}.page-head p{max-width:650px;color:var(--ink-soft);font-size:18px}.page-head p[lang=en]{font:24px/1.5 var(--font-display-en),Georgia,serif;color:var(--cinnabar-deep)}.commission-steps{border-top:1px solid var(--line)}.step-list{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line)}.step-list>div{padding:22px 22px 28px 0;min-height:250px}.step-list>div+div{border-left:1px solid var(--line);padding-left:22px}.step-list h2{font-size:30px;font-weight:500;margin:34px 0 4px}.step-list p{font-size:14px;color:var(--ink-soft)}.step-list p[lang=en]{font:17px var(--font-display-en),Georgia,serif;color:var(--ink)}.form-section{display:grid;grid-template-columns:1fr 1fr;gap:90px;border-top:1px solid var(--line)}.form-section h2{font-size:46px;font-weight:500;line-height:1.3;margin:18px 0}.form-section>div>p{color:var(--ink-soft);max-width:520px}.commission-form{border-top:1px solid var(--line);padding-top:16px}.commission-form label{display:block;color:var(--ink-soft);font-size:13px;margin-bottom:18px}.commission-form input:not([type=checkbox]),.commission-form select,.commission-form textarea{display:block;width:100%;margin-top:7px;border:1px solid var(--line);border-radius:0;background:var(--paper-light);color:var(--ink);padding:12px 13px;font-size:16px}.commission-form textarea{resize:vertical}.commission-form input:focus,.commission-form select:focus,.commission-form textarea:focus{border-color:var(--cinnabar)}.commission-form .consent{display:flex;align-items:flex-start;gap:9px}.commission-form .consent input{margin-top:5px;accent-color:var(--cinnabar)}.form-prep{display:flex;flex-direction:column;gap:6px;margin-bottom:22px;padding:12px 14px;border-left:2px solid var(--cinnabar);background:var(--paper-light);color:var(--ink-soft);font-size:12px;line-height:1.7}.form-prep strong{color:var(--ink);font-weight:500}.custom-space{display:none}.form-note{color:var(--meta);font-size:11px;margin-top:14px}@media(max-width:767px){.page-head{padding:58px 0 48px}.page-head h1{font-size:54px}.page-head p[lang=en]{font-size:20px}.step-list,.form-section{grid-template-columns:1fr;gap:28px}.step-list>div,.step-list>div+div{min-height:0;padding:18px 0;border-left:0;border-bottom:1px solid var(--line)}.step-list>div:last-child{border-bottom:0}.step-list h2{margin:12px 0 4px}.form-section h2{font-size:36px}}
+.page-head{padding:94px 0 72px;max-width:1200px}.page-head h1{font-size:clamp(52px,7vw,92px);line-height:1.16;font-weight:500;letter-spacing:var(--tracking-display);margin:22px 0}.page-head p{max-width:650px;color:var(--ink-soft);font-size:18px}.page-head p[lang=en]{font:24px/1.5 var(--font-display-en),Georgia,serif;color:var(--cinnabar-deep)}.commission-steps{border-top:1px solid var(--line)}.step-list{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line)}.step-list>div{padding:22px 22px 28px 0;min-height:250px}.step-list>div+div{border-left:1px solid var(--line);padding-left:22px}.step-list h2{font-size:30px;font-weight:500;margin:34px 0 4px}.step-list p{font-size:14px;color:var(--ink-soft)}.step-list p[lang=en]{font:17px var(--font-display-en),Georgia,serif;color:var(--ink)}.form-section{display:grid;grid-template-columns:1fr 1fr;gap:90px;border-top:1px solid var(--line)}.form-section h2{font-size:46px;font-weight:500;line-height:1.3;margin:18px 0}.form-section>div>p{color:var(--ink-soft);max-width:520px}.commission-form{border-top:1px solid var(--line);padding-top:16px}.commission-form label{display:block;color:var(--ink-soft);font-size:13px;margin-bottom:18px}.commission-form input:not([type=checkbox]),.commission-form select,.commission-form textarea{display:block;width:100%;margin-top:7px;border:1px solid var(--line);border-radius:0;background:var(--paper-light);color:var(--ink);padding:12px 13px;font-size:16px}.commission-form textarea{resize:vertical}.commission-form input:focus,.commission-form select:focus,.commission-form textarea:focus{border-color:var(--cinnabar)}.commission-form .consent{display:flex;align-items:flex-start;gap:9px}.commission-form .consent input{margin-top:5px;accent-color:var(--cinnabar)}.form-prep{display:flex;flex-direction:column;gap:6px;margin-bottom:22px;padding:12px 14px;border-left:2px solid var(--cinnabar);background:var(--paper-light);color:var(--ink-soft);font-size:12px;line-height:1.7}.form-prep strong{color:var(--ink);font-weight:500}.custom-space{display:none}.form-note{color:var(--meta);font-size:11px;margin-top:14px}
+/* ── 分步表单（P1-03）── */
+.form-step{border:0;margin:0;padding:0;min-width:0}
+.form-step[hidden]{display:none!important}
+.form-step legend{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;padding:0;margin:0 0 22px;font-size:22px;font-weight:500;color:var(--ink);line-height:1.4}
+.form-step .step-no{font-size:12px;letter-spacing:.08em;color:var(--cinnabar-deep)}
+.form-step .step-hint{font-size:12px;font-weight:400;color:var(--ink-soft)}
+.req{color:var(--cinnabar);margin-left:6px}
+.field-help{margin:-12px 0 18px;color:var(--meta);font-size:11px;line-height:1.7}
+.step-nav{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:24px}
+.step-nav .btn{flex:0 0 auto}
+.btn-ghost{background:transparent;border:1px solid var(--line);color:var(--ink-soft);padding:12px 20px;font-size:14px;cursor:pointer;transition:border-color .2s ease,color .2s ease}
+.btn-ghost:hover{border-color:var(--cinnabar);color:var(--cinnabar-deep)}
 .form-feedback{margin:14px 0 0;padding:10px 12px;border-left:2px solid var(--cinnabar);color:var(--cinnabar-deep);font-size:12px;line-height:1.7}
 .images-note{display:flex;flex-direction:column;gap:4px;margin-bottom:18px;padding:12px 14px;border-left:2px solid var(--line);background:var(--paper-light);color:var(--ink-soft);font-size:12px;line-height:1.7}
 .images-note strong{color:var(--ink-soft);font-weight:500}
 .honeypot{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;opacity:0!important;pointer-events:none!important}
+@media(max-width:767px){.page-head{padding:58px 0 48px}.page-head h1{font-size:54px}.page-head p[lang=en]{font-size:20px}.step-list,.form-section{grid-template-columns:1fr;gap:28px}.step-list>div,.step-list>div+div{min-height:0;padding:18px 0;border-left:0;border-bottom:1px solid var(--line)}.step-list>div:last-child{border-bottom:0}.step-list h2{margin:12px 0 4px}.form-section h2{font-size:36px}}
+@media(max-width:639px){.step-nav{flex-direction:column;align-items:stretch}.step-nav .btn{width:100%}}
 </style>
