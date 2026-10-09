@@ -5,6 +5,12 @@
 // 通道 2 · 邮件（Resend）：环境变量 RESEND_API_KEY + RESEND_TO_EMAIL
 //          （RESEND_FROM_EMAIL 可选，默认 onboarding@resend.dev）
 //
+// ⚠ Resend 未验证域名时的硬限制（2026-10-09 实测）：用默认发件人
+//    onboarding@resend.dev 时，只能发到「注册 Resend 所用的邮箱」，发其他地址
+//    一律 403 validation_error。因此 RESEND_TO_EMAIL 必须填该账号邮箱；
+//    想发到任意地址，需先在 resend.com/domains 验证自有域名，
+//    并把 RESEND_FROM_EMAIL 设为该域名下的地址（如 notice@xiaominart.com）。
+//
 // 三条原则：
 // 1. 通知是「尽力而为」——任何失败只写日志，绝不影响用户提交结果；
 // 2. 凭据一律走 Cloudflare Pages 环境变量，禁止硬编码（本仓库公开，
