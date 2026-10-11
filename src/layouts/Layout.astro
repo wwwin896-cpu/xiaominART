@@ -15,7 +15,7 @@ import ShareButton from '../components/ShareButton.astro';
 import WishlistDrawer from '../components/WishlistDrawer.astro';
 import SearchModal from '../components/SearchModal.astro';
 import CookieConsent from '../components/CookieConsent.astro';
-const { title = '小民艺术｜日常之礼', description = '小民艺术，以亲笔书写为起点的东方日常之礼。见字如面，心意表达。', canonical, image = '/assets/images/og-image.png', noindex = false, breadcrumbs = [] } = Astro.props;
+const { title = '小民艺术｜用心好礼', description = '小民艺术，用心为你写一份好礼。以亲笔书写为起点，见字如面，心意表达。', canonical, image = '/assets/images/og-image.png', noindex = false, breadcrumbs = [] } = Astro.props;
 const seoTitle = title.replace(/xiaominart/gi, 'XIAOMINART');
 const url = canonical ?? Astro.url.href;
 const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
@@ -113,7 +113,7 @@ const baiduId = trackPage ? BAIDU_TONGJI_ID : undefined;
           '@id': new URL('/#organization', Astro.site ?? Astro.url).href,
           name: '小民艺术',
           alternateName: ['XIAOMINART', 'Xiaomin Art', '小民艺术 XIAOMINART'],
-          description: '以亲笔书写为起点的东方日常之礼，提供手写书法礼品、书画定制与企业礼赠。',
+          description: '用心为你写一份好礼。以亲笔书写为起点，提供手写书法礼品、书画定制与企业礼赠。',
           url: new URL('/', Astro.site ?? Astro.url).href,
           logo: new URL('/assets/brand/xiaominart-logo.png', Astro.site ?? Astro.url).href,
           email: 'hi@xiaominart.com',
@@ -195,7 +195,7 @@ const baiduId = trackPage ? BAIDU_TONGJI_ID : undefined;
     <header class="site-header" data-component="site-header">
       <div class="container header-inner">
         <button class="back-btn" type="button" data-back-button aria-label="返回上一页"><span class="back-arrow" aria-hidden="true">‹</span>返回</button>
-        <a class="brand" href="/" aria-label="小民艺术｜日常之礼首页"><img class="brand-logo" src="/assets/brand/xiaominart-logo.png" width="270" height="51" alt="小民艺术 XIAOMINART｜方寸之境，也藏山河" /></a>
+        <a class="brand" href="/" aria-label="小民艺术｜用心好礼首页"><img class="brand-logo" src="/assets/brand/xiaominart-logo.png" width="270" height="51" alt="小民艺术 XIAOMINART｜方寸之境，也藏山河" /></a>
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">菜单 / Menu</button>
         <nav id="site-nav" aria-label="主导航">
           {navItems.map((item) => <div class="nav-item"><a href={item.href} class:list={{ current: isCurrent(item.href) }} aria-current={isCurrent(item.href) ? 'page' : undefined}><span>{item.zh}</span><small lang="en">{item.en}</small></a>{item.children?.length ? <div class="nav-dropdown">{item.children.map((child) => <a href={child.href}><span>{child.zh}</span><small lang="en">{child.en}</small></a>)}</div> : null}</div>)}
@@ -240,7 +240,7 @@ const baiduId = trackPage ? BAIDU_TONGJI_ID : undefined;
     </div>
     <footer class="site-footer" data-component="site-footer">
       <div class="container footer-grid">
-        <div><p class="eyebrow">XIAOMINART / 日常之礼</p><p class="footer-claim serif">愿你在这方寸之间，<br />找到属于自己的定制心意。</p></div>
+        <div><p class="eyebrow">XIAOMINART / 用心好礼</p><p class="footer-claim serif">愿你在这方寸之间，<br />找到属于自己的定制心意。</p></div>
         <div class="footer-contact"><p class="eyebrow">Contact / 联系</p><a href={`mailto:${siteContact.email}`}>{siteContact.email}</a>{siteContact.wechatId ? <p>微信 / 企业微信：<strong>{siteContact.wechatId}</strong>（备注来意，尽快回复）</p> : siteContact.wechatQr ? <p>微信 / 企业微信：扫码添加（备注来意，尽快回复）</p> : <p>微信 / 企业微信：提交<a href="/custom-commission/">定制咨询表单</a>并留下你的微信号，我们会主动添加你。</p>}{siteContact.wechatQr ? <a class="wechat-qr-link" href={siteContact.wechatQr} target="_blank" rel="noopener" title="点击查看大图，长按识别添加"><img class="wechat-qr" src={siteContact.wechatQr} width="112" height="112" alt="小民艺术微信二维码" loading="lazy" /></a> : null}<p>送礼问题可先从送礼指南开始；需要个性化建议，可提交咨询。</p><p class="footer-policy"><a href="/help/#after-sales">售后保障与退换须知 →</a><a href="/privacy/">隐私政策 →</a></p><button class="ink-seek footer-seek" type="button" aria-controls="quick-message" aria-expanded="false">或先说一句想说的话 →</button></div>
       </div>
       <div class="container trust-signals" aria-label="信息边界 / Information boundaries"><div><span class="eyebrow">Artist / 艺术家</span><strong>由具体创作方向与沟通内容开始</strong></div><div><span class="eyebrow">Projects / 项目</span><strong>已确认内容才会公开呈现</strong></div><div class="trust-privacy"><span class="eyebrow">Privacy / 隐私</span><strong>客户故事与图像获得授权后发布</strong></div><p>我们不使用未经核验的客户数量、媒体曝光或合作机构作为背书。</p></div>

@@ -3,7 +3,7 @@
     xiaominART 官方品牌标识 (深色模式 · 方案二深化版)
     - 符号：【斗升小民】量具金石古印（镂空透底、古朴厚重）
     - 上行：扁平化现代无衬线英文 xiaominART
-    - 下行：中文副标「小民艺术 · 日常表达」，两端与上方英文 100% 绝对等宽对齐
+    - 下行：中文副标「小民艺术 · 用心好礼」，两端与上方英文 100% 绝对等宽对齐
   -->
 
   <!-- 左侧镂空古印符号：斗升金石印 (Hollow Measure Seal) -->
@@ -46,7 +46,7 @@
       xiaomin<tspan font-weight="800" fill="#E2B878" letter-spacing="1.5">ART</tspan>
     </text>
 
-    <!-- 下行：中文「小民艺术 · 日常表达」（精确宽度 260px，与上方完全等宽两端对齐） -->
+    <!-- 下行：中文「小民艺术 · 用心好礼」（精确宽度 260px，与上方完全等宽两端对齐） -->
     <text x="0" y="60" 
           font-family="'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', 'STSong', serif" 
           font-size="12.5" 
@@ -54,7 +54,7 @@
           fill="#B5B2AA" 
           textLength="260"
           lengthAdjust="spacing">
-      小民艺术 · 日常表达
+      小民艺术 · 用心好礼
     </text>
   </g>
 </svg>
