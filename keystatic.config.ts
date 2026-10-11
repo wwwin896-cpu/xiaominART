@@ -26,7 +26,7 @@ export default config({
   locale: 'zh-CN',
   ui: {
     brand: {
-      name: '小民艺术｜东方日常之礼',
+      name: '小民艺术｜用心好礼',
     },
     navigation: {
       内容管理: ['settings', 'navigation', 'products', 'occasions', 'recipients', 'scenes', 'channelPages', 'blog', 'faqs', 'clientStories', 'readyMadeStatus'],
@@ -38,13 +38,13 @@ export default config({
       path: 'content/settings/site.yaml',
       format: 'yaml',
       schema: {
-        siteTitle: fields.text({ label: '网站标题', defaultValue: '小民艺术｜日常之礼' }),
-        siteDescription: fields.text({ label: '网站描述', multiline: true, defaultValue: '小民艺术，以亲笔书写为起点的东方日常之礼。见字如面，心意表达。' }),
-        logoSubtitle: fields.text({ label: 'Logo 副标', defaultValue: '小民艺术｜日常之礼' }),
+        siteTitle: fields.text({ label: '网站标题', defaultValue: '小民艺术｜用心好礼' }),
+        siteDescription: fields.text({ label: '网站描述', multiline: true, defaultValue: '小民艺术，用心为你写一份好礼。以亲笔书写为起点，见字如面，心意表达。' }),
+        logoSubtitle: fields.text({ label: 'Logo 副标', defaultValue: '小民艺术｜用心好礼' }),
         brandSlogan: fields.text({ label: '品牌主张', defaultValue: '见字如面，心意表达' }),
         artistPenName: fields.text({ label: '艺术家笔名', defaultValue: '升斗小民' }),
         contactEmail: fields.text({ label: '联系邮箱', defaultValue: 'hello@xiaominart.com' }),
-        footerText: fields.text({ label: '页脚文案', multiline: true, defaultValue: 'XIAOMINART / 东方日常之礼' }),
+        footerText: fields.text({ label: '页脚文案', multiline: true, defaultValue: 'XIAOMINART / 用心好礼' }),
         published: fields.checkbox({ label: '启用设置', defaultValue: true }),
       },
     }),
