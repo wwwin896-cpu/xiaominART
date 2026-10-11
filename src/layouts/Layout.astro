@@ -115,7 +115,7 @@ const baiduId = trackPage ? BAIDU_TONGJI_ID : undefined;
           alternateName: ['XIAOMINART', 'Xiaomin Art', '小民艺术 XIAOMINART'],
           description: '用心为你写一份好礼。以亲笔书写为起点，提供手写书法礼品、书画定制与企业礼赠。',
           url: new URL('/', Astro.site ?? Astro.url).href,
-          logo: new URL('/assets/brand/xiaominart-logo-16.png', Astro.site ?? Astro.url).href,
+          logo: new URL('/assets/brand/xiaominart-logo-full.png', Astro.site ?? Astro.url).href,
           email: 'hi@xiaominart.com',
           foundingLocation: { '@type': 'Place', name: '中国' },
           areaServed: { '@type': 'Country', name: '中国' },
@@ -195,7 +195,7 @@ const baiduId = trackPage ? BAIDU_TONGJI_ID : undefined;
     <header class="site-header" data-component="site-header">
       <div class="container header-inner">
         <button class="back-btn" type="button" data-back-button aria-label="返回上一页"><span class="back-arrow" aria-hidden="true">‹</span>返回</button>
-        <a class="brand" href="/" aria-label="小民艺术｜用心好礼首页"><img class="brand-logo" src="/assets/brand/xiaominart-logo-16.png" width="270" height="51" alt="小民艺术 XIAOMINART｜方寸之境，也藏山河" /></a>
+        <a class="brand" href="/" aria-label="小民艺术｜用心好礼首页"><img class="brand-logo" src="/assets/brand/xiaominart-logo-full.png" width="270" height="51" alt="小民艺术 XIAOMINART｜方寸之境，也藏山河" /></a>
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">菜单 / Menu</button>
         <nav id="site-nav" aria-label="主导航">
           {navItems.map((item) => <div class="nav-item"><a href={item.href} class:list={{ current: isCurrent(item.href) }} aria-current={isCurrent(item.href) ? 'page' : undefined}><span>{item.zh}</span><small lang="en">{item.en}</small></a>{item.children?.length ? <div class="nav-dropdown">{item.children.map((child) => <a href={child.href}><span>{child.zh}</span><small lang="en">{child.en}</small></a>)}</div> : null}</div>)}
