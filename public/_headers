@@ -12,10 +12,11 @@
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
 
+# 品牌标识会不定期更新，但文件名固定（网页固定引用 xiaominart-logo.png），
+# 沿用下面 /assets/* 的 14 天缓存会让老访客长期看到旧 LOGO（2026-10-11 踩过：
+# 更新 LOGO 后业主浏览器无变化）。故品牌目录单独设 1 小时 —— 更具体的规则
+# 必须写在更宽泛的 /assets/* 之前。
 /assets/brand/*
-  # 品牌标识会不定期更新，但文件名固定（网页固定引用 xiaominart-logo.png），
-  # 沿用 /assets/* 的 14 天缓存会让老访客长期看到旧 LOGO（2026-10-11 踩过：
-  # 更新 LOGO 后业主浏览器无变化）。故品牌目录单独设 1 小时。
   Cache-Control: public, max-age=3600, stale-while-revalidate=86400
 
 /assets/*
