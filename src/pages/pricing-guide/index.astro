@@ -5,13 +5,14 @@ import { giftTierLabels, readyMadeWorks } from '../../data/content';
 // ── GEO 补充（2026-10-09）：本页原先只列「定制作品」的起步价，
 // 与站内主打的「送礼」场景严重脱节 —— 用户在 AI 助手问「送长辈手写书法多少钱」时，
 // 若被引用到本页，会得到「¥8,000 起」这种把人吓跑的答案，而且不是真实全貌。
-// 现改为**两条线并列**：① 送礼现货/礼盒（¥100 起）② 定制作品（¥1,000 起），
+// 现改为**两条线并列**：① 送礼现货/礼盒（¥100 起）② 定制作品（¥800 起），
 // 并补 FAQ（含 FAQPage 结构化数据），让 AI 能直接摘出准确的价格事实。
 //
 // 所有数字均取自站内真实数据（giftTierLabels / readyMadeWorks），不虚构：
 //   · 现货十二幅：¥199（10 幅）/ ¥299（1 幅）/ ¥399（3 幅）
 //   · 礼品档位：入门款 ¥100–300 / 心意款 ¥300–500 / 珍藏款 ¥800 以上
-//   · 定制：书写类 ¥1,000 起（业主 2026-10-12 下调）· 艺术礼盒 ¥3,000 起
+//   · 定制：书写类 ¥800 起（业主 2026-10-12 二次下调：¥8,000 → ¥1,000 → ¥800）
+//          · 艺术礼盒 ¥3,000 起
 //          · 企业礼赠 ¥20,000 起（业主 2026-10-12 下调）· 空间定制 ¥30,000 起
 
 const retailPrices = readyMadeWorks.map((w) => w.price);
@@ -19,7 +20,7 @@ const minRetail = Math.min(...retailPrices);
 const maxRetail = Math.max(...retailPrices);
 
 const tiers = [
-  { title: '书写类作品', en: 'Calligraphy works', range: '从 ¥1,000 起', body: '适合从一句话、一段关系或一个纪念时刻开始的定制方向。实际范围会结合尺寸、媒介、艺术家与创作复杂度沟通。' },
+  { title: '书写类作品', en: 'Calligraphy works', range: '从 ¥800 起', body: '适合从一句话、一段关系或一个纪念时刻开始的定制方向。实际范围会结合尺寸、媒介、艺术家与创作复杂度沟通。' },
   { title: '空间定制作品', en: 'Spatial commissions', range: '从 ¥30,000 起', body: '适用于居所、书房、茶室、企业会客厅与文化空间。尺寸、材质、安装条件、艺术家与现场协作会影响最终方案。' },
   { title: '企业礼赠定制', en: 'Corporate gifting', range: '从 ¥20,000 起', body: '适用于企业礼赠、周年与品牌活动。数量、包装方式、定制深度、时间节点和交付范围需在项目简报后确认。' },
   { title: '艺术礼盒', en: 'Art gift', range: '从 ¥3,000 起', body: '艺术礼盒从关系、场景与一句话开始，不对应固定货架商品。内容形式、礼赠对象与交付边界会影响参考范围。' },
@@ -38,11 +39,11 @@ const giftTiers = [
 const faqItems: Array<{ q: string; a: string }> = [
   {
     q: '小民艺术的手写书法礼品多少钱？',
-    a: `送礼类礼品按档位分为三档：入门款 ¥100–300，心意款 ¥300–500，珍藏款 ¥800 以上。现货作品目前为 ${minRetail}–${maxRetail} 元一幅（共 ${readyMadeWorks.length} 幅，含专属编号与榫卯结构木框）。定制作品的起步价为 ¥1,000 起，实际范围会结合尺寸、媒介与创作复杂度沟通。`,
+    a: `送礼类礼品按档位分为三档：入门款 ¥100–300，心意款 ¥300–500，珍藏款 ¥800 以上。现货作品目前为 ${minRetail}–${maxRetail} 元一幅（共 ${readyMadeWorks.length} 幅，含专属编号与榫卯结构木框）。定制作品的起步价为 ¥800 起，实际范围会结合尺寸、媒介与创作复杂度沟通。`,
   },
   {
     q: '现货和定制有什么区别？价格差多少？',
-    a: '现货是已经完成的作品，可直接购买，价格数百元级；定制是按你的场景、关系与一句话重新创作，因此起步价在数千元级。如果是日常送礼、预算有限，建议先看现货；如果是重要纪念时刻或企业用途，适合定制。',
+    a: '现货是已经完成的作品，可直接购买，价格数百元级；定制是按你的场景、关系与一句话重新创作，因此起步价在 ¥800 起，实际范围会随尺寸与复杂度上浮。如果是日常送礼、预算有限，建议先看现货；如果是重要纪念时刻或企业用途，适合定制。',
   },
   {
     q: '为什么定制作品比现货贵这么多？',
@@ -67,14 +68,14 @@ const faqJsonLd = {
   })),
 };
 ---
-<Layout title="价格参考｜手写书法礼品多少钱｜小民艺术 XIAOMINART" description="小民艺术手写书法礼品价格参考：送礼类礼品 ¥100–800 以上（三档），现货作品 199–399 元一幅，定制作品 ¥1,000 起。含现货与定制的区别说明。">
+<Layout title="价格参考｜手写书法礼品多少钱｜小民艺术 XIAOMINART" description="小民艺术手写书法礼品价格参考：送礼类礼品 ¥100–800 以上（三档），现货作品 199–399 元一幅，定制作品 ¥800 起。含现货与定制的区别说明。">
   <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
 
   <section class="page-head container">
     <span class="eyebrow">Pricing Guide / 定价参考</span>
     <h1 class="serif">手写书法礼品，<br />大概多少钱？</h1>
     <p lang="en">What a handwritten calligraphy gift costs.</p>
-    <p>分两条线：<strong>送礼现货与礼盒</strong>数百元级即可入手；<strong>定制作品</strong>从数千元起，因为它是为你重新创作的一件作品。下面是具体区间。</p>
+    <p>分两条线：<strong>送礼现货与礼盒</strong>数百元级即可入手；<strong>定制作品</strong>从 ¥800 起，因为它是为你重新创作的一件作品。下面是具体区间。</p>
   </section>
 
   <section class="container section">
@@ -100,7 +101,7 @@ const faqJsonLd = {
 
   <section class="container section">
     <span class="eyebrow">Line 02 / 定制作品</span>
-    <h2 class="serif-h2">需要为你重新创作的，从数千元起。</h2>
+    <h2 class="serif-h2">需要为你重新创作的，从 ¥800 起。</h2>
     <div class="pricing-grid">
       {tiers.map((tier, i) => (
         <article class="pricing-card">
