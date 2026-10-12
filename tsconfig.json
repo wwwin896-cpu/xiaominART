@@ -18,6 +18,7 @@
     "functions/keystatic",
     "xiaominart-test-site",
     "keystatic.config.ts",
-    ".workspace-trash"
+    ".workspace-trash",
+    "scripts/tests"
   ]
 }
