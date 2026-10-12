@@ -205,6 +205,16 @@ const steps = [
         // B3：成功态给出时效与更快的微信通道
         // innerHTML 用于渲染带结构的成功卡；入参为本行写死的字面量，非用户输入
         status.innerHTML = successHtml('工作日通常 <strong>当天或次日</strong>回复你。', '参考图片、空间照片可以直接在微信里发给我们，沟通会快很多。');
+        // 2026-10-12 业主反馈：提交后表单会 goTo(0) 重置回第一步，而成功卡在表单下方，
+        // 用户视线还在提交按钮附近 → 很容易完全看不到提交结果。
+        // 因此额外弹一个中央浮层，确保「已提交」这个结论一定被看到；
+        // 内联卡保留，作为关闭弹层后仍可回看的凭证。
+        window.dispatchEvent(new CustomEvent('xiaominart:form-success', {
+          detail: {
+            note: '工作日通常 <strong>当天或次日</strong>回复你。',
+            hint: '参考图片、空间照片可以直接在微信里发给我们，沟通会快很多。',
+          },
+        }));
         commissionForm.reset();
         syncCustomSpace();
         goTo(0);

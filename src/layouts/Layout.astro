@@ -252,11 +252,38 @@ const baiduId = trackPage ? BAIDU_TONGJI_ID : undefined;
 <script>
   import { trackEvent } from '../scripts/cloud-forms';
   import { readWishlist, onWishlistChange } from '../scripts/wishlist';
+  import { initFormSuccessDialog } from '../scripts/form-success-dialog';
+  // 表单成功弹层：集中在此初始化一次，各表单成功后派发
+  // 'xiaominart:form-success' 事件即可弹出（见 form-success-dialog.ts）。
+  initFormSuccessDialog();
   const toggle = document.querySelector('.menu-toggle');
   const nav = document.querySelector('#site-nav');
+  const isMenuOpen = () => toggle?.getAttribute('aria-expanded') === 'true';
   const closeMenu = () => { if (!toggle || !nav) return; toggle.setAttribute('aria-expanded', 'false'); nav.classList.remove('open'); document.body.classList.remove('menu-open'); };
   toggle?.addEventListener('click', () => { const open = toggle.getAttribute('aria-expanded') !== 'true'; toggle.setAttribute('aria-expanded', String(open)); nav?.classList.toggle('open', open); document.body.classList.toggle('menu-open', open); });
   nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
+  // 移动端菜单的三种关闭方式（2026-10-12 业主反馈：此前只能在菜单项上点一下才关得掉）
+  //   ① 点菜单与按钮以外的任意处
+  //   ② 手指上滑 / 页面滚动（内容往上走）时自动收起
+  //   ③ Escape 键（键盘与外接键盘用户）
+  // 三者都只在菜单已展开时生效，避免给未展开的页面增加无谓监听开销。
+  document.addEventListener('click', (event) => {
+    if (!isMenuOpen()) return;
+    const target = event.target as Node | null;
+    if (!target) return;
+    if (nav?.contains(target) || toggle?.contains(target)) return;
+    closeMenu();
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && isMenuOpen()) closeMenu();
+  });
+  // 滚动即收起：用 passive 监听，保证不拖慢滚动本身。
+  // 注意不要在所有滚动里做 DOM 写操作——先判断 isMenuOpen() 再动手。
+  window.addEventListener('scroll', () => { if (isMenuOpen()) closeMenu(); }, { passive: true });
+  // 视口变宽（横竖屏切换 / 放大窗口）后菜单变为桌面形态，
+  // 若仍留着 open 类会让桌面导航状态与 aria-expanded 不一致，这里一并复位。
+  const wideQuery = window.matchMedia('(min-width: 768px)');
+  wideQuery.addEventListener('change', (e) => { if (e.matches) closeMenu(); });
   // 移动端返回键：非首页显示，优先浏览器历史回退，无历史则回首页
   const backBtn = document.querySelector<HTMLButtonElement>('[data-back-button]');
   if (backBtn) {

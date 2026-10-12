@@ -18,8 +18,11 @@
 //   · 「静气生活」/journal/ 整体下线，_redirects 301 至 /about/。
 // 2026-10-06 调整：
 //   · 企业礼赠下拉从五个方向锚点精简为三类：送出去的心意 / 留得住的纪念 / 挂进空间的话（对应内页 #gifts #keep #space）。
-// 2026-10-06 调整：
-//   · 企业礼赠下拉从五个方向锚点精简为三类：送出去的心意 / 留得住的纪念 / 挂进空间的话（对应内页 #gifts #keep #space）。
+// 2026-10-12 调整：
+//   · 企业礼赠下拉与内页四张卡片标题对齐，并由三类扩为四类：
+//     商务伴手礼(#gifts) / 庆典墨宝礼(#keep) / 空间书法礼(#space) / 校园纪念礼(#campus)。
+//     → 此前菜单名与卡片名不一致（菜单旧名 vs 卡片新名），访客点进去会看到不同标题；
+//       第 4 张卡片「校园纪念礼」此前在导航里没有任何入口，本次一并补齐。
 // 2026-10-05 调整：
 //   · 「送礼指南」从「小民好礼」二级菜单移除，该下拉只留 现货好礼 / 定制好礼 两条找礼路径。
 //     /gift-guide/ 页面仍保留（页脚、/scenes/ 的「礼」、心愿单等入口可进入），不再出现在主导航。
@@ -32,9 +35,10 @@ export const navItems = [
   },
   {
     href: '/business-gifts/', zh: '企业礼赠', en: 'Corporate Gifts', children: [
-      { href: '/business-gifts/#gifts', zh: '送出去的心意', en: 'For Giving' },
-      { href: '/business-gifts/#keep', zh: '留得住的纪念', en: 'For Keeping' },
-      { href: '/business-gifts/#space', zh: '挂进空间的话', en: 'For Spaces' },
+      { href: '/business-gifts/#gifts', zh: '商务伴手礼', en: 'For Giving' },
+      { href: '/business-gifts/#keep', zh: '庆典墨宝礼', en: 'For Keeping' },
+      { href: '/business-gifts/#space', zh: '空间书法礼', en: 'For Spaces' },
+      { href: '/business-gifts/#campus', zh: '校园纪念礼', en: 'For Campus' },
     ],
   },
   {

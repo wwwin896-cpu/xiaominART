@@ -54,5 +54,27 @@ input, textarea, select { min-height: 44px; }
 .form-success-tip { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
 @media (max-width: 767px) { .form-success { padding: 14px 15px; } .form-success-qr img { width: 120px; height: 120px; } }
 
+/* 表单提交成功弹层（2026-10-12）
+   由 form-success-dialog.ts 动态注入。相比内联的成功卡，中央浮层不会被
+   「提交后表单重置回第一步」的滚动位置甩出视野，确保用户一定看到提交结果。
+   视觉沿用站内既有的 sheet 范式（见 Layout 的 .wechat-sheet）。 */
+.form-success-dialog { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; padding: 18px; background: rgba(24, 22, 19, .5); }
+.form-success-dialog[hidden] { display: none; }
+.form-success-dialog-card { position: relative; width: min(400px, 100%); max-height: calc(100dvh - 36px); overflow: auto; padding: 30px 26px 24px; background: var(--paper-light); border: 1px solid var(--line); box-shadow: var(--shadow); text-align: center; }
+.form-success-dialog-close { position: absolute; right: 12px; top: 8px; border: 0; background: transparent; font-size: 26px; line-height: 1; color: var(--ink); cursor: pointer; padding: 6px; }
+.form-success-dialog-mark { display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; margin: 4px 0 2px; border: 1px solid var(--cinnabar); border-radius: 50%; color: var(--cinnabar-deep); font-size: 20px; line-height: 1; }
+.form-success-dialog-title { font-size: 21px; font-weight: 500; line-height: 1.55; margin: 14px 0 0; color: var(--ink); }
+.form-success-dialog-note { margin: 12px 0 0; color: var(--ink-soft); font-size: 14px; line-height: 1.85; }
+.form-success-dialog-note strong { color: var(--ink); font-weight: 500; }
+.form-success-dialog-hint { margin: 10px 0 0; color: var(--muted); font-size: 12.5px; line-height: 1.7; }
+.form-success-dialog-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 22px; }
+.form-success-dialog-actions .btn { min-height: 44px; }
+@media (max-width: 767px) {
+  .form-success-dialog-card { padding: 26px 20px 20px; }
+  .form-success-dialog-title { font-size: 19px; }
+  .form-success-dialog-actions { flex-direction: column-reverse; }
+  .form-success-dialog-actions .btn { width: 100%; }
+}
+
 @media (max-width: 767px) { .container { width: min(var(--container), calc(100% - 32px)); } .section { padding: 64px 0; } .section-head { display: block; margin-bottom: 30px; } .section-head p { margin-top: 18px; } .section-head h2 { font-size: 30px; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; } }
