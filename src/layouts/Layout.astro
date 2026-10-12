@@ -1,4 +1,23 @@
 ---
+// ═════════════════════════════════════════════════════════════
+// 全站布局：只做「组装」，不装业务
+//
+// 2026-10-12 按职责拆分。此前本文件 495 行 / 40KB，7 天内被改 18 次 ——
+// 根因不是写得不好，而是它同时承担了 6 类互不相关的职责，
+// 任何一处需求（调 SEO、改导航、加弹层、修埋点）都要动这个文件。
+//
+// 拆分后的职责边界：
+//   · 本文件         → props 解析 + 面包屑推导 + 全局样式 + 区块组装
+//   · SeoHead        → <head> 全部（meta / OG / JSON-LD / 验证）
+//   · AnalyticsScript→ 统计脚本 + 同意门禁
+//   · SiteHeader     → 页头与主导航
+//   · SiteFooter     → 页脚与信任信号
+//   · MobileBar      → 移动底栏 + 微信弹层
+//   · scripts/layout-interactions.ts → 全部客户端交互
+//
+// ⚠ 新增东西时先问「它属于上面哪一块」，放进对应文件，
+//   不要再往本文件里堆 —— 这正是过去 18 次返工的成因。
+// ═════════════════════════════════════════════════════════════
 import '../styles/global.css';
 // 自托管 Web 字体：跨系统（iOS / 鸿蒙 / 安卓 / 桌面）统一渲染，中文分片按需加载
 import '@fontsource/noto-serif-sc/400.css';
@@ -7,14 +26,17 @@ import '@fontsource/cormorant-garamond/500.css';
 import '@fontsource/cormorant-garamond/600.css';
 import '@fontsource/source-sans-3/400.css';
 import '@fontsource/source-sans-3/600.css';
-import { navItems } from '../data/content';
-import { siteContact } from '../data/site';
-import Newsletter from '../components/Newsletter.astro';
+import SeoHead from '../components/SeoHead.astro';
+import AnalyticsScript from '../components/AnalyticsScript.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import MobileBar from '../components/MobileBar.astro';
 import FloatingConsultation from '../components/FloatingConsultation.astro';
 import ShareButton from '../components/ShareButton.astro';
 import WishlistDrawer from '../components/WishlistDrawer.astro';
 import SearchModal from '../components/SearchModal.astro';
 import CookieConsent from '../components/CookieConsent.astro';
+
 const { title = '小民艺术｜用心好礼', description = '小民艺术，用心为你写一份好礼。以亲笔书写为起点，见字如面，心意表达。', canonical, image = '/assets/images/og-image.png', noindex = false, breadcrumbs = [] } = Astro.props;
 const seoTitle = title.replace(/xiaominart/gi, 'XIAOMINART');
 const url = canonical ?? Astro.url.href;
@@ -69,153 +91,14 @@ const baiduId = trackPage ? BAIDU_TONGJI_ID : undefined;
 ---
 <html lang="zh-CN">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="description" content={description} />
-    <meta name="robots" content={noindex ? 'noindex,nofollow' : 'index,follow'} />
-    <link rel="canonical" href={url} />
-    <meta property="og:title" content={seoTitle} />
-    <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={url} />
-    <meta property="og:site_name" content="XIAOMINART" />
-    <meta property="og:locale" content="zh_CN" />
-    <meta property="og:image" content={new URL(image, Astro.site ?? Astro.url).href} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="小民艺术 XIAOMINART｜见字如面，郑重表达" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={seoTitle} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={new URL(image, Astro.site ?? Astro.url).href} />
-    <meta name="theme-color" content="#f4efe5" />
-    {/* 百度站长平台站点所有权验证（2026-10-09）——
-        放在 Layout 里而非仅首页：站长平台支持验证任意页面，全站携带更稳妥，
-        且不影响 SEO（该 meta 对搜索引擎无索引语义）。
-        当前值对应裸域 https://xiaominart.com 的站点（www 域因 301 跳转无法通过验证）。 */}
-    <meta name="baidu-site-verification" content="codeva-zpRUfdGBww" />
-    {/* 结构化数据实体图谱（JSON-LD）。
-        2026-10-09 GEO 强化：原只有 LocalBusiness + WebSite 两条，AI 难以据此
-        确认「小民艺术 = XIAOMINART = xiaominart.com」是同一实体、也不知道
-        这家做什么业务。改为 Organization + ProfessionalService + WebSite
-        + ItemList 的 @graph，用 @id 互相引用形成实体网：
-          · Organization 用 @id 锚定，WebSite 通过 publisher 指回它
-            —— 这是让 AI 把「品牌名 / 英文名 / 域名」合并成一个实体的关键；
-          · knowsAbout 声明业务领域，直接对应「送礼推荐 / 书画定制」这类提问；
-          · makesOffer 列出服务项，AI 回答「谁能做书画定制」时更容易命中；
-          · areaServed / availableLanguage 便于中文场景匹配。
-        注意：站内每页都会输出，值须与可见内容一致，不要写站上查不到的信息。 */}
-    <script type="application/ld+json" is:inline set:html={JSON.stringify({
-      '@context': 'https://schema.org',
-      '@graph': [
-        {
-          '@type': 'Organization',
-          '@id': new URL('/#organization', Astro.site ?? Astro.url).href,
-          name: '小民艺术',
-          alternateName: ['XIAOMINART', 'Xiaomin Art', '小民艺术 XIAOMINART'],
-          description: '用心为你写一份好礼。以亲笔书写为起点，提供手写书法礼品、书画定制与企业礼赠。',
-          url: new URL('/', Astro.site ?? Astro.url).href,
-          logo: new URL('/assets/brand/xiaominart-logo-full.png', Astro.site ?? Astro.url).href,
-          email: 'hi@xiaominart.com',
-          foundingLocation: { '@type': 'Place', name: '中国' },
-          areaServed: { '@type': 'Country', name: '中国' },
-          availableLanguage: ['zh-CN'],
-          knowsAbout: [
-            '书法礼品', '书画定制', '手写书法', '东方礼品', '送礼推荐',
-            '企业礼赠', '伴手礼定制', '非遗面塑', '题字与祝愿语', '书画装裱'
-          ],
-          makesOffer: [
-            { '@type': 'Offer', itemOffered: { '@type': 'Service', name: '手写书法礼品' } },
-            { '@type': 'Offer', itemOffered: { '@type': 'Service', name: '书画定制' } },
-            { '@type': 'Offer', itemOffered: { '@type': 'Service', name: '企业礼赠定制' } },
-            { '@type': 'Offer', itemOffered: { '@type': 'Service', name: '非遗面塑活动' } }
-          ]
-        },
-        {
-          '@type': 'ProfessionalService',
-          '@id': new URL('/#service', Astro.site ?? Astro.url).href,
-          name: '小民艺术 XIAOMINART 书画礼品定制',
-          description,
-          url: new URL('/', Astro.site ?? Astro.url).href,
-          image: new URL(image, Astro.site ?? Astro.url).href,
-          parentOrganization: { '@id': new URL('/#organization', Astro.site ?? Astro.url).href },
-          priceRange: '咨询制',
-          areaServed: { '@type': 'Country', name: '中国' },
-          serviceType: ['书画礼品定制', '手写书法礼品', '企业礼赠', '非遗面塑活动']
-        },
-        {
-          '@type': 'WebSite',
-          '@id': new URL('/#website', Astro.site ?? Astro.url).href,
-          name: '小民艺术 XIAOMINART',
-          alternateName: 'XIAOMINART',
-          url: new URL('/', Astro.site ?? Astro.url).href,
-          inLanguage: 'zh-CN',
-          publisher: { '@id': new URL('/#organization', Astro.site ?? Astro.url).href }
-        },
-        {
-          '@type': 'ItemList',
-          name: '小民艺术主要页面',
-          itemListElement: [
-            { '@type': 'SiteNavigationElement', position: 1, name: '小民好礼', url: new URL('/gifts/', Astro.site ?? Astro.url).href },
-            { '@type': 'SiteNavigationElement', position: 2, name: '选礼指南', url: new URL('/gift-guide/', Astro.site ?? Astro.url).href },
-            { '@type': 'SiteNavigationElement', position: 3, name: '书画定制', url: new URL('/custom-commission/', Astro.site ?? Astro.url).href },
-            { '@type': 'SiteNavigationElement', position: 4, name: '企业礼赠', url: new URL('/business-gifts/', Astro.site ?? Astro.url).href },
-            { '@type': 'SiteNavigationElement', position: 5, name: '关于我们', url: new URL('/about/', Astro.site ?? Astro.url).href }
-          ]
-        }
-      ]
-    })} />
-    {effectiveBreadcrumbs.length > 0 && <script type="application/ld+json" is:inline set:html={JSON.stringify({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: effectiveBreadcrumbs.map((item: { name: string; href: string }, i: number) => ({ '@type': 'ListItem', position: i + 1, name: item.name, item: new URL(item.href, Astro.site ?? Astro.url).href })) })} />}
-    {/* 统计脚本统一改为**同意后再注入**（PIPL，2026-10-09）。
-        CookieConsent 组件的 is:inline 脚本会在 head 之前同步写入 window.__xmConsent，
-        因此这里读到的值一定是「用户已有选择」的结果（默认 false = 未同意）。
-        `__xmLoadAnalytics` 挂到 window，供用户在横幅上点「同意」后即时补加载，无需刷新。
-        ⚠ 关键：未同意时**脚本根本不下发**，而不是先加载再屏蔽 —— 后者不合规。 */}
-    <script is:inline set:html={`(function(){
-      var consent=window.__xmConsent===true;
-      var BAIDU=${baiduId ? JSON.stringify(baiduId) : 'null'};
-      var GA=${gaId ? JSON.stringify(gaId) : 'null'};
-      var UMAMI_SRC=${umamiSrc ? JSON.stringify(umamiSrc) : 'null'};
-      var UMAMI_ID=${umamiId ? JSON.stringify(umamiId) : 'null'};
-      var CLARITY=${clarityId ? JSON.stringify(clarityId) : 'null'};
-      function load(){
-        if(BAIDU&&!window.__xmBaidu){window.__xmBaidu=1;var _hmt=window._hmt=window._hmt||[];(function(){var hm=document.createElement('script');hm.async=1;hm.src='https://hm.baidu.com/hm.js?'+BAIDU;var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(hm,s);})();}
-        if(GA&&!window.__xmGa){window.__xmGa=1;var s1=document.createElement('script');s1.async=1;s1.src='https://www.googletagmanager.com/gtag/js?id='+GA;document.head.appendChild(s1);window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments);};gtag('js',new Date());gtag('config',GA);}
-        if(UMAMI_SRC&&UMAMI_ID&&!window.__xmUmami){window.__xmUmami=1;var s2=document.createElement('script');s2.defer=1;s2.setAttribute('data-website-id',UMAMI_ID);s2.src=UMAMI_SRC;document.head.appendChild(s2);}
-        if(CLARITY&&!window.__xmClarity){window.__xmClarity=1;(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src='https://www.clarity.ms/tag/'+i;y=l.getElementsByTagName(r)[0];if(y&&y.parentNode){y.parentNode.insertBefore(t,y);}})(window,document,'clarity','script',CLARITY);}
-      }
-      window.__xmLoadAnalytics=load;
-      if(consent)load();
-    })();`} />
+    <SeoHead title={seoTitle} description={description} url={url} image={image} noindex={noindex} breadcrumbs={effectiveBreadcrumbs} />
+    <AnalyticsScript gaId={gaId} umamiSrc={umamiSrc} umamiId={umamiId} clarityId={clarityId} baiduId={baiduId} />
     <link rel="icon" href="/assets/brand/xiaominart-logo-icon.svg" />
     <title>{seoTitle}</title>
   </head>
   <body>
     <a class="skip-link" href="#main">跳到主要内容</a>
-    <header class="site-header" data-component="site-header">
-      <div class="container header-inner">
-        <button class="back-btn" type="button" data-back-button aria-label="返回上一页"><span class="back-arrow" aria-hidden="true">‹</span>返回</button>
-        <a class="brand" href="/" aria-label="小民艺术｜用心好礼首页"><img class="brand-logo" src="/assets/brand/xiaominart-logo-full.png" width="270" height="51" alt="小民艺术 XIAOMINART｜方寸之境，也藏山河" /></a>
-        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">菜单 / Menu</button>
-        <nav id="site-nav" aria-label="主导航">
-          {navItems.map((item) => <div class="nav-item"><a href={item.href} class:list={{ current: isCurrent(item.href) }} aria-current={isCurrent(item.href) ? 'page' : undefined}><span>{item.zh}</span><small lang="en">{item.en}</small></a>{item.children?.length ? <div class="nav-dropdown">{item.children.map((child) => <a href={child.href}><span>{child.zh}</span><small lang="en">{child.en}</small></a>)}</div> : null}</div>)}
-        </nav>
-        {/* 桌面端没有移动底栏，心愿单需要一个常驻入口：
-            它不能塞进主导航（业主明确要求保持 4 个导航项不动），
-            因此做成导航右侧的图标按钮，与移动底栏的「心愿单」开的是同一个抽屉。 */}
-        <div class="header-tools">
-          <button class="wishlist-entry" type="button" data-wishlist-open aria-label="打开心愿单">
-            <span aria-hidden="true">♡</span>
-            <span class="wishlist-entry-zh">心愿单</span>
-            <span class="wishlist-entry-count" data-wishlist-count hidden></span>
-          </button>
-          <button class="search-entry" type="button" data-search-open aria-label="搜索站内内容（快捷键 Ctrl 或 ⌘ 加 K）">
-            <span aria-hidden="true">⌕</span>
-            <span class="search-entry-zh">搜索</span>
-          </button>
-        </div>
-      </div>
-    </header>
+    <SiteHeader isCurrent={isCurrent} />
     {/* noindex 的功能页（心愿单、进度查询、内部后台）不进搜索索引：
         它们的内容依赖 localStorage 或查询码，索引下来只会是空壳，
         搜索命中后点进去反而看到空白页。用 noindex 这个已有信号统一判定，
@@ -226,154 +109,16 @@ const baiduId = trackPage ? BAIDU_TONGJI_ID : undefined;
     <WishlistDrawer />
     <SearchModal />
     <CookieConsent />
-    <nav class="mobile-shopping-bar" aria-label="移动端底部导航"><a href="/gifts/" aria-label="浏览小民好礼"><span class="bar-zh">礼物</span><small lang="en">Gifts</small></a><button class="wishlist-bar" type="button" data-wishlist-open aria-label="打开心愿单"><span class="bar-zh">心愿单</span><small lang="en">Saved <span data-wishlist-count></span></small></button><button class="wechat-link" type="button" aria-controls="wechat-sheet" aria-expanded="false" aria-label="加微信直接聊"><span class="bar-zh">微信直联</span><small lang="en">WeChat</small></button><button class="bar-share" type="button" data-share-button data-event="share_click" aria-label="分享本页给微信好友或朋友圈"><span class="bar-zh">分享</span><small lang="en">Share</small></button></nav>
-    <div class="wechat-sheet" id="wechat-sheet" role="dialog" aria-modal="true" aria-labelledby="wechat-sheet-title" hidden>
-      <div class="wechat-sheet-card">
-        <button class="wechat-sheet-close" type="button" aria-label="关闭">×</button>
-        <span class="eyebrow">WeChat / 微信直联</span>
-        <h2 id="wechat-sheet-title" class="serif">想快点聊上，加微信最快。</h2>
-        <a class="wechat-sheet-qr" href={siteContact.wechatQr} target="_blank" rel="noopener" title="点击查看大图，长按识别添加"><img src={siteContact.wechatQr} width="176" height="176" alt="小民艺术微信二维码" loading="lazy" /></a>
-        <p class="wechat-sheet-hint">长按上方二维码识别添加，备注一句来意即可。</p>
-        {siteContact.wechatId ? <div class="wechat-sheet-id"><code data-wechat-id>{siteContact.wechatId}</code><button class="btn btn-secondary btn-sm" type="button" data-copy-wechat>复制微信号</button></div> : null}
-        <p class="wechat-sheet-note">不方便加微信也可以<a href="/custom-commission/">提交定制咨询</a>，留下联系方式，我们主动找你。</p>
-      </div>
-    </div>
-    <footer class="site-footer" data-component="site-footer">
-      <div class="container footer-grid">
-        <div><p class="eyebrow">XIAOMINART / 用心好礼</p><p class="footer-claim serif">愿你在这方寸之间，<br />找到属于自己的定制心意。</p></div>
-        <div class="footer-contact"><p class="eyebrow">Contact / 联系</p><a href={`mailto:${siteContact.email}`}>{siteContact.email}</a>{siteContact.wechatId ? <p>微信 / 企业微信：<strong>{siteContact.wechatId}</strong>（备注来意，尽快回复）</p> : siteContact.wechatQr ? <p>微信 / 企业微信：扫码添加（备注来意，尽快回复）</p> : <p>微信 / 企业微信：提交<a href="/custom-commission/">定制咨询表单</a>并留下你的微信号，我们会主动添加你。</p>}{siteContact.wechatQr ? <a class="wechat-qr-link" href={siteContact.wechatQr} target="_blank" rel="noopener" title="点击查看大图，长按识别添加"><img class="wechat-qr" src={siteContact.wechatQr} width="112" height="112" alt="小民艺术微信二维码" loading="lazy" /></a> : null}<p>送礼问题可先从送礼指南开始；需要个性化建议，可提交咨询。</p><p class="footer-policy"><a href="/help/#after-sales">售后保障与退换须知 →</a><a href="/privacy/">隐私政策 →</a></p><button class="ink-seek footer-seek" type="button" aria-controls="quick-message" aria-expanded="false">或先说一句想说的话 →</button></div>
-      </div>
-      <div class="container trust-signals" aria-label="信息边界 / Information boundaries"><div><span class="eyebrow">Artist / 艺术家</span><strong>由具体创作方向与沟通内容开始</strong></div><div><span class="eyebrow">Projects / 项目</span><strong>已确认内容才会公开呈现</strong></div><div class="trust-privacy"><span class="eyebrow">Privacy / 隐私</span><strong>客户故事与图像获得授权后发布</strong></div><p>我们不使用未经核验的客户数量、媒体曝光或合作机构作为背书。</p></div>
-      <div class="container footer-newsletter"><Newsletter /></div>
-      <div class="container footer-bottom"><span>© {new Date().getFullYear()} XIAOMINART | 守艺 · 传情</span><span>世间无双，只此一幅 | Every piece is one of a kind.</span></div>
-    </footer>
+    <MobileBar />
+    <SiteFooter />
   </body>
 </html>
 <script>
-  import { trackEvent } from '../scripts/cloud-forms';
-  import { readWishlist, onWishlistChange } from '../scripts/wishlist';
-  import { initFormSuccessDialog } from '../scripts/form-success-dialog';
-  // 表单成功弹层：集中在此初始化一次，各表单成功后派发
-  // 'xiaominart:form-success' 事件即可弹出（见 form-success-dialog.ts）。
-  initFormSuccessDialog();
-  const toggle = document.querySelector('.menu-toggle');
-  const nav = document.querySelector('#site-nav');
-  const isMenuOpen = () => toggle?.getAttribute('aria-expanded') === 'true';
-  const closeMenu = () => { if (!toggle || !nav) return; toggle.setAttribute('aria-expanded', 'false'); nav.classList.remove('open'); document.body.classList.remove('menu-open'); };
-  toggle?.addEventListener('click', () => { const open = toggle.getAttribute('aria-expanded') !== 'true'; toggle.setAttribute('aria-expanded', String(open)); nav?.classList.toggle('open', open); document.body.classList.toggle('menu-open', open); });
-  nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
-  // 移动端菜单的三种关闭方式（2026-10-12 业主反馈：此前只能在菜单项上点一下才关得掉）
-  //   ① 点菜单与按钮以外的任意处
-  //   ② 手指上滑 / 页面滚动（内容往上走）时自动收起
-  //   ③ Escape 键（键盘与外接键盘用户）
-  // 三者都只在菜单已展开时生效，避免给未展开的页面增加无谓监听开销。
-  document.addEventListener('click', (event) => {
-    if (!isMenuOpen()) return;
-    const target = event.target as Node | null;
-    if (!target) return;
-    if (nav?.contains(target) || toggle?.contains(target)) return;
-    closeMenu();
-  });
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && isMenuOpen()) closeMenu();
-  });
-  // 滚动即收起：用 passive 监听，保证不拖慢滚动本身。
-  // 注意不要在所有滚动里做 DOM 写操作——先判断 isMenuOpen() 再动手。
-  window.addEventListener('scroll', () => { if (isMenuOpen()) closeMenu(); }, { passive: true });
-  // 视口变宽（横竖屏切换 / 放大窗口）后菜单变为桌面形态，
-  // 若仍留着 open 类会让桌面导航状态与 aria-expanded 不一致，这里一并复位。
-  const wideQuery = window.matchMedia('(min-width: 768px)');
-  wideQuery.addEventListener('change', (e) => { if (e.matches) closeMenu(); });
-  // 移动端返回键：非首页显示，优先浏览器历史回退，无历史则回首页
-  const backBtn = document.querySelector<HTMLButtonElement>('[data-back-button]');
-  if (backBtn) {
-    if (window.location.pathname === '/') backBtn.remove();
-    else backBtn.addEventListener('click', () => { if (window.history.length > 1) window.history.back(); else window.location.href = '/'; });
-  }
-  const revealItems = document.querySelectorAll<HTMLElement>('[data-reveal]');
-  if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const revealObserver = new IntersectionObserver((entries, observer) => entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); observer.unobserve(entry.target); } }), { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
-    revealItems.forEach((item) => revealObserver.observe(item));
-  } else revealItems.forEach((item) => item.classList.add('is-visible'));
-  document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeMenu(); });
-  // 2026-10-09：由「逐个节点绑 addEventListener」改为**事件委托**。
-  // 原写法只在页面加载时对既有 [data-event] 节点绑定一次，之后由组件动态插入的节点
-  // （搜索结果项、心愿单抽屉条目、选礼器选项卡）**永远收不到监听** —— 表现是这些交互
-  // 的埋点全部为空，且没有任何报错，极难发现。委托到 document 后，动态节点自动生效。
-  document.addEventListener('click', (event) => {
-    const target = event.target as HTMLElement | null;
-    const element = target?.closest<HTMLElement>('[data-event]');
-    if (!element) return;
-    const eventName = element.dataset.event;
-    if (!eventName) return;
-    window.dispatchEvent(new CustomEvent('xiaominart:event', { detail: { name: eventName, path: window.location.pathname, slot: element.dataset.slot, channel: element.dataset.channel } }));
-  });
-  // 站内所有交互事件统一在这里汇入上报（只上报核心漏斗的 6 个，服务端另有白名单）
-  window.addEventListener('xiaominart:event', (event) => {
-    const detail = ((event as CustomEvent).detail || {}) as Record<string, unknown>;
-    const name = typeof detail.name === 'string' ? detail.name : '';
-    if (!name) return;
-    const data: Record<string, unknown> = {};
-    Object.entries(detail).forEach(([key, value]) => { if (key !== 'name' && value) data[key] = value; });
-    trackEvent(name, data);
-  });
-  // 移动端「微信直联」弹层（WO-P0-04）
-  // 触点：底栏按钮 → 弹出二维码 + 可选微信号复制。微信内打开时提示「长按识别」，
-  // 其他浏览器补一句「截图后用微信扫一扫」，因为站内无法直接唤起微信加好友。
-  const wechatTrigger = document.querySelector<HTMLButtonElement>('.wechat-link');
-  const wechatSheet = document.querySelector<HTMLElement>('#wechat-sheet');
-  const closeWechat = () => { if (!wechatSheet || !wechatTrigger) return; wechatSheet.hidden = true; wechatTrigger.setAttribute('aria-expanded', 'false'); };
-  wechatTrigger?.addEventListener('click', () => {
-    if (!wechatSheet) return;
-    wechatSheet.hidden = false;
-    wechatTrigger.setAttribute('aria-expanded', 'true');
-    window.dispatchEvent(new CustomEvent('xiaominart:event', { detail: { name: 'wechat_direct_open', path: window.location.pathname } }));
-    wechatSheet.querySelector<HTMLButtonElement>('.wechat-sheet-close')?.focus();
-  });
-  wechatSheet?.querySelector('.wechat-sheet-close')?.addEventListener('click', closeWechat);
-  wechatSheet?.addEventListener('click', (event) => { if (event.target === wechatSheet) closeWechat(); });
-  document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeWechat(); });
-  // 一键复制微信号：成功与否都给明确反馈（失败时回退为选中文本，方便手动复制）
-  const copyWechatBtn = document.querySelector<HTMLButtonElement>('[data-copy-wechat]');
-  copyWechatBtn?.addEventListener('click', async () => {
-    const id = document.querySelector<HTMLElement>('[data-wechat-id]')?.textContent?.trim() || '';
-    if (!id) return;
-    const restore = () => setTimeout(() => { if (copyWechatBtn) copyWechatBtn.textContent = '复制微信号'; }, 1800);
-    try {
-      await navigator.clipboard.writeText(id);
-      copyWechatBtn.textContent = '已复制 ✓';
-      window.dispatchEvent(new CustomEvent('xiaominart:event', { detail: { name: 'wechat_id_copy', path: window.location.pathname } }));
-      restore();
-    } catch {
-      // 剪贴板不可用（非 HTTPS 或权限被拒）时，选中文本让用户手动复制，不留死路
-      const node = document.querySelector<HTMLElement>('[data-wechat-id]');
-      if (node) {
-        const range = document.createRange();
-        range.selectNodeContents(node);
-        const selection = window.getSelection();
-        selection?.removeAllRanges();
-        selection?.addRange(range);
-      }
-      copyWechatBtn.textContent = '长按上方号码复制';
-      restore();
-    }
-  });
-  // 底栏 / 桌面导航的心愿单角标。
-  // 读写与订阅统一走 src/scripts/wishlist.ts —— 此前这里是第 4 份独立实现，
-  // 抽屉上线后必须与其他三处共享同一份逻辑，否则会出现「抽屉里移除了一件、
-  // 角标却还停在旧数字」的状态不同步。
-  const updateWishlistCount = () => {
-    const count = readWishlist().length;
-    document.querySelectorAll<HTMLElement>('[data-wishlist-count]').forEach((node) => {
-      node.textContent = String(count);
-      // 桌面端是胶囊数字，0 时整颗隐藏；移动端底栏是文字后缀，0 时留空即可
-      if (node.classList.contains('wishlist-entry-count')) node.hidden = count === 0;
-    });
-  };
-  updateWishlistCount();
-  onWishlistChange(updateWishlistCount);
+  // 全站布局级交互（菜单 / 返回键 / 滚动显现 / 埋点 / 微信弹层 / 心愿单角标）
+  // 2026-10-12 从本文件内联脚本抽出，见 src/scripts/layout-interactions.ts
+  import '../scripts/layout-interactions';
 </script>
-<style>
+<style is:global>
   .site-header { position: sticky; top: 0; z-index: 5; background: rgba(244, 239, 229, .96); border-bottom: 1px solid var(--line); backdrop-filter: blur(8px); }
   .header-inner { min-height: 80px; display: flex; align-items: center; gap: 26px; }
   .brand { display: flex; align-items: center; min-width: 280px; flex-shrink: 0; }

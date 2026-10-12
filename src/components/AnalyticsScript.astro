@@ -1,0 +1,44 @@
+---
+// ─────────────────────────────────────────────────────────────
+// 统计脚本注入（2026-10-12 从 Layout.astro 抽出）
+//
+// 三套分析工具 + 百度统计，全部「配了 PUBLIC_* 环境变量才注入，不配则零注入」。
+// 接入步骤、UTM 规范与 CSP 域名要求见 docs/数据分析接入指南.md。
+//
+// ⚠ 合规要点（PIPL，2026-10-09）：脚本在**用户同意后**才下发，
+//   而不是「先加载再屏蔽」—— 后者不合规。
+//   CookieConsent 组件的 is:inline 脚本在 head 之前同步写入 window.__xmConsent，
+//   因此这里读到的值一定是「用户已有选择」的结果（默认 false = 未同意）。
+//   `__xmLoadAnalytics` 挂到 window，供用户在横幅上点「同意」后即时补加载，无需刷新。
+//
+// noindex 闸门（2026-10-09 WO-P2-03）：功能页与内部后台
+// （/wishlist/、/progress/、/admin/*）本身带 noindex，不应进任何统计口径，
+// 否则后台访问会污染「访客数 / 转化率」。
+// ─────────────────────────────────────────────────────────────
+interface Props {
+  gaId?: string;
+  umamiSrc?: string;
+  umamiId?: string;
+  clarityId?: string;
+  baiduId?: string;
+}
+
+const { gaId, umamiSrc, umamiId, clarityId, baiduId } = Astro.props;
+---
+
+<script is:inline set:html={`(function(){
+  var consent=window.__xmConsent===true;
+  var BAIDU=${baiduId ? JSON.stringify(baiduId) : 'null'};
+  var GA=${gaId ? JSON.stringify(gaId) : 'null'};
+  var UMAMI_SRC=${umamiSrc ? JSON.stringify(umamiSrc) : 'null'};
+  var UMAMI_ID=${umamiId ? JSON.stringify(umamiId) : 'null'};
+  var CLARITY=${clarityId ? JSON.stringify(clarityId) : 'null'};
+  function load(){
+    if(BAIDU&&!window.__xmBaidu){window.__xmBaidu=1;var _hmt=window._hmt=window._hmt||[];(function(){var hm=document.createElement('script');hm.async=1;hm.src='https://hm.baidu.com/hm.js?'+BAIDU;var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(hm,s);})();}
+    if(GA&&!window.__xmGa){window.__xmGa=1;var s1=document.createElement('script');s1.async=1;s1.src='https://www.googletagmanager.com/gtag/js?id='+GA;document.head.appendChild(s1);window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments);};gtag('js',new Date());gtag('config',GA);}
+    if(UMAMI_SRC&&UMAMI_ID&&!window.__xmUmami){window.__xmUmami=1;var s2=document.createElement('script');s2.defer=1;s2.setAttribute('data-website-id',UMAMI_ID);s2.src=UMAMI_SRC;document.head.appendChild(s2);}
+    if(CLARITY&&!window.__xmClarity){window.__xmClarity=1;(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src='https://www.clarity.ms/tag/'+i;y=l.getElementsByTagName(r)[0];if(y&&y.parentNode){y.parentNode.insertBefore(t,y);}})(window,document,'clarity','script',CLARITY);}
+  }
+  window.__xmLoadAnalytics=load;
+  if(consent)load();
+})();`} />

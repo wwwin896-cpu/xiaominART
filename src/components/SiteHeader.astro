@@ -1,0 +1,50 @@
+---
+// ─────────────────────────────────────────────────────────────
+// 站点头部（2026-10-12 从 Layout.astro 抽出）
+//
+// 含：返回键（仅移动端非首页）、品牌 logo、菜单按钮、主导航（含下拉）、
+// 桌面端工具区（心愿单 + 搜索）。
+//
+// 这是全站改动最频繁的区块之一 —— 导航项、下拉结构都由
+// `src/data/content.ts` 的 navItems 驱动，改导航内容不需要动本文件；
+// 只有改头部结构与交互时才动这里。
+//
+// 相关样式仍在 Layout.astro 的 <style> 中（.site-header / .header-inner /
+// nav / .nav-item / .nav-dropdown / .header-tools 等），因为它们是全局
+// 布局级样式，与页脚、移动底栏共享断点。
+// 相关交互见 src/scripts/layout-interactions.ts 第 ① 节。
+// ─────────────────────────────────────────────────────────────
+import { navItems } from '../data/content';
+
+interface Props {
+  /** 判断某链接是否为当前页（由 Layout 传入，避免重复实现路径归一化逻辑） */
+  isCurrent: (href: string) => boolean;
+}
+
+const { isCurrent } = Astro.props;
+---
+
+<header class="site-header" data-component="site-header">
+  <div class="container header-inner">
+    <button class="back-btn" type="button" data-back-button aria-label="返回上一页"><span class="back-arrow" aria-hidden="true">‹</span>返回</button>
+    <a class="brand" href="/" aria-label="小民艺术｜用心好礼首页"><img class="brand-logo" src="/assets/brand/xiaominart-logo-full.png" width="270" height="51" alt="小民艺术 XIAOMINART｜方寸之境，也藏山河" /></a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">菜单 / Menu</button>
+    <nav id="site-nav" aria-label="主导航">
+      {navItems.map((item) => <div class="nav-item"><a href={item.href} class:list={{ current: isCurrent(item.href) }} aria-current={isCurrent(item.href) ? 'page' : undefined}><span>{item.zh}</span><small lang="en">{item.en}</small></a>{item.children?.length ? <div class="nav-dropdown">{item.children.map((child) => <a href={child.href}><span>{child.zh}</span><small lang="en">{child.en}</small></a>)}</div> : null}</div>)}
+    </nav>
+    {/* 桌面端没有移动底栏，心愿单需要一个常驻入口：
+        它不能塞进主导航（业主明确要求保持 4 个导航项不动），
+        因此做成导航右侧的图标按钮，与移动底栏的「心愿单」开的是同一个抽屉。 */}
+    <div class="header-tools">
+      <button class="wishlist-entry" type="button" data-wishlist-open aria-label="打开心愿单">
+        <span aria-hidden="true">♡</span>
+        <span class="wishlist-entry-zh">心愿单</span>
+        <span class="wishlist-entry-count" data-wishlist-count hidden></span>
+      </button>
+      <button class="search-entry" type="button" data-search-open aria-label="搜索站内内容（快捷键 Ctrl 或 ⌘ 加 K）">
+        <span aria-hidden="true">⌕</span>
+        <span class="search-entry-zh">搜索</span>
+      </button>
+    </div>
+  </div>
+</header>

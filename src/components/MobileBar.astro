@@ -1,0 +1,31 @@
+---
+// ─────────────────────────────────────────────────────────────
+// 移动端底部导航栏 + 微信直联弹层（2026-10-12 从 Layout.astro 抽出）
+//
+// 两者放在同一文件的原因：微信弹层**只**由底栏的「微信直联」按钮触发，
+// 二者是一组完整的「触发 → 弹层」交互，拆开反而要在两处对着改。
+//
+// 底栏 4 格：礼物 / 心愿单 / 微信直联 / 分享。
+// 注意：这一组按钮是移动端唯一的工具入口 —— 桌面端用的是
+// SiteHeader 的 .header-tools（心愿单 + 搜索），两者不可互换。
+//
+// 相关样式仍在 Layout.astro 的 <style> 中
+// （.mobile-shopping-bar / .wechat-sheet 等），因底栏需要在
+// 同一媒体查询里与页脚 padding、Cookie 横幅高度做协同。
+// 相关交互见 src/scripts/layout-interactions.ts 第 ⑤ 节。
+// ─────────────────────────────────────────────────────────────
+import { siteContact } from '../data/site';
+---
+
+<nav class="mobile-shopping-bar" aria-label="移动端底部导航"><a href="/gifts/" aria-label="浏览小民好礼"><span class="bar-zh">礼物</span><small lang="en">Gifts</small></a><button class="wishlist-bar" type="button" data-wishlist-open aria-label="打开心愿单"><span class="bar-zh">心愿单</span><small lang="en">Saved <span data-wishlist-count></span></small></button><button class="wechat-link" type="button" aria-controls="wechat-sheet" aria-expanded="false" aria-label="加微信直接聊"><span class="bar-zh">微信直联</span><small lang="en">WeChat</small></button><button class="bar-share" type="button" data-share-button data-event="share_click" aria-label="分享本页给微信好友或朋友圈"><span class="bar-zh">分享</span><small lang="en">Share</small></button></nav>
+<div class="wechat-sheet" id="wechat-sheet" role="dialog" aria-modal="true" aria-labelledby="wechat-sheet-title" hidden>
+  <div class="wechat-sheet-card">
+    <button class="wechat-sheet-close" type="button" aria-label="关闭">×</button>
+    <span class="eyebrow">WeChat / 微信直联</span>
+    <h2 id="wechat-sheet-title" class="serif">想快点聊上，加微信最快。</h2>
+    <a class="wechat-sheet-qr" href={siteContact.wechatQr} target="_blank" rel="noopener" title="点击查看大图，长按识别添加"><img src={siteContact.wechatQr} width="176" height="176" alt="小民艺术微信二维码" loading="lazy" /></a>
+    <p class="wechat-sheet-hint">长按上方二维码识别添加，备注一句来意即可。</p>
+    {siteContact.wechatId ? <div class="wechat-sheet-id"><code data-wechat-id>{siteContact.wechatId}</code><button class="btn btn-secondary btn-sm" type="button" data-copy-wechat>复制微信号</button></div> : null}
+    <p class="wechat-sheet-note">不方便加微信也可以<a href="/custom-commission/">提交定制咨询</a>，留下联系方式，我们主动找你。</p>
+  </div>
+</div>

@@ -1,0 +1,125 @@
+---
+// ─────────────────────────────────────────────────────────────
+// 全站 <head> 内容（2026-10-12 从 Layout.astro 抽出）
+//
+// 承担三类职责，全部是「构建期产出、客户端零交互」的静态标签：
+//   ① 基础 meta / OG / Twitter Card / canonical / robots
+//   ② JSON-LD 实体图谱（Organization + ProfessionalService + WebSite + ItemList）
+//      + 面包屑 BreadcrumbList
+//   ③ 百度站长验证 meta
+//
+// 抽出的原因：这些内容此前混在 Layout.astro 的 head 里，与页头页脚、
+// 交互脚本同处一个文件，导致每次调 SEO 或调导航都要改同一个文件。
+//
+// 统计脚本不在这里 —— 它带同意门禁逻辑，见 AnalyticsScript.astro。
+// ─────────────────────────────────────────────────────────────
+interface Props {
+  title: string;
+  description: string;
+  url: string;
+  image: string;
+  noindex: boolean;
+  /** 已解析完成的面包屑（显式传入优先，否则为按路径自动生成的兜底结果） */
+  breadcrumbs: Array<{ name: string; href: string }>;
+}
+
+const { title, description, url, image, noindex, breadcrumbs } = Astro.props;
+---
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="description" content={description} />
+<meta name="robots" content={noindex ? 'noindex,nofollow' : 'index,follow'} />
+<link rel="canonical" href={url} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:type" content="website" />
+<meta property="og:url" content={url} />
+<meta property="og:site_name" content="XIAOMINART" />
+<meta property="og:locale" content="zh_CN" />
+<meta property="og:image" content={new URL(image, Astro.site ?? Astro.url).href} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="小民艺术 XIAOMINART｜见字如面，郑重表达" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={new URL(image, Astro.site ?? Astro.url).href} />
+<meta name="theme-color" content="#f4efe5" />
+{/* 百度站长平台站点所有权验证（2026-10-09）——
+    放在 Layout 里而非仅首页：站长平台支持验证任意页面，全站携带更稳妥，
+    且不影响 SEO（该 meta 对搜索引擎无索引语义）。
+    当前值对应裸域 https://xiaominart.com 的站点（www 域因 301 跳转无法通过验证）。 */}
+<meta name="baidu-site-verification" content="codeva-zpRUfdGBww" />
+{/* 结构化数据实体图谱（JSON-LD）。
+    2026-10-09 GEO 强化：原只有 LocalBusiness + WebSite 两条，AI 难以据此
+    确认「小民艺术 = XIAOMINART = xiaominart.com」是同一实体、也不知道
+    这家做什么业务。改为 Organization + ProfessionalService + WebSite
+    + ItemList 的 @graph，用 @id 互相引用形成实体网：
+      · Organization 用 @id 锚定，WebSite 通过 publisher 指回它
+        —— 这是让 AI 把「品牌名 / 英文名 / 域名」合并成一个实体的关键；
+      · knowsAbout 声明业务领域，直接对应「送礼推荐 / 书画定制」这类提问；
+      · makesOffer 列出服务项，AI 回答「谁能做书画定制」时更容易命中；
+      · areaServed / availableLanguage 便于中文场景匹配。
+    注意：站内每页都会输出，值须与可见内容一致，不要写站上查不到的信息。 */}
+<script type="application/ld+json" is:inline set:html={JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': new URL('/#organization', Astro.site ?? Astro.url).href,
+      name: '小民艺术',
+      alternateName: ['XIAOMINART', 'Xiaomin Art', '小民艺术 XIAOMINART'],
+      description: '用心为你写一份好礼。以亲笔书写为起点，提供手写书法礼品、书画定制与企业礼赠。',
+      url: new URL('/', Astro.site ?? Astro.url).href,
+      logo: new URL('/assets/brand/xiaominart-logo-full.png', Astro.site ?? Astro.url).href,
+      email: 'hi@xiaominart.com',
+      foundingLocation: { '@type': 'Place', name: '中国' },
+      areaServed: { '@type': 'Country', name: '中国' },
+      availableLanguage: ['zh-CN'],
+      knowsAbout: [
+        '书法礼品', '书画定制', '手写书法', '东方礼品', '送礼推荐',
+        '企业礼赠', '伴手礼定制', '非遗面塑', '题字与祝愿语', '书画装裱'
+      ],
+      makesOffer: [
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: '手写书法礼品' } },
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: '书画定制' } },
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: '企业礼赠定制' } },
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: '非遗面塑活动' } }
+      ]
+    },
+    {
+      '@type': 'ProfessionalService',
+      '@id': new URL('/#service', Astro.site ?? Astro.url).href,
+      name: '小民艺术 XIAOMINART 书画礼品定制',
+      description,
+      url: new URL('/', Astro.site ?? Astro.url).href,
+      image: new URL(image, Astro.site ?? Astro.url).href,
+      parentOrganization: { '@id': new URL('/#organization', Astro.site ?? Astro.url).href },
+      priceRange: '咨询制',
+      areaServed: { '@type': 'Country', name: '中国' },
+      serviceType: ['书画礼品定制', '手写书法礼品', '企业礼赠', '非遗面塑活动']
+    },
+    {
+      '@type': 'WebSite',
+      '@id': new URL('/#website', Astro.site ?? Astro.url).href,
+      name: '小民艺术 XIAOMINART',
+      alternateName: 'XIAOMINART',
+      url: new URL('/', Astro.site ?? Astro.url).href,
+      inLanguage: 'zh-CN',
+      publisher: { '@id': new URL('/#organization', Astro.site ?? Astro.url).href }
+    },
+    {
+      '@type': 'ItemList',
+      name: '小民艺术主要页面',
+      itemListElement: [
+        { '@type': 'SiteNavigationElement', position: 1, name: '小民好礼', url: new URL('/gifts/', Astro.site ?? Astro.url).href },
+        { '@type': 'SiteNavigationElement', position: 2, name: '选礼指南', url: new URL('/gift-guide/', Astro.site ?? Astro.url).href },
+        { '@type': 'SiteNavigationElement', position: 3, name: '书画定制', url: new URL('/custom-commission/', Astro.site ?? Astro.url).href },
+        { '@type': 'SiteNavigationElement', position: 4, name: '企业礼赠', url: new URL('/business-gifts/', Astro.site ?? Astro.url).href },
+        { '@type': 'SiteNavigationElement', position: 5, name: '关于我们', url: new URL('/about/', Astro.site ?? Astro.url).href }
+      ]
+    }
+  ]
+})} />
+{breadcrumbs.length > 0 && <script type="application/ld+json" is:inline set:html={JSON.stringify({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: breadcrumbs.map((item, i) => ({ '@type': 'ListItem', position: i + 1, name: item.name, item: new URL(item.href, Astro.site ?? Astro.url).href })) })} />}
