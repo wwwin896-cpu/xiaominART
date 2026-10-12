@@ -5,8 +5,9 @@ import Layout from '../../layouts/Layout.astro';
 // 条款为业主 2026-10-09 定稿并提供的法律文本（源文件：《小民艺术_XIAOMINART_隐私政策.docx》）。
 // ⚠ 此处为**忠实转录**：不改写措辞、不增删条款、不调整承诺范围。
 //    需要修订时请业主在原 docx 上改并重新提供，不要在本文件里临时发挥。
+// 注：业主 2026-10-12 要求删除页面上的「生效日期 / 更新日期」展示区块；
+//    生效日期仍作为变量保留并用于落款（PIPL 要求标明生效时间），更新日期已移除。
 const effectiveDate = '2026年10月9日';
-const updatedDate = '2026年10月9日';
 
 const sections: Array<{ title: string; blocks: string[] }> = [
   {
@@ -121,8 +122,6 @@ const lastName = '小民艺术 XIAOMINART';
     <h1 class="serif">您的信息，<br />我们怎么对待。</h1>
     <p>小民艺术（以下简称"我们"或"小民艺术"）运营网站 https://xiaominart.com/（以下简称"本网站"）。我们深知个人信息对您的重要性，并会尽全力保护您的个人信息安全。本隐私政策旨在向您说明我们如何收集、使用、存储和保护您的个人信息，以及您享有的相关权利。请您在使用本网站前，仔细阅读并了解本隐私政策的全部内容。您继续使用本网站即表示您同意我们按照本隐私政策处理您的相关信息。</p>
     <dl class="privacy-meta">
-      <div><dt>生效日期</dt><dd>{effectiveDate}</dd></div>
-      <div><dt>更新日期</dt><dd>{updatedDate}</dd></div>
     </dl>
   </section>
 

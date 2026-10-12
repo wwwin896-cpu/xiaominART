@@ -10,13 +10,13 @@ const creed = artist.slug === 'xiaomin' ? creatorCreed : [];
 ---
 <Layout title={`${artist.name}｜艺术家｜XIAOMINART`} description={`${artist.name} 的创作方向、媒介与定制合作方式。`} breadcrumbs={[{ name: '首页', href: '/' }, { name: '艺术家', href: '/artists/' }, { name: artist.name, href: `/artists/${artist.slug}/` }]}>
   <section class="artist-hero container"><div class="artist-sign"><span class="serif">{artist.name.slice(-1)}</span><small>ARTIST / XIAOMINART</small></div><div><span class="eyebrow">Artist profile / 艺术家详情</span><h1 class="serif">{artist.name}</h1><p lang="en">{artist.en}</p><p>{artist.bio}</p><div class="tag-row">{artist.styles.map((style) => <span class="status">{style}</span>)}{artist.media.map((medium) => <span class="status">{medium}</span>)}</div></div></section>
-  <section class="container section profile-copy"><div><span class="eyebrow">Practice / 创作理念</span><h2 class="serif">{artist.philosophy}</h2></div><div><p>艺术家详情页用于理解其视觉语言、媒介倾向与共同创作方式。页面中的图像和案例只作为创作参考，不代表同款可获得。</p><p lang="en">This profile introduces an artistic language, not a catalogue. Any commission begins anew from your context.</p><a class="btn btn-primary" href={`/custom-commission/?artist=${encodeURIComponent(artist.name)}&direction=${encodeURIComponent(artist.discipline)}`}>以此艺术家为方向定制 <span>→</span></a></div></section>
+  <section class="container section profile-copy"><div><span class="eyebrow">Practice / 创作理念</span><h2 class="serif">{artist.philosophy}</h2></div><div><p>艺术家详情页用于理解其视觉语言、媒介倾向与共同创作方式。页面中的图像和案例只作为创作参考，不代表最终交付效果。</p><p lang="en">This profile introduces an artistic language, not a catalogue. Any commission begins anew from your context.</p><a class="btn btn-primary" href={`/custom-commission/?artist=${encodeURIComponent(artist.name)}&direction=${encodeURIComponent(artist.discipline)}`}>去除，因为我们只有一个书者升斗小民 <span>→</span></a></div></section>
   {creed.length > 0 && (
     <section class="container section artist-creed" aria-labelledby="artist-creed-title">
       <div class="section-heading">
         <span class="eyebrow">In her words / 书者手记</span>
         <h2 id="artist-creed-title" class="serif">她是这么看待书法的。</h2>
-        <p>两则原话，不加修饰。一则是她怎么看「把格言挂上墙」，一则是她自己的笔下功夫从哪里来。</p>
+        <p>一则是她怎么看「把格言挂上墙」，一则是她自己的笔下功夫从哪里来。</p>
       </div>
       <div class="artist-creed-list">
         {creed.map((item) => (
@@ -33,7 +33,7 @@ const creed = artist.slug === 'xiaomin' ? creatorCreed : [];
       </div>
     </section>
   )}
-  <section class="container section services"><div class="section-heading"><span class="eyebrow">Service entries / 服务入口</span><h2 class="serif">可以从这三件事开始。</h2><p>每个入口都写清了适合谁和下一步点哪里，不必先想清楚全部细节。</p></div><div class="service-grid">{artist.services.map((service) => <article class="service-card"><h3 class="serif">{service.zh}</h3><p lang="en">{service.en}</p><p>{service.body}</p><a class="btn btn-link" href={service.href} data-event="artist_service_entry">{service.zh} · 从这里开始 →</a></article>)}</div></section>
+  <section class="container section services"><div class="section-heading"><span class="eyebrow">Service entries / 服务入口</span><h2 class="serif">可以从这三件事开始。</h2></div><div class="service-grid">{artist.services.map((service) => <article class="service-card"><h3 class="serif">{service.zh}</h3><p lang="en">{service.en}</p><p>{service.body}</p><a class="btn btn-link" href={service.href} data-event="artist_service_entry">{service.zh} · 从这里开始 →</a></article>)}</div></section>
   <section class="container section portfolio"><div class="section-heading"><span class="eyebrow">Selected directions / 代表方向</span><h2 class="serif">代表创作方向</h2><p>方向名称用于说明视觉语言与媒介倾向；可获得的形态以实际定制沟通确认为准，不做同款复刻。</p></div><div class="direction-row">{artist.portfolio.map((title) => <span class="direction">{title}</span>)}</div></section>
   <section class="container section artist-facts"><div><span class="eyebrow">Media & project fit / 擅长媒介与适配项目</span><p>{artist.media.join(' · ')}</p><p>{artist.projectTypes.join(' · ')}</p><p class="pending">{artist.siteNote}</p></div><div><span class="eyebrow">Experience / 经历</span><p>{artist.experience}</p><span class="eyebrow">Reference quote / 参考报价</span><p>{artist.quote}</p></div></section>
 </Layout>

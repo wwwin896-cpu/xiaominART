@@ -49,7 +49,7 @@ const founders = [
     role: '品牌主理人 · 书者',
     discipline: '书写与用心好礼 / Calligraphy',
     line: '一个致力于用书法解读历史的书者。',
-    body: '她以书写为入口，把字看作一段可以重读的历史。写下的不只是吉语与心事，也是一个人在某个时刻想郑重说出的那句话：什么该说，什么该停，什么值得留在纸上。',
+    body: '她以书写为入口，把字看作一段可以重读的历史。写下的不只是吉语与心事，也是一个人在某个时刻想郑重说出的心里话。',
   },
   {
     slug: 'xiaoning',
@@ -67,7 +67,7 @@ const capabilities = [
   { tag: 'Ready to ship / 已经写好的', title: '看中了，随时寄出', fit: '想尽快把一份心意送出去的人', gain: '装裱完成的手写小品，一物一码，看中了我们当天就安排寄出', href: '/gifts/ready-made/', cta: '看看最近写了什么' },
   { tag: 'Made to order / 为你写一张', title: '从一句话开始', fit: '心里有一句话想留住的人', gain: '只为一个人写的作品，连同装裱与礼盒，附一张藏品证书', href: '/custom-commission/', cta: '说说你的那句话' },
   { tag: 'Craft / 亲手捏一次', title: '把手艺交到手上', fit: '想带孩子或朋友摸一摸传统的人', gain: '面塑体验活动与出版插画方向的合作，材料和时间都备好了', href: '/partners/heritage/', cta: '看看活动安排' },
-  { tag: 'Business / 一群人的心意', title: '替团队说声谢谢', fit: '想为答谢、周年或会客空间准备礼物的人', gain: '批量的礼物，也可以一份一份被认真对待', href: '/business-gifts/', cta: '聊聊你们的场合' },
+  { tag: 'Business / 一群人的心意', title: '替团队说声谢谢', fit: '想为答谢、周年或会客空间准备礼物的人', gain: '批量的礼物，也可以一份一份被认真对待', href: '/business-gifts/', cta: '聊聊你们的场景' },
 ];
 ---
 <Layout title="关于我们｜品牌故事与主理人｜XIAOMINART" description="小民艺术 XIAOMINART：从「小」的细节与「民」的看见出发，把东方艺术融入现代人的生活方式。了解品牌故事、品牌理念与两位主理人——升斗小民与非遗小宁。">
@@ -84,14 +84,14 @@ const capabilities = [
   <section class="container section story" id="story">
     <div><span class="eyebrow">Brand story / 品牌故事</span><h2 class="serif">两个人，<br />两门手艺，<br />一个品牌。</h2></div>
     <div>
-      <p>小民艺术由两位创作者共同创建。她们也是这里所有作品的主理人：一位是升斗小民，致力于用书法解读历史的书者；一位是非遗小宁，致力于非遗面塑的传承人。</p>
-      <p>她们的手艺并不相同，看的东西却很像——都舍不得那些正在被日常生活忽略的细节。一个人从纸本上读历史，一个人从材料里传手艺；一个让字成为可以留下的表达，一个让手艺成为可以被亲手做过一次的记忆。</p>
+      <p>小民艺术由两位创作者共同创建。她们也是这里所有作品的主理人：一位是升斗小民，致力于用书法解读历史的书者；一位是非遗小宁，致力于非遗面塑的传承。</p>
+      <p>她们的手艺并不相同，关注的东西却很像——都舍不得那些正在被日常生活忽略的细节。一个人从纸本上读历史，一个人从材料里传手艺；一个让字成为可以留下的表达，一个让手艺成为可以被亲手做过一次的记忆。</p>
       <p>于是有了 XIAOMINART。没有宏大的叙事，只有各自手上那一点确定的功夫：用自己的专业和技艺，用力所能及的方式对外表达；也借这样的方式，往更大的美学空间里走一走。所以对我们来说，品牌不只是一个名字，更像一场还没写完的共同创作。</p>
     </div>
   </section>
 
   <section class="container section philosophy" id="philosophy">
-    <div class="section-lead"><span class="eyebrow">Philosophy / 品牌理念</span><h2 class="serif">从东方文化开始，<br />以现代人的视觉。</h2><p>我们做的事情，归结起来是三句话。它决定了我们接什么、放什么，也解释了为什么我们愿意把一件事做得慢一点。</p></div>
+    <div class="section-lead"><span class="eyebrow">Philosophy / 品牌理念</span><h2 class="serif">从东方文化开始，<br />以现代人的视觉。</h2><p>我们做的事情，归结起来是四个字：传情守艺，它决定了我们接什么、放什么，也解释了为什么我们愿意把一件事做得慢一点。</p></div>
     <div class="philosophy-grid">{philosophy.map((item) => <article class="philo-card"><span class="mono">{item.no}</span><h3 class="serif">{item.title}</h3><p lang="en">{item.en}</p><p>{item.body}</p></article>)}</div>
   </section>
 
@@ -151,7 +151,7 @@ const capabilities = [
     <p class="founders-note">想直接了解她们的创作方向与媒介倾向？<a href="/artists/">进入艺术家页面 →</a>　·　两位创作者的作品与经历会随创作笔记持续补充。</p>
   </section>
 
-  <section class="container section values"><div><span class="mono">01</span><h2 class="serif">慢一点，没关系</h2><p>好的字和好的手艺都急不来。等得起的事，我们慢慢做；等不起的心意，我们用已经写好的来接。</p></div><div><span class="mono">02</span><h2 class="serif">一人一作</h2><p>同一个词，不同的人写出来是不一样的心事。你的字，只为你写一次。</p></div><div><span class="mono">03</span><h2 class="serif">字有来处</h2><p>写什么、怎么写，先弄清这句话的来路与去处。懂得多一点，笔下的分寸才稳一点。</p></div><div><span class="mono">04</span><h2 class="serif">一次委托，一段来往</h2><p>很多客人写完一幅，还会回来写第二幅。比起做成一单生意，我们更喜欢这样的来往。</p></div></section>
+  <section class="container section values"><div><span class="mono">01</span><h2 class="serif">慢一点，没关系</h2><p>好的字和好的手艺都急不来。等得起的事，我们慢慢做；等不起的心意，我们有现货。</p></div><div><span class="mono">02</span><h2 class="serif">一人一作</h2><p>同一个词，不同的人写出来是不一样的心事。</p></div><div><span class="mono">03</span><h2 class="serif">字有来处</h2><p>写什么、怎么写，先弄清这句话的来路与去处。懂得多一点，笔下的分寸才稳一点。</p></div><div><span class="mono">04</span><h2 class="serif">一次委托，一段来往</h2><p>很多客人写完一幅，还会回来写第二幅。比起做成一单生意，我们更喜欢这样的来往。</p></div></section>
 
   <section class="container section capability" id="capability" aria-labelledby="capability-title"><div class="capability-lead"><span class="eyebrow">Where to begin / 从哪里开始</span><h2 id="capability-title" class="serif">不知道从哪里开始？<br />从你心里那句话开始。</h2><p>有人想尽快送出一份心意，有人想把一面空墙安顿好，有人想带孩子亲手摸一摸传统，也有人想替一群人说声谢谢。这四件事我们都在做，也都乐意做——选不选得好，来了聊几句就知道了。</p></div><div class="capability-grid">{capabilities.map((item) => <article class="cap-card"><span class="eyebrow">{item.tag}</span><h3 class="serif">{item.title}</h3><dl><dt>适合谁</dt><dd>{item.fit}</dd><dt>你会得到</dt><dd>{item.gain}</dd></dl><a class="btn btn-link" href={item.href}>{item.cta} →</a></article>)}</div><p class="capability-note">哪一条都拿不准也没关系，直接来说说你的情况就好。<a href="/custom-commission/">来聊聊 →</a></p></section>
 
