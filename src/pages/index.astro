@@ -21,37 +21,46 @@ const steps = [
   { no: '叁', title: '创作', body: '匹配的艺术家为你专属创作，过程中保留必要的确认节点。' },
   { no: '肆', title: '抵达', body: '作品以适合你的方式，带着温度抵达。' },
 ];
+// 见艺术 · 文字源流区的时间轴节点。
+// 史实口径：甲骨文（商）、金文（商周）、石鼓文（先秦，与首屏「秦王猎碣」同一出处）、秦篆（秦）。
+// 关键词沿用品牌侧定稿的「苍茫 / 厚重 / 古拙 / 雄浑」。
+const originNodes = [
+  { era: '商', name: '甲骨文', keyword: '苍茫', body: '契刻于龟甲兽骨，是汉字最老的模样。' },
+  { era: '商周', name: '金文', keyword: '厚重', body: '铸于青铜彝器，与礼乐一同庄重。' },
+  { era: '先秦', name: '石鼓文', keyword: '古拙', body: '刻于鼓形碣石，猎猎犹闻车马声。' },
+  { era: '秦', name: '秦篆', keyword: '雄浑', body: '书同文的范式，线条圆劲而匀整。' },
+];
 ---
-<Layout title="小民艺术 XIAOMINART｜方寸之境，也藏山河" description="书画礼品定制平台。在喧嚣之外，寻一处安放身心的角落。这里的每一笔墨痕，都是对生活的另一种回答。">
+<Layout title="小民艺术 XIAOMINART｜方寸藏境，山河入章" description="书画礼品定制平台。在喧嚣之外，寻一处安放身心的角落。这里的每一笔墨痕，都是对生活的另一种回答。">
   <section class="hero" aria-label="品牌横幅">
     <div class="hero-slide is-active hero-slide--soft" data-hero-slide>
       <div class="hero-media" aria-hidden="true"><Pic src="/assets/scenes/hero-shiguwen-light.jpg" alt="" width={1536} height={1024} loading="eager" /></div>
       <div class="container hero-inner">
         <span class="eyebrow">XIAOMINART / 书画礼品定制</span>
-        <h1 class="serif">方寸之境，<br />也藏山河。</h1>
+        <h1 class="serif">方寸藏境，<br />山河入章。</h1>
         <p class="hero-sub">取自秦王猎碣——「吾车既工，吾马既同；<br />吾车既好，吾马既阜。」最古老的石刻文字，就悬在这方寸之间。</p>
-      </div>
-    </div>
-    <div class="hero-slide" data-hero-slide aria-hidden="true">
-      <div class="hero-media" aria-hidden="true"><Pic src="/assets/scenes/imperfect-real.jpg" alt="" width={1280} height={720} loading="lazy" /></div>
-      <div class="container hero-inner">
-        <span class="eyebrow">XIAOMINART / 书画礼品定制</span>
-        <p class="serif hero-title">文字若记得，<br />时光便记得。</p>
-        <p class="hero-sub">一方魏晋碑刻，记下一纸寻常地契，也留下了名字。<br />记录，让我们看见过去，也能被未来看见。</p>
       </div>
     </div>
     <div class="hero-slide" data-hero-slide aria-hidden="true">
       <div class="hero-media" aria-hidden="true"><Pic src="/assets/scenes/bird-seal-tearoom.jpg" alt="" width={1280} height={720} loading="lazy" /></div>
       <div class="container hero-inner">
         <span class="eyebrow">XIAOMINART / 书画礼品定制</span>
-        <p class="serif hero-title">于方寸线条间<br />得自在游弋</p>
+        <p class="serif hero-title">线条有界，<br />意趣无疆。</p>
         <p class="hero-sub">融古老鸟虫篆意趣，字如游鱼，昂首摆尾，穿梭自如。<br />在生活的洪流里，愿你也能找到自己的节奏，游刃有余。</p>
       </div>
     </div>
+    <div class="hero-slide" data-hero-slide aria-hidden="true">
+      <div class="hero-media" aria-hidden="true"><Pic src="/assets/scenes/imperfect-real.jpg" alt="" width={1280} height={720} loading="lazy" /></div>
+      <div class="container hero-inner">
+        <span class="eyebrow">XIAOMINART / 书画礼品定制</span>
+        <p class="serif hero-title">字里藏光，<br />岁月无恙。</p>
+        <p class="hero-sub">一方魏晋碑刻，记下一纸寻常地契，文字若记得，时光便记得。<br />记录，让我们看见过去，也被未来看见。</p>
+      </div>
+    </div>
     <div class="hero-dots" aria-label="横幅切换">
-      <button class="hero-dot is-active" type="button" data-hero-dot aria-label="第一屏：方寸之境，也藏山河"></button>
-      <button class="hero-dot" type="button" data-hero-dot aria-label="第二屏：文字若记得，时光便记得"></button>
-      <button class="hero-dot" type="button" data-hero-dot aria-label="于方寸线条间，得自在游弋"></button>
+      <button class="hero-dot is-active" type="button" data-hero-dot aria-label="第一屏：方寸藏境，山河入章"></button>
+      <button class="hero-dot" type="button" data-hero-dot aria-label="第二屏：线条有界，意趣无疆"></button>
+      <button class="hero-dot" type="button" data-hero-dot aria-label="第三屏：字里藏光，岁月无恙"></button>
     </div>
   </section>
   <script>
@@ -92,6 +101,60 @@ const steps = [
     }
   </script>
 
+  {/* ── 见艺术 · 主标题区：承接「见山河」的气势，从山河格局转入道法与书法。
+      背景用首屏同款石鼓文图（浅色版）做低透明度纹理，呼应「做纹理，不抢字」。 ── */}
+  <section class="art-hero" aria-labelledby="art-hero-title">
+    <div class="art-hero-texture" aria-hidden="true"></div>
+    <div class="container art-hero-inner" data-reveal>
+      <span class="eyebrow">见艺术 / 主标题</span>
+      <h2 id="art-hero-title" class="serif">道法有形，<br />书法有源。</h2>
+      <p class="art-hero-sub serif">溯字之源，以书载道；<br />字有所本，道有所传。</p>
+      <p class="art-hero-note">道法在天地运行的秩序里，书法在汉字生长的脉络中。</p>
+    </div>
+  </section>
+
+  {/* ── 见艺术 · 文字源流区：把古文字书法流派的来龙去脉说清楚。
+      附件原拟 CTA「字游记」页面尚不存在，先链到祝愿字典（最接近的现有内容）。 ── */}
+  <section class="container section origins" aria-labelledby="origins-title">
+    <div class="section-lead" data-reveal>
+      <span class="eyebrow">见艺术 / 文字源流</span>
+      <h2 id="origins-title" class="serif">每一笔，都不是凭空而来。</h2>
+      <p>从甲骨文的苍茫、金文的厚重、石鼓文的古拙，到秦篆的雄浑——小民艺术从文字源头出发，考据字形、提炼笔意、回归书写本真，让古文字不只是博物馆里的符号，也成为当代人可感、可读、可用的美学。</p>
+    </div>
+    <ol class="origin-rail" data-reveal>
+      {originNodes.map((node) => <li class="origin-node"><span class="mono origin-era">{node.era}</span><strong class="serif origin-name">{node.name}</strong><span class="origin-key">{node.keyword}</span><p>{node.body}</p></li>)}
+    </ol>
+    <a class="btn btn-link origins-more" href="/blessings/">了解古文字与字义 →</a>
+  </section>
+
+  {/* ── 见自己 · 修身入口区：从「艺术」转向「人」。配图用书写近景（墨有呼吸系列实拍）。 ── */}
+  <section class="container section self-section" aria-labelledby="self-title">
+    <div class="self-grid">
+      <figure class="self-fig" data-reveal><Pic src="/assets/scenes/ink-breath-writing.jpg" alt="书写近景：手执毛笔在毛边纸上写下浓墨大字，笔锋转折与飞白清晰可见，旁有砚台" loading="lazy" decoding="async" /></figure>
+      <div class="self-copy" data-reveal>
+        <span class="eyebrow">见自己 / 修身入口</span>
+        <h2 id="self-title" class="serif">看见，是理解的开始；<br />理解，是修身的入口。</h2>
+        <p>当一个字被认真辨认，一段历史便不再遥远；当一种书写被慢慢临习，心性也会随之沉静下来。</p>
+        <p class="self-close">小民艺术希望你在方寸之间，遇见更从容的自己。</p>
+      </div>
+    </div>
+  </section>
+
+  {/* ── 见来处 · 品牌承接区：品牌内核落点（看见—理解—解读—修身）。
+      三条背书均与站内既有事实页对应，不做无凭据的夸示。 ── */}
+  <section class="container section brand-landing" aria-labelledby="brand-title">
+    <div class="section-lead brand-lead" data-reveal>
+      <span class="eyebrow">见来处 / 品牌来处</span>
+      <h2 id="brand-title" class="serif">见来处，方知去向。</h2>
+    </div>
+    <p class="brand-body" data-reveal>小民艺术承接的，不只是古文字的形，更是它背后的来处：看见文明的源头，理解汉字的深意，解读先人的智慧，并在书写中安顿自己。我们以书载道，以书述史，让每一个现代人，都能重新认出自己文化的来处。</p>
+    <ul class="brand-facts" data-reveal>
+      <li><a href="/partners/museum-tourism/"><span class="mono">壹</span>博物馆与文旅合作</a></li>
+      <li><a href="/partners/heritage/"><span class="mono">贰</span>非遗面塑传承</a></li>
+      <li><a href="/about/"><span class="mono">叁</span>以书法解读历史</a></li>
+    </ul>
+    <a class="btn btn-primary" href="/about/" data-reveal>走进小民艺术 →</a>
+  </section>
 
   <section class="container section choices" aria-labelledby="choices-title">
     <div class="section-lead"><span class="eyebrow">01 / 心意之选</span><h2 id="choices-title" class="serif">为生活添一份心意。</h2><p>不是冰冷的印刷品，而是带着温度的手泽。或是案头的一抹清欢，或是心头的一声叹息。</p></div>
@@ -135,6 +198,42 @@ const steps = [
   .hero-inner { position: relative; z-index: 1; width: min(var(--container), calc(100% - 48px)); margin: 0 auto; padding: 96px 0; text-align: left; }
   .hero :is(h1, .hero-title) { font-size: clamp(38px, 5.6vw, 72px); line-height: 1.25; font-weight: 400; letter-spacing: .06em; margin: 22px 0 26px; }
   .hero-sub { max-width: 560px; color: var(--ink-soft); font-size: 17px; line-height: 2; margin: 0 0 34px; }
+  /* ── 见艺术 · 主标题区：全幅留白 + 石鼓文低透明度纹理，字是绝对主角 ── */
+  .art-hero { position: relative; overflow: hidden; padding: clamp(76px, 10vw, 128px) 0; text-align: center; }
+  .art-hero-texture { position: absolute; inset: 0; background: url('/assets/scenes/hero-shiguwen-light.jpg') center / cover no-repeat; opacity: .13; }
+  .art-hero-texture::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(244, 239, 229, .92) 0%, rgba(244, 239, 229, .42) 34%, rgba(244, 239, 229, .42) 66%, rgba(244, 239, 229, .94) 100%); }
+  .art-hero-inner { position: relative; z-index: 1; }
+  .art-hero :is(h2, .art-hero-sub) { letter-spacing: .1em; }
+  .art-hero h2 { font-size: clamp(36px, 5.4vw, 64px); font-weight: 400; line-height: 1.3; margin: 22px 0 26px; }
+  .art-hero-sub { font-size: clamp(18px, 2.2vw, 24px); color: var(--ink); line-height: 2; margin: 0 0 30px; }
+  .art-hero-note { color: var(--ink-soft); font-size: 15px; letter-spacing: .05em; margin: 0; }
+  /* ── 见艺术 · 文字源流区：时间轴沿用 process-card 的「上边线 + 序号」语言 ── */
+  .origins { border-top: 1px solid var(--line-soft); }
+  .origin-rail { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px; list-style: none; margin: 0; padding: 0; }
+  .origin-node { position: relative; border-top: 1px solid var(--line); padding: 26px 20px 0 0; }
+  .origin-node::before { content: ''; position: absolute; top: -4px; left: 0; width: 7px; height: 7px; border-radius: 50%; background: var(--cinnabar); }
+  .origin-era { color: var(--muted); font-size: 12px; letter-spacing: .24em; }
+  .origin-name { display: block; font-size: clamp(24px, 2.6vw, 32px); font-weight: 500; letter-spacing: .08em; margin: 10px 0 4px; }
+  .origin-key { color: var(--cinnabar); font-size: 14px; letter-spacing: .32em; }
+  .origin-node p { color: var(--ink-soft); font-size: 13px; line-height: 1.9; margin: 12px 0 0; }
+  .origins-more { margin-top: 32px; }
+  /* ── 见自己 · 修身入口区：左图右文，图是案头实拍，避免过度商业感 ── */
+  .self-section { border-top: 1px solid var(--line-soft); }
+  .self-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 52px; align-items: center; }
+  .self-fig { margin: 0; overflow: hidden; aspect-ratio: 4 / 3; background: var(--paper-deep); }
+  .self-fig :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease, filter .5s ease; }
+  .self-fig:hover :global(img) { transform: scale(1.03); filter: brightness(1.05); }
+  .self-copy h2 { font-size: clamp(24px, 3vw, 36px); font-weight: 500; line-height: 1.6; letter-spacing: .02em; margin: 14px 0 22px; }
+  .self-copy p { color: var(--ink-soft); line-height: 2.05; margin: 0 0 14px; }
+  .self-close { color: var(--ink) !important; }
+  /* ── 见来处 · 品牌承接区：居中收束，背书三条皆有站内事实页对应 ── */
+  .brand-landing { border-top: 1px solid var(--line-soft); text-align: center; }
+  .brand-lead { margin-left: auto; margin-right: auto; max-width: 640px; }
+  .brand-body { max-width: 640px; margin: 0 auto 36px; color: var(--ink-soft); font-size: 15px; line-height: 2.15; }
+  .brand-facts { display: flex; justify-content: center; flex-wrap: wrap; gap: 14px 44px; list-style: none; margin: 0 0 40px; padding: 0; }
+  .brand-facts a { display: inline-flex; align-items: baseline; gap: 10px; color: var(--ink-soft); font-size: 14px; letter-spacing: .04em; text-decoration: none; border-bottom: 1px solid transparent; transition: color .3s ease, border-color .3s ease; }
+  .brand-facts a:hover { color: var(--cinnabar); border-bottom-color: var(--cinnabar); }
+  .brand-facts .mono { color: var(--cinnabar); font-size: 13px; }
   .choices, .stories, .process, .closing { border-top: 1px solid var(--line-soft); }
   .section-lead { max-width: 560px; margin-bottom: 44px; }
   .section-lead h2 { font-size: clamp(24px, 2.8vw, 38px); font-weight: 500; line-height: 1.4; margin: 14px 0 12px; letter-spacing: .02em; }
@@ -195,6 +294,15 @@ const steps = [
     .hero-sub { font-size: 15px; }
     .section { padding: 56px 0; }
     .section-lead { margin-bottom: 30px; }
+    /* 见艺术 · 主标题区 */
+    .art-hero { padding: 64px 0; }
+    /* 见艺术 · 文字源流区：时间轴横向滚动，与 process-rail 同一交互范式 */
+    .origin-rail { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 16px; padding-bottom: 8px; margin: 0 -16px; padding-inline: 16px; }
+    .origin-node { flex: 0 0 74%; scroll-snap-align: start; }
+    /* 见自己：单列，图上文下 */
+    .self-grid { grid-template-columns: 1fr; gap: 28px; }
+    /* 见来处：背书改两行居中 */
+    .brand-facts { gap: 12px 28px; }
     .choice-grid { grid-template-columns: 1fr; gap: 34px; }
     .choice-card figure { aspect-ratio: 4 / 3; }
     .story-grid { grid-template-columns: 1fr; gap: 20px; }

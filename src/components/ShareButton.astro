@@ -29,7 +29,7 @@
   buttons.forEach((button) => button.addEventListener('click', async () => {
     const shareData: ShareData = {
       title: document.title.replace(/｜小民艺术.*$/, '').replace(/｜XIAOMINART.*$/i, '') || '小民艺术',
-      text: '方寸之境，也藏山河。' + (document.querySelector<HTMLMetaElement>('meta[name="description"]')?.content || ''),
+      text: '方寸藏境，山河入章。' + (document.querySelector<HTMLMetaElement>('meta[name="description"]')?.content || ''),
       url: window.location.href,
     };
     const inWeChat = /MicroMessenger/i.test(navigator.userAgent);
