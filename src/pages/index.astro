@@ -101,15 +101,15 @@ const originNodes = [
     }
   </script>
 
-  {/* ── 承载 / 承接：从「见山河」的气势承接进道法与书法。
-      背景用业主提供的浅纸调古文字墙卷（甲骨/金文/石鼓文/篆书四段），文字深墨居中。 ── */}
+  {/* ── 见先古 / 笔墨之根：从「见山河」的气势承接进道法与书法。
+      背景用业主提供的浅纸调古文字四段图（甲骨/金文/石鼓文/篆书），文字深墨居中。 ── */}
   <section class="art-hero" aria-labelledby="art-hero-title">
     <div class="art-hero-texture" aria-hidden="true"></div>
     <div class="container art-hero-inner" data-reveal>
-      <span class="eyebrow">承载 / 承接</span>
-      <h2 id="art-hero-title" class="serif">道法有形，<br />书法有源。</h2>
-      <p class="art-hero-sub serif">溯字之源，以书载道；<br />字有所本，道有所传。</p>
-      <p class="art-hero-note">道法在天地运行的秩序里，书法在汉字生长的脉络中。</p>
+      <span class="eyebrow">见先古 / 笔墨之根</span>
+      <h2 id="art-hero-title" class="serif">溯字之源，<br />以书载道。</h2>
+      <p class="art-hero-sub serif">笔墨之根，源于天地造化与礼乐文明。</p>
+      <p class="art-hero-note">从殷商甲骨的契刻，到周秦钟鼎的熔铸；从石鼓猎碣的苍茫，到秦汉小篆的规矩——<br class="art-hero-note-br" />书法在汉字生长的脉络中，生生不息。</p>
     </div>
   </section>
 
@@ -203,13 +203,13 @@ const originNodes = [
   .art-hero { position: relative; overflow: hidden; padding: clamp(76px, 10vw, 128px) 0; text-align: center; }
   /* 业主提供的古文字墙卷（浅纸调，甲骨/金文/石鼓文/篆书四段），全幅铺底；
      中段轻覆纸色让文字浮出，上下沿渐隐回纸色，与相邻段落衔接 */
-  .art-hero-texture { position: absolute; inset: 0; background: url('/assets/scenes/art-hero-scroll.webp') center / cover no-repeat; }
+  .art-hero-texture { position: absolute; inset: 0; background: url('/assets/scenes/art-hero-origins.webp') center / cover no-repeat; }
   .art-hero-texture::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, var(--paper) 0%, rgba(244, 239, 229, .62) 32%, rgba(244, 239, 229, .62) 68%, var(--paper) 100%); }
   .art-hero-inner { position: relative; z-index: 1; }
   .art-hero :is(h2, .art-hero-sub) { letter-spacing: .1em; color: var(--ink); }
   .art-hero h2 { font-size: clamp(36px, 5.4vw, 64px); font-weight: 400; line-height: 1.3; margin: 22px 0 26px; }
   .art-hero-sub { font-size: clamp(18px, 2.2vw, 24px); line-height: 2; margin: 0 0 30px; }
-  .art-hero-note { color: var(--ink-soft); font-size: 15px; letter-spacing: .05em; margin: 0; }
+  .art-hero-note { color: var(--ink-soft); font-size: 15px; letter-spacing: .05em; margin: 0 auto; max-width: 640px; }
   /* ── 见艺术 · 文字源流区：时间轴沿用 process-card 的「上边线 + 序号」语言 ── */
   .origins { border-top: 1px solid var(--line-soft); }
   .origin-rail { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px; list-style: none; margin: 0; padding: 0; }
@@ -300,6 +300,7 @@ const originNodes = [
     .section-lead { margin-bottom: 30px; }
     /* 见艺术 · 主标题区 */
     .art-hero { padding: 64px 0; }
+    .art-hero-note-br { display: none; }
     /* 见艺术 · 文字源流区：时间轴横向滚动，与 process-rail 同一交互范式 */
     .origin-rail { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 16px; padding-bottom: 8px; margin: 0 -16px; padding-inline: 16px; }
     .origin-node { flex: 0 0 74%; scroll-snap-align: start; }
