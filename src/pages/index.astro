@@ -101,12 +101,12 @@ const originNodes = [
     }
   </script>
 
-  {/* ── 见艺术 · 主标题区：承接「见山河」的气势，从山河格局转入道法与书法。
-      背景用首屏同款石鼓文图（浅色版）做低透明度纹理，呼应「做纹理，不抢字」。 ── */}
+  {/* ── 承载 / 承接：从「见山河」的气势承接进道法与书法。
+      背景用业主提供的古文字墙面图（暗调），全幅铺底、上下沿渐隐回纸色，文字反白居中。 ── */}
   <section class="art-hero" aria-labelledby="art-hero-title">
     <div class="art-hero-texture" aria-hidden="true"></div>
     <div class="container art-hero-inner" data-reveal>
-      <span class="eyebrow">见艺术 / 主标题</span>
+      <span class="eyebrow">承载 / 承接</span>
       <h2 id="art-hero-title" class="serif">道法有形，<br />书法有源。</h2>
       <p class="art-hero-sub serif">溯字之源，以书载道；<br />字有所本，道有所传。</p>
       <p class="art-hero-note">道法在天地运行的秩序里，书法在汉字生长的脉络中。</p>
@@ -201,13 +201,15 @@ const originNodes = [
   .hero-sub { max-width: 560px; color: var(--ink-soft); font-size: 17px; line-height: 2; margin: 0 0 34px; }
   /* ── 见艺术 · 主标题区：全幅留白 + 石鼓文低透明度纹理，字是绝对主角 ── */
   .art-hero { position: relative; overflow: hidden; padding: clamp(76px, 10vw, 128px) 0; text-align: center; }
-  .art-hero-texture { position: absolute; inset: 0; background: url('/assets/scenes/hero-shiguwen-light.jpg') center / cover no-repeat; opacity: .13; }
-  .art-hero-texture::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(244, 239, 229, .92) 0%, rgba(244, 239, 229, .42) 34%, rgba(244, 239, 229, .42) 66%, rgba(244, 239, 229, .94) 100%); }
+  /* 业主提供的古文字墙面图（暗调），全幅铺底；上下沿渐隐回纸色，与相邻段落衔接 */
+  .art-hero-texture { position: absolute; inset: 0; background: url('/assets/scenes/art-hero-wall.webp') center / cover no-repeat; }
+  .art-hero-texture::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, var(--paper) 0%, rgba(244, 239, 229, 0) 16%, rgba(24, 18, 14, .38) 42%, rgba(24, 18, 14, .46) 64%, var(--paper) 100%); }
   .art-hero-inner { position: relative; z-index: 1; }
-  .art-hero :is(h2, .art-hero-sub) { letter-spacing: .1em; }
+  .art-hero .eyebrow { color: var(--gilt); }
+  .art-hero :is(h2, .art-hero-sub) { letter-spacing: .1em; color: var(--paper); text-shadow: 0 1px 18px rgba(0, 0, 0, .35); }
   .art-hero h2 { font-size: clamp(36px, 5.4vw, 64px); font-weight: 400; line-height: 1.3; margin: 22px 0 26px; }
-  .art-hero-sub { font-size: clamp(18px, 2.2vw, 24px); color: var(--ink); line-height: 2; margin: 0 0 30px; }
-  .art-hero-note { color: var(--ink-soft); font-size: 15px; letter-spacing: .05em; margin: 0; }
+  .art-hero-sub { font-size: clamp(18px, 2.2vw, 24px); line-height: 2; margin: 0 0 30px; }
+  .art-hero-note { color: rgba(244, 239, 229, .8); font-size: 15px; letter-spacing: .05em; margin: 0; text-shadow: 0 1px 10px rgba(0, 0, 0, .4); }
   /* ── 见艺术 · 文字源流区：时间轴沿用 process-card 的「上边线 + 序号」语言 ── */
   .origins { border-top: 1px solid var(--line-soft); }
   .origin-rail { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px; list-style: none; margin: 0; padding: 0; }

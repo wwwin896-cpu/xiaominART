@@ -1,4 +1,9 @@
 {
+ "/assets/brand/xiaominart-logo-16.png": [
+  600,
+  1000,
+  1520
+ ],
  "/assets/brand/xiaominart-logo-full.png": [
   600,
   1000,
@@ -27,6 +32,11 @@
  ],
  "/assets/images/wechat-qr.jpg": [
   796
+ ],
+ "/assets/scenes/art-hero-wall.jpg": [
+  600,
+  1000,
+  1536
  ],
  "/assets/scenes/bird-seal-tearoom.jpg": [
   600,
