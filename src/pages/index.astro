@@ -102,7 +102,7 @@ const originNodes = [
   </script>
 
   {/* ── 承载 / 承接：从「见山河」的气势承接进道法与书法。
-      背景用业主提供的古文字墙面图（暗调），全幅铺底、上下沿渐隐回纸色，文字反白居中。 ── */}
+      背景用业主提供的浅纸调古文字墙卷（甲骨/金文/石鼓文/篆书四段），文字深墨居中。 ── */}
   <section class="art-hero" aria-labelledby="art-hero-title">
     <div class="art-hero-texture" aria-hidden="true"></div>
     <div class="container art-hero-inner" data-reveal>
@@ -127,10 +127,10 @@ const originNodes = [
     <a class="btn btn-link origins-more" href="/blessings/">了解古文字与字义 →</a>
   </section>
 
-  {/* ── 见自己 · 修身入口区：从「艺术」转向「人」。配图用书写近景（墨有呼吸系列实拍）。 ── */}
+  {/* ── 见自己 · 修身入口区：从「艺术」转向「人」。配图用业主提供的书写近景实拍。 ── */}
   <section class="container section self-section" aria-labelledby="self-title">
     <div class="self-grid">
-      <figure class="self-fig" data-reveal><Pic src="/assets/scenes/ink-breath-writing.jpg" alt="书写近景：手执毛笔在毛边纸上写下浓墨大字，笔锋转折与飞白清晰可见，旁有砚台" loading="lazy" decoding="async" /></figure>
+      <figure class="self-fig" data-reveal><Pic src="/assets/scenes/self-practice-writing.jpg" alt="书写近景：手执毛笔在亚麻纸上写下浓墨大字，旁有砚台，暖光下笔锋清晰可见" loading="lazy" decoding="async" /></figure>
       <div class="self-copy" data-reveal>
         <span class="eyebrow">见自己 / 修身入口</span>
         <h2 id="self-title" class="serif">看见，是理解的开始；<br />理解，是修身的入口。</h2>
@@ -201,15 +201,15 @@ const originNodes = [
   .hero-sub { max-width: 560px; color: var(--ink-soft); font-size: 17px; line-height: 2; margin: 0 0 34px; }
   /* ── 见艺术 · 主标题区：全幅留白 + 石鼓文低透明度纹理，字是绝对主角 ── */
   .art-hero { position: relative; overflow: hidden; padding: clamp(76px, 10vw, 128px) 0; text-align: center; }
-  /* 业主提供的古文字墙面图（暗调），全幅铺底；上下沿渐隐回纸色，与相邻段落衔接 */
+  /* 业主提供的古文字墙卷（浅纸调，甲骨/金文/石鼓文/篆书四段），全幅铺底；
+     中段轻覆纸色让文字浮出，上下沿渐隐回纸色，与相邻段落衔接 */
   .art-hero-texture { position: absolute; inset: 0; background: url('/assets/scenes/art-hero-wall.webp') center / cover no-repeat; }
-  .art-hero-texture::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, var(--paper) 0%, rgba(244, 239, 229, 0) 16%, rgba(24, 18, 14, .38) 42%, rgba(24, 18, 14, .46) 64%, var(--paper) 100%); }
+  .art-hero-texture::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, var(--paper) 0%, rgba(244, 239, 229, .62) 32%, rgba(244, 239, 229, .62) 68%, var(--paper) 100%); }
   .art-hero-inner { position: relative; z-index: 1; }
-  .art-hero .eyebrow { color: var(--gilt); }
-  .art-hero :is(h2, .art-hero-sub) { letter-spacing: .1em; color: var(--paper); text-shadow: 0 1px 18px rgba(0, 0, 0, .35); }
+  .art-hero :is(h2, .art-hero-sub) { letter-spacing: .1em; color: var(--ink); }
   .art-hero h2 { font-size: clamp(36px, 5.4vw, 64px); font-weight: 400; line-height: 1.3; margin: 22px 0 26px; }
   .art-hero-sub { font-size: clamp(18px, 2.2vw, 24px); line-height: 2; margin: 0 0 30px; }
-  .art-hero-note { color: rgba(244, 239, 229, .8); font-size: 15px; letter-spacing: .05em; margin: 0; text-shadow: 0 1px 10px rgba(0, 0, 0, .4); }
+  .art-hero-note { color: var(--ink-soft); font-size: 15px; letter-spacing: .05em; margin: 0; }
   /* ── 见艺术 · 文字源流区：时间轴沿用 process-card 的「上边线 + 序号」语言 ── */
   .origins { border-top: 1px solid var(--line-soft); }
   .origin-rail { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px; list-style: none; margin: 0; padding: 0; }
