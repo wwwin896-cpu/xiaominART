@@ -203,7 +203,7 @@ const originNodes = [
   .art-hero { position: relative; overflow: hidden; padding: clamp(76px, 10vw, 128px) 0; text-align: center; }
   /* 业主提供的古文字墙卷（浅纸调，甲骨/金文/石鼓文/篆书四段），全幅铺底；
      中段轻覆纸色让文字浮出，上下沿渐隐回纸色，与相邻段落衔接 */
-  .art-hero-texture { position: absolute; inset: 0; background: url('/assets/scenes/art-hero-wall.webp') center / cover no-repeat; }
+  .art-hero-texture { position: absolute; inset: 0; background: url('/assets/scenes/art-hero-scroll.webp') center / cover no-repeat; }
   .art-hero-texture::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, var(--paper) 0%, rgba(244, 239, 229, .62) 32%, rgba(244, 239, 229, .62) 68%, var(--paper) 100%); }
   .art-hero-inner { position: relative; z-index: 1; }
   .art-hero :is(h2, .art-hero-sub) { letter-spacing: .1em; color: var(--ink); }
