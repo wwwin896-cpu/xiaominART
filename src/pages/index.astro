@@ -134,8 +134,8 @@ const originNodes = [
       <div class="self-copy" data-reveal>
         <span class="eyebrow">见自己 / 修身入口</span>
         <h2 id="self-title" class="serif">看见，是理解的开始；<br />理解，是修身的入口。</h2>
-        <p>当一个字被认真辨认，一段历史便不再遥远；当一种书写被慢慢临习，心性也会随之沉静下来。</p>
-        <p class="self-close">小民艺术希望你在方寸之间，遇见更从容的自己。</p>
+        <p>当文化有了形，便成了你案头的一幅字。</p>
+        <p class="self-close">当一个字被认真辨认，一段历史便不再遥远；<br />当一种书写被慢慢临习，心性也会随之沉静下来。</p>
       </div>
     </div>
   </section>
@@ -148,7 +148,7 @@ const originNodes = [
       <h2 id="brand-title" class="serif">见来处，方知去向。</h2>
     </div>
     <p class="brand-body" data-reveal>小民艺术承接的，不只是古文字的形，更是它背后的来处：看见文明的源头，理解汉字的深意，解读先人的智慧，并在书写中安顿自己。</p>
-    <p class="brand-body brand-close" data-reveal>我们希望，每一个走近小民艺术的人，都能在方寸之间，遇见更从容的自己，也重新认出自己文化的来处。</p>
+    <p class="brand-body brand-close" data-reveal>我们希望，每一个走进小民艺术的人，都能在方寸之间，找到属于自己的心意之选。</p>
     <ul class="brand-facts" data-reveal>
       <li><a href="/partners/museum-tourism/"><span class="mono">壹</span>博物馆与文旅合作</a></li>
       <li><a href="/partners/heritage/"><span class="mono">贰</span>非遗面塑传承</a></li>
@@ -206,10 +206,12 @@ const originNodes = [
   .art-hero-texture { position: absolute; inset: 0; background: url('/assets/scenes/art-hero-origins.webp') center / cover no-repeat; }
   .art-hero-texture::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, var(--paper) 0%, rgba(244, 239, 229, .62) 32%, rgba(244, 239, 229, .62) 68%, var(--paper) 100%); }
   .art-hero-inner { position: relative; z-index: 1; }
+  /* 居中修正：letter-spacing 会在末字后多出字距，负右边距抵消，让字面真居中 */
+  .art-hero .eyebrow { margin-right: -.12em; }
   .art-hero :is(h2, .art-hero-sub) { letter-spacing: .1em; color: var(--ink); }
-  .art-hero h2 { font-size: clamp(36px, 5.4vw, 64px); font-weight: 400; line-height: 1.3; margin: 22px 0 26px; }
-  .art-hero-sub { font-size: clamp(18px, 2.2vw, 24px); line-height: 2; margin: 0 0 30px; }
-  .art-hero-note { color: var(--ink-soft); font-size: 15px; letter-spacing: .05em; margin: 0 auto; max-width: 640px; }
+  .art-hero h2 { font-size: clamp(36px, 5.4vw, 64px); font-weight: 400; line-height: 1.3; margin: 22px -.1em 26px 0; }
+  .art-hero-sub { font-size: clamp(18px, 2.2vw, 24px); line-height: 2; margin: 0 -.1em 30px 0; }
+  .art-hero-note { color: var(--ink-soft); font-size: 15px; letter-spacing: .05em; max-width: 640px; margin: 0 auto; padding-left: .05em; }
   /* ── 见艺术 · 文字源流区：时间轴沿用 process-card 的「上边线 + 序号」语言 ── */
   .origins { border-top: 1px solid var(--line-soft); }
   .origin-rail { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px; list-style: none; margin: 0; padding: 0; }
