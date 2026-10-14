@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import { getGiftCatalog } from '../lib/keystatic';
 import { artists, work, channelPages, blessings, seasons } from '../data/content';
 import { getReadyMadeWorks } from '../lib/ready-made';
+import { getArchives } from '../lib/code-registry';
 import { lastmodFor } from '../lib/seo';
 
 // sitemap 只收录真实存在、未被重定向、且只有一个 URL 的最终页面。
@@ -67,6 +68,8 @@ const staticRoutes: { path: string; files: string[] }[] = [
   { path: 'referral/', files: [P('referral/index.astro')] },
   { path: 'seasons/', files: [P('seasons/index.astro')] },
   { path: 'blessings/', files: [P('blessings/index.astro')] },
+  // 作品编码查询入口（2026-10-14 新增，防伪体系）
+  { path: 'verify/', files: [P('verify/index.astro'), 'src/lib/code-registry.ts', ...CONTENT] },
 ];
 
 // 动态详情路由：从数据源枚举，不手写
@@ -112,6 +115,13 @@ const dynamicRoutes: { path: string; files: string[] }[] = [
   ...getGiftCatalog().recipients.map((item) => ({
     path: `recipients/${item.slug}/`,
     files: [P('recipients/[slug].astro'), 'src/lib/keystatic.ts'],
+  })),
+  // 作品公开档案页（2026-10-14 新增，防伪体系核心）
+  // 每件在册作品的编码都是一个唯一 URL——既是对外验真的入口，
+  // 也是「客户搜编码直接找到官网」的 SEO 落点。
+  ...getArchives().map((a) => ({
+    path: `verify/${a.parts.raw}/`,
+    files: [P('verify/[code].astro'), 'src/lib/code-registry.ts', ...CONTENT],
   })),
 ];
 

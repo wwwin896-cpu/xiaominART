@@ -1,0 +1,276 @@
+---
+// ═══════════════════════════════════════════════════════════════
+// 作品公开档案页 /verify/{编码}
+//
+// 这一页是**防伪体系的核心**：
+//   仿冒者可以抄走编码，但拿不到「与该编码对应的那幅作品」。
+//   只要这一页公开可访问、可被搜索引擎收录，
+//   客户买前搜一下编码，就能对照实物验真。
+//
+// 设计取向（与全站调性一致）：
+//   · 静态生成——不依赖后端，边缘即可扛住流量
+//   · 一物一页——每幅作品的编码是唯一 URL，天然 SEO 友好
+//   · 不做「红色告警」式的验真 UI，用冷静的档案语言
+// ═══════════════════════════════════════════════════════════════
+import Layout from '../../layouts/Layout.astro';
+import Pic from '../../components/Pic.astro';
+import { getArchives } from '../../lib/code-registry';
+import { getReadyMadeWorks } from '../../lib/ready-made';
+
+export function getStaticPaths() {
+  // 只给「在册且有合法编码」的作品生成档案页；
+  // 未登记的编码不会生成页面 → 访问 404 → 本身就是验真关卡
+  const soldMap = new Map(getReadyMadeWorks().map((w) => [w.slug, w.sold]));
+  return getArchives().map((archive) => ({
+    params: { code: archive.parts.raw },
+    props: { archive, sold: soldMap.get(archive.work.slug) ?? false },
+  }));
+}
+
+const { archive, sold } = Astro.props;
+const { work, parts } = archive;
+
+const isWall = work.form === '挂墙';
+const formText = isWall ? '墙面悬挂' : '案头摆件';
+const sizeText = work.size ? `装框后 ${work.size.w} × ${work.size.h} cm` : '以随附作品档案为准';
+
+const pageTitle = `${work.title} · 作品档案 ${work.code}｜小民艺术`;
+const pageDesc = `${work.code} 是小民艺术为《${work.title}》签发的作品编码，创作于 ${parts.year} 年。核对此页可确认编码与作品是否一致。`;
+
+const archiveSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: `${work.title}｜手写书法小品`,
+  sku: work.code,
+  description: work.note,
+  image: [new URL(work.image, Astro.site ?? 'https://xiaominart.com').href],
+  brand: { '@type': 'Brand', name: 'XIAOMINART 小民艺术' },
+  material: work.material ?? '手写书法原作 · 榫卯结构实木框',
+  ...(work.size
+    ? {
+        width: { '@type': 'QuantitativeValue', value: work.size.w, unitCode: 'CMT' },
+        height: { '@type': 'QuantitativeValue', value: work.size.h, unitCode: 'CMT' },
+      }
+    : {}),
+  offers: {
+    '@type': 'Offer',
+    price: work.price,
+    priceCurrency: 'CNY',
+    availability: sold ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock',
+    itemCondition: 'https://schema.org/NewCondition',
+    url: new URL(`/verify/${work.code}/`, Astro.site ?? 'https://xiaominart.com').href,
+  },
+};
+---
+
+<Layout
+  title={pageTitle}
+  description={pageDesc}
+  breadcrumbs={[
+    { name: '首页', href: '/' },
+    { name: '作品档案', href: '/verify/' },
+    { name: work.title, href: `/verify/${work.code}/` },
+  ]}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(archiveSchema)} />
+
+  <nav class="container crumb" aria-label="面包屑">
+    <a href="/">首页</a><span>/</span><a href="/verify/">作品档案</a><span>/</span><span aria-current="page">{work.code}</span>
+  </nav>
+
+  <section class="container archive-head">
+    <span class="eyebrow">Work Archive / 作品公开档案</span>
+    <h1 class="serif">这一页，为《{work.title}》存证。</h1>
+    <p class="lead">
+      小民艺术为每一件手写作品签发唯一编码。<strong>编码可被抄写，作品不能。</strong>
+      如你手中的作品与此页在编码、图像、年份上一致，即为在册原件。
+    </p>
+  </section>
+
+  <section class="container archive-body">
+    <figure class="archive-figure">
+      <Pic src={work.image} alt={work.alt} loading="eager" decoding="async" />
+      <figcaption>本编码对应的作品实拍 · 装裱完成</figcaption>
+    </figure>
+
+    <div class="archive-copy">
+      <div class="status-row">
+        <span class="status-dot" data-sold={sold ? 'true' : 'false'} aria-hidden="true"></span>
+        <span class="status-text">{sold ? '已售出 · 在册档案保留' : '在售 · 现货唯一一件'}</span>
+      </div>
+
+      <h2 class="serif work-title">{work.title}</h2>
+      <p class="work-en" lang="en">{work.en}</p>
+
+      <dl class="meta">
+        <div class="meta-row">
+          <dt>作品编码</dt>
+          <dd><code class="code">{work.code}</code></dd>
+        </div>
+        <div class="meta-row">
+          <dt>创作年份</dt>
+          <dd><strong>{parts.year} 年</strong><em>创作完成年份，非上架年份</em></dd>
+        </div>
+        <div class="meta-row">
+          <dt>年内序号</dt>
+          <dd>{parts.year} 年第 {parts.seq} 号 · {parts.formLabel}</dd>
+        </div>
+        <div class="meta-row">
+          <dt>品类 / 档位</dt>
+          <dd>{parts.categoryLabel} · {parts.tierLabel}</dd>
+        </div>
+        <div class="meta-row">
+          <dt>材质与装帧</dt>
+          <dd>{work.material ?? '手写书法原作 · 榫卯结构实木框'}</dd>
+        </div>
+        <div class="meta-row">
+          <dt>成品尺寸</dt>
+          <dd>{sizeText} · {formText}</dd>
+        </div>
+        <div class="meta-row">
+          <dt>释读</dt>
+          <dd class="note-dd">{work.note}</dd>
+        </div>
+      </dl>
+
+      <a class="btn btn-link" href={`/gifts/ready-made/${work.slug}/`}>
+        {sold ? '查看这件作品的详情页 →' : '查看这一幅 · 在售详情 →'}
+      </a>
+    </div>
+  </section>
+
+  <section class="container section verify-explain" aria-labelledby="explain-title">
+    <div class="section-lead">
+      <span class="eyebrow">How to Verify / 如何核对</span>
+      <h2 id="explain-title" class="serif">三步，确认你手里的是原件。</h2>
+    </div>
+    <ol class="steps">
+      <li class="step">
+        <span class="mono">01</span>
+        <h3>核对作品图像</h3>
+        <p>你手中作品的笔迹、印章与装裱形态，应与上方实拍一致。这是最可靠的一关——<strong>仿冒者能抄到编码，却复制不出同一幅笔迹。</strong></p>
+      </li>
+      <li class="step">
+        <span class="mono">02</span>
+        <h3>核对编码与年份</h3>
+        <p>作品随附的藏品证书上印有完整编码。证书编码、本页编码、与作品本身，三者应完全一致。编码第 4 段即创作年份。</p>
+      </li>
+      <li class="step">
+        <span class="mono">03</span>
+        <h3>有疑问，直接问我们</h3>
+        <p>如编码查不到本页、或图像有明显出入，请带实物照片联系我们核实。<strong>我们只认自己签发的编码。</strong></p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="container section code-explain" aria-labelledby="code-title">
+    <div class="section-lead">
+      <span class="eyebrow">Code Anatomy / 编码怎么读</span>
+      <h2 id="code-title" class="serif">一串编码，读得出这些信息。</h2>
+    </div>
+    <div class="code-anatomy">
+      {
+        [
+          { seg: 'XMA', label: '品牌', value: '小民艺术出品', width: 'brand' },
+          { seg: 'CL', label: '品类', value: parts.categoryLabel, width: 'cat' },
+          { seg: 'WA', label: '形态', value: parts.formLabel, width: 'form' },
+          { seg: '26', label: '年份', value: `${parts.year} 年创作`, width: 'year', hi: true },
+          { seg: '0001', label: '序号', value: `年内第 ${parts.seq} 号`, width: 'seq' },
+          { seg: 'T2', label: '档位', value: parts.tierLabel, width: 'tier' },
+          { seg: String(parts.check), label: '校验', value: '防抄错', width: 'chk' },
+        ].map((s) => (
+          <div class={`seg ${s.width}`} data-hi={s.hi ? 'true' : 'false'}>
+            <code>{s.seg}</code>
+            <span class="seg-label">{s.label}</span>
+            <span class="seg-value">{s.value}</span>
+          </div>
+        ))
+      }
+    </div>
+    <p class="code-note">
+      编码末位是校验位，用于发现抄写错误；<strong>它只说明编码抄得对不对，不说明作品真伪</strong>。
+      真正的验真标准是：<strong>该编码是否在本站档案库中存在</strong>——也就是你现在看到的这一页。
+    </p>
+  </section>
+
+  <section class="container section archive-cta">
+    <div class="cta-panel">
+      <div>
+        <span class="eyebrow">Query / 查另一件作品</span>
+        <h2 class="serif">手里还有别的编码？</h2>
+        <p>把编号补进网址即可打开对应档案，例如 <code>/verify/XMA-CL-WA-26-0002-T2-3/</code>。</p>
+      </div>
+      <a class="btn btn-primary" href="/verify/">打开编码查询 →</a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .crumb { display: flex; flex-wrap: wrap; gap: 8px; padding: 28px 0 0; color: var(--muted); font-size: 13px; }
+  .crumb a { color: var(--ink-soft); }
+  .crumb a:hover { color: var(--cinnabar); }
+
+  .archive-head { padding: 26px 0 8px; text-align: center; }
+  .archive-head h1 { font-size: clamp(30px, 4vw, 46px); font-weight: 500; line-height: 1.35; margin: 14px 0 18px; }
+  .archive-head .lead { max-width: 640px; margin: 0 auto; color: var(--ink-soft); font-size: 16px; line-height: 2; }
+  .archive-head .lead strong { color: var(--ink); font-weight: 500; }
+
+  .archive-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; padding: 44px 0 10px; align-items: start; }
+  .archive-figure { margin: 0; border: 1px solid var(--line); background: var(--paper-deep); }
+  .archive-figure :global(img) { width: 100%; display: block; }
+  .archive-figure figcaption { padding: 10px 14px; border-top: 1px solid var(--line); background: var(--paper-light); color: var(--muted); font-size: 12px; letter-spacing: .08em; }
+
+  .status-row { display: flex; align-items: center; gap: 9px; margin-bottom: 14px; }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cinnabar); flex: none; }
+  .status-dot[data-sold='true'] { background: var(--muted); }
+  .status-text { color: var(--ink-soft); font-size: 13px; letter-spacing: .06em; }
+
+  .work-title { font-size: clamp(30px, 3.6vw, 44px); font-weight: 500; margin: 0 0 4px; }
+  .work-en { font: 19px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); margin: 0 0 22px; }
+
+  .meta { margin: 0; border-top: 1px solid var(--line); }
+  .meta-row { display: grid; grid-template-columns: 108px 1fr; gap: 16px; padding: 13px 0; border-bottom: 1px solid var(--line); }
+  .meta-row dt { color: var(--muted); font-size: 13px; padding-top: 2px; }
+  .meta-row dd { margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.85; }
+  .meta-row dd strong { color: var(--ink); font-weight: 500; }
+  .meta-row dd em { display: block; font-style: normal; color: var(--muted); font-size: 12px; margin-top: 3px; }
+  .meta-row .note-dd { color: var(--ink-soft); }
+  code.code { font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); font-size: 14px; font-weight: 600; color: var(--cinnabar); letter-spacing: .04em; }
+  .archive-copy .btn-link { margin-top: 22px; }
+
+  .verify-explain { border-top: 1px solid var(--line); }
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+  .step { padding: 24px 24px 28px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .step .mono { display: block; color: var(--cinnabar); font-size: 12px; letter-spacing: .14em; margin-bottom: 10px; }
+  .step h3 { font-size: 17px; font-weight: 500; margin: 0 0 10px; }
+  .step p { margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.9; }
+  .step p strong { color: var(--ink); font-weight: 500; }
+
+  .code-explain { border-top: 1px solid var(--line); }
+  .code-anatomy { display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch; }
+  .seg { flex: 1 1 88px; min-width: 82px; padding: 14px 12px; border: 1px solid var(--line); background: var(--paper-light); text-align: center; }
+  .seg[data-hi='true'] { border-color: var(--cinnabar); background: var(--paper-deep); }
+  .seg code { display: block; font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); font-size: 17px; font-weight: 600; color: var(--ink); letter-spacing: .06em; margin-bottom: 7px; }
+  .seg[data-hi='true'] code { color: var(--cinnabar); }
+  .seg-label { display: block; font-size: 11px; color: var(--muted); letter-spacing: .12em; margin-bottom: 3px; }
+  .seg-value { display: block; font-size: 12px; color: var(--ink-soft); }
+  .code-note { max-width: 720px; margin: 22px 0 0; color: var(--ink-soft); font-size: 14px; line-height: 2; }
+  .code-note strong { color: var(--ink); font-weight: 500; }
+
+  .archive-cta { border-top: 1px solid var(--line); }
+  .cta-panel { display: flex; flex-wrap: wrap; gap: 26px; align-items: center; justify-content: space-between; padding: 30px 32px; border: 1px solid var(--line); background: var(--paper-deep); }
+  .cta-panel h2 { font-size: 24px; font-weight: 500; margin: 8px 0 8px; }
+  .cta-panel p { margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.9; }
+  .cta-panel code { font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); color: var(--cinnabar); font-size: 13px; }
+
+  @media (max-width: 1023px) {
+    .archive-body { grid-template-columns: 1fr; gap: 32px; }
+    .steps { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 767px) {
+    .crumb { padding-top: 20px; }
+    .meta-row { grid-template-columns: 1fr; gap: 5px; }
+    .cta-panel { padding: 24px 20px; }
+    .cta-panel h2 { font-size: 21px; }
+  }
+</style>

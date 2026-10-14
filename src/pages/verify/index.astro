@@ -1,0 +1,242 @@
+---
+// ═══════════════════════════════════════════════════════════════
+// 编码查询入口 /verify/
+//
+// 纯前端做「格式 + 校验位」判定并给出对应档案链接；
+// 真正的验真由 /verify/{编码} 页面是否存在决定——
+// 未登记的编码没有页面，浏览器会 404，这本身就是关卡。
+//
+// 注意措辞纪律：校验位通过 ≠ 真品，页面上必须讲清楚。
+// ═══════════════════════════════════════════════════════════════
+import Layout from '../../layouts/Layout.astro';
+import { getArchives } from '../../lib/code-registry';
+import { getReadyMadeWorks } from '../../lib/ready-made';
+
+const archives = getArchives();
+const soldMap = new Map(getReadyMadeWorks().map((w) => [w.slug, w.sold]));
+const sampleCode = archives[0]?.parts.raw ?? 'XMA-CL-WA-26-0001-T2-0';
+---
+
+<Layout
+  title="作品编码查询｜核对你的作品是否为在册原件｜小民艺术"
+  description="输入作品编码，核对这件作品是否由小民艺术签发。编码第 4 段是创作年份；本页可查询全部在册作品档案。"
+  breadcrumbs={[{ name: '首页', href: '/' }, { name: '作品档案', href: '/verify/' }]}
+>
+  <nav class="container crumb" aria-label="面包屑">
+    <a href="/">首页</a><span>/</span><span aria-current="page">作品档案</span>
+  </nav>
+
+  <section class="container verify-head">
+    <span class="eyebrow">Verify / 作品编码查询</span>
+    <h1 class="serif">查一查，这件作品在不在册。</h1>
+    <p class="lead">
+      小民艺术为每一件手写作品签发唯一编码。输入编码（如 <code>{sampleCode}</code>），
+      即可打开它的公开档案：创作年份、材质尺寸、作品实拍。<br />
+      <strong>编码可以抄写，作品不能——对得上图像，才是原件。</strong>
+    </p>
+  </section>
+
+  <section class="container verify-tool">
+    <form class="tool-form" data-verify-form novalidate>
+      <label class="field">
+        <span class="field-label">作品编码</span>
+        <input
+          type="text"
+          name="code"
+          data-verify-input
+          class="input"
+          placeholder={sampleCode}
+          autocomplete="off"
+          spellcheck="false"
+          aria-describedby="verify-hint"
+        />
+      </label>
+      <button class="btn btn-primary" type="submit">查询这件作品</button>
+    </form>
+
+    <div class="tool-result" data-verify-result hidden role="status" aria-live="polite"></div>
+    <p class="tool-hint" id="verify-hint">
+      编码形如 <code>XMA-CL-WA-26-0001-T2-0</code>，共 7 段，通常印在作品随附的藏品证书上。
+      末位为校验位，用于发现抄写错误——<strong>校验位正确只说明编码抄对了，不代表作品为真</strong>。
+    </p>
+  </section>
+
+  <section class="container section verify-why" aria-labelledby="why-title">
+    <div class="section-lead">
+      <span class="eyebrow">Why / 为什么要查</span>
+      <h2 id="why-title" class="serif">三件事，一页说清。</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why">
+        <span class="mono">01</span>
+        <h3>知道它是哪一年的作品</h3>
+        <p>编码第 4 段即创作年份：<code>…-26-…</code> 是 2026 年完成的作品。年份是创作完成的年份，不随上架时间变化。</p>
+      </div>
+      <div class="why">
+        <span class="mono">02</span>
+        <h3>知道它在不在册</h3>
+        <p>在册作品都有独立档案页。查询到页面、且图像与你手中的作品一致，即为小民艺术签发的原件。</p>
+      </div>
+      <div class="why">
+        <span class="mono">03</span>
+        <h3>发现异常可立即核实</h3>
+        <p>查不到、或图像明显不符，请带实物照片联系我们。<strong>我们只认自己签发的编码。</strong></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="container section archive-list" aria-labelledby="list-title">
+    <div class="section-lead">
+      <span class="eyebrow">In Archive / 在册作品</span>
+      <h2 id="list-title" class="serif">目前已有 {archives.length} 件作品建档。</h2>
+      <p class="section-note">每一件都是手写原作，世间唯一。点开编码即可查看该件作品的公开档案。</p>
+    </div>
+    <ul class="archive-ul">
+      {
+        archives.map((a) => (
+          <li class="archive-li">
+            <a href={`/verify/${a.parts.raw}/`} class="archive-link">
+              <code class="li-code">{a.parts.raw}</code>
+              <span class="li-title serif">{a.work.title}</span>
+              <span class="li-meta">
+                {a.parts.year} 年 · {a.parts.formLabel} · ¥{a.work.price}
+                {soldMap.get(a.work.slug) ? ' · 已售出' : ''}
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <script>
+    // 前端只做「格式 + 校验位」预检，真正的在册判定靠目标页是否存在（404 即未登记）。
+    const MOD_WEIGHTS = [1, 3, 7, 9, 5, 11, 13];
+    function lettersToDigits(s: string): string {
+      let out = '';
+      for (const ch of s.toUpperCase()) {
+        if (ch >= '0' && ch <= '9') out += ch;
+        else if (ch >= 'A' && ch <= 'Z') out += String(ch.charCodeAt(0) - 64);
+      }
+      return out;
+    }
+    function calcCheck(body: string): number {
+      const digits = lettersToDigits(body.replace(/-/g, ''));
+      let total = 0;
+      for (let i = 0; i < digits.length; i++) total += Number(digits[i]) * MOD_WEIGHTS[i % MOD_WEIGHTS.length];
+      return (10 - (total % 10)) % 10;
+    }
+
+    const form = document.querySelector<HTMLFormElement>('[data-verify-form]');
+    const input = document.querySelector<HTMLInputElement>('[data-verify-input]');
+    const result = document.querySelector<HTMLElement>('[data-verify-result]');
+
+    function show(kind: 'ok' | 'warn' | 'error', html: string) {
+      if (!result) return;
+      result.hidden = false;
+      result.dataset.kind = kind;
+      result.innerHTML = html;
+    }
+
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const raw = (input?.value ?? '').trim().toUpperCase().replace(/\s+/g, '');
+      if (!raw) {
+        show('warn', '<strong>请先输入编码。</strong>编码通常印在作品随附的藏品证书上。');
+        return;
+      }
+      const parts = raw.split('-');
+      if (parts.length !== 7 || parts[0] !== 'XMA') {
+        show(
+          'error',
+          `<strong>编码格式不对。</strong>应形如 <code>XMA-CL-WA-26-0001-T2-0</code>（7 段，以 XMA 开头）。请核对证书上的编号后重试。`
+        );
+        return;
+      }
+      const expected = calcCheck(parts.slice(0, 6).join('-'));
+      if (Number(parts[6]) !== expected) {
+        show(
+          'error',
+          `<strong>校验位不匹配。</strong>这段编码可能存在抄写错误（末位应为 <code>${expected}</code>），或并非小民艺术签发的编码。请核对证书后重试。`
+        );
+        return;
+      }
+      const year = 2000 + Number(parts[3]);
+      show(
+        'ok',
+        `<strong>编码格式有效，创作于 ${year} 年。</strong><br />正在打开它的公开档案，请核对作品图像是否与你手中的一致。<br /><a class="result-link" href="/verify/${raw}/">打开 ${raw} 的档案 →</a>`
+      );
+    });
+  </script>
+</Layout>
+
+<style>
+  .crumb { display: flex; flex-wrap: wrap; gap: 8px; padding: 28px 0 0; color: var(--muted); font-size: 13px; }
+  .crumb a { color: var(--ink-soft); }
+  .crumb a:hover { color: var(--cinnabar); }
+
+  .verify-head { padding: 26px 0 6px; text-align: center; }
+  .verify-head h1 { font-size: clamp(31px, 4.2vw, 48px); font-weight: 500; line-height: 1.35; margin: 14px 0 18px; }
+  .verify-head .lead { max-width: 680px; margin: 0 auto; color: var(--ink-soft); font-size: 16px; line-height: 2; }
+  .verify-head .lead strong { color: var(--ink); font-weight: 500; }
+  .verify-head code { font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); font-size: 14px; color: var(--cinnabar); }
+
+  .verify-tool { padding: 40px 0 6px; max-width: 760px; }
+  .tool-form { display: flex; gap: 12px; align-items: flex-end; }
+  .field { flex: 1 1 auto; display: block; }
+  .field-label { display: block; color: var(--muted); font-size: 13px; letter-spacing: .08em; margin-bottom: 8px; }
+  .input {
+    width: 100%;
+    padding: 13px 15px;
+    border: 1px solid var(--line);
+    background: var(--paper-light);
+    color: var(--ink);
+    font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+    font-size: 15px;
+    letter-spacing: .04em;
+  }
+  .input:focus { outline: none; border-color: var(--cinnabar); }
+  .input::placeholder { color: var(--muted); opacity: .7; }
+
+  .tool-result { margin-top: 20px; padding: 16px 18px; border-left: 2px solid var(--ink-soft); background: var(--paper-deep); color: var(--ink-soft); font-size: 14px; line-height: 1.95; }
+  .tool-result[hidden] { display: none; }
+  .tool-result strong { color: var(--ink); font-weight: 500; }
+  .tool-result code { font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); color: var(--cinnabar); }
+  .tool-result[data-kind='ok'] { border-left-color: var(--cinnabar); }
+  .tool-result :global(.result-link) { color: var(--cinnabar); font-weight: 500; }
+
+  .tool-hint { margin: 18px 0 0; color: var(--muted); font-size: 13px; line-height: 1.9; }
+  .tool-hint strong { color: var(--ink-soft); font-weight: 500; }
+  .tool-hint code { font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); color: var(--cinnabar-deep); }
+
+  .verify-why { border-top: 1px solid var(--line); }
+  .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+  .why { padding: 24px 24px 28px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .why .mono { display: block; color: var(--cinnabar); font-size: 12px; letter-spacing: .14em; margin-bottom: 10px; }
+  .why h3 { font-size: 17px; font-weight: 500; margin: 0 0 10px; }
+  .why p { margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.9; }
+  .why p strong { color: var(--ink); font-weight: 500; }
+  .why code { font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); color: var(--cinnabar); font-size: 13px; }
+
+  .archive-list { border-top: 1px solid var(--line); }
+  .section-note { margin: 12px 0 0; color: var(--ink-soft); font-size: 15px; line-height: 1.9; }
+  .archive-ul { list-style: none; margin: 26px 0 0; padding: 0; border-top: 1px solid var(--line); }
+  .archive-li { border-bottom: 1px solid var(--line); }
+  .archive-link { display: grid; grid-template-columns: 220px minmax(0, 1fr) auto; gap: 18px; align-items: center; padding: 15px 4px; }
+  .archive-link:hover { background: var(--paper-deep); }
+  .li-code { font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); font-size: 13px; color: var(--cinnabar); letter-spacing: .03em; }
+  .li-title { font-size: 19px; font-weight: 500; color: var(--ink); }
+  .li-meta { color: var(--muted); font-size: 13px; white-space: nowrap; }
+
+  @media (max-width: 1023px) {
+    .why-grid { grid-template-columns: 1fr; }
+    .archive-link { grid-template-columns: 1fr auto; row-gap: 5px; }
+    .li-code { grid-column: 1 / -1; }
+  }
+  @media (max-width: 767px) {
+    .crumb { padding-top: 20px; }
+    .tool-form { flex-direction: column; align-items: stretch; }
+    .archive-link { grid-template-columns: 1fr; }
+    .li-meta { white-space: normal; }
+  }
+</style>
