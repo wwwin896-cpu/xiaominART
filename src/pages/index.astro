@@ -124,7 +124,6 @@ const originNodes = [
     <ol class="origin-rail" data-reveal>
       {originNodes.map((node) => <li class="origin-node"><span class="mono origin-era">{node.era}</span><strong class="serif origin-name">{node.name}</strong><span class="origin-key">{node.keyword}</span><p>{node.body}</p></li>)}
     </ol>
-    <a class="btn btn-link origins-more" href="/blessings/">了解古文字与字义 →</a>
   </section>
 
   {/* ── 见自己 · 修身入口区：从「艺术」转向「人」。配图用业主提供的书写近景实拍。 ── */}
@@ -221,7 +220,6 @@ const originNodes = [
   .origin-name { display: block; font-size: clamp(24px, 2.6vw, 32px); font-weight: 500; letter-spacing: .08em; margin: 10px 0 4px; }
   .origin-key { color: var(--cinnabar); font-size: 14px; letter-spacing: .32em; }
   .origin-node p { color: var(--ink-soft); font-size: 13px; line-height: 1.9; margin: 12px 0 0; }
-  .origins-more { margin-top: 32px; }
   /* ── 见自己 · 修身入口区：左图右文，图是案头实拍，避免过度商业感 ── */
   .self-section { border-top: 1px solid var(--line-soft); }
   .self-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 52px; align-items: center; }

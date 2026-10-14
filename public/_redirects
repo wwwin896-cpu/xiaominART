@@ -85,7 +85,25 @@
 /business-custom /business-gifts/ 301
 /business-custom/ /business-gifts/ 301
 
-# 2.5 /discover/ 原本是站内的 Astro 重定向页（meta refresh 属软跳转），
-#     改为真正的 301，对搜索引擎更清晰
-/discover /art-direction/ 301
-/discover/ /art-direction/ 301
+# 2.5 /discover/ 原本指 art-direction；2026-10-15 art-direction 下线后改指 about（见 2.6 末尾）
+
+# ── 2.6 展示型品牌站精简（2026-10-15 业主裁决）：五个零内链页面下线 ──
+# blessings（古文字与字义）：唯一直接入口已删；数据保留，待「字游记」资料备齐再启
+/blessings / 301
+/blessings/ / 301
+/blessings/* / 301
+# referral（分享推荐）：承诺手稿礼遇但用 mailto 且自我否认，不符合「保障售后」定位
+/referral / 301
+/referral/ / 301
+# your-story（心事成字）：与定制流程重叠，301 并入定制页
+/your-story /custom-commission/ 301
+/your-story/ /custom-commission/ 301
+# art-direction（艺术方向）：零内链孤岛，301 归入品牌介绍
+/art-direction /about/ 301
+/art-direction/ /about/ 301
+# 旧规则 /discover 原指 art-direction，目标下线后改指 about
+/discover /about/ 301
+/discover/ /about/ 301
+# pricing-guide（价格参考）：零内链孤岛，定制价目已在定制页呈现
+/pricing-guide /custom-commission/ 301
+/pricing-guide/ /custom-commission/ 301

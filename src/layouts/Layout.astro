@@ -65,12 +65,13 @@ const isCurrent = (href: string) => { const normalized = href.replace(/\/$/, '')
 // 显式传入 breadcrumbs 的页面照旧；未传入的页面按路径自动生成：
 // 深度 1（/about/）→ 首页 / 关于我们；深度 2+（/seasons/spring/）→ 首页 / 四季节气 / {title 首段}。
 const SECTION_LABELS: Record<string, string> = {
-  'about': '关于我们', 'art-direction': '艺术方向', 'business-gifts': '企业礼赠', 'contact': '联系我们',
+  'about': '关于我们', 'business-gifts': '企业礼赠', 'contact': '联系我们',
   'custom-commission': '定制创作', 'gift-guide': '选礼指南', 'gifts': '小民好礼', 'help': '帮助中心',
-  'pricing-guide': '价格参考', 'progress': '定制进度', 'referral': '分享推荐', 'scenes': '灵感参考',
-  'stories': '墙上的故事', 'wishlist': '心愿单', 'works': '作品档案', 'your-story': '心事成字',
-  'artists': '艺术家', 'blessings': '祝愿字典', 'seasons': '四季节气', 'occasions': '送礼场合',
+  'progress': '定制进度', 'scenes': '灵感参考',
+  'stories': '墙上的故事', 'wishlist': '心愿单', 'works': '作品档案',
+  'artists': '艺术家', 'seasons': '四季节气', 'occasions': '送礼场合',
   'recipients': '送礼对象', 'partners': '机构合作', 'channel': '购买渠道', 'privacy': '隐私政策',
+  // 2026-10-15 精简下线的 art-direction/pricing-guide/referral/your-story/blessings 已移除
 };
 const PATH_LABELS: Record<string, string> = {
   '/partners/cases/': '合作案例', '/partners/heritage/': '非遗面塑活动',

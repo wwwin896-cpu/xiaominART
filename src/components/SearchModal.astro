@@ -188,7 +188,7 @@
 
     // 首页信息量最低
     if (segments.length === 0) score -= 60;
-    // 详情页（/gifts/xxx/、/artists/xxx/、/blessings/xxx/ 等）优先于聚合页
+    // 详情页（/gifts/xxx/、/artists/xxx/ 等）优先于聚合页
     else if (segments.length >= 2) score += 25;
     // 明确是商品详情，再给一档
     if (segments[0] === 'gifts' && segments.length >= 2) score += 30;

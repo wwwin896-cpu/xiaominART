@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { getGiftCatalog } from '../lib/keystatic';
-import { artists, work, channelPages, blessings, seasons } from '../data/content';
+import { artists, work, channelPages, seasons } from '../data/content';
 import { getReadyMadeWorks } from '../lib/ready-made';
 import { getArchives } from '../lib/code-registry';
 import { lastmodFor } from '../lib/seo';
@@ -59,15 +59,12 @@ const staticRoutes: { path: string; files: string[] }[] = [
   // 隐私政策（P1-04 收尾，2026-10-09）：页脚常驻入口，合规必备页
   { path: 'privacy/', files: [P('privacy/index.astro')] },
   // 内容与参考
-  { path: 'art-direction/', files: [P('art-direction/index.astro')] },
-  { path: 'pricing-guide/', files: [P('pricing-guide/index.astro'), ...CONTENT] },
+  // 2026-10-15 精简：art-direction / pricing-guide / your-story / referral / blessings
+  // 五个零内链页面已下线（301 见 public/_redirects）；blessings 数据保留备「字游记」
   // 独立页面
   { path: 'works/', files: [P('works/index.astro'), ...CONTENT] },
   { path: 'stories/', files: [P('stories/index.astro')] },
-  { path: 'your-story/', files: [P('your-story/index.astro')] },
-  { path: 'referral/', files: [P('referral/index.astro')] },
   { path: 'seasons/', files: [P('seasons/index.astro')] },
-  { path: 'blessings/', files: [P('blessings/index.astro')] },
   // 作品编码查询入口（2026-10-14 新增，防伪体系）
   { path: 'verify/', files: [P('verify/index.astro'), 'src/lib/code-registry.ts', ...CONTENT] },
 ];
@@ -96,12 +93,7 @@ const dynamicRoutes: { path: string; files: string[] }[] = [
     path: `channel/${c.slug}/`,
     files: [P('channel/[slug].astro'), ...CONTENT],
   })),
-  // 祝愿词条（福/禄/寿/喜/财）——索引页与首页 BlessingRail 均有站内链接，
-  // 每页有独立字义与适用场景文案，是「福字书法」这类长尾词的自然落点
-  ...blessings.map((b) => ({
-    path: `blessings/${b.slug}/`,
-    files: [P('blessings/[slug].astro'), ...CONTENT],
-  })),
+  // 祝愿词条页已下线（2026-10-15 精简，301 回首页）；blessings 数据保留备「字游记」
   // 四季节气详情（2026-10-07 补录，内容偏薄但可索引）
   ...seasons.map((s) => ({
     path: `seasons/${s.slug}/`,
