@@ -16,6 +16,8 @@ import Layout from '../../layouts/Layout.astro';
 import Pic from '../../components/Pic.astro';
 import { getArchives } from '../../lib/code-registry';
 import { getReadyMadeWorks } from '../../lib/ready-made';
+import { qrSvg } from '../../lib/qr';
+import { siteContact, hasOfficialAccount } from '../../data/site';
 
 export function getStaticPaths() {
   // 只给「在册且有合法编码」的作品生成档案页；
@@ -36,6 +38,11 @@ const sizeText = work.size ? `装框后 ${work.size.w} × ${work.size.h} cm` : '
 
 const pageTitle = `${work.title} · 作品档案 ${work.code}｜小民艺术`;
 const pageDesc = `${work.code} 是小民艺术为《${work.title}》签发的作品编码，创作于 ${parts.year} 年。核对此页可确认编码与作品是否一致。`;
+
+// 二维码：指向本页自身的规范地址。
+// 静态生成时就把 SVG 直接写进 HTML —— 零运行时开销、零外部请求、不外泄扫码数据。
+const canonicalUrl = new URL(`/verify/${work.code}/`, Astro.site ?? 'https://xiaominart.com').href;
+const archiveQrSvg = qrSvg(canonicalUrl, 200, 3);
 
 const archiveSchema = {
   '@context': 'https://schema.org',
@@ -139,6 +146,32 @@ const archiveSchema = {
     </div>
   </section>
 
+  <section class="container section qr-section" aria-labelledby="qr-title">
+    <div class="qr-panel">
+      <div class="qr-figure">
+        <div class="qr-box" set:html={archiveQrSvg} />
+        <span class="qr-cap mono">{work.code}</span>
+      </div>
+      <div class="qr-copy">
+        <span class="eyebrow">Scan / 扫码验真</span>
+        <h2 id="qr-title" class="serif">手机一扫，直达这一页。</h2>
+        <p>
+          证书上印着这枚二维码。任何人用手机扫一扫，都会打开你现在看到的这一页——
+          <strong>编码、年份、作品实拍，一一对照，无需手工输入那串长编码。</strong>
+        </p>
+        <ul class="qr-points">
+          <li><span class="mono">01</span>扫出来的是本站地址 <code>xiaominart.com</code>，不是第三方页面</li>
+          <li><span class="mono">02</span>核对实拍笔迹——这一关仿冒者过不去</li>
+          <li><span class="mono">03</span>查不到本页，即为存疑，请联系我们核实</li>
+        </ul>
+        <p class="qr-note">
+          二维码本身可以被复制。<strong>真正无法复制的是这一页的作品实拍。</strong>
+          如果你手里那件的笔迹与此页不符，编码再对也不算数。
+        </p>
+      </div>
+    </div>
+  </section>
+
   <section class="container section verify-explain" aria-labelledby="explain-title">
     <div class="section-lead">
       <span class="eyebrow">How to Verify / 如何核对</span>
@@ -200,10 +233,109 @@ const archiveSchema = {
         <h2 class="serif">手里还有别的编码？</h2>
         <p>把编号补进网址即可打开对应档案，例如 <code>/verify/XMA-CL-WA-26-0002-T2-3/</code>。</p>
       </div>
-      <a class="btn btn-primary" href="/verify/">打开编码查询 →</a>
+      <a class="btn btn-primary" href="/verify/" data-event="archive_query_click">打开编码查询 →</a>
+    </div>
+  </section>
+
+  {/* ─────────────────────────────────────────────────────────────
+      转化段（扫码后的第 ② ③ 步）
+
+      顺序是刻意的：先给结论建立信任，再要关注，最后才谈定制。
+      ① 验真 → 已在页面上方完成（实拍 + 编码 + 年份）
+      ② 关注 → 本段。公众号未配置时自动隐藏，降级为个人微信。
+      ③ 定制 → 本段。带来源标记，用于衡量扫码带来的咨询量。
+     ───────────────────────────────────────────────────────────── */}
+  <section class="container section convert" aria-labelledby="convert-title">
+    <div class="convert-head">
+      <span class="eyebrow">From This Piece / 由这件作品开始</span>
+      <h2 id="convert-title" class="serif">验过了，接下来想做点什么？</h2>
+      <p class="convert-lead">
+        你刚确认了一件在册原件。如果这份笔墨让你多看了一眼，这里有两件事可以继续。
+      </p>
+    </div>
+
+    <div class="convert-grid">
+      {/* ② 关注段 */}
+      {hasOfficialAccount && (
+        <article class="convert-card follow">
+          <span class="mono card-step">02</span>
+          <h3 class="serif">看看它是怎么写出来的</h3>
+          <p>
+            每一幅字背后都有一段过程——落笔前的斟酌、钤印时的取舍。
+            关注「{siteContact.mpName || '小民艺术'}」，新作与创作过程先发在这里。
+          </p>
+          <div class="follow-body">
+            {siteContact.mpQr ? (
+              <img class="follow-qr" src={siteContact.mpQr} alt={`${siteContact.mpName || '小民艺术'}公众号二维码`} width="132" height="132" loading="lazy" decoding="async" />
+            ) : null}
+            <div class="follow-text">
+              <p class="follow-hint">长按识别二维码，或在微信搜索关注。</p>
+              <p class="follow-warn">
+                <strong>注意：</strong>微信内的网页无法一键跳转关注，需长按上面的二维码识别。
+              </p>
+            </div>
+          </div>
+          <a class="btn btn-link" href="/verify/" data-event="archive_follow_click">先看看其他作品 →</a>
+        </article>
+      )}
+
+      {/* ③ 定制段 */}
+      <article class="convert-card custom">
+        <span class="mono card-step">{hasOfficialAccount ? '03' : '02'}</span>
+        <h3 class="serif">也想有一件属于你的？</h3>
+        <p>
+          现成的是「这一幅」，定制的才是「你的那一幅」。
+          说清要写给谁、挂在哪儿、何时要用，我们会给出尺寸与方案建议。
+        </p>
+        <div class="custom-actions">
+          <a
+            class="btn btn-primary"
+            href={`/contact/?from=archive&code=${encodeURIComponent(work.code)}`}
+            data-event="archive_custom_click"
+            data-code={work.code}
+          >发起定制咨询 →</a>
+          {siteContact.wechatId && (
+            <a
+              class="btn btn-link"
+              href="/contact/"
+              data-event="archive_follow_click"
+              data-code={work.code}
+            >或先加微信聊聊 · {siteContact.wechatId}</a>
+          )}
+        </div>
+        <p class="custom-meta">
+          咨询时提到编码 <code>{work.code}</code>，我们能直接对应到这件作品，省去反复描述。
+        </p>
+      </article>
     </div>
   </section>
 </Layout>
+
+<script>
+  // 档案页浏览埋点：扫码进来的每一跳都记一次，用于统计「扫码验真」的实际发生量。
+  // 走与全站一致的 /api/event，事件名已在三处同登记白名单。
+  const code = document.querySelector('.qr-cap')?.textContent?.trim() ?? '';
+  const fire = (name: string, data: Record<string, unknown> = {}) => {
+    try {
+      void fetch('/api/event', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, data: { code, page: 'verify', ...data } }),
+        keepalive: true,
+      }).catch(() => {});
+    } catch {
+      /* 埋点失败绝不影响页面功能 */
+    }
+  };
+
+  fire('archive_view');
+
+  // 带 data-event 的转化入口，统一由这里转发；
+  // 若全站已有委托监听，这里只补 data-code，避免重复上报。
+  document.querySelectorAll<HTMLElement>('[data-event]').forEach((el) => {
+    if (!el.dataset.code && code) el.dataset.code = code;
+  });
+</script>
 
 <style>
   .crumb { display: flex; flex-wrap: wrap; gap: 8px; padding: 28px 0 0; color: var(--muted); font-size: 13px; }
@@ -263,14 +395,60 @@ const archiveSchema = {
   .cta-panel p { margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.9; }
   .cta-panel code { font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); color: var(--cinnabar); font-size: 13px; }
 
+  /* ── 二维码区 ── */
+  .qr-section { border-top: 1px solid var(--line); }
+  .qr-panel { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 44px; align-items: center; padding: 34px 32px; border: 1px solid var(--line); background: var(--paper-deep); }
+  .qr-figure { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .qr-box { width: 200px; height: 200px; padding: 10px; background: #fff; border: 1px solid var(--line); line-height: 0; }
+  /* set:html 注入的 SVG 不带作用域属性，必须用 :global */
+  .qr-box :global(svg) { display: block; width: 100%; height: auto; }
+  .qr-cap { color: var(--muted); font-size: 11px; letter-spacing: .1em; word-break: break-all; text-align: center; max-width: 220px; }
+  .qr-copy h2 { font-size: clamp(23px, 2.8vw, 32px); font-weight: 500; margin: 10px 0 14px; }
+  .qr-copy > p { margin: 0 0 16px; color: var(--ink-soft); font-size: 15px; line-height: 2; }
+  .qr-copy strong { color: var(--ink); font-weight: 500; }
+  .qr-points { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 9px; }
+  .qr-points li { display: grid; grid-template-columns: 30px 1fr; gap: 10px; color: var(--ink-soft); font-size: 14px; line-height: 1.8; }
+  .qr-points .mono { color: var(--cinnabar); font-size: 12px; letter-spacing: .1em; padding-top: 3px; }
+  .qr-points code { font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); font-size: 13px; color: var(--cinnabar); }
+  .qr-note { margin: 0; padding-top: 14px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; line-height: 1.9; }
+  .qr-note strong { color: var(--ink-soft); font-weight: 500; }
+
+  /* ── 转化段（关注 + 定制）── */
+  .convert { border-top: 1px solid var(--line); }
+  .convert-head { text-align: center; margin-bottom: 30px; }
+  .convert-head h2 { font-size: clamp(25px, 3.2vw, 36px); font-weight: 500; margin: 12px 0 12px; }
+  .convert-lead { max-width: 560px; margin: 0 auto; color: var(--ink-soft); font-size: 15px; line-height: 2; }
+  .convert-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+  .convert-card { padding: 28px 26px 30px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); display: flex; flex-direction: column; }
+  .convert-card .card-step { display: block; color: var(--cinnabar); font-size: 12px; letter-spacing: .14em; margin-bottom: 12px; }
+  .convert-card h3 { font-size: 21px; font-weight: 500; margin: 0 0 12px; }
+  .convert-card > p { margin: 0 0 18px; color: var(--ink-soft); font-size: 14px; line-height: 1.95; }
+  .convert-card .btn { align-self: flex-start; }
+  .convert-card .btn-link { margin-top: auto; }
+  .custom-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .custom-meta { margin: 14px 0 0 !important; padding-top: 13px; border-top: 1px solid var(--line); color: var(--muted) !important; font-size: 12.5px !important; }
+  .custom-meta code { font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); color: var(--cinnabar); font-size: 12px; }
+  .follow-body { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 20px; }
+  .follow-qr { width: 132px; height: 132px; flex: none; border: 1px solid var(--line); background: #fff; padding: 5px; }
+  .follow-text { min-width: 0; }
+  .follow-hint { margin: 0 0 10px; color: var(--ink-soft); font-size: 13px; line-height: 1.8; }
+  .follow-warn { margin: 0; padding: 9px 11px; background: var(--paper-light); border-left: 2px solid var(--cinnabar); color: var(--muted); font-size: 12.5px; line-height: 1.75; }
+  .follow-warn strong { color: var(--ink-soft); font-weight: 500; }
+
   @media (max-width: 1023px) {
     .archive-body { grid-template-columns: 1fr; gap: 32px; }
     .steps { grid-template-columns: 1fr; }
+    .qr-panel { grid-template-columns: 1fr; gap: 28px; justify-items: center; text-align: center; }
+    .qr-points li { text-align: left; }
   }
   @media (max-width: 767px) {
     .crumb { padding-top: 20px; }
     .meta-row { grid-template-columns: 1fr; gap: 5px; }
     .cta-panel { padding: 24px 20px; }
     .cta-panel h2 { font-size: 21px; }
+    .qr-panel { padding: 24px 18px; }
+    .qr-box { width: 176px; height: 176px; }
+    .follow-body { flex-direction: column; align-items: flex-start; }
+    .convert-card { padding: 24px 18px 26px; }
   }
 </style>

@@ -178,6 +178,14 @@ const TRACKED_EVENTS = new Set([
   'wishlist_drawer_open',
   'wechat_direct_open',
   'wechat_id_copy',
+  // 2026-10-14 补录：作品档案页扫码转化漏斗（二维码验真 → 关注 → 定制）
+  // 三处同登记：本文件 / functions/api/event.ts / docs/事件字典.md
+  // archive_view 由档案页在 DOMContentLoaded 时上报，data 带 code / year；
+  // 后三个是「关注段」「定制段」的点击，用于衡量扫码后的转化率。
+  'archive_view',
+  'archive_follow_click',
+  'archive_custom_click',
+  'archive_query_click',
 ]);
 
 const EVENT_URL = '/api/event';

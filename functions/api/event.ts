@@ -58,6 +58,12 @@ const ALLOWED_EVENTS = new Set([
   'wishlist_drawer_open',
   'wechat_direct_open',
   'wechat_id_copy',
+  // 2026-10-14 补录：作品档案页扫码转化漏斗（二维码验真 → 关注 → 定制）
+  // 三处同登记：本文件 / src/scripts/cloud-forms.ts / docs/事件字典.md
+  'archive_view',
+  'archive_follow_click',
+  'archive_custom_click',
+  'archive_query_click',
 ]);
 
 // /api/* 是接口，不应被搜索引擎收录、也不应被缓存。
