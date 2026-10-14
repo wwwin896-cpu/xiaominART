@@ -183,8 +183,12 @@ const TRACKED_EVENTS = new Set([
   // archive_view 由档案页在 DOMContentLoaded 时上报，data 带 code / year；
   // 后三个是「关注段」「定制段」的点击，用于衡量扫码后的转化率。
   'archive_view',
-  'archive_follow_click',
   'archive_custom_click',
+  // 2026-10-14 档案页改版（结论优先）：新增「下一步」三个引导入口的点击。
+  'archive_browse_click',
+  'archive_stories_click',
+  'archive_share_click',
+  'archive_follow_click',
   'archive_query_click',
 ]);
 

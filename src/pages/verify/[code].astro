@@ -17,7 +17,7 @@ import Pic from '../../components/Pic.astro';
 import { getArchives } from '../../lib/code-registry';
 import { getReadyMadeWorks } from '../../lib/ready-made';
 import { qrSvg } from '../../lib/qr';
-import { siteContact, hasOfficialAccount } from '../../data/site';
+import { siteContact, hasOfficialAccount, shareEnabled } from '../../data/site';
 
 export function getStaticPaths() {
   // 只给「在册且有合法编码」的作品生成档案页；
@@ -35,6 +35,15 @@ const { work, parts } = archive;
 const isWall = work.form === '挂墙';
 const formText = isWall ? '墙面悬挂' : '案头摆件';
 const sizeText = work.size ? `装框后 ${work.size.w} × ${work.size.h} cm` : '以随附作品档案为准';
+
+// ── 结论优先（2026-10-14 业主反馈后重做）──
+// 业主原话：「用户停留时间不会很长，他只关心是不是正品。你只要告诉他一个结果。」
+// 所以这一页的信息层级被压成三层：结论 → 证据 → 下一步。
+// 解释性的内容（编码怎么读、如何核对三步）已移除，改为浓缩进说明文字。
+const verdict = sold ? '原件已认领' : '在册原件';
+const verdictSub = sold
+  ? `这件作品已于 ${parts.year} 年被一位藏家收藏，档案永久保留。`
+  : '这件作品现在在售，全世界只此一件。';
 
 const pageTitle = `${work.title} · 作品档案 ${work.code}｜小民艺术`;
 const pageDesc = `${work.code} 是小民艺术为《${work.title}》签发的作品编码，创作于 ${parts.year} 年。核对此页可确认编码与作品是否一致。`;
@@ -73,6 +82,7 @@ const archiveSchema = {
 <Layout
   title={pageTitle}
   description={pageDesc}
+  bodyData={{ 'archive-code': work.code }}
   breadcrumbs={[
     { name: '首页', href: '/' },
     { name: '作品档案', href: '/verify/' },
@@ -88,225 +98,128 @@ const archiveSchema = {
   <section class="container archive-head">
     <span class="eyebrow">Work Archive / 作品公开档案</span>
     <h1 class="serif">这一页，为《{work.title}》存证。</h1>
-    <p class="lead">
-      小民艺术为每一件手写作品签发唯一编码。<strong>编码可被抄写，作品不能。</strong>
-      如你手中的作品与此页在编码、图像、年份上一致，即为在册原件。
-    </p>
   </section>
 
+  {/* ─────────────────────────────────────────────────────────────
+      结论 + 实拍（并排，一屏内看完）
+
+      2026-10-14 业主反馈后重做：客户只想知道「是不是正品」，停留时间很短。
+      因此把「结论」提到最显眼处，实拍紧邻结论作为唯一需要的证据。
+      原先的「如何核对三步」「编码怎么读」两段已移除 —— 解释成本太高，
+      收益为零，反而稀释了结论。解释浓缩为结论下方一行小字。
+     ───────────────────────────────────────────────────────────── */}
   <section class="container archive-body">
     <figure class="archive-figure">
       <Pic src={work.image} alt={work.alt} loading="eager" decoding="async" />
-      <figcaption>本编码对应的作品实拍 · 装裱完成</figcaption>
+      <figcaption>与编码 {work.code} 对应的作品实拍 · 请与手中实物核对笔迹</figcaption>
     </figure>
 
     <div class="archive-copy">
-      <div class="status-row">
-        <span class="status-dot" data-sold={sold ? 'true' : 'false'} aria-hidden="true"></span>
-        <span class="status-text">{sold ? '已售出 · 在册档案保留' : '在售 · 现货唯一一件'}</span>
+      <div class="verdict" data-sold={sold ? 'true' : 'false'} role="status">
+        <span class="verdict-badge">
+          <span class="verdict-dot" aria-hidden="true"></span>
+          正品
+        </span>
+        <h2 class="verdict-title serif">{verdict}</h2>
+        <p class="verdict-sub">{verdictSub}</p>
       </div>
-
-      <h2 class="serif work-title">{work.title}</h2>
-      <p class="work-en" lang="en">{work.en}</p>
 
       <dl class="meta">
         <div class="meta-row">
-          <dt>作品编码</dt>
+          <dt>作品</dt>
+          <dd><strong>{work.title}</strong><em>{work.en}</em></dd>
+        </div>
+        <div class="meta-row">
+          <dt>编码</dt>
           <dd><code class="code">{work.code}</code></dd>
         </div>
         <div class="meta-row">
           <dt>创作年份</dt>
-          <dd><strong>{parts.year} 年</strong><em>创作完成年份，非上架年份</em></dd>
+          <dd><strong>{parts.year} 年</strong></dd>
         </div>
         <div class="meta-row">
-          <dt>年内序号</dt>
-          <dd>{parts.year} 年第 {parts.seq} 号 · {parts.formLabel}</dd>
-        </div>
-        <div class="meta-row">
-          <dt>品类 / 档位</dt>
-          <dd>{parts.categoryLabel} · {parts.tierLabel}</dd>
-        </div>
-        <div class="meta-row">
-          <dt>材质与装帧</dt>
-          <dd>{work.material ?? '手写书法原作 · 榫卯结构实木框'}</dd>
-        </div>
-        <div class="meta-row">
-          <dt>成品尺寸</dt>
-          <dd>{sizeText} · {formText}</dd>
-        </div>
-        <div class="meta-row">
-          <dt>释读</dt>
-          <dd class="note-dd">{work.note}</dd>
+          <dt>规格</dt>
+          <dd>{sizeText} · {formText} · {parts.categoryLabel}</dd>
         </div>
       </dl>
 
-      <a class="btn btn-link" href={`/gifts/ready-made/${work.slug}/`}>
-        {sold ? '查看这件作品的详情页 →' : '查看这一幅 · 在售详情 →'}
-      </a>
-    </div>
-  </section>
+      <p class="verdict-note">
+        编码已在本站档案库中登记，即为原件。<strong>最可靠的一关是笔迹</strong>——
+        仿冒者能抄走编码，抄不走这一幅。
+      </p>
 
-  <section class="container section qr-section" aria-labelledby="qr-title">
-    <div class="qr-panel">
-      <div class="qr-figure">
-        <div class="qr-box" set:html={archiveQrSvg} />
-        <span class="qr-cap mono">{work.code}</span>
+      <div class="archive-actions">
+        {!sold && (
+          <a class="btn btn-primary" href={`/gifts/ready-made/${work.slug}/`} data-event="ready_work_click" data-code={work.code}>
+            这件还在 · 看看详情 →
+          </a>
+        )}
+        <a class="btn btn-link" href="/gifts/ready-made/" data-event="archive_browse_click" data-code={work.code}>
+          看看其他作品 →
+        </a>
       </div>
-      <div class="qr-copy">
-        <span class="eyebrow">Scan / 扫码验真</span>
-        <h2 id="qr-title" class="serif">手机一扫，直达这一页。</h2>
-        <p>
-          证书上印着这枚二维码。任何人用手机扫一扫，都会打开你现在看到的这一页——
-          <strong>编码、年份、作品实拍，一一对照，无需手工输入那串长编码。</strong>
-        </p>
-        <ul class="qr-points">
-          <li><span class="mono">01</span>扫出来的是本站地址 <code>xiaominart.com</code>，不是第三方页面</li>
-          <li><span class="mono">02</span>核对实拍笔迹——这一关仿冒者过不去</li>
-          <li><span class="mono">03</span>查不到本页，即为存疑，请联系我们核实</li>
-        </ul>
-        <p class="qr-note">
-          二维码本身可以被复制。<strong>真正无法复制的是这一页的作品实拍。</strong>
-          如果你手里那件的笔迹与此页不符，编码再对也不算数。
-        </p>
-      </div>
-    </div>
-  </section>
 
-  <section class="container section verify-explain" aria-labelledby="explain-title">
-    <div class="section-lead">
-      <span class="eyebrow">How to Verify / 如何核对</span>
-      <h2 id="explain-title" class="serif">三步，确认你手里的是原件。</h2>
-    </div>
-    <ol class="steps">
-      <li class="step">
-        <span class="mono">01</span>
-        <h3>核对作品图像</h3>
-        <p>你手中作品的笔迹、印章与装裱形态，应与上方实拍一致。这是最可靠的一关——<strong>仿冒者能抄到编码，却复制不出同一幅笔迹。</strong></p>
-      </li>
-      <li class="step">
-        <span class="mono">02</span>
-        <h3>核对编码与年份</h3>
-        <p>作品随附的藏品证书上印有完整编码。证书编码、本页编码、与作品本身，三者应完全一致。编码第 4 段即创作年份。</p>
-      </li>
-      <li class="step">
-        <span class="mono">03</span>
-        <h3>有疑问，直接问我们</h3>
-        <p>如编码查不到本页、或图像有明显出入，请带实物照片联系我们核实。<strong>我们只认自己签发的编码。</strong></p>
-      </li>
-    </ol>
-  </section>
-
-  <section class="container section code-explain" aria-labelledby="code-title">
-    <div class="section-lead">
-      <span class="eyebrow">Code Anatomy / 编码怎么读</span>
-      <h2 id="code-title" class="serif">一串编码，读得出这些信息。</h2>
-    </div>
-    <div class="code-anatomy">
-      {
-        [
-          { seg: 'XMA', label: '品牌', value: '小民艺术出品', width: 'brand' },
-          { seg: 'CL', label: '品类', value: parts.categoryLabel, width: 'cat' },
-          { seg: 'WA', label: '形态', value: parts.formLabel, width: 'form' },
-          { seg: '26', label: '年份', value: `${parts.year} 年创作`, width: 'year', hi: true },
-          { seg: '0001', label: '序号', value: `年内第 ${parts.seq} 号`, width: 'seq' },
-          { seg: 'T2', label: '档位', value: parts.tierLabel, width: 'tier' },
-          { seg: String(parts.check), label: '校验', value: '防抄错', width: 'chk' },
-        ].map((s) => (
-          <div class={`seg ${s.width}`} data-hi={s.hi ? 'true' : 'false'}>
-            <code>{s.seg}</code>
-            <span class="seg-label">{s.label}</span>
-            <span class="seg-value">{s.value}</span>
-          </div>
-        ))
-      }
-    </div>
-    <p class="code-note">
-      编码末位是校验位，用于发现抄写错误；<strong>它只说明编码抄得对不对，不说明作品真伪</strong>。
-      真正的验真标准是：<strong>该编码是否在本站档案库中存在</strong>——也就是你现在看到的这一页。
-    </p>
-  </section>
-
-  <section class="container section archive-cta">
-    <div class="cta-panel">
-      <div>
-        <span class="eyebrow">Query / 查另一件作品</span>
-        <h2 class="serif">手里还有别的编码？</h2>
-        <p>把编号补进网址即可打开对应档案，例如 <code>/verify/XMA-CL-WA-26-0002-T2-3/</code>。</p>
-      </div>
-      <a class="btn btn-primary" href="/verify/" data-event="archive_query_click">打开编码查询 →</a>
+      <details class="qr-mini">
+        <summary>证书二维码</summary>
+        <div class="qr-mini-body">
+          <div class="qr-box" set:html={archiveQrSvg} />
+          <p>
+            藏品证书上印有此码。用手机相机或微信扫一扫，直达本页，省去手工输入编码。
+            <span class="qr-mini-warn">
+              本页的码是给证书排版用的，长按它无法识别——网页里的图片不具备「扫一扫」能力，
+              请对准纸质证书上的那枚，或用手机相机的取景框扫。
+            </span>
+          </p>
+        </div>
+      </details>
     </div>
   </section>
 
   {/* ─────────────────────────────────────────────────────────────
-      转化段（扫码后的第 ② ③ 步）
+      下一步：引导看更多作品 / 分享自己的作品
 
-      顺序是刻意的：先给结论建立信任，再要关注，最后才谈定制。
-      ① 验真 → 已在页面上方完成（实拍 + 编码 + 年份）
-      ② 关注 → 本段。公众号未配置时自动隐藏，降级为个人微信。
-      ③ 定制 → 本段。带来源标记，用于衡量扫码带来的咨询量。
+      2026-10-14 业主反馈：原先的「查另一件作品」没有意义（客户只有一件），
+      「关注公众号」在公众号就绪前也落不了地。改为引导看更多作品，
+      并为「分享自己的作品得积分」埋好入口。
+
+      积分未启用（无后端配置）时，分享卡片降级为「联系我们」，不留死链。
      ───────────────────────────────────────────────────────────── */}
-  <section class="container section convert" aria-labelledby="convert-title">
-    <div class="convert-head">
-      <span class="eyebrow">From This Piece / 由这件作品开始</span>
-      <h2 id="convert-title" class="serif">验过了，接下来想做点什么？</h2>
-      <p class="convert-lead">
-        你刚确认了一件在册原件。如果这份笔墨让你多看了一眼，这里有两件事可以继续。
-      </p>
+  <section class="container section next-step" aria-labelledby="next-title">
+    <div class="section-lead">
+      <span class="eyebrow">Next / 接下来</span>
+      <h2 id="next-title" class="serif">这一件，只是开始。</h2>
     </div>
 
-    <div class="convert-grid">
-      {/* ② 关注段 */}
-      {hasOfficialAccount && (
-        <article class="convert-card follow">
-          <span class="mono card-step">02</span>
-          <h3 class="serif">看看它是怎么写出来的</h3>
-          <p>
-            每一幅字背后都有一段过程——落笔前的斟酌、钤印时的取舍。
-            关注「{siteContact.mpName || '小民艺术'}」，新作与创作过程先发在这里。
-          </p>
-          <div class="follow-body">
-            {siteContact.mpQr ? (
-              <img class="follow-qr" src={siteContact.mpQr} alt={`${siteContact.mpName || '小民艺术'}公众号二维码`} width="132" height="132" loading="lazy" decoding="async" />
-            ) : null}
-            <div class="follow-text">
-              <p class="follow-hint">长按识别二维码，或在微信搜索关注。</p>
-              <p class="follow-warn">
-                <strong>注意：</strong>微信内的网页无法一键跳转关注，需长按上面的二维码识别。
-              </p>
-            </div>
-          </div>
-          <a class="btn btn-link" href="/verify/" data-event="archive_follow_click">先看看其他作品 →</a>
-        </article>
-      )}
+    <div class="next-grid">
+      <a class="next-card" href="/gifts/ready-made/" data-event="archive_browse_click" data-code={work.code}>
+        <span class="next-kicker">看作品</span>
+        <h3 class="serif">还有这些，正在等一个人</h3>
+        <p>每一件都只有一个。看看有没有哪一幅，正好说出你想说的话。</p>
+        <span class="next-go">浏览在售作品 →</span>
+      </a>
 
-      {/* ③ 定制段 */}
-      <article class="convert-card custom">
-        <span class="mono card-step">{hasOfficialAccount ? '03' : '02'}</span>
-        <h3 class="serif">也想有一件属于你的？</h3>
-        <p>
-          现成的是「这一幅」，定制的才是「你的那一幅」。
-          说清要写给谁、挂在哪儿、何时要用，我们会给出尺寸与方案建议。
-        </p>
-        <div class="custom-actions">
-          <a
-            class="btn btn-primary"
-            href={`/contact/?from=archive&code=${encodeURIComponent(work.code)}`}
-            data-event="archive_custom_click"
-            data-code={work.code}
-          >发起定制咨询 →</a>
-          {siteContact.wechatId && (
-            <a
-              class="btn btn-link"
-              href="/contact/"
-              data-event="archive_follow_click"
-              data-code={work.code}
-            >或先加微信聊聊 · {siteContact.wechatId}</a>
-          )}
-        </div>
-        <p class="custom-meta">
-          咨询时提到编码 <code>{work.code}</code>，我们能直接对应到这件作品，省去反复描述。
-        </p>
-      </article>
+      <a class="next-card" href="/stories/" data-event="archive_stories_click" data-code={work.code}>
+        <span class="next-kicker">看故事</span>
+        <h3 class="serif">别人把它送给了谁</h3>
+        <p>送出时的场景、收到时的反应。真实的人，真实的心意。</p>
+        <span class="next-go">读客户故事 →</span>
+      </a>
+
+      {shareEnabled ? (
+        <a class="next-card is-highlight" href="/share/" data-event="archive_share_click" data-code={work.code}>
+          <span class="next-kicker">分享有礼</span>
+          <h3 class="serif">晒出你的那一件</h3>
+          <p>晒作品、聊感受，即可获得积分。积分可以兑换我们的其他作品。</p>
+          <span class="next-go">了解怎么参与 →</span>
+        </a>
+      ) : (
+        <a class="next-card" href="/contact/?from=archive" data-event="archive_custom_click" data-code={work.code}>
+          <span class="next-kicker">定制</span>
+          <h3 class="serif">也想有一件属于你的</h3>
+          <p>说清写给谁、挂在哪里，我们给出尺寸与内容建议。</p>
+          <span class="next-go">聊聊定制 →</span>
+        </a>
+      )}
     </div>
   </section>
 </Layout>
@@ -314,7 +227,11 @@ const archiveSchema = {
 <script>
   // 档案页浏览埋点：扫码进来的每一跳都记一次，用于统计「扫码验真」的实际发生量。
   // 走与全站一致的 /api/event，事件名已在三处同登记白名单。
-  const code = document.querySelector('.qr-cap')?.textContent?.trim() ?? '';
+  //
+  // 2026-10-14：编码来源由 `.qr-cap` 改为 body 上的 data 属性 ——
+  // 二维码已收进折叠区，`.qr-cap` 元素不复存在，原选择器会静默取到空串，
+  // 导致所有埋点丢失 code 归属（这类「埋点全空且无报错」的坑本仓库已踩过多次）。
+  const code = document.body.dataset.archiveCode ?? '';
   const fire = (name: string, data: Record<string, unknown> = {}) => {
     try {
       void fetch('/api/event', {
@@ -329,12 +246,6 @@ const archiveSchema = {
   };
 
   fire('archive_view');
-
-  // 带 data-event 的转化入口，统一由这里转发；
-  // 若全站已有委托监听，这里只补 data-code，避免重复上报。
-  document.querySelectorAll<HTMLElement>('[data-event]').forEach((el) => {
-    if (!el.dataset.code && code) el.dataset.code = code;
-  });
 </script>
 
 <style>
@@ -342,113 +253,71 @@ const archiveSchema = {
   .crumb a { color: var(--ink-soft); }
   .crumb a:hover { color: var(--cinnabar); }
 
-  .archive-head { padding: 26px 0 8px; text-align: center; }
-  .archive-head h1 { font-size: clamp(30px, 4vw, 46px); font-weight: 500; line-height: 1.35; margin: 14px 0 18px; }
-  .archive-head .lead { max-width: 640px; margin: 0 auto; color: var(--ink-soft); font-size: 16px; line-height: 2; }
-  .archive-head .lead strong { color: var(--ink); font-weight: 500; }
+  .archive-head { padding: 22px 0 4px; text-align: center; }
+  .archive-head h1 { font-size: clamp(26px, 3.4vw, 38px); font-weight: 500; line-height: 1.35; margin: 12px 0 0; }
 
-  .archive-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; padding: 44px 0 10px; align-items: start; }
+  .archive-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; padding: 34px 0 10px; align-items: start; }
   .archive-figure { margin: 0; border: 1px solid var(--line); background: var(--paper-deep); }
   .archive-figure :global(img) { width: 100%; display: block; }
-  .archive-figure figcaption { padding: 10px 14px; border-top: 1px solid var(--line); background: var(--paper-light); color: var(--muted); font-size: 12px; letter-spacing: .08em; }
+  .archive-figure figcaption { padding: 10px 14px; border-top: 1px solid var(--line); background: var(--paper-light); color: var(--muted); font-size: 12px; letter-spacing: .04em; }
 
-  .status-row { display: flex; align-items: center; gap: 9px; margin-bottom: 14px; }
-  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cinnabar); flex: none; }
-  .status-dot[data-sold='true'] { background: var(--muted); }
-  .status-text { color: var(--ink-soft); font-size: 13px; letter-spacing: .06em; }
-
-  .work-title { font-size: clamp(30px, 3.6vw, 44px); font-weight: 500; margin: 0 0 4px; }
-  .work-en { font: 19px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); margin: 0 0 22px; }
+  /* 结论块 —— 全页视觉重心，客户一屏内看到「是不是正品」 */
+  .verdict { padding: 22px 24px 20px; border: 1px solid var(--line); background: var(--paper-deep); margin-bottom: 24px; }
+  .verdict-badge { display: inline-flex; align-items: center; gap: 7px; padding: 4px 11px 4px 9px; border: 1px solid var(--cinnabar); color: var(--cinnabar); font-size: 12px; letter-spacing: .12em; }
+  .verdict-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--cinnabar); flex: none; }
+  .verdict[data-sold='true'] .verdict-badge { border-color: var(--muted); color: var(--muted); }
+  .verdict[data-sold='true'] .verdict-dot { background: var(--muted); }
+  .verdict-title { font-size: clamp(26px, 3.2vw, 36px); font-weight: 500; margin: 14px 0 8px; }
+  .verdict-sub { margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.9; }
 
   .meta { margin: 0; border-top: 1px solid var(--line); }
-  .meta-row { display: grid; grid-template-columns: 108px 1fr; gap: 16px; padding: 13px 0; border-bottom: 1px solid var(--line); }
+  .meta-row { display: grid; grid-template-columns: 92px 1fr; gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--line); }
   .meta-row dt { color: var(--muted); font-size: 13px; padding-top: 2px; }
-  .meta-row dd { margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.85; }
+  .meta-row dd { margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.8; }
   .meta-row dd strong { color: var(--ink); font-weight: 500; }
-  .meta-row dd em { display: block; font-style: normal; color: var(--muted); font-size: 12px; margin-top: 3px; }
-  .meta-row .note-dd { color: var(--ink-soft); }
-  code.code { font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); font-size: 14px; font-weight: 600; color: var(--cinnabar); letter-spacing: .04em; }
-  .archive-copy .btn-link { margin-top: 22px; }
+  .meta-row dd em { display: block; font-style: normal; color: var(--muted); font-size: 12px; margin-top: 2px; }
+  code.code { font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); font-size: 13.5px; font-weight: 600; color: var(--cinnabar); letter-spacing: .03em; word-break: break-all; }
 
-  .verify-explain { border-top: 1px solid var(--line); }
-  .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
-  .step { padding: 24px 24px 28px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-  .step .mono { display: block; color: var(--cinnabar); font-size: 12px; letter-spacing: .14em; margin-bottom: 10px; }
-  .step h3 { font-size: 17px; font-weight: 500; margin: 0 0 10px; }
-  .step p { margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.9; }
-  .step p strong { color: var(--ink); font-weight: 500; }
+  .verdict-note { margin: 18px 0 0; padding-top: 15px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; line-height: 1.9; }
+  .verdict-note strong { color: var(--ink-soft); font-weight: 500; }
 
-  .code-explain { border-top: 1px solid var(--line); }
-  .code-anatomy { display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch; }
-  .seg { flex: 1 1 88px; min-width: 82px; padding: 14px 12px; border: 1px solid var(--line); background: var(--paper-light); text-align: center; }
-  .seg[data-hi='true'] { border-color: var(--cinnabar); background: var(--paper-deep); }
-  .seg code { display: block; font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); font-size: 17px; font-weight: 600; color: var(--ink); letter-spacing: .06em; margin-bottom: 7px; }
-  .seg[data-hi='true'] code { color: var(--cinnabar); }
-  .seg-label { display: block; font-size: 11px; color: var(--muted); letter-spacing: .12em; margin-bottom: 3px; }
-  .seg-value { display: block; font-size: 12px; color: var(--ink-soft); }
-  .code-note { max-width: 720px; margin: 22px 0 0; color: var(--ink-soft); font-size: 14px; line-height: 2; }
-  .code-note strong { color: var(--ink); font-weight: 500; }
+  .archive-actions { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-top: 20px; }
 
-  .archive-cta { border-top: 1px solid var(--line); }
-  .cta-panel { display: flex; flex-wrap: wrap; gap: 26px; align-items: center; justify-content: space-between; padding: 30px 32px; border: 1px solid var(--line); background: var(--paper-deep); }
-  .cta-panel h2 { font-size: 24px; font-weight: 500; margin: 8px 0 8px; }
-  .cta-panel p { margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.9; }
-  .cta-panel code { font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); color: var(--cinnabar); font-size: 13px; }
-
-  /* ── 二维码区 ── */
-  .qr-section { border-top: 1px solid var(--line); }
-  .qr-panel { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 44px; align-items: center; padding: 34px 32px; border: 1px solid var(--line); background: var(--paper-deep); }
-  .qr-figure { display: flex; flex-direction: column; align-items: center; gap: 12px; }
-  .qr-box { width: 200px; height: 200px; padding: 10px; background: #fff; border: 1px solid var(--line); line-height: 0; }
+  /* 二维码收进折叠区 —— 证书上已有码，网页上不必占主视觉 */
+  .qr-mini { margin-top: 22px; border-top: 1px solid var(--line); padding-top: 14px; }
+  .qr-mini summary { color: var(--muted); font-size: 13px; letter-spacing: .06em; cursor: pointer; list-style: none; }
+  .qr-mini summary::-webkit-details-marker { display: none; }
+  .qr-mini summary::before { content: '＋ '; color: var(--cinnabar); }
+  .qr-mini[open] summary::before { content: '− '; }
+  .qr-mini summary:hover { color: var(--cinnabar); }
+  .qr-mini-body { display: flex; gap: 18px; align-items: flex-start; margin-top: 14px; }
+  .qr-box { width: 148px; height: 148px; padding: 8px; background: #fff; border: 1px solid var(--line); line-height: 0; flex: none; }
   /* set:html 注入的 SVG 不带作用域属性，必须用 :global */
   .qr-box :global(svg) { display: block; width: 100%; height: auto; }
-  .qr-cap { color: var(--muted); font-size: 11px; letter-spacing: .1em; word-break: break-all; text-align: center; max-width: 220px; }
-  .qr-copy h2 { font-size: clamp(23px, 2.8vw, 32px); font-weight: 500; margin: 10px 0 14px; }
-  .qr-copy > p { margin: 0 0 16px; color: var(--ink-soft); font-size: 15px; line-height: 2; }
-  .qr-copy strong { color: var(--ink); font-weight: 500; }
-  .qr-points { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 9px; }
-  .qr-points li { display: grid; grid-template-columns: 30px 1fr; gap: 10px; color: var(--ink-soft); font-size: 14px; line-height: 1.8; }
-  .qr-points .mono { color: var(--cinnabar); font-size: 12px; letter-spacing: .1em; padding-top: 3px; }
-  .qr-points code { font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); font-size: 13px; color: var(--cinnabar); }
-  .qr-note { margin: 0; padding-top: 14px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; line-height: 1.9; }
-  .qr-note strong { color: var(--ink-soft); font-weight: 500; }
+  .qr-mini-body p { margin: 0; color: var(--muted); font-size: 12.5px; line-height: 1.85; }
+  .qr-mini-warn { display: block; margin-top: 7px; color: var(--ink-soft); }
 
-  /* ── 转化段（关注 + 定制）── */
-  .convert { border-top: 1px solid var(--line); }
-  .convert-head { text-align: center; margin-bottom: 30px; }
-  .convert-head h2 { font-size: clamp(25px, 3.2vw, 36px); font-weight: 500; margin: 12px 0 12px; }
-  .convert-lead { max-width: 560px; margin: 0 auto; color: var(--ink-soft); font-size: 15px; line-height: 2; }
-  .convert-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
-  .convert-card { padding: 28px 26px 30px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); display: flex; flex-direction: column; }
-  .convert-card .card-step { display: block; color: var(--cinnabar); font-size: 12px; letter-spacing: .14em; margin-bottom: 12px; }
-  .convert-card h3 { font-size: 21px; font-weight: 500; margin: 0 0 12px; }
-  .convert-card > p { margin: 0 0 18px; color: var(--ink-soft); font-size: 14px; line-height: 1.95; }
-  .convert-card .btn { align-self: flex-start; }
-  .convert-card .btn-link { margin-top: auto; }
-  .custom-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
-  .custom-meta { margin: 14px 0 0 !important; padding-top: 13px; border-top: 1px solid var(--line); color: var(--muted) !important; font-size: 12.5px !important; }
-  .custom-meta code { font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); color: var(--cinnabar); font-size: 12px; }
-  .follow-body { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 20px; }
-  .follow-qr { width: 132px; height: 132px; flex: none; border: 1px solid var(--line); background: #fff; padding: 5px; }
-  .follow-text { min-width: 0; }
-  .follow-hint { margin: 0 0 10px; color: var(--ink-soft); font-size: 13px; line-height: 1.8; }
-  .follow-warn { margin: 0; padding: 9px 11px; background: var(--paper-light); border-left: 2px solid var(--cinnabar); color: var(--muted); font-size: 12.5px; line-height: 1.75; }
-  .follow-warn strong { color: var(--ink-soft); font-weight: 500; }
+  /* ── 下一步（看作品 / 看故事 / 分享）── */
+  .next-step { border-top: 1px solid var(--line); }
+  .next-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(268px, 1fr)); gap: 0; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+  .next-card { display: flex; flex-direction: column; padding: 26px 24px 28px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); color: inherit; text-decoration: none; transition: background .2s; }
+  .next-card:hover { background: var(--paper-light); }
+  .next-card.is-highlight { background: var(--paper-deep); }
+  .next-card.is-highlight:hover { background: var(--paper-light); }
+  .next-kicker { display: block; color: var(--cinnabar); font-size: 12px; letter-spacing: .14em; margin-bottom: 11px; }
+  .next-card h3 { font-size: 20px; font-weight: 500; margin: 0 0 11px; }
+  .next-card p { margin: 0 0 18px; color: var(--ink-soft); font-size: 14px; line-height: 1.9; }
+  .next-go { margin-top: auto; color: var(--cinnabar); font-size: 13.5px; letter-spacing: .04em; }
 
   @media (max-width: 1023px) {
-    .archive-body { grid-template-columns: 1fr; gap: 32px; }
-    .steps { grid-template-columns: 1fr; }
-    .qr-panel { grid-template-columns: 1fr; gap: 28px; justify-items: center; text-align: center; }
-    .qr-points li { text-align: left; }
+    .archive-body { grid-template-columns: 1fr; gap: 30px; }
   }
   @media (max-width: 767px) {
     .crumb { padding-top: 20px; }
-    .meta-row { grid-template-columns: 1fr; gap: 5px; }
-    .cta-panel { padding: 24px 20px; }
-    .cta-panel h2 { font-size: 21px; }
-    .qr-panel { padding: 24px 18px; }
-    .qr-box { width: 176px; height: 176px; }
-    .follow-body { flex-direction: column; align-items: flex-start; }
-    .convert-card { padding: 24px 18px 26px; }
+    .archive-body { padding-top: 24px; }
+    .verdict { padding: 18px 18px 16px; }
+    .meta-row { grid-template-columns: 1fr; gap: 4px; }
+    .qr-mini-body { flex-direction: column; }
+    .next-card { padding: 22px 18px 24px; }
   }
 </style>

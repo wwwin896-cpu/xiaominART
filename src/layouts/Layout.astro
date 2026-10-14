@@ -37,7 +37,25 @@ import WishlistDrawer from '../components/WishlistDrawer.astro';
 import SearchModal from '../components/SearchModal.astro';
 import CookieConsent from '../components/CookieConsent.astro';
 
-const { title = '小民艺术｜用心好礼', description = '小民艺术，用心为你写一份好礼。以亲笔书写为起点，见字如面，心意表达。', canonical, image = '/assets/images/og-image.png', noindex = false, breadcrumbs = [] } = Astro.props;
+const { title = '小民艺术｜用心好礼', description = '小民艺术，用心为你写一份好礼。以亲笔书写为起点，见字如面，心意表达。', canonical, image = '/assets/images/og-image.png', noindex = false, breadcrumbs = [], bodyData } = Astro.props;
+
+/**
+ * 页面级 body data-* 属性（2026-10-14 加）。
+ *
+ * 用途：让页面把「这一页特有的标识」交给全站脚本读取，而不必靠在 DOM 里
+ * 找某个元素来反推 —— 后者一旦元素被删（如二维码收进折叠区），
+ * 选择器会静默取到 null，埋点全部丢失 code 归属且不报错。
+ *
+ * 例：作品档案页传 { 'archive-code': work.code }
+ *     → <body data-archive-code="XMA-CL-WA-26-0001-T2-0">
+ *
+ * 值以字符串序列化，布尔值 true 序列化为空串（HTML 布尔属性惯例）。
+ */
+const bodyDataAttrs = Object.fromEntries(
+  Object.entries((bodyData as Record<string, string | number | boolean> | undefined) ?? {})
+    .filter(([, v]) => v !== false && v !== undefined && v !== null)
+    .map(([k, v]) => [`data-${k}`, v === true ? '' : String(v)]),
+);
 const seoTitle = title.replace(/xiaominart/gi, 'XIAOMINART');
 const url = canonical ?? Astro.url.href;
 const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
@@ -96,7 +114,7 @@ const baiduId = trackPage ? BAIDU_TONGJI_ID : undefined;
     <link rel="icon" href="/assets/brand/xiaominart-logo-icon.svg" />
     <title>{seoTitle}</title>
   </head>
-  <body>
+  <body {...bodyDataAttrs}>
     <a class="skip-link" href="#main">跳到主要内容</a>
     <SiteHeader isCurrent={isCurrent} />
     {/* noindex 的功能页（心愿单、进度查询、内部后台）不进搜索索引：
@@ -110,7 +128,7 @@ const baiduId = trackPage ? BAIDU_TONGJI_ID : undefined;
     <SearchModal />
     <CookieConsent />
     <MobileBar />
-    <SiteFooter />
+    <SiteFooter isHome={currentPath === '/'} />
   </body>
 </html>
 <script>
@@ -151,6 +169,15 @@ const baiduId = trackPage ? BAIDU_TONGJI_ID : undefined;
   body.drawer-open { overflow: hidden; }
   .back-btn { display: none; }
   .site-footer { border-top: 1px solid var(--line); padding: 80px 0 24px; margin-top: 0; }
+
+  /* 内页精简页脚（2026-10-14）：只有首页保留完整页脚，
+     内页收成一行版权 + 三个必要入口，避免同一块内容反复出现。 */
+  .site-footer.is-slim { padding: 26px 0 24px; }
+  .footer-slim { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 26px; }
+  .footer-slim-copy { color: var(--muted); font-size: 11.5px; letter-spacing: .04em; }
+  .footer-slim-nav { display: flex; flex-wrap: wrap; gap: 20px; }
+  .footer-slim-nav a { color: var(--ink-soft); font-size: 12px; letter-spacing: .04em; }
+  .footer-slim-nav a:hover { color: var(--cinnabar); }
   .footer-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 36px; align-items: start; }
   .footer-grid a { display: flex; flex-direction: column; gap: 2px; margin: 10px 0; color: var(--ink-soft); min-height: 44px; justify-content: center; }
   .footer-contact p { color: var(--ink-soft); font-size: 13px; line-height: 1.8; }

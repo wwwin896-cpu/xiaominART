@@ -61,8 +61,14 @@ const ALLOWED_EVENTS = new Set([
   // 2026-10-14 补录：作品档案页扫码转化漏斗（二维码验真 → 关注 → 定制）
   // 三处同登记：本文件 / src/scripts/cloud-forms.ts / docs/事件字典.md
   'archive_view',
-  'archive_follow_click',
   'archive_custom_click',
+  // 2026-10-14 档案页改版（结论优先）：原「查另一件作品」入口已移除，
+  // archive_query_click / archive_follow_click 保留在册（旧的已上线页面可能仍在发），
+  // 新增下面三个「下一步」引导点击。
+  'archive_browse_click',
+  'archive_stories_click',
+  'archive_share_click',
+  'archive_follow_click',
   'archive_query_click',
 ]);
 
