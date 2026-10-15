@@ -45,10 +45,11 @@ export const navItems = [
   },
   {
     href: '/partners/', zh: '机构合作', en: 'Partnerships', children: [
+      // 2026-10-16 业主裁决：下拉只保留三条业务方向；「合作案例」不是一栏业务，
+      // 其入口保留在 /partners/ 页面内的案例卡片里（不再出现在导航下拉）。
       { href: '/partners/publishing/', zh: '出版社插画', en: 'Publishing' },
       { href: '/partners/museum-tourism/', zh: '博物馆与文旅', en: 'Museum & Tourism' },
       { href: '/partners/heritage/', zh: '非遗面塑活动', en: 'Heritage Workshops' },
-      { href: '/partners/cases/', zh: '合作案例', en: 'Case Studies' },
     ],
   },
   {

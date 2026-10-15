@@ -550,6 +550,71 @@ const businessLines = [
     line-height: 1.9;
   }
 
+  /* ── 在线提交表单（2026-10-16 业主反馈：此前本表单没有任何样式 ——
+     label 行内排布导致字段横向溢出、输入框是浏览器默认白底，与纸色调冲突。
+     现按 /custom-commission/ 表单的同一套范式补齐：label 块级、字段全宽、
+     纸色底 + 暖边框，双栏布局（左侧说明 / 右侧表单），移动端收单栏。 ── */
+  .business-form {
+    display: grid;
+    grid-template-columns: 1fr 1.25fr;
+    gap: 32px 72px;
+    align-items: start;
+    border-top: 1px solid var(--line);
+    padding-top: 48px;
+  }
+  .form-aside h2 {
+    margin: 12px 0 14px;
+    font-size: 30px;
+    line-height: 1.35;
+  }
+  .form-aside > p {
+    margin: 0;
+    max-width: 420px;
+    color: var(--ink-soft);
+    font-size: 14.5px;
+    line-height: 1.9;
+  }
+  .business-form form label {
+    display: block;
+    margin-bottom: 16px;
+    color: var(--ink-soft);
+    font-size: 13px;
+  }
+  .business-form form input:not(.honeypot),
+  .business-form form select,
+  .business-form form textarea {
+    display: block;
+    width: 100%;
+    margin-top: 7px;
+    padding: 12px 13px;
+    border: 1px solid var(--line);
+    border-radius: 0;
+    background: var(--paper-light);
+    color: var(--ink);
+    font-size: 16px;
+  }
+  .business-form form textarea { resize: vertical; }
+  .business-form form input:focus,
+  .business-form form select:focus,
+  .business-form form textarea:focus { border-color: var(--cinnabar); }
+  .business-form form .btn { margin-top: 4px; }
+  .business-form .form-note {
+    margin: 14px 0 0;
+    color: var(--muted);
+    font-size: 12.5px;
+    line-height: 1.8;
+  }
+  /* 蜜罐字段：对人是隐藏的，此前缺这条样式导致「网址」输入框裸露在版面上 */
+  .business-form .honeypot-field {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+    clip: rect(0 0 0 0) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
   /* 表单旁提交说明 */
   .form-sla {
     margin-top: 22px;
@@ -622,5 +687,11 @@ const businessLines = [
       display: block;
       margin: 6px 0 0;
     }
+    .business-form {
+      grid-template-columns: 1fr;
+      gap: 26px;
+      padding-top: 36px;
+    }
+    .form-aside h2 { font-size: 25px; }
   }
 </style>
