@@ -104,13 +104,16 @@ const originNodes = [
   {/* ── 见山河 / 笔墨之根：从「见山河」的气势承接进道法与书法。
       背景用业主提供的浅纸调古文字四段图（甲骨/金文/石鼓文/篆书），文字深墨居中。
       2026-10-16 业主裁决：眉题「见先古」改「见山河」，且整块显式居中（flex 列居中，
-      不再依赖 text-align —— 眉题字距造成的视觉偏移由此彻底消除）。 ── */}
+      不再依赖 text-align —— 眉题字距造成的视觉偏移由此彻底消除）。
+      2026-10-16 三修：标题行尾的全角标点（，。）墨迹只占字形框左半，
+      导致「盒子居中但字看着偏左」。行包一层 span，用负右边距裁掉
+      尾部标点的空白半格，让墨迹真正落在中轴上（浏览器实测生效）。 ── */}
   <section class="art-hero" aria-labelledby="art-hero-title">
     <div class="art-hero-texture" aria-hidden="true"></div>
     <div class="container art-hero-inner" data-reveal>
       <span class="eyebrow">见山河 / 笔墨之根</span>
-      <h2 id="art-hero-title" class="serif">溯字之源，<br />以书载道。</h2>
-      <p class="art-hero-sub serif">笔墨之根，源于天地造化与礼乐文明。</p>
+      <h2 id="art-hero-title" class="serif"><span class="hp-line">溯字之源，</span><span class="hp-line">以书载道。</span></h2>
+      <p class="art-hero-sub serif"><span class="hp-line">笔墨之根，源于天地造化与礼乐文明。</span></p>
       <p class="art-hero-note">从殷商甲骨的契刻，到周秦钟鼎的熔铸；从石鼓猎碣的苍茫，到秦汉小篆的规矩——<br class="art-hero-note-br" />书法在汉字生长的脉络中，生生不息。</p>
     </div>
   </section>
@@ -210,8 +213,10 @@ const originNodes = [
   /* 居中修正：letter-spacing 会在末字后多出字距，负右边距抵消，让字面真居中 */
   .art-hero .eyebrow { margin-right: calc(-1 * var(--tracking-meta)); }
   .art-hero :is(h2, .art-hero-sub) { letter-spacing: .1em; color: var(--ink); }
-  .art-hero h2 { font-size: clamp(36px, 5.4vw, 64px); font-weight: 400; line-height: 1.3; margin: 22px -.1em 26px 0; }
-  .art-hero-sub { font-size: clamp(18px, 2.2vw, 24px); line-height: 2; margin: 0 -.1em 30px 0; }
+  .art-hero h2 { font-size: clamp(36px, 5.4vw, 64px); font-weight: 400; line-height: 1.3; margin: 22px 0 26px; }
+  .art-hero-sub { font-size: clamp(18px, 2.2vw, 24px); line-height: 2; margin: 0 0 30px; }
+  /* 行尾全角标点裁偏（见上「三修」注释）：裁掉标点右侧空白半格，让墨迹居中 */
+  .art-hero .hp-line { display: block; margin-right: -.5em; }
   .art-hero-note { color: var(--ink-soft); font-size: 15px; letter-spacing: .05em; max-width: 640px; margin: 0 auto; padding-left: .05em; }
   /* ── 见艺术 · 文字源流区：时间轴沿用 process-card 的「上边线 + 序号」语言 ── */
   .origins { border-top: 1px solid var(--line-soft); }

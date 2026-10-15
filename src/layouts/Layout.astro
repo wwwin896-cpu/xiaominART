@@ -189,7 +189,10 @@ const baiduId = trackPage ? BAIDU_TONGJI_ID : undefined;
   .footer-wechat { display: flex; align-items: center; gap: 16px; margin: 10px 0 4px; }
   .footer-wechat p { margin: 0; }
   .footer-hint { color: var(--muted); margin-top: 8px; }
-  .footer-hint a { color: var(--cinnabar); border-bottom: 1px solid var(--cinnabar); }
+  /* ⚠️ .footer-grid a 会给所有后链接上 display:flex + min-height:44px，
+     行内说明里的链接因此被撑成一个个高块（2026-10-16 截图实测）。
+     这里强制回行内，字号也回到正文，不让它像「按钮墙」。 */
+  .footer-hint a { display: inline; min-height: 0; margin: 0; color: var(--cinnabar); border-bottom: 1px solid var(--cinnabar); }
   .footer-contact a[href^="/custom-commission"] { color: var(--cinnabar); border-bottom: 1px solid var(--cinnabar); }
   .footer-policy { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line-soft); display: flex; flex-wrap: wrap; gap: 4px 18px; }
   .footer-policy a { color: var(--cinnabar); font-size: 13px; border-bottom: 1px solid var(--cinnabar); display: inline-block; margin: 0; min-height: 0; }
