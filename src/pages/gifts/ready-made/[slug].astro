@@ -81,6 +81,7 @@ const productSchema = {
         ? <div class="detail-actions"><a class="btn btn-primary" href="/custom-commission/?context=礼赠或纪念&inspiration={encodeURIComponent(`类似「${work.title}」的定制`)}" data-event="custom_inquiry_start" data-slot={`${work.slug}_sold`}>定制一件类似的 →</a><button class="btn btn-secondary" type="button" data-wx-open data-event="ready_work_click" data-slot={work.slug}>想聊这一幅的来龙去脉 →</button><button class="btn btn-secondary wishlist-toggle" type="button" data-wishlist={work.slug} aria-pressed="false">♡ 先存个念想</button></div>
         : <div class="detail-actions"><button class="btn btn-primary" type="button" data-wx-open data-event="ready_work_click" data-slot={work.slug}>咨询这一幅 / 微信直聊 →</button><a class="btn btn-secondary" href="/custom-commission/?context=礼赠或纪念&inspiration={encodeURIComponent(`现货定制 · 类似「${work.title}」`)}">定制类似的 →</a><button class="btn btn-secondary wishlist-toggle" type="button" data-wishlist={work.slug} aria-pressed="false">♡ 先收进心愿单</button></div>}
       <p class="detail-fineprint">{work.sold ? '这一幅已售出并交付，详情页保留作为作品档案。想要气息接近的一件，最直接的方式是走定制——点上方按钮，或按「联系我们」页的微信二维码添加（备注来意）。' : '点「咨询这一幅」弹出微信二维码，扫码即可与我们直接沟通；尺寸与纸墨细节也以随附作品档案为准。'}</p>
+      <p class="biz-cross-link">需要同款的批量礼赠（企业答谢、节日礼盒、会议伴手礼）？<a href="/business-gifts/" data-event="ready_to_business">了解企业礼赠与批量定制 →</a></p>
     </div>
   </section>
 
@@ -175,6 +176,8 @@ const productSchema = {
   .sold-notice strong { color: var(--ink); font-weight: 500; }
   .detail-actions { display: flex; flex-wrap: wrap; gap: 12px; }
   .detail-fineprint { margin: 18px 0 0; padding: 14px 16px; border-left: 2px solid var(--cinnabar); background: var(--paper-light); color: var(--ink-soft); font-size: 13px; line-height: 1.8; }
+  .biz-cross-link { margin: 14px 0 0; color: var(--ink-soft); font-size: 13px; line-height: 1.8; }
+  .biz-cross-link a { color: var(--cinnabar-deep); border-bottom: 1px solid var(--cinnabar); padding-bottom: 2px; }
   .work-facts { border-top: 1px solid var(--line); }
   .facts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin: 0; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
   .fact { padding: 22px 22px 26px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }

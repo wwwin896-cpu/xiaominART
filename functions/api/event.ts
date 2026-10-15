@@ -44,6 +44,9 @@ const ALLOWED_EVENTS = new Set([
   'gift_guide_ready_made',
   'gift_detail_view',
   'ready_work_click',
+  // 2026-10-15 补录：现货作品详情页 → 企业礼赠页（批量定制导流）
+  // 三处同登记：本文件 / src/scripts/cloud-forms.ts / docs/事件字典.md
+  'ready_to_business',
   'scene_to_product',
   'scene_view',
   // 页面 data-event：心愿单与分享
