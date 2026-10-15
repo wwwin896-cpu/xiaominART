@@ -26,6 +26,20 @@
 /downloads/*
   Cache-Control: public, max-age=3600, must-revalidate
 
+# ⚠️ 2026-10-15 线上抓头实测：上面那条 /downloads/* 对 .docx / .pdf **不生效** ——
+#    Cloudflare Pages 对可下载的二进制 MIME（docx/pdf/zip/xlsx…）会强制套用
+#    平台默认 max-age=14400，与 /pagefind/*.js 被覆盖是同一个机制（见下方 pagefind 段）。
+#    .html / .json 走上面那条通配规则正常命中 3600，所以「规则写法是对的，只是不覆盖二进制」。
+#    解决办法：对具体文件逐个写精确路径规则 —— 精确路径优先级高于通配，
+#    且平台不再对其套用扩展名默认值。
+#    新增下载文件时必须在这里补一行，否则会静默退回 4 小时缓存。
+/downloads/小民艺术-企业礼赠采购需求表.docx
+  Cache-Control: public, max-age=3600, must-revalidate
+/downloads/小民艺术-企业礼赠采购需求表.pdf
+  Cache-Control: public, max-age=3600, must-revalidate
+/downloads/小民艺术-企业礼赠采购需求表.html
+  Cache-Control: public, max-age=3600, must-revalidate
+
 /assets/*
   Cache-Control: public, max-age=1209600, stale-while-revalidate=604800
 
