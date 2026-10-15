@@ -3,10 +3,11 @@ import Layout from '../../layouts/Layout.astro';
 
 // 企业礼赠 FAQ（T-06）：数据与 FAQPage 结构化数据同源，改这里即可，HTML 与 JSON-LD 同步更新
 const faqItems: Array<{ q: string; a: string }> = [
-  { q: '起订量是多少？', a: '不用一开始就想好。轻量款 50 份起、定制款 100 份起、专属款 200 份起，都是参考——先说说你的情况，我们再一起定。' },
+  { q: '起订量是多少？', a: '轻量款 50 份起、定制款 100 份起、专属款 200 份起。数量不足或超出这些档位，也可以先说说情况，我们再看怎么安排。' },
   { q: '可以定制企业 Logo 和品牌元素吗？', a: '可以。轻量款配企业 Logo 卡片；定制款和专属款里，图案、尺寸、包装都能围绕你们来商量。' },
   { q: '可以先打样再批量吗？', a: '可以。先看一件实物再决定批量，打样的范围、费用和时间，我们会提前说清楚。' },
-  { q: '能开票或对公转账吗？', a: '都可以。在表单里说明需求，具体的主体、票种和节点，等方案确认后我们再对齐。' },
+  { q: '怎么付款？可以在官网直接下单吗？', a: '企业礼赠走对公结算，不在官网在线付款。流程是：需求沟通 → 方案与报价确认 → 签订采购合同 → 对公转账。付款节点一般为「签订后预付 50%，发货前付清尾款」，具体以合同约定为准。' },
+  { q: '可以开增值税发票吗？', a: '可以，支持增值税普通发票与专用发票。需要专票的话，请在沟通时提供公司全称、纳税人识别号、地址电话与开户行账号。' },
   { q: '可以分地址寄送并去掉价格单据吗？', a: '可以。收礼人的地址信息、包裹里不放价格单据——这些细节，确认方案时我们会一一安排好。' },
   { q: '交期需要多久？', a: '取决于数量、定制深度与包装。告诉我们你希望的时间，我们先判断做不做得出来；做不出来会直说，不耽误你另作安排。' },
   { q: '包装能否定制企业 VI？', a: '定制款和专属款可以讨论企业 VI 的使用范围、包装结构与印刷方式。' },
@@ -34,7 +35,16 @@ const faqJsonLd = {
   </div></section>
   <section class="container plans"><article><span class="mono">01</span><span class="eyebrow">Light / 轻量款</span><h2 class="serif">先从一份<br />标准的心意开始。</h2><strong>50 份起</strong><p>标准的字样，配一张以企业名义手写的卡片。第一次合作、会议伴手礼、节日慰问，从这里开始就好。</p></article><article><span class="mono">02</span><span class="eyebrow">Custom / 定制款</span><h2 class="serif">让礼物，<br />更像你们。</h2><strong>100 份起</strong><p>图案、尺寸与包装，可以围着企业的场景来商量。适合客户答谢、员工福利和品牌活动。</p></article><article><span class="mono">03</span><span class="eyebrow">Bespoke / 专属款</span><h2 class="serif">为一件大事，<br />专写一件东西。</h2><strong>200 份起</strong><p>周年、开业、重要的合作关系——从企业自己的那句话出发，创作方向与礼盒都只为这一次而做。</p></article></section>
   <section class="container section business-faq"><span class="eyebrow">Corporate FAQ / 企业礼赠 FAQ</span><h2 class="serif">先把话说在前面。</h2><div class="faq-grid">{faqItems.map((item) => <details><summary>{item.q}</summary><p>{item.a}</p></details>)}</div></section>
-  <section id="business-form" class="container section business-form"><div><span class="eyebrow">Business needs / 企业项目需求</span><h2 class="serif">说说你们想做<br />一件什么事。</h2><p>不用担心填得不够全——场景、数量、时间，说个大概就好。我们会在两个工作日内回复，先聊清楚，再往下走。</p></div><form data-business-form><label>公司名称 / Company<input name="company" required /></label><label>联系人与联系方式 / Contact<input name="contact" required placeholder="微信优先，邮箱或手机号备选" /></label><label>预算范围 / Budget<select name="budget"><option>尚未确定 / To be discussed</option><option>¥20,000 以下 / Under 20k</option><option>¥20,000–50,000</option><option>¥50,000 以上 / Above 50k</option></select></label><label>预计数量 / Quantity<select name="quantity"><option>50 份起</option><option>100 份起</option><option>200 份起</option><option>尚未确定</option></select></label><label>用途场景 / Use case<select name="scene"><option>客户答谢</option><option>员工福利</option><option>会议礼品</option><option>开业庆典</option><option>节日慰问</option><option>校庆/校友会纪念</option><option>其他</option></select></label><label>期望交付时间 / Timeline<input name="timeline" placeholder="例如：2026 年 12 月前" /></label><label>项目说明 / Brief<textarea name="brief" rows="4" placeholder="品牌背景、希望表达的文化、包装想法等"></textarea></label><label class="honeypot-field" aria-hidden="true">网址 / Website<input name="website" tabindex="-1" autocomplete="off" class="honeypot" /></label><button class="btn btn-primary" type="submit">把需求发给我们 →</button><p class="form-note" data-form-status role="status" aria-live="polite">提交后我们会通过你留下的联系方式回复；想先聊聊也可以加页脚微信，备注「企业礼赠」。</p></form></section>
+  <section class="container section biz-process" aria-labelledby="biz-process-title"><div class="section-lead"><span class="eyebrow">How we work / 合作方式</span><h2 id="biz-process-title" class="serif">从一句话，<br />到一批送到手上的礼。</h2><p>企业采购要的是确定性：谁对接、多久回复、怎么结算、出问题怎么办。下面是我们一贯的做法，先说清楚，再开始。</p></div>
+    <ol class="process-list">
+      <li><span class="mono">01</span><div><h3 class="serif">需求沟通</h3><p>说说场景、数量、期望时间与大致预算。不必想得很完整，我们会接着往下问。</p></div></li>
+      <li><span class="mono">02</span><div><h3 class="serif">方案与报价</h3><p>两个工作日内给出建议方案与报价单，包含产品形式、材质、包装与交付周期。</p></div></li>
+      <li><span class="mono">03</span><div><h3 class="serif">打样确认</h3><p>批量制作前先看实物样品或效果图。确认无误后再进入生产，避免双方返工。</p></div></li>
+      <li><span class="mono">04</span><div><h3 class="serif">签约与对公结算</h3><p>签订采购合同后对公转账，可开具增值税普票或专票。付款节点以合同约定为准。</p></div></li>
+      <li><span class="mono">05</span><div><h3 class="serif">创作与交付</h3><p>制作过程中同步进度；成品保价配送，可按你提供的名单分地址寄送。</p></div></li>
+      <li><span class="mono">06</span><div><h3 class="serif">售后与补件</h3><p>运输破损免费补发或重做，创作瑕疵协商修改。交付后如有个别补件需求，也可以再联系我们。</p></div></li>
+    </ol></section>
+  <section id="business-form" class="container section business-form"><div><span class="eyebrow">Business needs / 企业项目需求</span><h2 class="serif">说说你们想做<br />一件什么事。</h2><p>不用担心填得不够全——场景、数量、时间，说个大概就好。我们会在两个工作日内回复，先聊清楚，再往下走。</p></div><form data-business-form><label>公司名称 / Company<input name="company" required /></label><label>联系人与联系方式 / Contact<input name="contact" required placeholder="微信优先，邮箱或手机号备选" /></label><label>预算范围 / Budget<select name="budget"><option>尚未确定 / To be discussed</option><option>¥20,000 以下 / Under 20k</option><option>¥20,000–50,000</option><option>¥50,000 以上 / Above 50k</option></select></label><label>预计数量 / Quantity<select name="quantity"><option>50 份起</option><option>100 份起</option><option>200 份起</option><option>尚未确定</option></select></label><label>用途场景 / Use case<select name="scene"><option>客户答谢</option><option>员工福利</option><option>会议礼品</option><option>开业庆典</option><option>节日慰问</option><option>校庆/校友会纪念</option><option>其他</option></select></label><label>期望交付时间 / Timeline<input name="timeline" placeholder="例如：2026 年 12 月前" /></label><label>开票需求 / Invoice<select name="invoice"><option>尚未确定 / To be discussed</option><option>增值税普通发票</option><option>增值税专用发票</option><option>不需要发票</option></select></label><label>项目说明 / Brief<textarea name="brief" rows="4" placeholder="品牌背景、希望表达的文化、包装想法等"></textarea></label><label class="honeypot-field" aria-hidden="true">网址 / Website<input name="website" tabindex="-1" autocomplete="off" class="honeypot" /></label><button class="btn btn-primary" type="submit">把需求发给我们 →</button><p class="form-note" data-form-status role="status" aria-live="polite">企业礼赠走对公结算，不在官网在线付款。提交后我们会在两个工作日内联系你；想先聊聊也可以加页脚微信，备注「企业礼赠」。</p></form></section>
 </Layout>
 <script>
   import { submitLead, isHoneypotFilled, CONTACT_FALLBACK, successHtml } from '../../scripts/cloud-forms';
@@ -58,6 +68,7 @@ const faqJsonLd = {
         quantity: pick('quantity'),
         scene: pick('scene'),
         timeline: pick('timeline'),
+        invoice: pick('invoice'),
         brief: pick('brief'),
         page: window.location.pathname,
         referrer: document.referrer || null,
@@ -86,11 +97,18 @@ const faqJsonLd = {
   .dir-item p { color: var(--ink-soft); font-size: 15px; line-height: 1.9; margin: 0; max-width: 760px; }
   .dir-scenes { display: inline-block; margin-top: 12px; color: var(--cinnabar-deep); font-size: 13px; letter-spacing: .04em; }
   .dir-note { color: var(--muted); font-size: 13px; letter-spacing: .04em; margin-top: 16px !important; }
+  .biz-process .section-lead { max-width: 680px; margin-bottom: 40px; } .biz-process h2 { font-size: clamp(26px, 3.2vw, 40px); font-weight: 500; margin: 14px 0 12px; } .biz-process .section-lead p { color: var(--ink-soft); line-height: 1.9; margin: 0; }
+  .process-list { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); list-style: none; padding: 0; margin: 0; }
+  .process-list li { padding: 26px 26px 30px 0; border-bottom: 1px solid var(--line); }
+  .process-list li:not(:nth-child(3n + 1)) { padding-left: 26px; border-left: 1px solid var(--line); }
+  .process-list .mono { display: block; font-size: 13px; letter-spacing: .18em; color: var(--cinnabar-deep); margin-bottom: 12px; }
+  .process-list h3 { font-size: 19px; font-weight: 500; margin: 0 0 8px; }
+  .process-list p { color: var(--ink-soft); font-size: 14px; line-height: 1.85; margin: 0; }
   .plans { display: grid; grid-template-columns: repeat(3, 1fr); border-block: 1px solid var(--line); } .plans article { padding: 24px 22px 30px 0; min-height: 300px; } .plans article + article { padding-left: 22px; border-left: 1px solid var(--line); } .plans .eyebrow { display: block; margin-top: 24px; } .plans h2 { font-size: 29px; font-weight: 500; line-height: 1.35; margin: 14px 0; } .plans strong { color: var(--cinnabar-deep); font: 21px var(--font-display-en), Georgia, serif; } .plans p { color: var(--ink-soft); font-size: 14px; }
   .business-form, .business-faq { border-top: 1px solid var(--line); } .business-form h2, .business-faq h2 { font-size: clamp(26px, 3vw, 40px); font-weight: 500; margin: 18px 0 28px; }
   .business-form { display: grid; grid-template-columns: .8fr 1.2fr; gap: 80px; } .business-form > div > p { max-width: 500px; color: var(--ink-soft); } form { border-top: 1px solid var(--line); padding-top: 20px; } label { display: block; color: var(--ink-soft); font-size: 13px; margin-bottom: 16px; } input, select, textarea { display: block; width: 100%; margin-top: 6px; border: 1px solid var(--line); border-radius: 0; background: var(--paper-light); padding: 11px 12px; } textarea { resize: vertical; } .form-note { color: var(--muted); font-size: 12px; line-height: 1.7; }
   .faq-grid { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid var(--line); } .faq-grid details { padding: 18px 20px 18px 0; border-bottom: 1px solid var(--line); } .faq-grid details:nth-child(even) { padding-left: 20px; border-left: 1px solid var(--line); } .faq-grid summary { cursor: pointer; min-height: 44px; font-weight: 500; } .faq-grid p { color: var(--ink-soft); font-size: 14px; }
   .honeypot-field { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   .honeypot { position: absolute !important; width: 1px !important; height: 1px !important; overflow: hidden !important; clip: rect(0 0 0 0) !important; opacity: 0 !important; pointer-events: none !important; }
-  @media (max-width: 767px) { .business-hero-scenes { grid-template-columns: 1fr; gap: 12px; } .business-hero-scenes img { aspect-ratio: 1.3; } .page-head { padding: 56px 0 42px; } .page-head h1 { font-size: 30px; } .page-head p { font-size: 16px; } .page-head p[lang='en'] { font-size: 20px; } .dir-item { gap: 16px; padding: 22px 0; } .plans, .business-form, .faq-grid { grid-template-columns: 1fr; } .plans article, .plans article + article { min-height: 0; padding: 22px 0; border-left: 0; border-bottom: 1px solid var(--line); } .plans article:last-child { border-bottom: 0; } .business-form { gap: 28px; } .faq-grid details, .faq-grid details:nth-child(even) { padding: 16px 0; border-left: 0; } }
+  @media (max-width: 767px) { .business-hero-scenes { grid-template-columns: 1fr; gap: 12px; } .business-hero-scenes img { aspect-ratio: 1.3; } .page-head { padding: 56px 0 42px; } .page-head h1 { font-size: 30px; } .page-head p { font-size: 16px; } .page-head p[lang='en'] { font-size: 20px; } .dir-item { gap: 16px; padding: 22px 0; } .plans, .business-form, .faq-grid { grid-template-columns: 1fr; } .plans article, .plans article + article { min-height: 0; padding: 22px 0; border-left: 0; border-bottom: 1px solid var(--line); } .plans article:last-child { border-bottom: 0; } .business-form { gap: 28px; } .faq-grid details, .faq-grid details:nth-child(even) { padding: 16px 0; border-left: 0; } .process-list { grid-template-columns: 1fr; } .process-list li, .process-list li:not(:nth-child(3n + 1)) { padding: 20px 0; border-left: 0; } .process-list li:last-child { border-bottom: 0; } }
 </style>
