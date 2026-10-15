@@ -47,6 +47,9 @@ const ALLOWED_EVENTS = new Set([
   // 2026-10-15 补录：现货作品详情页 → 企业礼赠页（批量定制导流）
   // 三处同登记：本文件 / src/scripts/cloud-forms.ts / docs/事件字典.md
   'ready_to_business',
+  // 2026-10-15 补录：企业礼赠页场景导航 / 合作对象位 → 表单（页面内导流）
+  'biz_scene_nav',
+  'biz_trust_to_form',
   'scene_to_product',
   'scene_view',
   // 页面 data-event：心愿单与分享
