@@ -19,25 +19,39 @@
 /assets/brand/*
   Cache-Control: public, max-age=3600, stale-while-revalidate=86400
 
-# 下载区（采购需求表等）：固定文件名 + 1 小时缓存。
-# ⚠️ 不能用长缓存 —— 表格内容更新后，已访问过的采购商会在缓存期内下载到旧版，
-#    而 B 端一旦按旧表填完发来，返工成本比省下的带宽高得多。
-#    必须写在更宽泛的 /assets/* 之前（同 _headers 的「更具体优先」规则）。
+# ⚠️ 实测（2026-10-15，线上逐资源抓头）本项目的 _headers 生效边界：
+#
+#   资源                                  Cache-Control        规则是否命中
+#   /downloads/*.html                     max-age=3600         ✅ /downloads/* 命中
+#   /pagefind/pagefind-entry.json         max-age=600          ✅ /pagefind/* 命中
+#   /assets/images/og-image-600.webp      max-age=1209600      ✅ /assets/* 命中
+#   ─────────────────────────────────────────────────────────────────
+#   /downloads/*.docx  /downloads/*.pdf   max-age=14400        ❌ 套用平台默认
+#   /pagefind/*.js                        max-age=14400        ❌ 套用平台默认
+#   /favicon.svg                          max-age=14400        ❌ 套用平台默认
+#
+#   规律：**服务端渲染类文本资产**（html / json / webp 等）走 _headers；
+#         **下载类与嵌入类资源**（docx / pdf / js / svg）被平台套用 max-age=14400，
+#         _headers 覆盖无效。cf-cache-status 为 MISS 时依旧 14400，
+#         证明是回源后的真实响应头，不是边缘缓存残留。
+#
+#   已验证的**无效**尝试（2026-10-15，勿重蹈）：
+#     ① 写精确中文路径 /downloads/小民艺术-企业礼赠采购需求表.docx —— 无效
+#        （怀疑与路径含非 ASCII 字符有关，但 SVG 为纯 ASCII 同样无效，故非根因）
+#     ② 依赖通配 /downloads/* —— 只对 .html 生效，对 docx/pdf 无效
+#
+#   当前策略（接受平台默认，靠运维规避）：
+#     · 若将来必须让下载文件「改完即生效」，**改文件名加版本后缀**最省事：
+#         小民艺术-企业礼赠采购需求表-v2.docx
+#       URL 变了 → 缓存必然失效 → 100% 拿到新版。页面上链接同步改即可
+#       （该文件无外链引用，无历史链接包袱）。
+#     · 若不愿改文件名，再考虑加 functions/downloads/[[path]].ts 兜底路由
+#       显式写头 —— 代价是多一处运行时代码，须评估后再做，勿轻率引入。
+#
+#   影响面评估：下载是「填一次就发回」的一次性动作，同一人重复下载概率极低；
+#   真正会命中的是「同公司多人共用一个浏览器」的场景。4 小时窗口风险偏低，
+#   故本轮不引入运行时兜底。
 /downloads/*
-  Cache-Control: public, max-age=3600, must-revalidate
-
-# ⚠️ 2026-10-15 线上抓头实测：上面那条 /downloads/* 对 .docx / .pdf **不生效** ——
-#    Cloudflare Pages 对可下载的二进制 MIME（docx/pdf/zip/xlsx…）会强制套用
-#    平台默认 max-age=14400，与 /pagefind/*.js 被覆盖是同一个机制（见下方 pagefind 段）。
-#    .html / .json 走上面那条通配规则正常命中 3600，所以「规则写法是对的，只是不覆盖二进制」。
-#    解决办法：对具体文件逐个写精确路径规则 —— 精确路径优先级高于通配，
-#    且平台不再对其套用扩展名默认值。
-#    新增下载文件时必须在这里补一行，否则会静默退回 4 小时缓存。
-/downloads/小民艺术-企业礼赠采购需求表.docx
-  Cache-Control: public, max-age=3600, must-revalidate
-/downloads/小民艺术-企业礼赠采购需求表.pdf
-  Cache-Control: public, max-age=3600, must-revalidate
-/downloads/小民艺术-企业礼赠采购需求表.html
   Cache-Control: public, max-age=3600, must-revalidate
 
 /assets/*
