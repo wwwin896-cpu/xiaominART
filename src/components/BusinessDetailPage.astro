@@ -1,0 +1,328 @@
+---
+/**
+ * 企业礼赠业务详情页的共用版面。
+ *
+ * 为什么抽成组件：四条业务线（商务伴手礼 / 庆典墨宝礼 / 空间书法礼 / 校园纪念礼）
+ * 的信息结构完全一致，只有内容不同。抽出来之后：
+ *   · 改版面只需改一处
+ *   · 新增业务线只需写内容、不用重写版面
+ *
+ * ⚠️ GEO 准则（业主 2026-10-15 定调）：每条业务线必须有**独立可寻址的 URL**，
+ *    因为 AI 助手回答用户问题时需要能指到一个具体页面。
+ *    本组件负责输出每页的 JSON-LD（Service + FAQPage），提升被引用的概率。
+ *
+ * ⚠️ 授权红线：本组件不接收任何未获授权的客户名称或 LOGO。
+ *    合作方信息只在书面授权到位后才允许出现。
+ */
+import Layout from '../layouts/Layout.astro';
+import BusinessCaseWall, { type BusinessCase } from '../components/BusinessCaseWall.astro';
+
+export type DetailFaq = { q: string; a: string };
+
+interface Props {
+  /** 业务线中文名，如「商务伴手礼」 */
+  name: string;
+  /** 英文名，用于眉标，如 "Corporate Gifting" */
+  nameEn: string;
+  /** 一句话定位，用于 h1 副标 */
+  tagline: string;
+  /** 首屏事实行：带参数的关键条件，供采购商快速筛选 */
+  facts: string[];
+  /** 页面 title（含检索词） */
+  seoTitle: string;
+  /** 页面 description（含 B 端决策词） */
+  seoDescription: string;
+  /** 业务说明段落 */
+  intro: string[];
+  /** 适用场景，帮采购商判断「这是不是我」 */
+  scenarios: string[];
+  /** 规格与条件表：起订量、定制范围、工期、交付方式等 */
+  specRows: { label: string; value: string }[];
+  /** 案例数组（当前为临时图占位） */
+  cases: BusinessCase[];
+  /** 本业务线的常见问题 */
+  faqs: DetailFaq[];
+}
+
+const {
+  name,
+  nameEn,
+  tagline,
+  facts,
+  seoTitle,
+  seoDescription,
+  intro,
+  scenarios,
+  specRows,
+  cases,
+  faqs,
+} = Astro.props;
+
+const canonicalPath = Astro.url.pathname;
+
+// Service 结构化数据：让 AI 助手能识别「这是一项可采购的服务」，而不是泛泛的页面
+const serviceJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name,
+  serviceType: name,
+  description: seoDescription,
+  url: `https://xiaominart.com${canonicalPath}`,
+  areaServed: { '@type': 'Country', name: 'China' },
+  provider: {
+    '@type': 'Organization',
+    name: '小民艺术',
+    url: 'https://xiaominart.com',
+  },
+};
+
+// FAQ 结构化数据与页面 FAQ 同源
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
+---
+
+<Layout title={seoTitle} description={seoDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify(serviceJsonLd)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
+
+  <section class="container page-head">
+    <nav class="breadcrumb" aria-label="面包屑">
+      <a href="/business-gifts/">企业礼赠</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">{name}</span>
+    </nav>
+    <span class="eyebrow">{nameEn} / {name}</span>
+    <h1 class="serif">{name}</h1>
+    <p class="tagline">{tagline}</p>
+    <p class="facts-line">{facts.map((f, i) => (<span>{i > 0 && <em aria-hidden="true">·</em>}{f}</span>))}</p>
+    <div class="head-cta">
+      <a class="btn btn-primary" href="/business-gifts/#business-form" data-event="biz_detail_form">提交采购需求 →</a>
+      <a class="btn btn-ghost" href="/downloads/小民艺术-企业礼赠采购需求表.docx" download data-event="biz_detail_dl">下载采购需求表 ↓</a>
+    </div>
+  </section>
+
+  <section class="container section detail-intro" aria-labelledby="intro-title">
+    <div class="section-lead">
+      <span class="eyebrow">Overview / 业务说明</span>
+      <h2 id="intro-title" class="serif">{tagline}</h2>
+    </div>
+    <div class="intro-body">
+      {intro.map((para) => <p>{para}</p>)}
+    </div>
+  </section>
+
+  <section class="container section detail-scenarios" aria-labelledby="scenario-title">
+    <div class="section-lead">
+      <span class="eyebrow">Scenarios / 适用场景</span>
+      <h2 id="scenario-title" class="serif">适用于以下场合</h2>
+    </div>
+    <ul class="scenario-list">
+      {scenarios.map((scene) => <li>{scene}</li>)}
+    </ul>
+  </section>
+
+  <section class="container section detail-spec" aria-labelledby="spec-title">
+    <div class="section-lead">
+      <span class="eyebrow">Specification / 规格与条件</span>
+      <h2 id="spec-title" class="serif">关键条件一览</h2>
+      <p>以下为常规口径。具体项目可在报价阶段逐项确认。</p>
+    </div>
+    <div class="spec-table" role="table" aria-label={`${name}规格与条件`}>
+      {specRows.map((row) => (
+        <div class="spec-row" role="row">
+          <span role="rowheader" data-label="项目">{row.label}</span>
+          <span role="cell" data-label="说明">{row.value}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <BusinessCaseWall cases={cases} businessName={name} />
+
+  <section class="container section detail-faq" aria-labelledby="faq-title">
+    <div class="section-lead">
+      <span class="eyebrow">FAQ / 常见问题</span>
+      <h2 id="faq-title" class="serif">常见问题</h2>
+    </div>
+    <div class="faq-grid">
+      {faqs.map((item) => (
+        <details>
+          <summary>{item.q}</summary>
+          <p>{item.a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <section class="container detail-cta">
+    <p>需要方案与报价？提交采购需求，或直接下载需求表填写后发回。</p>
+    <div class="detail-cta-actions">
+      <a class="btn btn-primary" href="/business-gifts/#business-form" data-event="biz_detail_form_bottom">提交采购需求 →</a>
+      <a class="btn btn-ghost" href="/downloads/小民艺术-企业礼赠采购需求表.docx" download data-event="biz_detail_dl_bottom">下载采购需求表 ↓</a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .breadcrumb a {
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .breadcrumb a:hover {
+    color: var(--cinnabar-deep);
+  }
+  .page-head h1 {
+    margin: 8px 0 14px;
+    font-size: 40px;
+  }
+  .tagline {
+    max-width: 620px;
+    font-size: 17px;
+    line-height: 1.85;
+    color: var(--ink-soft);
+  }
+  .facts-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    margin: 22px 0 0;
+    font-size: 15px;
+    line-height: 1.9;
+    color: var(--ink);
+  }
+  .facts-line em {
+    margin-right: 10px;
+    font-style: normal;
+    color: var(--muted);
+  }
+  .head-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+    margin-top: 26px;
+  }
+  .head-cta .btn {
+    margin-top: 0;
+  }
+
+  .intro-body {
+    max-width: 720px;
+  }
+  .intro-body p {
+    margin: 0 0 16px;
+    font-size: 15.5px;
+    line-height: 2;
+    color: var(--ink-soft);
+  }
+
+  .scenario-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .scenario-list li {
+    padding: 8px 16px;
+    border: 1px solid var(--line);
+    font-size: 14.5px;
+    color: var(--ink);
+  }
+
+  .spec-table {
+    border-top: 1px solid var(--line);
+  }
+  .spec-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 24px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .spec-row > span[role='rowheader'] {
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .spec-row > span[role='cell'] {
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--ink);
+  }
+
+  .detail-cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 24px;
+    margin-top: 8px;
+    padding: 24px 28px;
+    background: var(--paper-light);
+    border: 1px solid var(--line);
+  }
+  .detail-cta p {
+    margin: 0;
+    font-size: 15px;
+    color: var(--ink-soft);
+  }
+  .detail-cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 14px;
+  }
+  .detail-cta .btn {
+    margin: 0;
+    padding: 11px 20px;
+    font-size: 14px;
+  }
+
+  @media (max-width: 767px) {
+    .page-head h1 {
+      font-size: 30px;
+    }
+    .tagline {
+      font-size: 15.5px;
+    }
+    .head-cta .btn {
+      width: 100%;
+      text-align: center;
+    }
+    .spec-row {
+      grid-template-columns: 1fr;
+      gap: 6px;
+      padding: 16px 0;
+    }
+    .spec-row > span[role='rowheader']::before {
+      content: attr(data-label) '：';
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .detail-cta {
+      padding: 20px 18px;
+    }
+    .detail-cta-actions {
+      width: 100%;
+    }
+    .detail-cta .btn {
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style>

@@ -138,6 +138,21 @@ export function isHoneypotFilled(form: HTMLFormElement): boolean {
 // 事件名，此前不在 TRACKED_EVENTS 内的直接被 return 丢弃，行为数据从未上报。
 // 事件定义与含义统一维护在 docs/事件字典.md；本集合必须与
 // functions/api/event.ts 的 ALLOWED_EVENTS 保持一致（两端各一份字面量，改动时同步）。
+
+/**
+ * 企业礼赠四条业务详情页共用的事件（由 BusinessDetailPage.astro 统一发出）。
+ *
+ * 四条业务线（商务伴手礼 / 庆典墨宝礼 / 空间书法礼 / 校园纪念礼）的页面结构一致，
+ * 事件名也一致 —— 区分业务线靠上报时带上的 path，而不是各自一套事件名。
+ * 这样新增业务线时不必再改白名单。
+ */
+const BUSINESS_DETAIL_EVENTS = [
+  'biz_detail_form',         // 详情页首屏 → 回主页表单
+  'biz_detail_dl',           // 详情页首屏 → 下载需求表
+  'biz_detail_form_bottom',  // 详情页页尾 → 回主页表单
+  'biz_detail_dl_bottom',    // 详情页页尾 → 下载需求表
+] as const;
+
 const TRACKED_EVENTS = new Set([
   // 程序化触发（表单结果、选礼器）
   'hero_cta_click',
@@ -166,25 +181,20 @@ const TRACKED_EVENTS = new Set([
   'ready_work_click',
   // 2026-10-15 补录：现货作品详情页 → 企业礼赠页（批量定制导流）
   'ready_to_business',
-  // 2026-10-15 补录：企业礼赠页场景导航 / 合作对象位 → 表单（页面内导流）
-  'biz_scene_nav',
-  'biz_trust_to_form',
-  // 2026-10-15 补录：企业礼赠页转化路径重做（首屏动作 + 采购需求表下载区 + 表单旁下载入口）
-  'biz_hero_download',
-  'biz_hero_form',
-  'biz_hero_wechat',
-  'biz_dl_docx',
-  'biz_dl_pdf',
-  'biz_dl_print',
-  'biz_dl_wechat',
-  'biz_dl_email',
-  'biz_form_dl_docx',
-  'biz_form_dl_pdf',
-  'biz_form_wechat',
-  // 2026-10-15：页中转化条（滚过产品线/FAQ 后的就近出口）
-  'biz_mid_download',
-  'biz_mid_form',
-  'biz_mid_wechat',
+  // ── 企业礼赠页（2026-10-15 晚 二次重写后的事件集）──
+  // 本轮按业主意见大幅精简：下载入口收敛到 2 处、只留 DOCX、删除场景导航/页中转化条/六步流程，
+  // 因此下列事件已废弃并从白名单移除（历史数据仍在库里，如需回溯请查事件字典的变更记录）：
+  //   biz_scene_nav / biz_trust_to_form
+  //   biz_hero_download / biz_hero_wechat / biz_dl_pdf / biz_dl_print / biz_dl_wechat
+  //   biz_form_dl_docx / biz_form_dl_pdf / biz_form_wechat
+  //   biz_mid_download / biz_mid_form / biz_mid_wechat
+  'biz_hero_dl',            // 首屏 → 下载采购需求表
+  'biz_hero_form',          // 首屏 → 在线提交
+  'biz_dl_docx',            // 需求表 Download 区 → 下载 DOCX（全页唯一下载入口）
+  'biz_dl_email',           // 需求表 Download 区 → 邮件发送入口
+  'biz_line_nav',           // 业务线名称 → 各业务详情页
+  'biz_line_nav_more',      // 业务线「查看详情」→ 各业务详情页
+  ...BUSINESS_DETAIL_EVENTS,
   'scene_to_product',
   'scene_view',
   // 页面 data-event：心愿单与分享

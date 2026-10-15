@@ -1,0 +1,168 @@
+---
+/**
+ * 企业礼赠业务详情页的案例区。
+ *
+ * ⚠️ 当前所有案例图片均为**临时占位**（`isPlaceholder: true`），取自站内既有作品图。
+ *    业主 2026-10-15 明确：先做文案 + 临时图，后续统一提供真实素材替换。
+ *    待换素材时只改本文件 `cases` 数组的 `image` / `alt` 字段即可，页面结构无需改动。
+ *
+ * ⚠️ 案例文案的写法遵循 GEO 准则：带可验证参数（客户类型 / 数量 / 场景 / 交付周期）
+ *    的事实句，比抒情描述更易被 AI 助手引用。
+ *
+ * ⚠️ 授权红线：涉及真实客户名称、品牌的案例，必须在取得书面授权后才能写入。
+ *    在授权到位之前，案例一律写成「脱敏 + 类型化」（如「某制造业企业」），
+ *    不得出现可识别的真实企业名或 LOGO。
+ */
+
+export type BusinessCase = {
+  /** 案例标题（脱敏后的场景描述） */
+  title: string;
+  /** 客户类型，用于让采购商对号入座 */
+  clientType: string;
+  /** 关键参数：数量 / 材质 / 工艺 / 周期等，尽量给数字 */
+  facts: string[];
+  /** 案例说明，一两句说清「做了什么、解决了什么」 */
+  body: string;
+  image: string;
+  alt: string;
+  /** true = 当前用的是站内既有作品图占位，待业主提供真实素材 */
+  isPlaceholder: boolean;
+};
+
+interface Props {
+  cases: BusinessCase[];
+  /** 该业务线的中文名，用于生成区域标题 */
+  businessName: string;
+}
+
+const { cases, businessName } = Astro.props;
+const hasPlaceholder = cases.some((c) => c.isPlaceholder);
+---
+
+<section class="container section case-wall" aria-labelledby="case-wall-title">
+  <div class="section-lead">
+    <span class="eyebrow">Case / 案例</span>
+    <h2 id="case-wall-title" class="serif">{businessName} 的过往项目</h2>
+    <p>以下为部分项目的情况说明。涉及客户名称与品牌的内容，均以对方书面授权为前提。</p>
+  </div>
+
+  {
+    hasPlaceholder && (
+      <p class="case-note">
+        <strong>图片说明：</strong>本区图片为站内既有作品图，用于占位。
+        对应项目的真实现场图与合作方信息，将随授权陆续替换。
+      </p>
+    )
+  }
+
+  <div class="case-grid">
+    {
+      cases.map((item) => (
+        <article class="case-card">
+          <div class="case-media">
+            <img src={item.image} alt={item.alt} width="800" height="600" loading="lazy" decoding="async" />
+          </div>
+          <div class="case-body">
+            <span class="case-type">{item.clientType}</span>
+            <h3 class="serif">{item.title}</h3>
+            <p>{item.body}</p>
+            <ul class="case-facts">
+              {item.facts.map((fact) => (
+                <li>{fact}</li>
+              ))}
+            </ul>
+          </div>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .case-note {
+    margin: -12px 0 26px;
+    padding: 12px 16px;
+    border-left: 2px solid var(--line-strong, var(--line));
+    background: var(--paper-light);
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--ink-soft);
+  }
+  .case-note strong {
+    color: var(--ink);
+  }
+  .case-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--line);
+  }
+  .case-card {
+    display: flex;
+    flex-direction: column;
+    padding: 28px 26px 30px;
+    border-bottom: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+  }
+  .case-card:nth-child(2n) {
+    border-right: 0;
+  }
+  .case-media {
+    margin-bottom: 20px;
+    overflow: hidden;
+    background: var(--paper-light);
+  }
+  .case-media img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .case-type {
+    display: inline-block;
+    margin-bottom: 10px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--cinnabar-deep);
+  }
+  .case-body h3 {
+    margin: 0 0 10px;
+    font-size: 20px;
+  }
+  .case-body > p {
+    margin: 0 0 16px;
+    font-size: 14px;
+    line-height: 1.85;
+    color: var(--ink-soft);
+  }
+  .case-facts {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+  }
+  .case-facts li {
+    padding: 4px 10px;
+    border: 1px solid var(--line);
+    font-size: 12.5px;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 767px) {
+    .case-grid {
+      grid-template-columns: 1fr;
+    }
+    .case-card,
+    .case-card:nth-child(2n) {
+      border-right: 0;
+      padding: 22px 0;
+    }
+    .case-body h3 {
+      font-size: 18px;
+    }
+  }
+</style>

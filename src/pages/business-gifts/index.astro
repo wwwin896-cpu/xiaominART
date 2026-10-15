@@ -1,19 +1,36 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 
-// 企业礼赠 FAQ（T-06）：数据与 FAQPage 结构化数据同源，改这里即可，HTML 与 JSON-LD 同步更新
+/**
+ * 企业礼赠主页。
+ *
+ * 2026-10-15 按业主五条意见重写：
+ *   ① 下载入口由 8 处收敛到 2 处，且只保留 DOCX 一种格式
+ *   ② 文案全面改为商务书面语 —— B 端采购商是筛选者与决策者，不是文艺读者
+ *   ③ 结构按采购决策链条重排，删除场景导航 / 页中转化条 / 六步流程等冗余区块
+ *   ④ 删除「不对公结算、不在官网在线付款」类向访客解释内部收付款规则的表述
+ *      （保留「对公结算」作为能力关键词 —— 它是采购商的筛选条件，不是流程说明）
+ *   ⑤ 明确反馈机制：提交后多久回复、通过什么渠道回复
+ *
+ * 副产品（业主同日追加要求）：四条产品线各自有独立详情页，
+ * 因为 GEO 准则要求每条业务线独立可寻址（AI 助手需要能指到具体 URL）。
+ */
+
+// FAQ：与页面展示同源。⚠️ 已删除原「怎么付款？可以在官网直接下单吗？」一条 ——
+// 该问答向访客解释了内部收付款规则，属于合同条款范畴，不应出现在官网。
 const faqItems: Array<{ q: string; a: string }> = [
-  { q: '起订量是多少？', a: '轻量款 50 份起、定制款 100 份起、专属款 200 份起。数量不足或超出这些档位，也可以先说说情况，我们再看怎么安排。' },
-  { q: '可以定制企业 Logo 和品牌元素吗？', a: '可以。轻量款配企业 Logo 卡片；定制款和专属款里，图案、尺寸、包装都能围绕你们来商量。' },
-  { q: '可以先打样再批量吗？', a: '可以。先看一件实物再决定批量，打样的范围、费用和时间，我们会提前说清楚。' },
-  { q: '怎么付款？可以在官网直接下单吗？', a: '企业礼赠走对公结算，不在官网在线付款。流程是：需求沟通 → 方案与报价确认 → 签订采购合同 → 对公转账。付款节点一般为「签订后预付 50%，发货前付清尾款」，具体以合同约定为准。' },
-  { q: '可以开增值税发票吗？', a: '可以，支持增值税普通发票与专用发票。需要专票的话，请在沟通时提供公司全称、纳税人识别号、地址电话与开户行账号。' },
-  { q: '可以分地址寄送并去掉价格单据吗？', a: '可以。收礼人的地址信息、包裹里不放价格单据——这些细节，确认方案时我们会一一安排好。' },
-  { q: '交期需要多久？', a: '取决于数量、定制深度与包装。告诉我们你希望的时间，我们先判断做不做得出来；做不出来会直说，不耽误你另作安排。' },
-  { q: '包装能否定制企业 VI？', a: '定制款和专属款可以讨论企业 VI 的使用范围、包装结构与印刷方式。' },
-  { q: '校庆、校友会周年纪念可以做吗？', a: '可以，这是我们专门开辟的一条业务线。从校训或周年主题句出发：批量纪念小品配以学校名义的手写贺卡，重点作品带唯一编号与藏品证书，支持分地址寄送、直接到校友手上。数量参考上面的轻量款、定制款、专属款三档。' },
-  { q: '没有准备好完整需求也能咨询吗？', a: '当然。场景、数量、时间，说个大概就行，剩下的我们一起理。' },
+  { q: '起订量是多少？', a: '商务伴手礼与校园纪念礼 50 份起订，庆典墨宝礼 100 份起订。数量不足起订量的项目，请在需求表中说明用途与场合，我们评估后答复是否可以承接。' },
+  { q: '可以定制企业 Logo 与品牌元素吗？', a: '可以。轻量规格配企业 Logo 卡片；定制规格可调整图案、尺寸与包装。需在设计稿确认后再进入打样。' },
+  { q: '可以先打样再批量吗？', a: '可以。先看实物样或效果图，确认后再进入批量。打样的范围、费用与时间在开始前告知。' },
+  { q: '可以开具增值税发票吗？', a: '可以，支持增值税普通发票与专用发票。开具专票需提供公司全称、纳税人识别号、地址电话与开户行账号。' },
+  { q: '可以分地址寄送吗？包裹里会放价格单据吗？', a: '可以分地址寄送至收礼人本人，包裹内不含价格单据。名单请提供 Excel 表格（收件人、地址、联系方式），我们按表核对后分批交付。' },
+  { q: '交付需要多久？', a: '常规总量 25–45 个工作日（含打样）。如贵司有明确的时间节点，请在需求表中写明，我们优先评估可行性；无法满足会直接答复，以便贵司另行安排。' },
+  { q: '包装可以定制企业 VI 吗？', a: '可以。包装结构、材质与印刷方式可在方案阶段按企业 VI 要求确定，需以设计稿确认后再进入制作。' },
+  { q: '校庆、校友会周年纪念可以承接吗？', a: '可以，这是我们单独设立的一条业务线。从校训或周年主题句出发，批量纪念小品配以学校名义手写的贺卡，重点作品带唯一编号与藏品证书，支持按校友名单分地址寄送。校方如需走招标或政府采购流程，我们可配合提供所需材料。' },
+  { q: '手写件会有笔迹差异吗？', a: '会有。全部由人手逐份落笔，自然存在笔迹差异，这是该品类的基本工艺特征，不视为质量问题。需要完全一致的呈现，请提前说明。' },
+  { q: '需求还不完整，可以先沟通吗？', a: '可以。场景、数量、时间三项有初步方向即可提交，其余部分我们协助梳理。' },
 ];
+
 const faqJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -23,193 +40,587 @@ const faqJsonLd = {
     acceptedAnswer: { '@type': 'Answer', text: item.a },
   })),
 };
+
+// 四条业务线 —— 各自链接到独立详情页（GEO 要求独立可寻址）
+const businessLines = [
+  {
+    id: 'gifts',
+    no: '01',
+    name: '商务伴手礼',
+    href: '/business-gifts/gifts/',
+    desc: '装裱小品、卡笺或扇面，配以企业名义手写的贺卡。适用于客户答谢、员工福利、会议与活动赠礼。',
+    facts: '50 份起 · 可定制 Logo · 可开专票 · 分地址寄送',
+  },
+  {
+    id: 'keep',
+    no: '02',
+    name: '庆典墨宝礼',
+    href: '/business-gifts/keep/',
+    desc: '把企业自己的那句话写成书法原作，每幅带唯一编号与藏品证书。适用于周年纪念、开业题字与里程碑。',
+    facts: '100 份起 · 书法原作 · 唯一编号 · 附藏品证书',
+  },
+  {
+    id: 'space',
+    no: '03',
+    name: '空间书法礼',
+    href: '/business-gifts/space/',
+    desc: '按空间尺度、光线与气质定制书法装置，含装裱方案与安装建议。适用于前台、会客区与走廊。',
+    facts: '按空间定尺寸 · 含勘测 · 可配合设计方',
+  },
+  {
+    id: 'campus',
+    no: '04',
+    name: '校园纪念礼',
+    href: '/business-gifts/campus/',
+    desc: '面向校庆、校友会周年与毕业季。校训或周年主题句写成书法，支持按校友名单分地址寄送。',
+    facts: '50 份起 · 重点作品带编号 · 可配合招标',
+  },
+];
 ---
-<Layout title="企业礼品定制｜商务伴手礼与书法答谢礼｜小民艺术" description="企业礼品定制与批量伴手礼：手写书法答谢礼、员工福利、会议伴手礼、开业庆典与校庆纪念礼。支持企业 Logo 定制、对公结算、开具增值税发票与分地址寄送。">
+
+<Layout
+  title="企业礼品定制｜商务伴手礼与书法答谢礼批量定制｜小民艺术"
+  description="企业礼品定制与批量伴手礼：手写书法答谢礼、员工福利、会议伴手礼、开业庆典与校庆纪念礼。50 份起订，支持企业 Logo 定制、对公结算、增值税专票与分地址寄送，常规交付 25–45 个工作日。"
+>
   <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
-  <section class="container page-head"><span class="eyebrow">Business Gifts / 企业礼赠</span><h1 class="serif">企业礼品定制，<br />从一份需求表开始。</h1><p class="hero-facts"><strong>50 份起</strong> · 手写落笔 · 可定制企业 Logo · 对公结算 · 可开专票 · 分地址寄送</p><p class="hero-timeline">交期参考：打样 5–7 个工作日，批量 15–30 个工作日</p>
-    <div class="hero-cta"><a class="btn btn-primary" href="#downloads" data-event="biz_hero_download">下载采购需求表 ↓</a><a class="btn btn-ghost" href="#business-form" data-event="biz_hero_form">直接在线提交需求 →</a><button type="button" class="hero-wechat" data-wechat-open data-event="biz_hero_wechat">或加微信直接聊</button></div></section>
-  <section id="downloads" class="container section biz-downloads" aria-labelledby="biz-dl-title"><div class="section-lead"><span class="eyebrow">Download / 采购需求表</span><h2 id="biz-dl-title" class="serif">填好这张表发我们，<br />省掉十几轮来回。</h2><p>九章，覆盖选品、定制、包装、开票、验收。一次填清，我们直接出方案与报价。</p></div>
-    <div class="dl-grid">
-      <article class="dl-card dl-primary"><span class="dl-tag">推荐</span><h3 class="serif">Word 版</h3><p>在电脑上直接填写、勾选，填完发回即可。</p><a class="btn btn-primary" href="/downloads/小民艺术-企业礼赠采购需求表.docx" download data-event="biz_dl_docx">下载 .docx ↓</a><span class="dl-meta">约 40 KB</span></article>
-      <article class="dl-card"><span class="dl-tag">打印</span><h3 class="serif">PDF 版</h3><p>打印手写，或发给同事传阅后统一填写。</p><a class="btn btn-ghost" href="/downloads/小民艺术-企业礼赠采购需求表.pdf" target="_blank" rel="noopener" data-event="biz_dl_pdf">下载 .pdf →</a><span class="dl-meta">A4 · 2 页</span></article>
-      <article class="dl-card"><span class="dl-tag">网页</span><h3 class="serif">在线打印版</h3><p>不想下载？打开就能打印或存成 PDF。</p><a class="btn btn-ghost" href="/downloads/小民艺术-企业礼赠采购需求表.html" target="_blank" rel="noopener" data-event="biz_dl_print">打开网页版 →</a><span class="dl-meta">免下载</span></article>
+
+  <!-- ① 首屏：只给采购决策需要的硬条件 -->
+  <section class="container page-head">
+    <span class="eyebrow">Business Gifts / 企业礼赠</span>
+    <h1 class="serif">企业礼品定制</h1>
+    <p class="hero-lead">手写书法礼品批量定制，面向企业答谢、庆典纪念与校园活动。可定制企业标识，支持对公结算与分地址寄送。</p>
+    <dl class="hero-conditions">
+      <div><dt>起订量</dt><dd>50 份起</dd></div>
+      <div><dt>定制范围</dt><dd>企业 Logo · 内容 · 尺寸 · 包装</dd></div>
+      <div><dt>交付周期</dt><dd>常规 25–45 个工作日（含打样）</dd></div>
+      <div><dt>结算与发票</dt><dd>对公结算 · 可开增值税专票</dd></div>
+    </dl>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="/downloads/小民艺术-企业礼赠采购需求表.docx" download data-event="biz_hero_dl">下载采购需求表 ↓</a>
+      <a class="btn btn-ghost" href="#business-form" data-event="biz_hero_form">在线提交采购需求 →</a>
     </div>
-    <p class="dl-note">填好发到 <a href="mailto:hi@xiaominart.com" data-event="biz_dl_email">hi@xiaominart.com</a> 或微信发回均可。<strong>我们 2 个工作日内回复方案与报价。</strong>不想填表也行 —— <button type="button" class="dl-inline-btn" data-wechat-open data-wechat-source="downloads" data-event="biz_dl_wechat">加微信直接聊</button>，说清场景、数量、时间三件事就能开工。</p></section>
-  <section class="container section biz-timeline" aria-labelledby="biz-timeline-title"><div class="section-lead"><span class="eyebrow">Lead time / 交付周期</span><h2 id="biz-timeline-title" class="serif">要多久，<br />给你个确切数。</h2><p>下面是从确认到收货的常规节奏。赶特定日期请提前说明。</p></div>
-    <div class="timeline-table" role="table" aria-label="企业礼赠各环节参考周期">
-      <div class="tl-row tl-head" role="row"><span role="columnheader">环节</span><span role="columnheader">参考时长</span><span role="columnheader">说明</span></div>
-      <div class="tl-row" role="row"><span role="cell" data-label="环节">方案与报价</span><span role="cell" data-label="参考时长">2 个工作日内</span><span role="cell" data-label="说明">收到需求表或表单后开始计时</span></div>
-      <div class="tl-row" role="row"><span role="cell" data-label="环节">打样确认</span><span role="cell" data-label="参考时长">5–7 个工作日</span><span role="cell" data-label="说明">实物样或效果图。打样费在开始前告知</span></div>
-      <div class="tl-row" role="row"><span role="cell" data-label="环节">批量创作与包装</span><span role="cell" data-label="参考时长">15–30 个工作日</span><span role="cell" data-label="说明">手写件逐件落笔，数量大取上限</span></div>
-      <div class="tl-row" role="row"><span role="cell" data-label="环节">配送</span><span role="cell" data-label="参考时长">3–7 个工作日</span><span role="cell" data-label="说明">保价配送，可按名单分地址寄送</span></div>
+  </section>
+
+  <!-- ② 业务范围：帮采购商判断自己属于哪一类 -->
+  <section class="container section biz-lines" aria-labelledby="biz-lines-title">
+    <div class="section-lead">
+      <span class="eyebrow">Business Lines / 业务范围</span>
+      <h2 id="biz-lines-title" class="serif">四条业务线</h2>
+      <p>按采购标的区分。点击可查看各业务线的规格条件与过往项目。</p>
     </div>
-    <p class="timeline-note">常规总量约 <strong>25–45 个工作日</strong>（含打样）。时间紧的请在咨询时直接说期望日期，我们先判断做不做得出，做不出会直说。</p></section>
-  <section class="container section biz-directions" aria-labelledby="biz-dir-title"><div class="section-lead"><span class="eyebrow">Corporate Gifting / 企业礼赠</span><h2 id="biz-dir-title" class="serif">四条产品线，<br />按你的场合选。</h2><p>不确定选哪条也没关系，填表时说明场景，我们帮你归位。</p></div>
-    <nav class="scene-nav" aria-labelledby="scene-nav-title"><h3 id="scene-nav-title" class="scene-nav-title">你们这次，属于哪一种？</h3><ul>
-      <li><a href="#gifts" data-event="biz_scene_nav"><span class="mono">01</span><strong>要送出去的一批礼</strong><small>客户答谢 · 节日福利 · 会议伴手礼</small></a></li>
-      <li><a href="#keep" data-event="biz_scene_nav"><span class="mono">02</span><strong>要留很多年的一件纪念</strong><small>周年 · 开业 · 里程碑</small></a></li>
-      <li><a href="#space" data-event="biz_scene_nav"><span class="mono">03</span><strong>要挂进空间的一句话</strong><small>前台 · 会客区 · 办公室</small></a></li>
-      <li><a href="#campus" data-event="biz_scene_nav"><span class="mono">04</span><strong>学校的一次纪念日</strong><small>校庆 · 校友会周年 · 毕业</small></a></li>
-    </ul></nav>
-    <div class="dir-list">
-    <article id="gifts" class="dir-item"><span class="mono dir-no">01</span><div><h3 class="serif">商务伴手礼</h3><p>装裱小品、卡笺或扇面，配一张以企业名义手写的贺卡。适合量大、需逐份送达的场合。</p><span class="dir-scenes">50 份起 · 客户答谢 · 节日礼盒 · 活动签到 · 员工福利</span></div></article>
-    <article id="keep" class="dir-item"><span class="mono dir-no">02</span><div><h3 class="serif">庆典墨宝礼</h3><p>把企业自己的那句话写成书法原作，每幅带唯一编号与藏品证书。</p><span class="dir-scenes">100 份起 · 周年纪念 · 开业题字 · 里程碑</span></div></article>
-    <article id="space" class="dir-item"><span class="mono dir-no">03</span><div><h3 class="serif">空间书法礼</h3><p>按空间尺度、光线与气质写字装裱，挂在前台、会客区或走廊。</p><span class="dir-scenes">按空间定 · 前台 · 会客空间 · 走廊 · 办公室</span></div></article>
-    <article id="campus" class="dir-item"><span class="mono dir-no">04</span><div><h3 class="serif">校园纪念礼</h3><p>校训或周年主题句写成书法。批量纪念小品配学校名义的手写贺卡，重点作品带编号与藏品证书，可直接寄到校友手上。</p><span class="dir-scenes">50 份起 · 校庆 · 校友会周年 · 校训题写 · 毕业纪念</span></div></article>
-  </div></section>
-  <section class="container plans"><article><span class="mono">01</span><span class="eyebrow">Light / 轻量款</span><h2 class="serif">标准字样，<br />配手写卡片。</h2><strong>50 份起</strong><p>会议伴手礼、节日慰问、首次合作。</p></article><article><span class="mono">02</span><span class="eyebrow">Custom / 定制款</span><h2 class="serif">图案尺寸包装，<br />围着场景做。</h2><strong>100 份起</strong><p>客户答谢、员工福利、品牌活动。</p></article><article><span class="mono">03</span><span class="eyebrow">Bespoke / 专属款</span><h2 class="serif">为一件大事，<br />专写一件。</h2><strong>200 份起</strong><p>周年、开业、重要合作，从企业那句话出发。</p></article></section>
-  <section class="container section business-faq"><span class="eyebrow">Corporate FAQ / 企业礼赠 FAQ</span><h2 class="serif">先把话说在前面。</h2><div class="faq-grid">{faqItems.map((item) => <details><summary>{item.q}</summary><p>{item.a}</p></details>)}</div></section>
-  <section class="container mid-cta"><p>看到这里，如果大方向合适——</p><div class="mid-cta-actions"><a class="btn btn-primary" href="#downloads" data-event="biz_mid_download">下载采购需求表 ↓</a><a class="btn btn-ghost" href="#business-form" data-event="biz_mid_form">在线提交需求 →</a><button type="button" class="btn-ghost" data-wechat-open data-wechat-source="mid-cta" data-event="biz_mid_wechat">加微信直接聊</button></div></section>
-  <section class="container section biz-process" aria-labelledby="biz-process-title"><div class="section-lead"><span class="eyebrow">How we work / 合作方式</span><h2 id="biz-process-title" class="serif">六步，<br />每步给你确切答复。</h2></div>
-    <ol class="process-list">
-      <li><span class="mono">01</span><div><h3 class="serif">需求沟通</h3><p>填表或加微信，说清场景、数量、时间。</p></div></li>
-      <li><span class="mono">02</span><div><h3 class="serif">方案与报价</h3><p>2 个工作日内给方案与报价单。</p></div></li>
-      <li><span class="mono">03</span><div><h3 class="serif">打样确认</h3><p>看实物样或效果图，确认后再开工。</p></div></li>
-      <li><span class="mono">04</span><div><h3 class="serif">签约与对公结算</h3><p>签合同后对公转账，可开普票或专票。</p></div></li>
-      <li><span class="mono">05</span><div><h3 class="serif">创作与交付</h3><p>保价配送，可按名单分地址寄送。</p></div></li>
-      <li><span class="mono">06</span><div><h3 class="serif">售后与补件</h3><p>运输破损免费补发，创作瑕疵协商修改。</p></div></li>
-    </ol></section>
-  <section class="container section biz-trust" aria-labelledby="biz-trust-title"><div class="section-lead"><span class="eyebrow">With whom / 合作对象</span><h2 id="biz-trust-title" class="serif">我们把名字，<br />留给愿意署名的人。</h2><p>企业礼赠涉及客户的品牌与场合，作品与案例的公开，一律以对方书面授权为前提。有授权的合作记录，会陆续放在这里——在此之前，我们不用任何无从核实的数字来说明自己。</p></div>
-    <div class="trust-placeholder"><p class="trust-placeholder-zh">合作案例与伙伴名单，将随授权陆续公开。</p><p class="trust-placeholder-en" lang="en">Case studies and partner names are published only with written permission.</p><a class="trust-placeholder-link" href="#business-form" data-event="biz_trust_to_form">想了解我们做过的类似场景？直接说，我们当面聊 →</a></div></section>
-  <section id="business-form" class="container section business-form"><div class="form-aside"><span class="eyebrow">Business needs / 企业项目需求</span><h2 class="serif">或者，<br />直接在线提交。</h2><p>填这一页表单也可以，说个大概就行。想一次说全，就下载需求表。</p>
-    <div class="aside-dl"><p class="aside-dl-title">要填得更细？</p><a href="/downloads/小民艺术-企业礼赠采购需求表.docx" download data-event="biz_form_dl_docx">下载采购需求表（Word）↓</a><a href="/downloads/小民艺术-企业礼赠采购需求表.pdf" target="_blank" rel="noopener" data-event="biz_form_dl_pdf">下载 PDF 版</a><button type="button" data-wechat-open data-wechat-source="form-aside" data-event="biz_form_wechat">加微信直接聊</button></div></div><form data-business-form><label>公司名称 / Company<input name="company" required /></label><label>联系人与联系方式 / Contact<input name="contact" required placeholder="微信优先，邮箱或手机号备选" /></label><label>预算范围 / Budget<select name="budget"><option>尚未确定 / To be discussed</option><option>¥5,000 以下 / Under 5k</option><option>¥5,000–20,000</option><option>¥20,000–50,000</option><option>¥50,000 以上 / Above 50k</option></select></label><label>预计数量 / Quantity<select name="quantity"><option>50 份起</option><option>100 份起</option><option>200 份起</option><option>尚未确定</option></select></label><label>用途场景 / Use case<select name="scene"><option>客户答谢</option><option>员工福利</option><option>会议礼品</option><option>开业庆典</option><option>节日慰问</option><option>校庆/校友会纪念</option><option>其他</option></select></label><label>期望交付时间 / Timeline<input name="timeline" placeholder="例如：2026 年 12 月前" /></label><label>开票需求 / Invoice<select name="invoice"><option>尚未确定 / To be discussed</option><option>增值税普通发票</option><option>增值税专用发票</option><option>不需要发票</option></select></label><label>项目说明 / Brief<textarea name="brief" rows="4" placeholder="品牌背景、希望表达的文化、包装想法等"></textarea></label><label class="honeypot-field" aria-hidden="true">网址 / Website<input name="website" tabindex="-1" autocomplete="off" class="honeypot" /></label><button class="btn btn-primary" type="submit">把需求发给我们 →</button><p class="form-note" data-form-status role="status" aria-live="polite">走对公结算，不在官网在线付款。<strong>2 个工作日内回复。</strong></p></form></section>
+    <div class="line-list">
+      {
+        businessLines.map((line) => (
+          <article class="line-item">
+            <span class="mono line-no">{line.no}</span>
+            <div class="line-body">
+              <h3 class="serif"><a href={line.href} data-event="biz_line_nav">{line.name}</a></h3>
+              <p>{line.desc}</p>
+              <span class="line-facts">{line.facts}</span>
+            </div>
+            <a class="line-more" href={line.href} aria-label={`查看${line.name}详情`} data-event="biz_line_nav_more">查看详情 →</a>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- ③ 采购规格：三档对应的场合与数量 -->
+  <section class="container plans" aria-labelledby="plans-title">
+    <div class="plans-head">
+      <span class="eyebrow">Specification Tiers / 采购规格</span>
+      <h2 id="plans-title" class="serif">三档规格</h2>
+    </div>
+    <div class="plans-grid">
+      <article>
+        <span class="mono">01</span>
+        <span class="eyebrow">Light / 轻量规格</span>
+        <h3 class="serif">标准字样，配企业 Logo 卡片</h3>
+        <strong>50 份起</strong>
+        <p>会议伴手礼、节日福利、首次合作。</p>
+      </article>
+      <article>
+        <span class="mono">02</span>
+        <span class="eyebrow">Custom / 定制规格</span>
+        <h3 class="serif">图案、尺寸与包装按场合定制</h3>
+        <strong>100 份起</strong>
+        <p>客户答谢、员工福利、品牌活动。</p>
+      </article>
+      <article>
+        <span class="mono">03</span>
+        <span class="eyebrow">Bespoke / 专属规格</span>
+        <h3 class="serif">内容与形制完全按项目定制</h3>
+        <strong>200 份起</strong>
+        <p>周年纪念、开业庆典、重要合作。</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ④ 采购需求表：全页唯一的下载入口 -->
+  <section id="downloads" class="container section biz-download" aria-labelledby="biz-dl-title">
+    <div class="section-lead">
+      <span class="eyebrow">Purchase Brief / 采购需求表</span>
+      <h2 id="biz-dl-title" class="serif">采购需求表</h2>
+      <p>填写后发送至我们，即可获得方案与报价。含选品、定制、包装、开票与验收等内容，一次填写完毕，减少往返确认。</p>
+    </div>
+    <div class="dl-box">
+      <div class="dl-file">
+        <span class="dl-format">DOCX</span>
+        <div>
+          <strong>企业礼赠采购需求表</strong>
+          <span class="dl-meta">Word 文档 · 约 40 KB · 可在电脑上直接填写勾选</span>
+        </div>
+      </div>
+      <a class="btn btn-primary" href="/downloads/小民艺术-企业礼赠采购需求表.docx" download data-event="biz_dl_docx">下载采购需求表 ↓</a>
+    </div>
+    <div class="dl-return">
+      <h3>填写后如何提交</h3>
+      <ul>
+        <li>发送至邮箱 <a href="mailto:hi@xiaominart.com" data-event="biz_dl_email">hi@xiaominart.com</a></li>
+        <li>或通过微信发送给对接人</li>
+      </ul>
+      <p class="dl-sla"><strong>收到后 2 个工作日内</strong>，我们回复方案与报价。若需求信息不完整，我们会先就已明确的部分给出初步方案，并列出需要补充确认的内容。</p>
+    </div>
+  </section>
+
+  <!-- ⑤ 合作流程：一行说明，不让客户逐条对照 -->
+  <section class="container section biz-flow" aria-labelledby="biz-flow-title">
+    <div class="section-lead">
+      <span class="eyebrow">Process / 合作流程</span>
+      <h2 id="biz-flow-title" class="serif">合作流程</h2>
+    </div>
+    <ol class="flow-inline">
+      <li>提交采购需求</li>
+      <li>2 个工作日内回复方案与报价</li>
+      <li>打样确认</li>
+      <li>签订采购合同</li>
+      <li>批量创作与交付</li>
+    </ol>
+    <p class="flow-note">交付后如遇运输破损，我们免费补发；创作瑕疵可协商修改。</p>
+  </section>
+
+  <!-- ⑥ 常见问题 -->
+  <section class="container section business-faq" aria-labelledby="faq-title">
+    <span class="eyebrow">FAQ / 常见问题</span>
+    <h2 id="faq-title" class="serif">常见问题</h2>
+    <div class="faq-grid">
+      {faqItems.map((item) => (
+        <details>
+          <summary>{item.q}</summary>
+          <p>{item.a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <!-- ⑦ 在线提交：即时反馈机制在此 -->
+  <section id="business-form" class="container section business-form">
+    <div class="form-aside">
+      <span class="eyebrow">Purchase Request / 采购需求</span>
+      <h2 class="serif">在线提交采购需求</h2>
+      <p>若不便下载表格，可直接填写本表单。信息有初步方向即可，其余部分我们协助梳理。</p>
+      <div class="form-sla">
+        <strong>提交后即时确认</strong>
+        <span>表单提交成功后，页面会立即显示确认信息。我们将在 2 个工作日内通过您留下的联系方式回复方案与报价。</span>
+      </div>
+    </div>
+    <form data-business-form>
+      <label>公司 / 机构名称<input name="company" required /></label>
+      <label>联系人与联系方式<input name="contact" required placeholder="手机、邮箱或微信号" /></label>
+      <label>预算范围
+        <select name="budget">
+          <option>尚未确定</option>
+          <option>¥5,000 以下</option>
+          <option>¥5,000–20,000</option>
+          <option>¥20,000–50,000</option>
+          <option>¥50,000 以上</option>
+        </select>
+      </label>
+      <label>预计数量
+        <select name="quantity">
+          <option>50 份起</option>
+          <option>100 份起</option>
+          <option>200 份起</option>
+          <option>尚未确定</option>
+        </select>
+      </label>
+      <label>用途场景
+        <select name="scene">
+          <option>客户答谢</option>
+          <option>员工福利</option>
+          <option>会议礼品</option>
+          <option>开业庆典</option>
+          <option>周年纪念</option>
+          <option>节日慰问</option>
+          <option>校庆/校友会纪念</option>
+          <option>其他</option>
+        </select>
+      </label>
+      <label>期望交付时间<input name="timeline" placeholder="例如：2026 年 12 月前" /></label>
+      <label>开票需求
+        <select name="invoice">
+          <option>尚未确定</option>
+          <option>增值税普通发票</option>
+          <option>增值税专用发票</option>
+          <option>不需要发票</option>
+        </select>
+      </label>
+      <label>项目说明<textarea name="brief" rows="4" placeholder="品牌背景、使用场合、包装要求等"></textarea></label>
+      <label class="honeypot-field" aria-hidden="true">网址<input name="website" tabindex="-1" autocomplete="off" class="honeypot" /></label>
+      <button class="btn btn-primary" type="submit">提交采购需求 →</button>
+      <p class="form-note" data-form-status role="status" aria-live="polite">提交后页面会即时显示确认信息，我们将在 2 个工作日内回复方案与报价。</p>
+    </form>
+  </section>
 </Layout>
+
 <script>
   import { submitLead, isHoneypotFilled, CONTACT_FALLBACK, successHtml } from '../../scripts/cloud-forms';
   const form = document.querySelector<HTMLFormElement>('[data-business-form]');
   if (form) {
     const status = form.querySelector<HTMLElement>('[data-form-status]');
-    const submitButton = form.querySelector<HTMLButtonElement>('button[type="submit"]');
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
-      if (!status || !submitButton) return;
-      if (isHoneypotFilled(form)) { status.textContent = '企业需求已收到，我们会尽快回复。'; return; }
-      const data = new FormData(form);
-      const pick = (key: string) => String(data.get(key) || '').trim();
-      const company = pick('company');
-      const contact = pick('contact');
-      if (!company || !contact) { status.textContent = '请补全公司名称与联系方式后再提交。'; return; }
-      submitButton.disabled = true;
-      status.textContent = '正在提交…';
-      const result = await submitLead('business_gift', company, contact, {
-        budget: pick('budget'),
-        quantity: pick('quantity'),
-        scene: pick('scene'),
-        timeline: pick('timeline'),
-        invoice: pick('invoice'),
-        brief: pick('brief'),
-        page: window.location.pathname,
-        referrer: document.referrer || null,
+      if (!status) return;
+      if (isHoneypotFilled(form)) return;
+      const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if (button) button.disabled = true;
+      status.dataset.state = 'pending';
+      status.innerHTML = '正在提交…';
+      const data = Object.fromEntries(new FormData(form).entries()) as Record<string, string>;
+      // submitLead(formType, name, contact, payload) —— name/contact 单独取出，
+      // 其余字段作为 payload 原样上报，便于在后台按字段筛选线索。
+      const outcome = await submitLead('business_gift', data.company ?? '', data.contact ?? '', {
+        budget: data.budget ?? '',
+        quantity: data.quantity ?? '',
+        scene: data.scene ?? '',
+        timeline: data.timeline ?? '',
+        invoice: data.invoice ?? '',
+        brief: data.brief ?? '',
+        source: 'business-gifts',
       });
-      submitButton.disabled = false;
-      if (result.ok) {
-        // B3：企业需求回复周期更长，成功态必须写明时限，避免对方反复追问
-        // innerHTML 用于渲染带结构的成功卡；入参为本行写死的字面量，非用户输入
-        status.innerHTML = successHtml('<strong>两个工作日内</strong>我们会通过你留下的联系方式回复。', '如果时间比较紧，可以在微信里补一句期望日期，我们会优先看。');
+      if (outcome.ok) {
+        status.dataset.state = 'success';
+        status.innerHTML = successHtml(
+          '需求已收到。我们将在 2 个工作日内通过您留下的联系方式回复方案与报价。',
+          '如需补充材料或说明时间节点，可直接回复确认信息中的联系方式。',
+        );
         form.reset();
       } else {
-        status.textContent = `提交失败，请稍后重试；${CONTACT_FALLBACK}`;
+        status.dataset.state = 'error';
+        status.innerHTML = successHtml(outcome.message ?? '提交未能完成，请稍后重试。', CONTACT_FALLBACK);
       }
+      if (button) button.disabled = false;
     });
   }
 </script>
+
 <style>
-  .page-head { padding: 90px 0 66px; } .page-head h1 { font-size: clamp(30px, 4vw, 52px); line-height: 1.3; font-weight: 500; margin: 20px 0; } .page-head p { max-width: 710px; color: var(--ink-soft); font-size: 18px; } .page-head p[lang='en'] { font: 24px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); } .page-head .btn { margin-top: 18px; }
-  /* 首屏事实行（2026-10-15 重做）：B 端采购第一眼要的是「起订量 / 能不能开票 / 怎么结算」，
-     而不是抒情文案。把六个硬信息压成一行，扫一眼就够。 */
-  .hero-facts { font-size: 15px; line-height: 2; color: var(--ink) !important; letter-spacing: .02em; }
-  .hero-facts strong { color: var(--cinnabar-deep); font-weight: 600; }
-  .hero-timeline { font-size: 14px !important; color: var(--muted) !important; margin-top: -6px; }
-  .hero-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin-top: 26px; }
-  .hero-cta .btn { margin-top: 0; }
-  .hero-wechat { padding: 0; border: 0; background: transparent; color: var(--cinnabar-deep); font: inherit; font-size: 14px; cursor: pointer; border-bottom: 1px solid var(--cinnabar); }
-  .btn-ghost { display: inline-block; padding: 12px 22px; border: 1px solid var(--ink); background: transparent; color: var(--ink); font: inherit; font-size: 14px; cursor: pointer; }
-  .btn-ghost:hover { background: var(--ink); color: var(--paper-light); }
-  /* 下载区（2026-10-15 新增）：业主提供采购需求表，让采购商自行下载填写再回传，
-     免去逐条问答的往返。三张卡覆盖三类人：要正式流程的 / 要打印传阅的 / 想先聊的。 */
-  .biz-downloads { border-top: 1px solid var(--line); }
-  .biz-downloads .section-lead { max-width: 680px; margin-bottom: 34px; }
-  .biz-downloads h2 { font-size: clamp(26px, 3.2vw, 40px); font-weight: 500; margin: 14px 0 12px; }
-  .biz-downloads .section-lead p { color: var(--ink-soft); line-height: 1.9; margin: 0; }
-  .dl-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid var(--line); }
-  .dl-card { position: relative; padding: 28px 24px 26px; border-right: 1px solid var(--line); display: flex; flex-direction: column; }
-  .dl-card:last-child { border-right: 0; }
-  .dl-card h3 { font-size: 19px; font-weight: 500; margin: 8px 0 10px; }
-  .dl-card p { color: var(--ink-soft); font-size: 13.5px; line-height: 1.8; margin: 0 0 18px; flex: 1; }
-  .dl-card .btn { align-self: flex-start; margin: 0 0 10px; }
-  .dl-card .btn-ghost { padding: 11px 20px; font-size: 13.5px; }
-  .dl-tag { align-self: flex-start; padding: 3px 9px; font-size: 11px; letter-spacing: .1em; color: var(--cinnabar-deep); border: 1px solid var(--cinnabar); }
-  .dl-primary { background: var(--paper-light); }
-  .dl-primary .dl-tag { background: var(--cinnabar); color: var(--paper-light); border-color: var(--cinnabar); }
-  .dl-meta { font-size: 12px; color: var(--muted); font-family: var(--font-mono); }
-  .dl-note { margin: 20px 0 0; font-size: 14px; color: var(--ink-soft); line-height: 1.9; }
-  .dl-note a { color: var(--cinnabar-deep); border-bottom: 1px solid var(--cinnabar); }
-  .dl-note strong { color: var(--ink); }
-  .dl-inline-btn { padding: 0; border: 0; background: transparent; color: var(--cinnabar-deep); font: inherit; font-size: 14px; cursor: pointer; border-bottom: 1px solid var(--cinnabar); }
-  /* 表单左侧下载入口（2026-10-15）：与在线表单并列，给「想填得更细」的人第二条路 */
-  .form-aside > p { max-width: 500px; color: var(--ink-soft); }
-  .aside-dl { margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
-  .aside-dl-title { margin: 0 0 4px; font-size: 13px; color: var(--muted); letter-spacing: .04em; }
-  .aside-dl a, .aside-dl button { padding: 0; border: 0; background: transparent; color: var(--cinnabar-deep); font: inherit; font-size: 14px; cursor: pointer; border-bottom: 1px solid var(--cinnabar); text-align: left; }
-  /* 中途转化条（2026-10-15）：采购商滚过产品线/FAQ 后若已有意向，
-     必须在当前位置就能找到出口，不能逼他一路滚到底部表单。
-     整条做成浅底带，视觉上是一次「呼吸」，不打断阅读节奏。 */
-  .mid-cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; margin-top: 8px; padding: 22px 26px; background: var(--paper-light); border: 1px solid var(--line); }
-  .mid-cta p { margin: 0; font-size: 15px; color: var(--ink-soft); }
-  .mid-cta-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
-  .mid-cta .btn, .mid-cta .btn-ghost { margin: 0; padding: 10px 18px; font-size: 13.5px; }
-  .business-hero-scenes { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 14px; margin-bottom: 32px; }
-  .business-hero-scenes img { width: 100%; aspect-ratio: 1.35; object-fit: cover; display: block; }
-  .biz-directions .section-lead { max-width: 680px; margin-bottom: 40px; } .biz-directions h2 { font-size: clamp(26px, 3.2vw, 40px); font-weight: 500; margin: 14px 0 12px; } .biz-directions .section-lead p { color: var(--ink-soft); line-height: 1.9; margin: 0; }
-  .dir-list { border-top: 1px solid var(--line); }
-  .dir-item { display: flex; gap: 24px; padding: 26px 0; border-bottom: 1px solid var(--line); scroll-margin-top: 92px; }
-  .dir-no { flex: none; font-size: 15px; color: var(--cinnabar-deep); border-bottom: 1px solid var(--cinnabar); padding-bottom: 5px; height: fit-content; letter-spacing: .18em; }
-  .dir-item h3 { font-size: clamp(20px, 2.4vw, 26px); font-weight: 500; margin: 4px 0 10px; }
-  .dir-item p { color: var(--ink-soft); font-size: 15px; line-height: 1.9; margin: 0; max-width: 760px; }
-  .dir-scenes { display: inline-block; margin-top: 12px; color: var(--cinnabar-deep); font-size: 13px; letter-spacing: .04em; }
-  .dir-note { color: var(--muted); font-size: 13px; letter-spacing: .04em; margin: 16px 0 26px; }
-  /* 场景导航（2026-10-15）：四个产品线正文较长，先给一个「对号入座」的快速入口。
-     四格等宽，窄屏自动换行；每格锚到对应产品线的 id。 */
-  .scene-nav { margin: 0 0 8px; }
-  .scene-nav-title { font-size: 15px; font-weight: 400; color: var(--ink); letter-spacing: .04em; margin: 0 0 14px; }
-  .scene-nav ul { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; list-style: none; padding: 0; margin: 0; border: 1px solid var(--line); }
-  .scene-nav li { border-right: 1px solid var(--line); }
-  .scene-nav li:last-child { border-right: 0; }
-  .scene-nav a { display: block; min-height: 100%; padding: 18px 16px 20px; text-decoration: none; transition: background .25s ease; }
-  .scene-nav a:hover, .scene-nav a:focus-visible { background: var(--paper-light); }
-  .scene-nav .mono { display: block; font-size: 12px; letter-spacing: .18em; color: var(--cinnabar-deep); margin-bottom: 8px; }
-  .scene-nav strong { display: block; font-size: 15px; font-weight: 500; color: var(--ink); line-height: 1.5; margin-bottom: 6px; }
-  .scene-nav small { display: block; font-size: 12px; color: var(--ink-soft); line-height: 1.7; letter-spacing: .02em; }
-  /* 交付周期表（2026-10-15）：B 端决策最关心「多久能到」，从 FAQ 里提出来做成可扫的表。
-     周期口径全部来自站上已有表述，未引入任何新承诺。 */
-  .biz-timeline .section-lead { max-width: 680px; margin-bottom: 36px; } .biz-timeline h2 { font-size: clamp(26px, 3.2vw, 40px); font-weight: 500; margin: 14px 0 12px; } .biz-timeline .section-lead p { color: var(--ink-soft); line-height: 1.9; margin: 0; }
-  .timeline-table { border-top: 1px solid var(--line); }
-  .tl-row { display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--line); }
-  .tl-row > span { font-size: 14px; line-height: 1.8; color: var(--ink-soft); }
-  .tl-row > span:first-child { color: var(--ink); font-weight: 500; }
-  .tl-row > span:nth-child(2) { color: var(--cinnabar-deep); }
-  .tl-head { border-bottom: 1px solid var(--ink); }
-  .tl-head > span { font-size: 12px !important; letter-spacing: .14em; color: var(--muted) !important; font-weight: 400 !important; }
-  .timeline-note { margin: 18px 0 0; color: var(--muted); font-size: 13px; line-height: 1.85; max-width: 720px; }
-  /* 合作对象说明位（2026-10-15）：无授权不放案例 —— 用一段诚实的说明占位，
-     而不是塞入无从核实的数字或未经许可的 LOGO。有授权后替换本块即可。 */
-  .biz-trust .section-lead { max-width: 680px; } .biz-trust h2 { font-size: clamp(26px, 3.2vw, 40px); font-weight: 500; margin: 14px 0 12px; } .biz-trust .section-lead p { color: var(--ink-soft); line-height: 1.9; margin: 0; }
-  .trust-placeholder { margin-top: 30px; padding: 30px 32px; border: 1px dashed var(--line); background: var(--paper-light); }
-  .trust-placeholder-zh { margin: 0 0 6px; font-size: 16px; color: var(--ink); }
-  .trust-placeholder-en { margin: 0 0 16px; font-family: var(--font-display-en), Georgia, serif; font-size: 15px; color: var(--muted); }
-  .trust-placeholder-link { display: inline-block; color: var(--cinnabar-deep); font-size: 14px; border-bottom: 1px solid var(--cinnabar); padding-bottom: 3px; }
-  .biz-process .section-lead { max-width: 680px; margin-bottom: 40px; } .biz-process h2 { font-size: clamp(26px, 3.2vw, 40px); font-weight: 500; margin: 14px 0 12px; } .biz-process .section-lead p { color: var(--ink-soft); line-height: 1.9; margin: 0; }
-  .process-list { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); list-style: none; padding: 0; margin: 0; }
-  .process-list li { padding: 26px 26px 30px 0; border-bottom: 1px solid var(--line); }
-  .process-list li:not(:nth-child(3n + 1)) { padding-left: 26px; border-left: 1px solid var(--line); }
-  .process-list .mono { display: block; font-size: 13px; letter-spacing: .18em; color: var(--cinnabar-deep); margin-bottom: 12px; }
-  .process-list h3 { font-size: 19px; font-weight: 500; margin: 0 0 8px; }
-  .process-list p { color: var(--ink-soft); font-size: 14px; line-height: 1.85; margin: 0; }
-  .plans { display: grid; grid-template-columns: repeat(3, 1fr); border-block: 1px solid var(--line); } .plans article { padding: 24px 22px 30px 0; min-height: 300px; } .plans article + article { padding-left: 22px; border-left: 1px solid var(--line); } .plans .eyebrow { display: block; margin-top: 24px; } .plans h2 { font-size: 29px; font-weight: 500; line-height: 1.35; margin: 14px 0; } .plans strong { color: var(--cinnabar-deep); font: 21px var(--font-display-en), Georgia, serif; } .plans p { color: var(--ink-soft); font-size: 14px; }
-  .business-form, .business-faq { border-top: 1px solid var(--line); } .business-form h2, .business-faq h2 { font-size: clamp(26px, 3vw, 40px); font-weight: 500; margin: 18px 0 28px; }
-  .business-form { display: grid; grid-template-columns: .8fr 1.2fr; gap: 80px; } .business-form > div > p { max-width: 500px; color: var(--ink-soft); } form { border-top: 1px solid var(--line); padding-top: 20px; } label { display: block; color: var(--ink-soft); font-size: 13px; margin-bottom: 16px; } input, select, textarea { display: block; width: 100%; margin-top: 6px; border: 1px solid var(--line); border-radius: 0; background: var(--paper-light); padding: 11px 12px; } textarea { resize: vertical; } .form-note { color: var(--muted); font-size: 12px; line-height: 1.7; }
-  .faq-grid { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid var(--line); } .faq-grid details { padding: 18px 20px 18px 0; border-bottom: 1px solid var(--line); } .faq-grid details:nth-child(even) { padding-left: 20px; border-left: 1px solid var(--line); } .faq-grid summary { cursor: pointer; min-height: 44px; font-weight: 500; } .faq-grid p { color: var(--ink-soft); font-size: 14px; }
-  .honeypot-field { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-  .honeypot { position: absolute !important; width: 1px !important; height: 1px !important; overflow: hidden !important; clip: rect(0 0 0 0) !important; opacity: 0 !important; pointer-events: none !important; }
-  @media (max-width: 767px) { .business-hero-scenes { grid-template-columns: 1fr; gap: 12px; } .business-hero-scenes img { aspect-ratio: 1.3; } .page-head { padding: 56px 0 42px; } .page-head h1 { font-size: 30px; } .page-head p { font-size: 16px; } .page-head p[lang='en'] { font-size: 20px; } .dir-item { gap: 16px; padding: 22px 0; } .plans, .business-form, .faq-grid { grid-template-columns: 1fr; } .plans article, .plans article + article { min-height: 0; padding: 22px 0; border-left: 0; border-bottom: 1px solid var(--line); } .plans article:last-child { border-bottom: 0; } .business-form { gap: 28px; } .faq-grid details, .faq-grid details:nth-child(even) { padding: 16px 0; border-left: 0; } .process-list { grid-template-columns: 1fr; } .process-list li, .process-list li:not(:nth-child(3n + 1)) { padding: 20px 0; border-left: 0; } .process-list li:last-child { border-bottom: 0; } .scene-nav ul { grid-template-columns: 1fr; } .scene-nav li { border-right: 0; border-bottom: 1px solid var(--line); } .scene-nav li:last-child { border-bottom: 0; } .scene-nav a { padding: 15px 16px 17px; } .tl-row { grid-template-columns: 1fr; gap: 4px; padding: 16px 0; } .tl-head { display: none; } .tl-row > span:nth-child(2) { margin-bottom: 4px; } .tl-row > span[data-label]::before { content: attr(data-label) '：'; color: var(--muted); font-size: 12px; } .tl-row > span:first-child::before { content: none; } .tl-row > span:nth-child(2)::before { content: none; } .trust-placeholder { padding: 22px 20px; } .dl-grid { grid-template-columns: 1fr; } .dl-card, .dl-card:last-child { border-right: 0; border-bottom: 1px solid var(--line); padding: 22px 18px; } .dl-card:last-child { border-bottom: 0; } .dl-card p { flex: none; } .dl-card .btn, .dl-primary .btn { align-self: stretch; text-align: center; } .hero-cta { gap: 12px; } .hero-cta .btn, .hero-cta .btn-ghost, .hero-wechat { width: 100%; text-align: center; } .hero-wechat { border-bottom: 0; padding: 8px 0; } .hero-facts { font-size: 14px !important; line-height: 1.9; } }
+  /* 首屏 */
+  .hero-lead {
+    max-width: 640px;
+    margin: 14px 0 0;
+    font-size: 17px;
+    line-height: 1.9;
+    color: var(--ink-soft);
+  }
+  .hero-conditions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+    max-width: 760px;
+    margin: 30px 0 0;
+    border-top: 1px solid var(--line);
+  }
+  .hero-conditions > div {
+    padding: 16px 20px 16px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .hero-conditions > div:nth-child(2n) {
+    padding-left: 20px;
+    border-left: 1px solid var(--line);
+  }
+  .hero-conditions dt {
+    font-size: 12.5px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .hero-conditions dd {
+    margin: 6px 0 0;
+    font-size: 15.5px;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+    margin-top: 28px;
+  }
+  .hero-actions .btn {
+    margin-top: 0;
+  }
+
+  /* 业务线列表 */
+  .line-list {
+    border-top: 1px solid var(--line);
+  }
+  .line-item {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: 24px;
+    align-items: start;
+    padding: 26px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .line-no {
+    font-size: 13px;
+    color: var(--muted);
+    padding-top: 4px;
+  }
+  .line-body h3 {
+    margin: 0 0 8px;
+    font-size: 21px;
+  }
+  .line-body h3 a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .line-body h3 a:hover {
+    color: var(--cinnabar-deep);
+  }
+  .line-body p {
+    margin: 0 0 12px;
+    max-width: 620px;
+    font-size: 14.5px;
+    line-height: 1.85;
+    color: var(--ink-soft);
+  }
+  .line-facts {
+    display: block;
+    font-size: 13px;
+    color: var(--cinnabar-deep);
+    letter-spacing: 0.02em;
+  }
+  .line-more {
+    padding-top: 4px;
+    font-size: 13.5px;
+    color: var(--cinnabar-deep);
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 1px solid transparent;
+  }
+  .line-more:hover {
+    border-bottom-color: var(--cinnabar);
+  }
+
+  /* 三档规格 */
+  .plans-head {
+    margin-bottom: 28px;
+  }
+  .plans-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 1px solid var(--line);
+  }
+  .plans-grid article {
+    padding: 30px 26px 32px;
+    border-left: 1px solid var(--line);
+  }
+  .plans-grid article:first-child {
+    border-left: 0;
+  }
+  .plans-grid h3 {
+    margin: 14px 0 12px;
+    font-size: 19px;
+    line-height: 1.5;
+  }
+  .plans-grid strong {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 15px;
+    color: var(--cinnabar-deep);
+  }
+  .plans-grid p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--ink-soft);
+  }
+
+  /* 采购需求表（全页唯一下载入口） */
+  .dl-box {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px 28px;
+    padding: 26px 28px;
+    border: 1px solid var(--line);
+    background: var(--paper-light);
+  }
+  .dl-file {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .dl-format {
+    display: inline-block;
+    padding: 8px 12px;
+    border: 1px solid var(--cinnabar);
+    color: var(--cinnabar-deep);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+  }
+  .dl-file strong {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+  .dl-meta {
+    display: block;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .dl-box .btn {
+    margin: 0;
+  }
+  .dl-return {
+    margin-top: 24px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+    max-width: 720px;
+  }
+  .dl-return h3 {
+    margin: 0 0 12px;
+    font-size: 15px;
+  }
+  .dl-return ul {
+    margin: 0 0 14px;
+    padding-left: 18px;
+  }
+  .dl-return li {
+    font-size: 14.5px;
+    line-height: 2;
+    color: var(--ink-soft);
+  }
+  .dl-return a {
+    color: var(--cinnabar-deep);
+  }
+  .dl-sla {
+    margin: 0;
+    padding: 14px 16px;
+    background: var(--paper-light);
+    border-left: 2px solid var(--cinnabar);
+    font-size: 14px;
+    line-height: 1.9;
+    color: var(--ink-soft);
+  }
+  .dl-sla strong {
+    color: var(--ink);
+  }
+
+  /* 合作流程（一行） */
+  .flow-inline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: flow;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 20px 0;
+  }
+  .flow-inline li {
+    font-size: 14.5px;
+    color: var(--ink);
+    line-height: 1.8;
+  }
+  .flow-inline li:not(:last-child)::after {
+    content: '→';
+    margin: 0 14px;
+    color: var(--muted);
+  }
+  .flow-note {
+    margin: 16px 0 0;
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.9;
+  }
+
+  /* 表单旁提交说明 */
+  .form-sla {
+    margin-top: 22px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+  .form-sla strong {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14.5px;
+    color: var(--ink);
+  }
+  .form-sla span {
+    display: block;
+    font-size: 13.5px;
+    line-height: 1.9;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 767px) {
+    .hero-lead {
+      font-size: 15.5px;
+    }
+    .hero-conditions {
+      grid-template-columns: 1fr;
+    }
+    .hero-conditions > div:nth-child(2n) {
+      padding-left: 0;
+      border-left: 0;
+    }
+    .hero-actions .btn {
+      width: 100%;
+      text-align: center;
+    }
+    .line-item {
+      grid-template-columns: 36px 1fr;
+      gap: 16px;
+      padding: 22px 0;
+    }
+    .line-more {
+      grid-column: 2;
+      padding-top: 0;
+    }
+    .plans-grid {
+      grid-template-columns: 1fr;
+    }
+    .plans-grid article,
+    .plans-grid article:first-child {
+      border-left: 0;
+      border-top: 1px solid var(--line);
+      padding: 24px 20px;
+    }
+    .plans-grid article:first-child {
+      border-top: 0;
+    }
+    .dl-box {
+      padding: 22px 18px;
+    }
+    .dl-box .btn {
+      width: 100%;
+      text-align: center;
+    }
+    .flow-inline {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .flow-inline li:not(:last-child)::after {
+      content: '↓';
+      display: block;
+      margin: 6px 0 0;
+    }
+  }
 </style>

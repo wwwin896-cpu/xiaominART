@@ -35,10 +35,12 @@ export const navItems = [
   },
   {
     href: '/business-gifts/', zh: '企业礼赠', en: 'Corporate Gifts', children: [
-      { href: '/business-gifts/#gifts', zh: '商务伴手礼', en: 'For Giving' },
-      { href: '/business-gifts/#keep', zh: '庆典墨宝礼', en: 'For Keeping' },
-      { href: '/business-gifts/#space', zh: '空间书法礼', en: 'For Spaces' },
-      { href: '/business-gifts/#campus', zh: '校园纪念礼', en: 'For Campus' },
+      // 2026-10-15：子项由锚点改为独立页面 —— 每条业务线现在有自己的详情页，
+      // 导航应直接指向该页，而不是跳回主页再滚动。
+      { href: '/business-gifts/gifts/', zh: '商务伴手礼', en: 'For Giving' },
+      { href: '/business-gifts/keep/', zh: '庆典墨宝礼', en: 'For Keeping' },
+      { href: '/business-gifts/space/', zh: '空间书法礼', en: 'For Spaces' },
+      { href: '/business-gifts/campus/', zh: '校园纪念礼', en: 'For Campus' },
     ],
   },
   {

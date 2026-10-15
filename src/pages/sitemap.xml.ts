@@ -33,6 +33,7 @@ import { lastmodFor } from '../lib/seo';
 //   · seasons 详情页偏薄但可索引，先入图；内容补齐后 lastmod 会自然更新
 //   · 同步新增发布校验：scripts/check-sitemap.mjs 在构建后核对 dist 页面与 sitemap 的一致性
 const P = (p: string) => `src/pages/${p}`;
+const GH = (p: string) => `src/components/${p}`;
 const CONTENT = ['src/data/content.ts'];
 
 // 静态路由：lastmod 只看该页自身模板（+ 确实驱动它内容的数据文件）
@@ -45,6 +46,13 @@ const staticRoutes: { path: string; files: string[] }[] = [
   { path: 'scenes/', files: [P('scenes/index.astro')] },
   { path: 'artists/', files: [P('artists/index.astro'), ...CONTENT] },
   { path: 'business-gifts/', files: [P('business-gifts/index.astro')] },
+  // 企业礼赠四条业务线详情页（2026-10-15 新增）
+  // ⚠️ GEO 要求：每条业务线独立可寻址 —— AI 助手回答用户问题时需要能指到具体 URL，
+  //    单页 + 锚点对它不友好（分不清锚点内容的归属）。故这四条必须进 sitemap 白名单。
+  { path: 'business-gifts/gifts/', files: [P('business-gifts/gifts.astro'), GH('BusinessCaseWall.astro'), GH('BusinessDetailPage.astro')] },
+  { path: 'business-gifts/keep/', files: [P('business-gifts/keep.astro'), GH('BusinessCaseWall.astro'), GH('BusinessDetailPage.astro')] },
+  { path: 'business-gifts/space/', files: [P('business-gifts/space.astro'), GH('BusinessCaseWall.astro'), GH('BusinessDetailPage.astro')] },
+  { path: 'business-gifts/campus/', files: [P('business-gifts/campus.astro'), GH('BusinessCaseWall.astro'), GH('BusinessDetailPage.astro')] },
   // 机构合作（注意：这四个页面是平铺文件 xxx.astro，不是 xxx/index.astro）
   { path: 'partners/', files: [P('partners/index.astro')] },
   { path: 'partners/publishing/', files: [P('partners/publishing.astro')] },

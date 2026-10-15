@@ -47,25 +47,24 @@ const ALLOWED_EVENTS = new Set([
   // 2026-10-15 补录：现货作品详情页 → 企业礼赠页（批量定制导流）
   // 三处同登记：本文件 / src/scripts/cloud-forms.ts / docs/事件字典.md
   'ready_to_business',
-  // 2026-10-15 补录：企业礼赠页场景导航 / 合作对象位 → 表单（页面内导流）
-  'biz_scene_nav',
-  'biz_trust_to_form',
-  // 2026-10-15 补录：企业礼赠页转化路径重做（首屏动作 + 采购需求表下载区 + 表单旁下载入口）
-  'biz_hero_download',
+  // ── 企业礼赠页（2026-10-15 晚 二次重写后的事件集）──
+  // 本轮按业主意见大幅精简：下载入口收敛到 2 处、只留 DOCX、删除场景导航/页中转化条/六步流程。
+  // 已废弃并移除（历史数据仍在库中）：
+  //   biz_scene_nav / biz_trust_to_form
+  //   biz_hero_download / biz_hero_wechat / biz_dl_pdf / biz_dl_print / biz_dl_wechat
+  //   biz_form_dl_docx / biz_form_dl_pdf / biz_form_wechat
+  //   biz_mid_download / biz_mid_form / biz_mid_wechat
+  'biz_hero_dl',
   'biz_hero_form',
-  'biz_hero_wechat',
   'biz_dl_docx',
-  'biz_dl_pdf',
-  'biz_dl_print',
-  'biz_dl_wechat',
   'biz_dl_email',
-  'biz_form_dl_docx',
-  'biz_form_dl_pdf',
-  'biz_form_wechat',
-  // 2026-10-15：页中转化条（滚过产品线/FAQ 后的就近出口）
-  'biz_mid_download',
-  'biz_mid_form',
-  'biz_mid_wechat',
+  'biz_line_nav',
+  'biz_line_nav_more',
+  // 四条业务详情页共用（商务伴手礼 / 庆典墨宝礼 / 空间书法礼 / 校园纪念礼）
+  'biz_detail_form',
+  'biz_detail_dl',
+  'biz_detail_form_bottom',
+  'biz_detail_dl_bottom',
   'scene_to_product',
   'scene_view',
   // 页面 data-event：心愿单与分享
