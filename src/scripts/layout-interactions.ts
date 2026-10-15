@@ -130,6 +130,10 @@ window.addEventListener('xiaominart:event', (event) => {
 // ── ⑤ 移动端「微信直联」弹层（WO-P0-04）────────────────────────
 // 触点：底栏按钮 → 弹出二维码 + 可选微信号复制。微信内打开时提示「长按识别」，
 // 其他浏览器补一句「截图后用微信扫一扫」，因为站内无法直接唤起微信加好友。
+//
+// 2026-10-15 扩展：页内任何 `[data-wechat-open]` 元素也能唤起同一个弹层。
+// 起因 —— 企业礼赠页把「加微信直接聊」提到了首屏与下载区，若只能靠移动底栏触发，
+// 桌面端访客在这些位置点下去会没有任何反应（底栏在桌面是隐藏的）。
 const wechatTrigger = document.querySelector<HTMLButtonElement>('.wechat-link');
 const wechatSheet = document.querySelector<HTMLElement>('#wechat-sheet');
 const closeWechat = () => {
@@ -137,14 +141,21 @@ const closeWechat = () => {
   wechatSheet.hidden = true;
   wechatTrigger.setAttribute('aria-expanded', 'false');
 };
-wechatTrigger?.addEventListener('click', () => {
+const openWechat = (source?: string) => {
   if (!wechatSheet) return;
   wechatSheet.hidden = false;
-  wechatTrigger.setAttribute('aria-expanded', 'true');
+  wechatTrigger?.setAttribute('aria-expanded', 'true');
   window.dispatchEvent(new CustomEvent('xiaominart:event', {
-    detail: { name: 'wechat_direct_open', path: window.location.pathname },
+    detail: { name: 'wechat_direct_open', path: window.location.pathname, source },
   }));
   wechatSheet.querySelector<HTMLButtonElement>('.wechat-sheet-close')?.focus();
+};
+wechatTrigger?.addEventListener('click', () => openWechat());
+// 页内触发点：[data-wechat-open]（可带 data-wechat-source 标明来路，便于比对各入口效果）
+document.querySelectorAll<HTMLElement>('[data-wechat-open]').forEach((el) => {
+  el.addEventListener('click', () => {
+    openWechat(el.dataset.wechatSource || el.dataset.event || 'inline');
+  });
 });
 wechatSheet?.querySelector('.wechat-sheet-close')?.addEventListener('click', closeWechat);
 wechatSheet?.addEventListener('click', (event) => { if (event.target === wechatSheet) closeWechat(); });
