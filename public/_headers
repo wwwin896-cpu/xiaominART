@@ -19,6 +19,13 @@
 /assets/brand/*
   Cache-Control: public, max-age=3600, stale-while-revalidate=86400
 
+# 下载区（采购需求表等）：固定文件名 + 1 小时缓存。
+# ⚠️ 不能用长缓存 —— 表格内容更新后，已访问过的采购商会在缓存期内下载到旧版，
+#    而 B 端一旦按旧表填完发来，返工成本比省下的带宽高得多。
+#    必须写在更宽泛的 /assets/* 之前（同 _headers 的「更具体优先」规则）。
+/downloads/*
+  Cache-Control: public, max-age=3600, must-revalidate
+
 /assets/*
   Cache-Control: public, max-age=1209600, stale-while-revalidate=604800
 

@@ -169,6 +169,22 @@ const TRACKED_EVENTS = new Set([
   // 2026-10-15 补录：企业礼赠页场景导航 / 合作对象位 → 表单（页面内导流）
   'biz_scene_nav',
   'biz_trust_to_form',
+  // 2026-10-15 补录：企业礼赠页转化路径重做（首屏动作 + 采购需求表下载区 + 表单旁下载入口）
+  'biz_hero_download',
+  'biz_hero_form',
+  'biz_hero_wechat',
+  'biz_dl_docx',
+  'biz_dl_pdf',
+  'biz_dl_print',
+  'biz_dl_wechat',
+  'biz_dl_email',
+  'biz_form_dl_docx',
+  'biz_form_dl_pdf',
+  'biz_form_wechat',
+  // 2026-10-15：页中转化条（滚过产品线/FAQ 后的就近出口）
+  'biz_mid_download',
+  'biz_mid_form',
+  'biz_mid_wechat',
   'scene_to_product',
   'scene_view',
   // 页面 data-event：心愿单与分享
