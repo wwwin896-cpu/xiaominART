@@ -1,12 +1,13 @@
 #!/usr/bin/env node
+// ─────────────────────────────────────────────────────────────
 // 百度「主动推送」（快速收录 API）——把 dist/sitemap.xml 里的 URL 推送给百度。
 //
 // 为什么用主动推送而不用 sitemap 提交：
 //   sitemap 提交依赖百度侧配额释放（新验证站点常显示「今日上限 0 条」，需 1-3 天）；
-//   主动推送配额独立且通常更宽松、当天可用、且是实时的（推完立刻进入抓取队列）。
+//   主动推送配额独立、且一旦释放即可当天用，实时的（推完立刻进入抓取队列）。
 //
 // 用法：
-//   node scripts/baidu-push.mjs                 # 推送全部（受配额限制，自动截断）
+//   node scripts/baidu-push.mjs                 # 自适应推送：先探测配额再按额度分批
 //   node scripts/baidu-push.mjs --dry-run       # 只打印将要推送的 URL，不发请求
 //   node scripts/baidu-push.mjs --limit=10      # 最多推送 10 条（保护今日配额）
 //   node scripts/baidu-push.mjs --urls=a,b      # 只推送指定 URL（适合增量推送）
@@ -19,7 +20,25 @@
 //    本地调试可写入仓库根目录 .env.baidu（已在 .gitignore 忽略），格式：
 //      BAIDU_PUSH_TOKEN=xxxxxxxxxxxxxxxx
 //
+// ⚠️⚠️ 2026-10-15 关键修复：**超配额会整批拒绝，不是「推一部分成功」**
+//
+//   实测（证据：CI run 38646550964 与 38732246171 的步骤日志，跨两天结果一致）：
+//     「百度主动推送：共 71 条 URL，分 1 批
+//       批次 1/1（71 条）… ⚠ 推送被拒绝：今日配额已用尽（over quota）
+//       汇总：成功推送 0 / 71 条」
+//
+//   原实现按 MAX_PER_REQUEST=1000 分批，71 条只分 1 批 → 整批超出配额 →
+//   百度**整批拒绝**（success:0），于是「每天都跑、每天都是 0 条成功」，
+//   长期静默失效。本站配额实测远小于 71（历史记录为 10 条/天，甚至可能为 0）。
+//
+//   修法：**先小批探测，再按返回的 remain 自适应分批**——
+//     ① 首批发 PROBE_SIZE 条（默认 1 条），成本极低但能拿到真实 remain
+//     ② 按 remain 把剩余 URL 切成不超过 remain 的批
+//     ③ 任一批返回 over quota 立即收尾（软失败，不报错）
+//   这样「配额 10 条」能推 10 条成功、而不是 0 条。
+//
 // 退出码：0 = 推送成功或无需推送；1 = 配置/网络/接口错误（CI 会因此标红）。
+// ─────────────────────────────────────────────────────────────
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -27,8 +46,14 @@ const ROOT = process.cwd();
 const SITE = 'https://xiaominart.com';
 const ENDPOINT = 'http://data.zz.baidu.com/urls';
 
-// 百度单次请求上限 2000 条，这里保守取 1000，避免请求体过大
+// 百度单次请求上限 2000 条，这里保守取 1000，避免请求体过大。
+// ⚠️ 注意：这是「单次请求的协议上限」，**不是配额**。实际配额由百度按站点下发，
+//    超了会整批拒绝 → 见文件头 2026-10-15 修复说明，务必先探测再分批。
 const MAX_PER_REQUEST = 1000;
+
+// 探测批大小：首批只发这么多条，用于换取接口返回的真实 remain。
+// 取 1 是有意的 —— 成本最低（最多浪费 1 条额度），但能拿到准确配额。
+const PROBE_SIZE = 1;
 
 // ---------- 参数解析 ----------
 const argv = process.argv.slice(2);
@@ -185,12 +210,7 @@ function leftovers(json) {
   return out;
 }
 
-const batches = [];
-for (let i = 0; i < target.length; i += MAX_PER_REQUEST) {
-  batches.push(target.slice(i, i + MAX_PER_REQUEST));
-}
-
-console.log(`百度主动推送：共 ${target.length} 条 URL，分 ${batches.length} 批`);
+console.log(`百度主动推送：共 ${target.length} 条 URL（自适应分批）`);
 console.log(`站点 ${SITE}`);
 console.log('');
 
@@ -199,9 +219,15 @@ let lastRemain = null;
 let hardFailure = false;
 let quotaHit = false;
 const rejected = [];
+const pending = [...target];
+let batchNo = 0;
 
-for (const [i, batch] of batches.entries()) {
-  process.stdout.write(`  批次 ${i + 1}/${batches.length}（${batch.length} 条）… `);
+/** 推一批并统一处理返回；返回 'stop' 表示应终止循环
+ * @param {string[]} batch
+ * @returns {Promise<'continue'|'stop'>} */
+async function runBatch(batch) {
+  batchNo += 1;
+  process.stdout.write(`  批次 ${batchNo}（${batch.length} 条）… `);
   let result;
   try {
     result = await pushBatch(batch);
@@ -209,7 +235,7 @@ for (const [i, batch] of batches.entries()) {
     console.log('✗ 网络错误');
     console.error(`     ${err instanceof Error ? err.message : String(err)}`);
     hardFailure = true;
-    break;
+    return 'stop';
   }
 
   const verdict = explain(result.json);
@@ -223,21 +249,40 @@ for (const [i, batch] of batches.entries()) {
   if (verdict.quota) {
     quotaHit = true;
     console.log('  ⚠ 今日配额已用尽，剩余 URL 请改日再推（脚本可重复执行，已收录的重复推送不影响）');
-    break;
+    return 'stop';
   }
   // remain 归零但本批仍有成功：配额刚好用完，同样按软失败收工
   if (lastRemain === 0) {
     quotaHit = true;
     console.log('  ⚠ 今日配额已用尽，剩余 URL 请改日再推');
-    break;
+    return 'stop';
   }
   // 真·配置错误（token 无效 / 站点未验证 / 接口地址错 / site 参数被编码）：
   // 后续批次必然同样失败，重试无意义 → 立即止损并 exit=1 让 CI 标红。
   // 早先只判 [401,403,404] 把 400 放过了，导致 token 配错时退出码仍为 0，已修正。
   if (result.json.error) {
     hardFailure = true;
-    break;
+    return 'stop';
   }
+  return 'continue';
+}
+
+// ① 探测批：先发 1 条，换取真实 remain（见文件头 2026-10-15 修复说明）
+if (pending.length > 0) {
+  const probe = pending.splice(0, Math.min(PROBE_SIZE, pending.length));
+  const act = await runBatch(probe);
+  if (act === 'stop') {
+    // 探测批就失败 → 直接进入汇总；此时 totalSuccess 已如实统计
+    pending.length = 0;
+  }
+}
+
+// ② 自适应批：按 remain 决定每批大小（remain 未知时退回保守的 10 条）
+while (pending.length > 0 && !hardFailure && !quotaHit) {
+  const size = Math.max(1, Math.min(lastRemain ?? 10, MAX_PER_REQUEST, pending.length));
+  const batch = pending.splice(0, size);
+  const act = await runBatch(batch);
+  if (act === 'stop') break;
 }
 
 console.log('');
