@@ -214,11 +214,17 @@ console.log(`百度主动推送：共 ${target.length} 条 URL（自适应分批
 console.log(`站点 ${SITE}`);
 console.log('');
 
-let totalSuccess = 0;
+// ⚠️ 这些变量被下方 runBatch() 读写。tsconfig 开了 checkJs，
+//    若只写 `let lastRemain = null` / `const rejected = []`，
+//    TS 会因「在被提升的函数里才被赋值/使用」而推不出类型 → ts(7034)/ts(7005) 报错。
+//    必须显式标注（本文件是 .mjs，用 JSDoc 注解而非 TS 语法）。
+/** @type {number|null} */
 let lastRemain = null;
+/** @type {string[]} */
+const rejected = [];
+let totalSuccess = 0;
 let hardFailure = false;
 let quotaHit = false;
-const rejected = [];
 const pending = [...target];
 let batchNo = 0;
 
