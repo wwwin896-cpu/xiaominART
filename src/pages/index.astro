@@ -318,7 +318,7 @@ const originNodes = [
   {/* ── 见自己 · 修身入口区：从「艺术」转向「人」。配图用业主提供的书写近景实拍。 ── */}
   <section class="container section self-section" aria-labelledby="self-title">
     <div class="self-grid">
-      <figure class="self-fig" data-reveal><Pic src="/assets/scenes/self-practice-writing.jpg" alt="书写近景：手执毛笔在亚麻纸上写下浓墨大字，旁有砚台，暖光下笔锋清晰可见" loading="lazy" decoding="async" /></figure>
+      <figure class="self-fig" data-reveal><Pic src="/assets/scenes/self-writing-gold-paper.jpg" alt="书写现场实拍：手执毛笔在洒金笺上落墨，案上有砚台、香炉、青瓷瓶与笔架，暖光下的书写一角" loading="lazy" decoding="async" /></figure>
       <div class="self-copy" data-reveal>
         <span class="eyebrow">见自己 / 修身入口</span>
         <h2 id="self-title" class="serif">看见，是理解的开始；<br />理解，是修身的入口。</h2>
@@ -352,8 +352,8 @@ const originNodes = [
   <section class="container section choices" aria-labelledby="works-title">
     <div class="section-lead">
       <span class="eyebrow">01 / 作品展示 · 一字一源</span>
-      <h2 id="works-title" class="serif">一个字，有它自己的来处。</h2>
-      <p>每一幅字都不是随手写下的。这些字从甲骨、青铜、石鼓与瓦当里长出来，走了几千年才落到你的案头。先认识它，再决定它该去哪儿。</p>
+      <h2 id="works-title" class="serif">每个字，有它自己的来处。</h2>
+      <p>每一幅字都不是随手写下的。这些字从甲骨、青铜、石鼓与碑刻里长出来，走了几千年才落到你的案头。</p>
     </div>
     <div class="work-grid">
       {sourceWorks.map((work) => (
@@ -476,7 +476,7 @@ const originNodes = [
      两者若长得一样，业主在文档里要求的「边界不重叠」就落不到眼睛上。 */
   .work-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px 30px; }
   .work-card { display: flex; flex-direction: column; }
-  .work-fig { position: relative; margin: 0; overflow: hidden; aspect-ratio: 4 / 5; background: var(--paper-deep); }
+  .work-fig { position: relative; margin: 0; overflow: hidden; aspect-ratio: 4 / 3; background: var(--paper-deep); }
   .work-fig :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease, filter .5s ease; }
   .work-card:hover .work-fig :global(img) { transform: scale(1.035); filter: brightness(1.05); }
   /* 「已真实交付」标记：业主 2026-10-16 确认前 4 件为真实委托。
@@ -506,9 +506,10 @@ const originNodes = [
   .work-foot { margin: 28px 0 0; color: var(--muted); font-size: 12px; line-height: 1.9; }
   .work-foot a { color: var(--cinnabar); border-bottom: 1px solid var(--cinnabar); }
   /* 场景索引条：横向一条，弱化处理，只作导航用 */
-  .scene-index { display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px 22px; margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--line); }
-  .scene-index-label { color: var(--muted); font-size: 11px; letter-spacing: .16em; }
-  .scene-index-list { display: flex; flex-wrap: wrap; gap: 8px 24px; list-style: none; margin: 0; padding: 0; }
+  /* 按场合找礼：标签居中在上，6 个入口 3 列 × 2 行居中排布（2026-10-16 业主调整） */
+  .scene-index { margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--line); text-align: center; }
+  .scene-index-label { display: block; color: var(--muted); font-size: 11px; letter-spacing: .16em; margin-bottom: 14px; }
+  .scene-index-list { display: grid; grid-template-columns: repeat(3, max-content); justify-content: center; gap: 12px 52px; list-style: none; margin: 0; padding: 0; }
   .scene-index-list a { display: inline-flex; align-items: baseline; gap: 8px; color: var(--ink-soft); font-size: 13px; text-decoration: none; border-bottom: 1px solid transparent; transition: color .3s ease, border-color .3s ease; }
   .scene-index-list a:hover { color: var(--cinnabar); border-bottom-color: var(--cinnabar); }
   .scene-index-list .mono { color: var(--cinnabar); font-size: 11px; letter-spacing: .1em; }
@@ -570,11 +571,10 @@ const originNodes = [
     .self-grid { grid-template-columns: 1fr; gap: 28px; }
     /* 见来处：背书改两行居中 */
     .brand-facts { gap: 12px 28px; }
-    /* 作品展示 · 一字一源：移动端单列，竖版图改横版更省纵向滚动 */
+    /* 作品展示 · 一字一源：移动端单列，横版图更省纵向滚动 */
     .work-grid { grid-template-columns: 1fr; gap: 34px; }
     .work-fig { aspect-ratio: 4 / 3; }
-    .scene-index { gap: 10px 18px; }
-    .scene-index-list { gap: 8px 18px; }
+    .scene-index-list { grid-template-columns: repeat(2, max-content); gap: 12px 34px; }
     .story-grid { grid-template-columns: 1fr; gap: 20px; }
     .process-rail { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 16px; padding-bottom: 8px; margin: 0 -16px; padding-inline: 16px; }
     .process-card { flex: 0 0 74%; scroll-snap-align: start; }
