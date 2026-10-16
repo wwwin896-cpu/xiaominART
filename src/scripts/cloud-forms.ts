@@ -197,6 +197,12 @@ const TRACKED_EVENTS = new Set([
   ...BUSINESS_DETAIL_EVENTS,
   'scene_to_product',
   'scene_view',
+  // 2026-10-16 补录：首页「作品展示 · 一字一源」区块（原「心意之选」场景卡改版）。
+  //   source_work_click —— 作品卡 → 商品/业务详情页（种草后去看）
+  //   source_work_wish  —— 作品卡「以此为灵感」写入心愿单（种草即收藏，程序化发出）
+  // 三处同登记：本文件 / functions/api/event.ts / docs/事件字典.md
+  'source_work_click',
+  'source_work_wish',
   // 页面 data-event：心愿单与分享
   'wishlist_to_guide',
   'wish_stories_click',

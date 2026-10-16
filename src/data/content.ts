@@ -464,6 +464,31 @@ export type ReadyMadeWork = {
    *  读取层见 `src/lib/ready-made.ts`（页面请用 getReadyMadeWorks()）。
    *  这里的字段只在**没有对应状态文件**时作为兜底，正常不要再手改。 */
   sold?: boolean;
+  /**
+   * 字源释读（2026-10-16 新增，配合首页「作品展示 · 一字一源」）。
+   *
+   * 文档要求作品页三层递进：① 这是什么 → ② 它可以为你做什么 → ③ 如果你想拥有它。
+   * 本字段承载第 ① 层。**可选**：只写得起考据的作品才填，未填时详情页
+   * 不会出现空白段落（渲染层做 `work.source && ...` 判断）。
+   *
+   * ⚠️ 考据必须可核验，不得为了页面好看而编造字形流变。业主已明确
+   * 「先上线再核，我根据你上线后的内容提供专业的内容」——当前是简释版，
+   * 页面会对外标注「待校订」，业主内容到位后覆盖本字段即可。
+   */
+  source?: {
+    /** 主打字（一个汉字），详情页用作字形主视觉 */
+    char: string;
+    /** 字形出处：朝代 + 载体，如「汉瓦当」「商甲骨文」 */
+    origin: string;
+    /** 考据正文：这个字怎么来的、为什么写出来是这个样子 */
+    note: string;
+  };
+  /**
+   * 场景联想（2026-10-16 新增）。承载三层递进的第 ② 层：
+   * 不描述规格，只描述「它可以为你做什么」——送给谁、放在哪、替你说了什么。
+   * 可选，未填时详情页不渲染该块。
+   */
+  sceneFit?: string;
 };
 
 /**
@@ -475,18 +500,42 @@ export type ReadyMadeWork = {
  * 尺寸与纸墨细节不写在页面上，随作品档案在咨询时提供；价格已公开（form/price 字段）。
  */
 export const readyMadeWorks: ReadyMadeWork[] = [
-  { slug: 'qing-huan', title: '清欢', en: 'Quiet Joy', code: 'XMA-CL-WA-26-0001-T2-0', year: 2026, note: '「人间有味是清欢」，苏轼写给寻常日子的七个字。不浓烈，却留得住——适合茶席、餐桌旁，或任何一个想慢下来的墙角。', material: '赭底宣纸 · 白色卡衬 · 榫卯结构柚木框', form: '挂墙', price: 399, size: { w: 60, h: 33 }, image: '/assets/works/work-qing-huan-2.jpg', alt: '赭底白卡柚木框书法小品《清欢》挂在墙上的空间实景，旁有青瓷瓶、座钟与书册' },
-  { slug: 'de-xin-ya-ju', title: '德馨雅居', en: 'Virtue Graces the Home', code: 'XMA-CL-WA-26-0002-T2-3', year: 2026, note: '「斯是陋室，惟吾德馨」——屋子不在大小，住的人自有雅气。适合客厅大墙，也适合乔迁与开业。', material: '手写书法原作 · 榫卯结构胡桃木框', form: '挂墙', price: 399, size: { w: 60, h: 33 }, image: '/assets/works/work-de-xin-ya-ju.jpg', alt: '书法横批《德馨雅居》挂在客厅大墙上，下方是茶台、皮沙发与圆几' },
-  { slug: 'shang-hua-pin-ming', title: '赏花品茗', en: 'Flowers & Tea', code: 'XMA-CL-SG-26-0001-T1-8', year: 2026, note: '赏花品茗，四时清课。瓶花与茶席之间，把日子过成自己的样子。适合茶室与餐边柜，也适合爱花爱茶的人。', material: '手写书法原作 · 榫卯结构柚木框', form: '摆件', price: 199, size: { w: 21, h: 29.7 }, image: '/assets/works/work-shang-hua-pin-ming.jpg', alt: '书法横批《赏花品茗》立在木质边柜上，旁有瓶花与盖碗茶席' },
-  { slug: 'nan-xi-xin-ji', title: '南谿新霁', en: 'Clearing Over the South Stream', code: 'XMA-CL-FA-26-0001-T1-4', year: 2026, note: '「南谿新霁」——雨过天晴，山清水净。四个字落在洒金扇面上，把雨停之后那一刻的清朗留在案头，适合茶席与书房。', material: '洒金扇面 · 榫卯结构胡桃木框', form: '摆件', price: 199, size: { w: 21, h: 29.7 }, image: '/assets/works/work-fan.jpg', alt: '胡桃木框洒金扇面书法小品《南谿新霁》立在抹茶茶席上，旁有茶碗、茶筅与和果子' },
-  { slug: 'chan', title: '禅', en: 'Zen', code: 'XMA-CL-SC-26-0001-T1-4', year: 2026, note: '「菩提本无树」，六祖慧能的偈语。一方圆光小品，进门第一眼、家里最安静的那个角落，都合适。', material: '圆光小品 · 榫卯结构胡桃木框', form: '摆件', price: 299, size: { w: 50, h: 50 }, image: '/assets/works/work-chan.jpg', alt: '圆光书法小品《禅》立在玄关石面上，旁有玉兰花枝与暖灯' },
-  { slug: 'mo-jian-hu-yin', title: '莫见乎隐', en: 'Seen Even When Alone', code: 'XMA-CL-WA-26-0003-T2-6', year: 2026, note: '「莫见乎隐，莫显乎微」——《中庸》讲慎独：越是没人看见的地方，越看得见一个人。适合书房，也适合留给自己的角落。', material: '手写书法立轴 · 榫卯结构胡桃木框', form: '挂墙', price: 399, size: { w: 60, h: 33 }, image: '/assets/works/work-mo-jian-hu-yin.jpg', alt: '书法立轴《莫见乎隐·莫显乎微》嵌在拱形壁龛里，下方石台上有陶瓶与蒲苇' },
-  { slug: 'guan-zi-zai', title: '观自在', en: 'At Ease, As You Are', code: 'XMA-CL-SG-26-0002-T1-1', year: 2026, note: '「观自在菩萨」，心经开篇三字。自在不在远处，就在抬眼可见的地方——适合书房与玄关。', material: '手写书法原作 · 榫卯结构胡桃木框', form: '摆件', price: 199, size: { w: 21, h: 29.7 }, image: '/assets/works/work-guan-zi-zai.jpg', alt: '书法横批《观自在》摆在中式木案上，旁有石盆、瘦枝与笔架' },
-  { slug: 'yi-hu-yi-xi', title: '一呼一吸', en: 'One Breath, Then Another', code: 'XMA-CL-SG-26-0003-T1-4', year: 2026, note: '一呼一吸之间，日子有了自己的节奏。适合卧室床头、书桌旁，也适合送给总在赶时间的人。', material: '手写书法原作 · 榫卯结构柚木框', form: '摆件', price: 199, size: { w: 21, h: 29.7 }, image: '/assets/works/work-yi-hu-yi-xi.jpg', alt: '书法小品《一呼一吸》立在卧室边柜上，旁有台灯与柿子果盘' },
-  { slug: 'chang-le', title: '长乐', en: 'Everlasting Joy', code: 'XMA-CL-WA-26-0004-T2-9', year: 2026, note: '取意汉瓦「长乐未央」，两个字，是古人最绵长的祝愿。适合书房与日常抬眼可见的地方。', material: '手写书法立轴 · 榫卯结构胡桃木框', form: '挂墙', price: 399, size: { w: 60, h: 33 }, image: '/assets/works/work-chang-le.jpg', alt: '书法立轴《长乐》挂在深木色书房书架间，案上有绿植、笔砚与台灯' },
-  { slug: 'duan-she-li', title: '断舍离', en: 'Less, Then Light', code: 'XMA-CL-SG-26-0004-T1-7', year: 2026, note: '三个字，写给正在做减法的人与家。适合卧室、玄关，也适合送给刚刚搬完家的朋友。', material: '手写书法原作 · 榫卯结构柚木框', form: '摆件', price: 199, size: { w: 21, h: 29.7 }, image: '/assets/works/work-duan-she-li-2.jpg', alt: '书法小品《断舍离》立在卧室柜上，旁有台灯、书册与瓶枝' },
-  { slug: 'mao-fei-jia-run', title: '猫肥家润', en: 'Fat Cat, Flourishing Home', code: 'XMA-CL-SG-26-0005-T1-0', year: 2026, note: '猫肥家润，花繁人安。把最有烟火气的幸福写进家里——适合客厅，也适合养猫的人家。', material: '手写书法原作 · 榫卯结构柚木框', form: '摆件', price: 199, size: { w: 21, h: 29.7 }, image: '/assets/works/work-mao-fei-jia-run.jpg', alt: '书法横批《猫肥家润》摆在客厅木几上，背景是沙发、抱枕与绿植' },
-  { slug: 'xiang-jian-yi-wu-shi', title: '相见亦无事', en: 'Nothing Much, Just to See You', code: 'XMA-CL-SG-26-0006-T1-3', year: 2026, note: '「相见亦无事，不来忽忆君」，写给不必寒暄的老朋友。适合客厅与茶席，也适合做乔迁与重逢的礼。', material: '白底红卡 · 榫卯结构胡桃木框', form: '摆件', price: 199, size: { w: 21, h: 29.7 }, image: '/assets/works/work-xiang-jian-yi-wu-shi.jpg', alt: '白底红卡黑框书法小品《相见亦无事》立在暖光卧室的木柜上，旁有台灯与书册' },
+  { slug: 'qing-huan', title: '清欢', en: 'Quiet Joy', code: 'XMA-CL-WA-26-0001-T2-0', year: 2026, note: '「人间有味是清欢」，苏轼写给寻常日子的七个字。不浓烈，却留得住——适合茶席、餐桌旁，或任何一个想慢下来的墙角。', material: '赭底宣纸 · 白色卡衬 · 榫卯结构柚木框', form: '挂墙', price: 399, size: { w: 60, h: 33 }, image: '/assets/works/work-qing-huan-2.jpg', alt: '赭底白卡柚木框书法小品《清欢》挂在墙上的空间实景，旁有青瓷瓶、座钟与书册',
+    source: { char: '歡', origin: '商周金文', note: '「欢」的繁体作「歡」，从雚从欠：左旁「雚」是一种水鸟，右旁「欠」象人张口出气。古人以鸟鸣开口之形，记下欢愉这件事——原来「开心」这个意思，一开始是从声音里来的。' },
+    sceneFit: '茶席旁、餐桌边，或任何一个想慢下来的墙角。它不劝你热闹，只提醒你——寻常日子本身就值得被写下来。' },
+  { slug: 'de-xin-ya-ju', title: '德馨雅居', en: 'Virtue Graces the Home', code: 'XMA-CL-WA-26-0002-T2-3', year: 2026, note: '「斯是陋室，惟吾德馨」——屋子不在大小，住的人自有雅气。适合客厅大墙，也适合乔迁与开业。', material: '手写书法原作 · 榫卯结构胡桃木框', form: '挂墙', price: 399, size: { w: 60, h: 33 }, image: '/assets/works/work-de-xin-ya-ju.jpg', alt: '书法横批《德馨雅居》挂在客厅大墙上，下方是茶台、皮沙发与圆几',
+    source: { char: '馨', origin: '商甲骨文', note: '「馨」从香从殸省，本义是香气传得远。《说文》释为「香之远闻者」——古人用一个字记下「好东西会自己飘出去」这件事，所以「德馨」说的是：住的人对了，屋子自然有味道。' },
+    sceneFit: '客厅大墙、进门正对的那面墙。乔迁、开业、或者只是你终于把家安顿好了——这四个字替主人说话，不必开口。' },
+  { slug: 'shang-hua-pin-ming', title: '赏花品茗', en: 'Flowers & Tea', code: 'XMA-CL-SG-26-0001-T1-8', year: 2026, note: '赏花品茗，四时清课。瓶花与茶席之间，把日子过成自己的样子。适合茶室与餐边柜，也适合爱花爱茶的人。', material: '手写书法原作 · 榫卯结构柚木框', form: '摆件', price: 199, size: { w: 21, h: 29.7 }, image: '/assets/works/work-shang-hua-pin-ming.jpg', alt: '书法横批《赏花品茗》立在木质边柜上，旁有瓶花与盖碗茶席',
+    source: { char: '茗', origin: '先秦石鼓文', note: '「茗」从艸从名，指晚采的茶。《说文》未收此字，较早见于汉魏文献；本义与「名」有关——茶有名字，不好的一茬才叫「茗」。后来这个字反而成了茶的雅称，古人的自谦，慢慢长成了体面。' },
+    sceneFit: '茶室、餐边柜、阳台一角的茶席。送给爱花爱茶的人，或者送给那个终于愿意给自己泡一壶茶的人。' },
+  { slug: 'nan-xi-xin-ji', title: '南谿新霁', en: 'Clearing Over the South Stream', code: 'XMA-CL-FA-26-0001-T1-4', year: 2026, note: '「南谿新霁」——雨过天晴，山清水净。四个字落在洒金扇面上，把雨停之后那一刻的清朗留在案头，适合茶席与书房。', material: '洒金扇面 · 榫卯结构胡桃木框', form: '摆件', price: 199, size: { w: 21, h: 29.7 }, image: '/assets/works/work-fan.jpg', alt: '胡桃木框洒金扇面书法小品《南谿新霁》立在抹茶茶席上，旁有茶碗、茶筅与和果子',
+    source: { char: '霁', origin: '秦篆', note: '「霁」从雨从齐，本义是雨停。《说文》释为「雨止也」，从「齐」得声兼取意——雨脚齐了，便是天要放晴。这个字只属于那一小段时间：雨刚停、水汽还悬着、光刚刚透进来。' },
+    sceneFit: '茶席、书房案头。它写的是雨后那一刻，也可以是你心里那件事刚刚过去的那一刻。' },
+  { slug: 'chan', title: '禅', en: 'Zen', code: 'XMA-CL-SC-26-0001-T1-4', year: 2026, note: '「菩提本无树」，六祖慧能的偈语。一方圆光小品，进门第一眼、家里最安静的那个角落，都合适。', material: '圆光小品 · 榫卯结构胡桃木框', form: '摆件', price: 299, size: { w: 50, h: 50 }, image: '/assets/works/work-chan.jpg', alt: '圆光书法小品《禅》立在玄关石面上，旁有玉兰花枝与暖灯',
+    source: { char: '禪', origin: '秦篆', note: '「禅」的繁体作「禪」，从示从單：左旁「示」是祭台，右旁「單」声。这个字本身是「祭天」之意，佛教东传后被借去翻译梵语「dhyāna」的音，从此长出一个全新的意思——一个字被赋予新生命，往往不是因为谁改造了它，而是因为有人需要它。' },
+    sceneFit: '玄关石面、最安静的墙角、办公桌一侧。它不说「你要放下」，它只是站在那里。' },
+  { slug: 'mo-jian-hu-yin', title: '莫见乎隐', en: 'Seen Even When Alone', code: 'XMA-CL-WA-26-0003-T2-6', year: 2026, note: '「莫见乎隐，莫显乎微」——《中庸》讲慎独：越是没人看见的地方，越看得见一个人。适合书房，也适合留给自己的角落。', material: '手写书法立轴 · 榫卯结构胡桃木框', form: '挂墙', price: 399, size: { w: 60, h: 33 }, image: '/assets/works/work-mo-jian-hu-yin.jpg', alt: '书法立轴《莫见乎隐·莫显乎微》嵌在拱形壁龛里，下方石台上有陶瓶与蒲苇',
+    source: { char: '隱', origin: '先秦石鼓文', note: '「隐」的繁体作「隱」，从阜从㥯：左旁「阜」是土山，右旁取其声兼意。本义是「藏在山后」——先秦的人用山的遮挡来理解「看不见」这件事，所以「隐」从来不是消失，只是被挡住了。' },
+    sceneFit: '书房、留给自己的那个角落。它不写给客人看，写给深夜还醒着的你。' },
+  { slug: 'guan-zi-zai', title: '观自在', en: 'At Ease, As You Are', code: 'XMA-CL-SG-26-0002-T1-1', year: 2026, note: '「观自在菩萨」，心经开篇三字。自在不在远处，就在抬眼可见的地方——适合书房与玄关。', material: '手写书法原作 · 榫卯结构胡桃木框', form: '摆件', price: 199, size: { w: 21, h: 29.7 }, image: '/assets/works/work-guan-zi-zai.jpg', alt: '书法横批《观自在》摆在中式木案上，旁有石盆、瘦枝与笔架',
+    source: { char: '心', origin: '秦篆', note: '「心」在秦篆里还是一个能看出心脏形状的象形字，《说文》释为「人心，土藏，在身之中」。到隶书时它才被压成今天的样子——字变了，「心」这个意思却一直没变。观自在的「自」，指的就是这颗心。' },
+    sceneFit: '书房案头、玄关。它不劝你放下什么，只提醒你——先看见自己，再谈其他。' },
+  { slug: 'yi-hu-yi-xi', title: '一呼一吸', en: 'One Breath, Then Another', code: 'XMA-CL-SG-26-0003-T1-4', year: 2026, note: '一呼一吸之间，日子有了自己的节奏。适合卧室床头、书桌旁，也适合送给总在赶时间的人。', material: '手写书法原作 · 榫卯结构柚木框', form: '摆件', price: 199, size: { w: 21, h: 29.7 }, image: '/assets/works/work-yi-hu-yi-xi.jpg', alt: '书法小品《一呼一吸》立在卧室边柜上，旁有台灯与柿子果盘',
+    source: { char: '息', origin: '商甲骨文', note: '「息」从自从心：「自」在甲骨文里就是鼻子的形状，古人以为气从鼻出，所以「息」的本义是呼吸。《说文》释「喘也」。一个由「鼻子」和「心」组成的字——呼吸这件事，从一开始就被当作心的事。' },
+    sceneFit: '卧室床头、书桌一角。送给总在赶时间的人，或者送给你自己——一呼一吸，你还在。' },
+  { slug: 'chang-le', title: '长乐', en: 'Everlasting Joy', code: 'XMA-CL-WA-26-0004-T2-9', year: 2026, note: '取意汉瓦「长乐未央」，两个字，是古人最绵长的祝愿。适合书房与日常抬眼可见的地方。', material: '手写书法立轴 · 榫卯结构胡桃木框', form: '挂墙', price: 399, size: { w: 60, h: 33 }, image: '/assets/works/work-chang-le.jpg', alt: '书法立轴《长乐》挂在深木色书房书架间，案上有绿植、笔砚与台灯',
+    source: { char: '樂', origin: '汉瓦当', note: '「长乐未央」是汉代瓦当上最常见的吉语之一，汉长乐宫的瓦头至今还留着这四个字。「乐」的初形是木上系丝弦——古人先有乐器，才从乐音里说出「快乐」。所以「长乐」的意思不只是长久高兴，是长久地、像音乐一样地过着。' },
+    sceneFit: '书房、抬眼可见的地方。不要热烈，只要绵长——这是两个字能给出的最长承诺。' },
+  { slug: 'duan-she-li', title: '断舍离', en: 'Less, Then Light', code: 'XMA-CL-SG-26-0004-T1-7', year: 2026, note: '三个字，写给正在做减法的人与家。适合卧室、玄关，也适合送给刚刚搬完家的朋友。', material: '手写书法原作 · 榫卯结构柚木框', form: '摆件', price: 199, size: { w: 21, h: 29.7 }, image: '/assets/works/work-duan-she-li-2.jpg', alt: '书法小品《断舍离》立在卧室柜上，旁有台灯、书册与瓶枝',
+    source: { char: '捨', origin: '秦篆', note: '「舍」的繁体作「捨」，从手从舍：提手旁是「放手」这个动作，右旁「舍」是房舍。本义是「放下手里的东西」。有意思的是，「舍」本身也指住所——同一个字，既是「放掉」，也是「安顿」。' },
+    sceneFit: '卧室、玄关、刚整理完的那个柜子前。送给刚搬完家的朋友，或者送给正打算重新开始的自己。' },
+  { slug: 'mao-fei-jia-run', title: '猫肥家润', en: 'Fat Cat, Flourishing Home', code: 'XMA-CL-SG-26-0005-T1-0', year: 2026, note: '猫肥家润，花繁人安。把最有烟火气的幸福写进家里——适合客厅，也适合养猫的人家。', material: '手写书法原作 · 榫卯结构柚木框', form: '摆件', price: 199, size: { w: 21, h: 29.7 }, image: '/assets/works/work-mao-fei-jia-run.jpg', alt: '书法横批《猫肥家润》摆在客厅木几上，背景是沙发、抱枕与绿植',
+    source: { char: '猫', origin: '先秦石鼓文', note: '「猫」从豸从苗：左旁「豸」在古文字里是长脊兽的象形，右旁「苗」是它的声音。从「苗」得声不是巧合——鼠害吃苗，所以猫因护苗而得名。这个字把「猫的用处」写进了它的样子里。' },
+    sceneFit: '客厅、猫窝旁边、家里的木几上。最没架子的一幅字——它记的不是理想生活，是有人在家。' },
+  { slug: 'xiang-jian-yi-wu-shi', title: '相见亦无事', en: 'Nothing Much, Just to See You', code: 'XMA-CL-SG-26-0006-T1-3', year: 2026, note: '「相见亦无事，不来忽忆君」，写给不必寒暄的老朋友。适合客厅与茶席，也适合做乔迁与重逢的礼。', material: '白底红卡 · 榫卯结构胡桃木框', form: '摆件', price: 199, size: { w: 21, h: 29.7 }, image: '/assets/works/work-xiang-jian-yi-wu-shi.jpg', alt: '白底红卡黑框书法小品《相见亦无事》立在暖光卧室的木柜上，旁有台灯与书册',
+    source: { char: '見', origin: '商甲骨文', note: '「见」的初形是一个人跪坐着、头上顶着一只放大的眼睛——甲骨文里「目」被刻意画得很大。古人用「突出眼睛」表示「看见」，因为看这件事，本来就不只是眼睛的事。' },
+    sceneFit: '客厅、茶席、老友常坐的那个位置。送给不必寒暄的人——不用说什么，来就好。' },
 ];
 
 export const channelPages = [

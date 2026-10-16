@@ -1,13 +1,139 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Pic from '../components/Pic.astro';
-const sceneCards = [
-  { tag: '节日问候', title: '四时一笺', body: '岁有寒暑，月有圆缺——把四季的流转写成一幅字，让问候在案头留得久一点。', price: '¥300', image: '/assets/scenes/theme-four-seasons.jpg', href: '/gifts/seasonal-letter-gift/', alt: '书房木案上的四季题跋书法横幅，旁有兰草与砚台' },
-  { tag: '传情达意', title: '一点朱砂', body: '朱砂作底，古字为凭——值得庆祝的事，就该这样郑重地讲出来。', price: '¥300', image: '/assets/scenes/theme-cinnabar.jpg', href: '/gifts/cinnabar-note-gift/', alt: '朱砂红卡的「欢喜」古文字书法框，旁有红梅与灯笼' },
-  { tag: '文房雅趣', title: '墨有呼吸', body: '书房雅趣，自古值得被记录——一笔一画的浓淡停顿都看得见，写出来的字，才是活的书香。', price: '¥800', image: '/assets/scenes/theme-ink-breath.jpg', href: '/gifts/ink-breath-teacher/', alt: '阳光下的毛边纸密字书法作品，笔触清晰可辨' },
-  { tag: '风生水起', title: '案上有山', body: '书房之内，自有山河——大境之气，亦有大静之气，把开阔与生长安放进日常。', price: '¥800', image: '/assets/scenes/theme-desk-mountain.jpg', href: '/gifts/desk-mountain-keepsake/', alt: '茶室绿墙上的长卷书法与原木长案茶席' },
-  { tag: '校庆谢师', title: '桃李不言', body: '校庆周年、谢师情谊——把校训或写给恩师的那句话写成字。桃李不言，下自成蹊，深深的感谢不必多言。', price: '¥800', image: '/assets/scenes/theme-teacher-calligraphy-desklamp.jpg', href: '/business-gifts/#campus', alt: '书房木案上的洒金笺古文字书法横幅，黑色台灯暖光下旁有青瓷瓶插山茶、放大镜与笔记本' },
-  { tag: '婚庆纪念', title: '琴瑟和鸣', body: '订婚、结婚、周年——把两个人的名字与祝愿写成一幅。琴瑟在御，莫不静好，愿此后岁岁年年。', price: '¥800', image: '/assets/scenes/theme-wedding-calligraphy-lantern.jpg', href: '/contact/', alt: '柚木边柜上的白底古文字书法横幅，旁有暖光纸灯笼、蕨类绿植与书册' },
+// ── 作品展示 · 一字一源（2026-10-16 业主裁决）────────────────────────────
+// 业主原话：「作品区要 6，不要恒/安/归，把心意之选换成作品展示」。
+//
+// 此前这一格是「01 / 心意之选」——6 张**送礼场景卡**（节日问候、传情达意…），
+// 讲的是「什么时候送 / 送给谁」。业主判定它与紧随其后的「02 / 客户分享」
+// （讲「这份礼是怎么来的」）职能重叠：两格都在讲礼，没人讲「字」。
+//
+// 现在改为「一字一源」作品展示：讲**这个字从哪来**——字形源流 + 场景联想。
+// 与 02 客户分享形成文档要求的边界：作品区讲「字」，客户区讲「人」，内容不重叠。
+//
+// ── 选件标准（业主授权「先上线再核」，此标准待业主用专业考据覆盖）──
+// 1. 必须能追溯到**具体的字形/实物遗存**（不是文学出处），这是「一字一源」的题眼；
+// 2. 前 4 件是**已真实交付**的委托作品（业主 2026-10-16 确认），带真实委托背景；
+// 3. 后 2 件从现货十二幅中选字源最硬的两件：长乐（汉瓦当实物）> 其余。
+//
+// ⚠️ 2026-10-16 关键区分：**已交付作品 vs 可购商品**。
+//    前 4 件（康而寿 / 择吉日 / 古为今用 / 百福图）是**委托已交付的案例**，
+//    slug 不在商品目录（giftProducts + readyMadeWorks）里 —— 它们**不可购买**。
+//    初版给这 4 件也加了「以此为灵感」收藏按钮，浏览器实测点击后
+//    localStorage 立刻被清空：WishlistDrawer 的 render() 会把「不在 catalog 里的 slug」
+//    当孤儿项剔除并写回（见 WishlistDrawer.astro 的 known 过滤逻辑）。
+//    从产品语义上讲，让用户「收藏」一件已经属于别人的作品本来就是错的，
+//    所以正解不是把 4 件塞进 catalog，而是**不给它们收藏按钮**：
+//      · 已交付作品 → 「以此为灵感定制」（带 slug 作为 inspiration 参数，走定制）
+//      · 在售现货   → 「以此为灵感」（真收藏，写入心愿单）
+//    页面不暴露这两个分支的技术原因，读者只会看到两个都说得通的入口。
+type SourceWork = {
+  slug: string;          // 现货作品与商品目录对齐；委托案例仅作定制灵感标识
+  title: string;         // 作品词面
+  en: string;
+  char: string;          // 主打字的古文字形展示字（页面用 display 字体放大表现）
+  origin: string;        // 字源出处（朝代 / 载体）
+  originNote: string;    // 字源考据一句话
+  scene: string;         // 场景联想：它可以为你做什么
+  image: string;
+  alt: string;
+  href: string;          // 「看看这一件」的去处
+  delivered: boolean;    // true = 已真实交付的委托作品（不可收藏，只能以之为灵感定制）
+  /** 在售现货才填：心愿单 slug（必须存在于商品目录，否则会被抽屉当孤儿清掉） */
+  wishSlug?: string;
+};
+const sourceWorks: SourceWork[] = [
+  {
+    slug: 'kang-er-shou',
+    title: '康而寿',
+    en: 'Health and Longevity',
+    char: '寿',
+    origin: '西周金文',
+    originNote: '「寿」在青铜器铭文里写作上「老」下「畴」的会意结构，本义是「久经岁月而身体不衰」。金文铸刻的线条厚实匀停，写出来自然带着一份稳当。',
+    scene: '给父母、长辈，或送给一个刚刚熬过难关的人。它不说「祝你健康」，它说的是「愿你的日子长久而安稳」。',
+    image: '/assets/scenes/study-kang-er-shou.jpg',
+    alt: '书房案头的《康而寿》书法横幅，旁有台灯与书卷',
+    href: '/stories/',
+    delivered: true,
+  },
+  {
+    slug: 'ze-ji-ri',
+    title: '择吉日',
+    en: 'Choose an Auspicious Day',
+    char: '吉',
+    origin: '商甲骨文',
+    originNote: '「吉」在甲骨文里是一只匣子中盛着兵器的形状，古人以此表示「器物齐备，可以行事」。商人不问吉凶不动兵，于是这个字本身就带着「准备好了」的分量。',
+    scene: '乔迁、开业、签约、启程。「择吉日」不是翻黄历，是说——搬进来的每一天，都算数。',
+    image: '/assets/scenes/housewarming-ze-ji-ri.jpg',
+    alt: '赭色卡纸的《择吉日》书法横幅，摆在卧室边柜上，旁有台灯与鲜花',
+    href: '/stories/',
+    delivered: true,
+  },
+  {
+    slug: 'gu-wei-jin-yong',
+    title: '古为今用',
+    en: 'The Old, Put to Present Use',
+    char: '用',
+    origin: '先秦石鼓文',
+    originNote: '石鼓文是现存最早的成篇刻石文字，笔画圆转如鼓形，被后世视为「篆书之祖」。「用」在其中的写法已近今天的结构，是汉字从图画走向秩序的关键一环。',
+    scene: '谢师、校庆、给一位把老学问讲成新道理的人。「古为今用」四个字，替你说出那句不容易说出口的感谢。',
+    image: '/assets/scenes/teacher-gu-wei-jin-yong.jpg',
+    alt: '餐边柜上的《古为今用》古文字书法横幅，旁有陶瓶与绿枝',
+    href: '/business-gifts/#campus',
+    delivered: true,
+  },
+  {
+    slug: 'bai-fu-tu',
+    title: '百福图',
+    en: 'A Hundred Blessings',
+    char: '福',
+    origin: '商周金文',
+    originNote: '「福」的初形是双手举酒樽献于神前，本义是「以酒祭神，求神赐福」。它一开始就不是一个祝福词，而是一个动作——把最好的东西，郑重地献出去。',
+    scene: '企业周年、合作庆典、长辈寿宴——需要一件压得住场面的礼。「百福」是一百种写法，也是一百种把好话说出口的方式。',
+    image: '/assets/scenes/dining-room-long-calligraphy.jpg',
+    alt: '企业空间里的书法横幅',
+    href: '/business-gifts/',
+    delivered: true,
+  },
+  {
+    slug: 'chang-le',
+    title: '长乐',
+    en: 'Everlasting Joy',
+    char: '乐',
+    origin: '汉瓦当',
+    originNote: '「长乐未央」是汉代瓦当上最常见的吉语之一，汉代长乐宫的瓦头至今还留着这四个字。「长乐」二字，是古人刻在屋檐上、住了两百年的祝愿。',
+    scene: '书房、茶席，或任何一个抬眼可见的地方。不要热烈，只要绵长——这是两个字能给出的最长承诺。',
+    image: '/assets/works/work-chang-le.jpg',
+    alt: '书法立轴《长乐》挂在深木色书房书架间，案上有绿植、笔砚与台灯',
+    href: '/gifts/ready-made/chang-le/',
+    delivered: false,
+    wishSlug: 'chang-le',
+  },
+  {
+    slug: 'guan-zi-zai',
+    title: '观自在',
+    en: 'At Ease, As You Are',
+    char: '心',
+    origin: '秦篆',
+    originNote: '「心」在秦篆里还是一个能看出心脏形状的象形字，许慎《说文》释为「人心，土藏，在身之中」。书同文之后，这个字形被固定下来，两千年未改。',
+    scene: '书房、玄关、办公桌上。「观自在」出自《心经》开篇，它不劝你放下，只提醒你——先看见自己，再谈其他。',
+    image: '/assets/works/work-guan-zi-zai.jpg',
+    alt: '书法横批《观自在》摆在中式木案上，旁有石盆、瘦枝与笔架',
+    href: '/gifts/ready-made/guan-zi-zai/',
+    delivered: false,
+    wishSlug: 'guan-zi-zai',
+  },
+];
+// 送礼场景导航：原「心意之选」6 张场景卡的职能是「按场合找礼」，
+// 这一职能不能被新作品区吞掉——否则首页就只剩「看字」，没有「找礼」的入口。
+// 降级为作品区下方的一条轻量索引（不占大图位），保住导航职能又不与作品区抢注意力。
+const sceneIndex = [
+  { tag: '节日问候', label: '四时一笺', href: '/gifts/seasonal-letter-gift/' },
+  { tag: '传情达意', label: '一点朱砂', href: '/gifts/cinnabar-note-gift/' },
+  { tag: '文房雅趣', label: '墨有呼吸', href: '/gifts/ink-breath-teacher/' },
+  { tag: '风生水起', label: '案上有山', href: '/gifts/desk-mountain-keepsake/' },
+  { tag: '校庆谢师', label: '桃李不言', href: '/business-gifts/#campus' },
+  { tag: '婚庆纪念', label: '琴瑟和鸣', href: '/contact/' },
 ];
 const storyCards = [
   { title: '书房定制 · 给父母的周年纪念礼', quote: '想给结婚三十年的爸妈留一件东西，最后写了「康而寿」。康是平安，寿是长久——挂进书房那天，我爸说，这三个字比什么都实在。', image: '/assets/scenes/study-kang-er-shou.jpg', alt: '书房案头的「康而寿」书法横幅，旁有台灯与书卷' },
@@ -101,6 +227,64 @@ const originNodes = [
     }
   </script>
 
+  {/* ── 作品展示 ·「以此为灵感」写入心愿单（任务 #106）─────────────────────
+      背景：文档把「以此为灵感」列为作品的轻量入口。此前首页这块的「以此为灵感」
+      只是一个指向详情页的箭头（`<span class="card-link">`），**不是收藏动作**——
+      用户点了会被带走，而不是把作品先收着。这与 /gifts/ 列表页的「加入心愿单」
+      是两种不同语义，文档要求的「轻量入口」应是后者。
+
+      实现直接复用 src/scripts/wishlist.ts（全站唯一读写入口，
+      见该文件头部注释：此前有 4 份独立实现，抽屉上线后必须收敛）。
+
+      ⚠️ 2026-10-16 实测踩坑：初版用「加载时 querySelectorAll 逐个绑定」的写法，
+      浏览器实测**点击完全无反应**（localStorage 不写入、aria-pressed 不变、
+      无任何报错）。原因是该 <script> 是 module，被 Astro 提到作品区**之前**
+      （实测 script 标签在 HTML 的 11867 字符处、作品卡在 16999 字符处），
+      执行时 [data-work-wish] 节点尚未解析出来 → querySelectorAll 返回空数组，
+      绑定循环一次都没进，且静默无错。
+      改为**事件委托到 document**（与本仓库 Layout 的 [data-event] 同一范式，
+      见 layout-interactions.ts 的注释：同样因为「动态插入的节点收不到监听」
+      而从逐个绑定改为委托）。委托对解析先后天然免疫。
+
+      选择器用 data-work-wish 而非复用 data-wishlist —— 后者是 GiftCard.astro
+      的专属选择器，若同页同时存在两套脚本会双层绑定，点一次 → toggle 两次 →
+      收藏状态原地抵消，且不报错（本仓库踩过同类静默事故）。 ── */}
+  <script>
+    import { isWishlisted, toggleWishlist, onWishlistChange } from '../scripts/wishlist';
+
+    /** 同步单个按钮的收藏态与文案 */
+    const syncButton = (button: HTMLButtonElement) => {
+      const slug = button.dataset.workWish || '';
+      if (!slug) return;
+      const saved = isWishlisted(slug);
+      button.setAttribute('aria-pressed', String(saved));
+      button.textContent = saved ? '已收藏' : '以此为灵感';
+    };
+
+    // 事件委托：不依赖节点何时被解析出来
+    document.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement | null;
+      const button = target?.closest<HTMLButtonElement>('[data-work-wish]');
+      if (!button) return;
+      const slug = button.dataset.workWish || '';
+      if (!slug) return;
+      toggleWishlist(slug);
+      syncButton(button);
+      // 落库统计：与 /gifts/ 的 wishlist_submit（提交清单）不是一回事，
+      // 这里衡量的是「在作品区被种草并收藏」这一步的转化。
+      window.dispatchEvent(new CustomEvent('xiaominart:event', {
+        detail: { name: 'source_work_wish', path: window.location.pathname, slot: slug },
+      }));
+    });
+
+    // 初始态 + bfcache 恢复（移动端 Safari / 微信返回时浏览器复用旧 DOM）
+    const syncAll = () => {
+      document.querySelectorAll<HTMLButtonElement>('[data-work-wish]').forEach(syncButton);
+    };
+    syncAll();
+    onWishlistChange(syncAll);
+  </script>
+
   {/* ── 见山河 / 笔墨之根：从「见山河」的气势承接进道法与书法。
       背景用业主提供的浅纸调古文字四段图（甲骨/金文/石鼓文/篆书），文字深墨居中。
       2026-10-16 业主裁决：眉题「见先古」改「见山河」，且整块显式居中（flex 列居中，
@@ -161,11 +345,51 @@ const originNodes = [
     <a class="btn btn-primary" href="/about/" data-reveal>走进小民艺术 →</a>
   </section>
 
-  <section class="container section choices" aria-labelledby="choices-title">
-    <div class="section-lead"><span class="eyebrow">01 / 心意之选</span><h2 id="choices-title" class="serif">为生活添一份心意。</h2><p>不是冰冷的印刷品，而是带着温度的手泽。或是案头的一抹清欢，或是心头的一声叹息。</p></div>
-    <div class="choice-grid">
-      {sceneCards.map((card) => <a class="choice-card" href={card.href} data-event="scene_view"><figure><Pic src={card.image} alt={card.alt} loading="lazy" decoding="async" /></figure><div class="choice-copy"><span class="mono choice-tag">{card.tag}</span><h3 class="serif">{card.title}</h3><p>{card.body}</p><div class="choice-meta"><span class="price">心意起点约 {card.price}</span><span class="card-link">以此为灵感 →</span></div></div></a>)}
+  {/* ── 01 / 作品展示 · 一字一源（2026-10-16 业主裁决：由「心意之选」改版）──
+      文档定调：作品页三层递进「这是什么 → 它可以为你做什么 → 如果你想拥有它」。
+      首页这一格取第一、二层（字源 + 场景联想），第三层交给详情页，避免首页过长。
+      每张卡片右下角一个「以此为灵感」——收藏进心愿单，是第三层的轻量入口。 ── */}
+  <section class="container section choices" aria-labelledby="works-title">
+    <div class="section-lead">
+      <span class="eyebrow">01 / 作品展示 · 一字一源</span>
+      <h2 id="works-title" class="serif">一个字，有它自己的来处。</h2>
+      <p>每一幅字都不是随手写下的。这些字从甲骨、青铜、石鼓与瓦当里长出来，走了几千年才落到你的案头。先认识它，再决定它该去哪儿。</p>
     </div>
+    <div class="work-grid">
+      {sourceWorks.map((work) => (
+        <article class="work-card" data-reveal>
+          <figure class="work-fig">
+            <Pic src={work.image} alt={work.alt} loading="lazy" decoding="async" />
+            {work.delivered && <span class="work-flag">已真实交付</span>}
+          </figure>
+          <div class="work-copy">
+            <div class="work-head">
+              <h3 class="serif">{work.title}</h3>
+              <span class="work-char serif" aria-hidden="true">{work.char}</span>
+            </div>
+            <p class="work-en" lang="en">{work.en}</p>
+            <p class="work-origin"><span class="mono work-era">{work.origin}</span>{work.originNote}</p>
+            <p class="work-scene">{work.scene}</p>
+            <div class="work-meta">
+              {work.wishSlug
+                ? <button class="work-wish" type="button" data-work-wish={work.wishSlug} aria-pressed="false">以此为灵感</button>
+                : <a class="work-wish" href="/custom-commission/" data-event="custom_inquiry_start" data-slot={`source_${work.slug}`}>以此为灵感定制 →</a>}
+              <a class="work-link" href={work.href} data-event="source_work_click">看看这一件 →</a>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+    <p class="work-foot">字源考据为简释版，专业考订内容正在整理中；如需了解某个字更完整的流变，欢迎<a href="/about/">与我们交流</a>。</p>
+
+    {/* 送礼场景索引：原 6 张场景卡的「按场合找礼」职能保留在此，
+        不占大图位、不与作品区抢注意力，但入口一个不少。 */}
+    <nav class="scene-index" aria-label="按送礼场合浏览">
+      <span class="scene-index-label">按场合找礼 /</span>
+      <ul class="scene-index-list">
+        {sceneIndex.map((scene) => <li><a href={scene.href} data-event="scene_view"><span class="mono">{scene.tag}</span>{scene.label}</a></li>)}
+      </ul>
+    </nav>
   </section>
 
   <section class="container section stories" aria-labelledby="stories-title">
@@ -245,22 +469,53 @@ const originNodes = [
   .brand-facts a { display: inline-flex; align-items: baseline; gap: 10px; color: var(--ink-soft); font-size: 14px; letter-spacing: .04em; text-decoration: none; border-bottom: 1px solid transparent; transition: color .3s ease, border-color .3s ease; }
   .brand-facts a:hover { color: var(--cinnabar); border-bottom-color: var(--cinnabar); }
   .brand-facts .mono { color: var(--cinnabar); font-size: 13px; }
+  /* ── 01 / 作品展示 · 一字一源（2026-10-16 由「心意之选」改版）──
+     视觉上与下方「02 / 客户分享」明确分家：
+       作品区 = 竖版大图 + 字形主体（讲「字」）
+       客户区 = 横版卡 + 引语（讲「人」）
+     两者若长得一样，业主在文档里要求的「边界不重叠」就落不到眼睛上。 */
+  .work-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px 30px; }
+  .work-card { display: flex; flex-direction: column; }
+  .work-fig { position: relative; margin: 0; overflow: hidden; aspect-ratio: 4 / 5; background: var(--paper-deep); }
+  .work-fig :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease, filter .5s ease; }
+  .work-card:hover .work-fig :global(img) { transform: scale(1.035); filter: brightness(1.05); }
+  /* 「已真实交付」标记：业主 2026-10-16 确认前 4 件为真实委托。
+     不做成交数字的夸示（禁用项），只标事实，让这 4 件与其他作品可区分。 */
+  .work-flag { position: absolute; left: 12px; top: 12px; padding: 4px 9px; background: rgba(244, 239, 229, .92); color: var(--cinnabar-deep); font-size: 11px; letter-spacing: .1em; }
+  .work-copy { display: flex; flex-direction: column; flex: 1; padding: 18px 2px 0; }
+  .work-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .work-head h3 { font-size: 21px; font-weight: 500; margin: 0; letter-spacing: .04em; }
+  /* 主打字的字形展示：用 display 字体（宋/明体）放大到接近字号的两倍，
+     低透明度朱砂色 —— 它是「装饰性的证据」，不参与阅读流，故 aria-hidden。 */
+  .work-char { flex-shrink: 0; color: var(--cinnabar); opacity: .26; font-size: 40px; line-height: 1; font-weight: 400; }
+  .work-en { margin: 4px 0 12px; font: 12px var(--font-display-en), Georgia, serif; color: var(--muted); letter-spacing: .04em; }
+  .work-origin { margin: 0 0 10px; color: var(--ink-soft); font-size: 13px; line-height: 1.95; }
+  .work-era { display: block; color: var(--cinnabar); font-size: 11px; letter-spacing: .16em; margin-bottom: 5px; }
+  .work-scene { margin: 0 0 16px; color: var(--ink); font-size: 14px; line-height: 1.95; }
+  .work-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--line-soft); }
+  /* 收藏按钮：与 /gifts/ 列表页的「加入心愿单」同一交互语义，但文案按文档
+     附录三的 CTA 口径，用「以此为灵感」而不是「加入购物车」类词。 */
+  /* 收藏按钮 / 定制链接共用一个类名：两者语义都是「把这一件留下来」，
+     只是已交付作品走定制、在售现货走心愿单。视觉上保持同一位置同一重量。 */
+  .work-wish { padding: 6px 2px; border: 0; border-bottom: 1px solid transparent; background: transparent; color: var(--cinnabar); font: inherit; font-size: 13px; text-decoration: none; cursor: pointer; transition: border-color .3s ease; }
+  .work-wish:hover { border-bottom-color: var(--cinnabar); }
+  .work-wish[aria-pressed="true"] { color: var(--cinnabar-deep); border-bottom-color: var(--cinnabar-deep); }
+  .work-wish[aria-pressed="true"]::before { content: '已收藏 · '; color: var(--muted); }
+  .work-link { color: var(--ink-soft); font-size: 12px; white-space: nowrap; transition: color .3s ease; }
+  .work-link:hover { color: var(--cinnabar); }
+  .work-foot { margin: 28px 0 0; color: var(--muted); font-size: 12px; line-height: 1.9; }
+  .work-foot a { color: var(--cinnabar); border-bottom: 1px solid var(--cinnabar); }
+  /* 场景索引条：横向一条，弱化处理，只作导航用 */
+  .scene-index { display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px 22px; margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--line); }
+  .scene-index-label { color: var(--muted); font-size: 11px; letter-spacing: .16em; }
+  .scene-index-list { display: flex; flex-wrap: wrap; gap: 8px 24px; list-style: none; margin: 0; padding: 0; }
+  .scene-index-list a { display: inline-flex; align-items: baseline; gap: 8px; color: var(--ink-soft); font-size: 13px; text-decoration: none; border-bottom: 1px solid transparent; transition: color .3s ease, border-color .3s ease; }
+  .scene-index-list a:hover { color: var(--cinnabar); border-bottom-color: var(--cinnabar); }
+  .scene-index-list .mono { color: var(--cinnabar); font-size: 11px; letter-spacing: .1em; }
   .choices, .stories, .process, .closing { border-top: 1px solid var(--line-soft); }
   .section-lead { max-width: 560px; margin-bottom: 44px; }
   .section-lead h2 { font-size: clamp(24px, 2.8vw, 38px); font-weight: 500; line-height: 1.4; margin: 14px 0 12px; letter-spacing: .02em; }
   .section-lead p { color: var(--ink-soft); margin: 0; line-height: 1.9; }
-  .choice-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 34px 30px; }
-  .choice-card { display: flex; flex-direction: column; }
-  .choice-card figure { margin: 0; overflow: hidden; aspect-ratio: 4 / 3; background: var(--paper-deep); }
-  .choice-card :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease, filter .5s ease; }
-  .choice-card:hover :global(img) { transform: scale(1.035); filter: brightness(1.05); }
-  .choice-tag { display: block; color: var(--cinnabar); font-size: 12px; letter-spacing: .14em; margin: 0 0 6px; }
-  .choice-copy { padding: 18px 2px 0; }
-  .choice-copy h3 { font-size: 20px; font-weight: 500; margin: 0 0 8px; }
-  .choice-copy p { color: var(--ink-soft); font-size: 14px; line-height: 1.8; margin: 0 0 14px; }
-  .choice-meta { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
-  .choice-meta .price { color: var(--cinnabar-deep); font-size: 13px; }
-  .choice-meta .card-link { color: var(--cinnabar); font-size: 12px; white-space: nowrap; }
   .story-grid { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-rows: 380px; gap: 30px; }
   .story-card { display: grid; grid-template-columns: .9fr 1.1fr; border: 1px solid var(--line); background: var(--paper-light); }
   .story-card figure { margin: 0; overflow: hidden; }
@@ -279,7 +534,7 @@ const originNodes = [
   .closing { text-align: center; border-top: 1px solid var(--line-soft); }
   .closing h2 { font-size: clamp(24px, 2.8vw, 36px); font-weight: 500; margin: 16px 0 12px; }
   .closing p { color: var(--ink-soft); margin: 0 0 28px; }
-  @media (max-width: 900px) { .choice-grid { gap: 20px; } .story-grid { grid-auto-rows: auto; } .story-card { grid-template-columns: 1fr; } .story-card figure { aspect-ratio: 16 / 9; } }
+  @media (max-width: 900px) { .work-grid { grid-template-columns: repeat(2, 1fr); gap: 30px 22px; } .story-grid { grid-auto-rows: auto; } .story-card { grid-template-columns: 1fr; } .story-card figure { aspect-ratio: 16 / 9; } }
   /* Web 端（≥901px）：定制故事横向排开，作品按 3:2 完整呈现不裁切；移动端版式不受影响 */
   @media (min-width: 1100px) {
     .story-grid { grid-template-columns: repeat(4, 1fr); grid-auto-rows: auto; gap: 24px; }
@@ -315,8 +570,11 @@ const originNodes = [
     .self-grid { grid-template-columns: 1fr; gap: 28px; }
     /* 见来处：背书改两行居中 */
     .brand-facts { gap: 12px 28px; }
-    .choice-grid { grid-template-columns: 1fr; gap: 34px; }
-    .choice-card figure { aspect-ratio: 4 / 3; }
+    /* 作品展示 · 一字一源：移动端单列，竖版图改横版更省纵向滚动 */
+    .work-grid { grid-template-columns: 1fr; gap: 34px; }
+    .work-fig { aspect-ratio: 4 / 3; }
+    .scene-index { gap: 10px 18px; }
+    .scene-index-list { gap: 8px 18px; }
     .story-grid { grid-template-columns: 1fr; gap: 20px; }
     .process-rail { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 16px; padding-bottom: 8px; margin: 0 -16px; padding-inline: 16px; }
     .process-card { flex: 0 0 74%; scroll-snap-align: start; }

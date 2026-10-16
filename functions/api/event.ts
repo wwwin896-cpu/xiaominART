@@ -67,6 +67,10 @@ const ALLOWED_EVENTS = new Set([
   'biz_detail_dl_bottom',
   'scene_to_product',
   'scene_view',
+  // 2026-10-16：首页「作品展示 · 一字一源」区块（原「心意之选」改版）引入的两个事件。
+  // 与 src/scripts/cloud-forms.ts 的 TRACKED_EVENTS、docs/事件字典.md 三处同登记。
+  'source_work_click',
+  'source_work_wish',
   // 页面 data-event：心愿单与分享
   'wishlist_to_guide',
   'wish_stories_click',

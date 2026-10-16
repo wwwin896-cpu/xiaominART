@@ -85,6 +85,50 @@ const productSchema = {
     </div>
   </section>
 
+  {/* ── 字源释读 + 场景联想（2026-10-16 新增）─────────────────────────
+      文档要求的作品页三层递进：
+        ① 这是什么   → 本区块的「字源释读」
+        ② 它可以为你做什么 → 本区块的「场景联想」
+        ③ 如果你想拥有它   → 上方详情区的咨询 / 心愿单按钮（已在）
+
+      顺序刻意放在规格（work-facts）**之前**：先讲清「字」，再讲「框」。
+      之前的页面从标题直接跳到材质尺寸，跳过了「这个字为什么值得挂」这一步，
+      对不懂书法的访客来说，「规格表」读起来像在解释一件他还不想要的东西。
+
+      两个字段都是可选的（见 content.ts 的 ReadyMadeWork 类型注释）：
+      未填时整块不渲染，不会留空标题——12 幅现货已全部补齐，但内容后台
+      新增的作品可能没填，这里必须容错。 ── */}
+  {(work.source || work.sceneFit) && (
+    <section class="container section work-source" aria-labelledby="source-title">
+      <div class="source-grid">
+        {work.source && (
+          <div class="source-block">
+            <span class="eyebrow">Chapter 01 / 释读</span>
+            <div class="source-head">
+              <h2 id="source-title" class="serif">这个字，从哪儿来。</h2>
+              <span class="source-char serif" aria-hidden="true">{work.source.char}</span>
+            </div>
+            <p class="source-origin"><span class="mono">{work.source.origin}</span></p>
+            <p class="source-note">{work.source.note}</p>
+            <p class="source-foot">字源考据为简释版；完整释读随作品档案一并提供，也可在咨询时向我们索取。</p>
+          </div>
+        )}
+        {work.sceneFit && (
+          <div class="scene-block">
+            <span class="eyebrow">Chapter 02 / 陈设</span>
+            <h2 class="serif">它可以为你做什么。</h2>
+            <p class="scene-fit">{work.sceneFit}</p>
+            <ul class="scene-list">
+              <li>一件世间唯一的手写原作，不是印刷复制品</li>
+              <li>出厂即装框完成，{isWall ? '可直接上墙' : '可直接立于案头'}，无需二次装裱</li>
+              <li>随附唯一编号与藏品证书，可在站内按编码核对</li>
+            </ul>
+          </div>
+        )}
+      </div>
+    </section>
+  )}
+
   <section class="container section work-facts" aria-labelledby="facts-title">
     <div class="section-lead"><span class="eyebrow">Work Details / 作品详情</span><h2 id="facts-title" class="serif">关于这一幅，你想知道的都在这里。</h2></div>
     <dl class="facts-grid">
@@ -178,6 +222,23 @@ const productSchema = {
   .detail-fineprint { margin: 18px 0 0; padding: 14px 16px; border-left: 2px solid var(--cinnabar); background: var(--paper-light); color: var(--ink-soft); font-size: 13px; line-height: 1.8; }
   .biz-cross-link { margin: 14px 0 0; color: var(--ink-soft); font-size: 13px; line-height: 1.8; }
   .biz-cross-link a { color: var(--cinnabar-deep); border-bottom: 1px solid var(--cinnabar); padding-bottom: 2px; }
+  /* ── 字源释读 + 场景联想（2026-10-16）──
+     双栏：左「字」右「用」。左栏以大字形态字作视觉锚点，
+     与首页作品区的 .work-char 同一语言（低透明度朱砂 + display 字体）。 */
+  .work-source { border-top: 1px solid var(--line); }
+  .source-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 56px; }
+  .source-head { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; }
+  .source-head h2 { font-size: clamp(22px, 2.6vw, 32px); font-weight: 500; line-height: 1.45; letter-spacing: .02em; margin: 14px 0 12px; }
+  .source-char { flex-shrink: 0; color: var(--cinnabar); opacity: .22; font-size: 72px; line-height: 1; }
+  .source-origin { margin: 0 0 14px; }
+  .source-origin .mono { display: inline-block; padding: 4px 10px; border: 1px solid var(--line); color: var(--cinnabar-deep); font-size: 12px; letter-spacing: .14em; }
+  .source-note { margin: 0; color: var(--ink); font-size: 16px; line-height: 2.05; }
+  .source-foot { margin: 18px 0 0; color: var(--muted); font-size: 12px; line-height: 1.9; }
+  .scene-block h2 { font-size: clamp(22px, 2.6vw, 32px); font-weight: 500; line-height: 1.45; letter-spacing: .02em; margin: 14px 0 12px; }
+  .scene-fit { margin: 0 0 24px; color: var(--ink); font-size: 16px; line-height: 2.05; }
+  .scene-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line-soft); }
+  .scene-list li { padding: 11px 0 11px 22px; border-bottom: 1px solid var(--line-soft); color: var(--ink-soft); font-size: 13px; line-height: 1.85; position: relative; }
+  .scene-list li::before { content: ''; position: absolute; left: 2px; top: 19px; width: 6px; height: 6px; border-radius: 50%; background: var(--cinnabar); }
   .work-facts { border-top: 1px solid var(--line); }
   .facts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin: 0; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
   .fact { padding: 22px 22px 26px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
@@ -211,6 +272,6 @@ const productSchema = {
   .wx-tip em { font-style: normal; color: var(--cinnabar-deep); }
   .wx-alt { color: var(--muted); font-size: 13px; margin: 0; }
   .wx-alt a { color: var(--cinnabar); }
-  @media (max-width: 1023px) { .work-detail { grid-template-columns: 1fr; gap: 34px; } .others-grid { grid-template-columns: repeat(2, 1fr); } .facts-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 767px) { .crumb { padding-top: 20px; } .detail-copy h1 { font-size: 32px; } .price-num { font-size: 28px; } .detail-actions { display: grid; } .detail-actions .btn { width: 100%; } .facts-grid { grid-template-columns: 1fr; } .others-grid { grid-template-columns: 1fr; gap: 20px; } }
+  @media (max-width: 1023px) { .work-detail { grid-template-columns: 1fr; gap: 34px; } .others-grid { grid-template-columns: repeat(2, 1fr); } .facts-grid { grid-template-columns: repeat(2, 1fr); } .source-grid { grid-template-columns: 1fr; gap: 36px; } }
+  @media (max-width: 767px) { .crumb { padding-top: 20px; } .detail-copy h1 { font-size: 32px; } .price-num { font-size: 28px; } .detail-actions { display: grid; } .detail-actions .btn { width: 100%; } .facts-grid { grid-template-columns: 1fr; } .others-grid { grid-template-columns: 1fr; gap: 20px; } .source-char { font-size: 52px; } .source-note, .scene-fit { font-size: 15px; } }
 </style>
