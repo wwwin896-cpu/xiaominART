@@ -293,6 +293,48 @@ export const giftProducts: GiftProduct[] = [
           '随附风琴折页藏品证书：一面为藏品登记页（作品编号、品名、艺术签名，钤朱红印鉴），一面为使用与养护说明；另配黑色信封一枚，以朱砂火漆封缄——写给收礼人的话，拆封前谁也没有读过。',
           '棉绳手提袋、米白便签卡与棉质白手套一并提供。开箱次序我们在证书上写好了：先核证书，再戴手套取框，摆位之后，包装纸留着——那也是设计的一部分。'], image: '/assets/scenes/packaging-set.jpg', imageAlt: 'xiaominART 包装系统：黑色天地盖礼盒与烫印标识、棉绳手提袋、风琴折页藏品证书与使用说明、朱砂火漆封缄信封与便签卡' },
     ] },
+  { slug: 'qin-se-he-ming-gift', name: '琴瑟和鸣 · 婚庆纪念', en: 'In Harmony · Wedding Gift', scene: 'anniversary', sceneLabel: '婚庆纪念', tier: 'thoughtful', price: '¥300–500', meaning: '琴瑟在御，莫不静好——把两个人的名字与祝愿写成一幅，愿此后岁岁年年。', recipient: '适合送给订婚、新婚的伴侣，或作为结婚周年纪念。', dispatch: '预计确认后 7–10 个工作日发出', packaging: '含礼盒包装、祝福卡和贺卡文字预览', visual: '瑟', image: '/assets/scenes/theme-wedding-qin-se-he-ming.jpg',
+    gallery: [
+      { src: '/assets/scenes/theme-wedding-qin-se-he-ming.jpg', alt: '朱砂红底「琴瑟和鸣」古文字书法横幅，黑胡桃木框装裱，陈设于卧室边柜，旁有白瓷瓶红果与中式卧房', caption: '装裱形式一 · 卧室边柜｜朱砂红底，与喜色卧房同调' },
+      { src: '/assets/scenes/theme-wedding-calligraphy-lantern.jpg', alt: '白底古文字书法横幅，陈设于柚木边柜，旁有暖光纸灯笼与蕨类绿植', caption: '装裱形式二 · 玄关边柜｜白底墨字，与灯笼暖光相伴' },
+    ],
+    deepDive: [
+      {
+        eyebrow: 'Chapter 01 / 释读', heading: '书法文字提取与释读', intro: '先讲清楚这四个字：为什么是「琴瑟和鸣」。', paragraphs: [
+          '主文以古文字书写「琴瑟和鸣」四字：「琴」「瑟」皆为丝乐器之形，象木上有弦；「和」从龢，象竹管编连、乐声相应；「鸣」从鸟从口，取声出于口之意。四字皆有古文字出处，不做美术化的拼贴与变形。',
+          '语出《诗经·小雅·常棣》：「妻子好合，如鼓瑟琴。」后世以「琴瑟和鸣」祝夫妇情笃、声气相投——两件乐器各自成声，合奏方为和鸣，正是两个人过日子的样子。',
+          '跋文以行书小字题写祝辞，落款纪年，钤名章与闲章各一。写给谁、因什么喜事而写，这几句话写在跋文里，作品就只属于这两个人。每件作品随附释读说明一页，逐字注明字形来源与跋文全文。'] },
+      {
+        eyebrow: 'Chapter 02 / 理念', heading: '设计理念与品牌定位', intro: '把喜庆感，收进一处朱色与留白。', paragraphs: [
+          '市面上的婚庆礼物大多热闹：大红抱枕、烫金摆件、印着「百年好合」的毛巾。「琴瑟和鸣」走的是另一条路——以朱砂红为底、古文字为文，把「郑重的祝愿」讲得克制而有出处。红色是中式语境里的正色，喜庆不必喧哗。',
+          '横幅案头是我们的美学定位：横向构图、低重心、与人坐姿视线齐平。它不要求一整面墙，一个边柜、一方玄关、一间卧房就是它的展厅——新居的日常里，它是一件天天见面的器物。',
+          '作为小民艺术婚庆纪念线的作品，「琴瑟和鸣」想传递的态度是：祝愿值得被写下来，而不是被印出来。'] },
+      {
+        eyebrow: 'Chapter 03 / 规格', heading: '产品规格说明书', intro: '以下是本件作品的参考规格，最终以随附作品档案为准。', specs: [
+          { label: '装裱外框', value: '外尺寸约 40.5 × 17.5 cm（横幅），对角线误差 ≤ 1 mm' },
+          { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+          { label: '框体厚度', value: '约 3 cm，内置桌面支架，亦可挂墙两用' },
+          { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，手工书写装裱，以实物为准' },
+          { label: '选材标准', value: '黑胡桃实木框条（含水率 8%–12%）、朱砂红/白底卡纸（可选）、光学级玻璃面板' },
+          { label: '装配结构', value: '45° 精拼角框体 + 硬质背板，S 形金属挂钩与桌面支架一体' },
+          { label: '耐候性指标', value: '适用温度 -10 ℃ 至 40 ℃、湿度 40%–70% RH；朱砂红底应避免长时间阳光直射以防褪色' } ] },
+      {
+        eyebrow: 'Chapter 04 / 工艺', heading: '装裱与材质工艺解析', intro: '三处细节，决定了它经不经得起细看。', cards: [
+          { name: '朱砂红洒金卡纸', text: '朱砂红为中式正色，取其郑重；洒金分布疏密有致，灯光下有细碎的暖光，与喜房的暖色调天然相合。高克重棉麻基底保证不透墨、不起拱。' },
+          { name: '极窄圆角黑胡桃木', text: '窄框边把存在感让给字与色；四角 R 形圆角处理，视觉上收掉木框的笨重；表面哑光木蜡油收面，深色木框压得住朱红底色。' },
+          { name: '光学玻璃防眩', text: '高透光、低反射的光学级玻璃，床头灯与窗景并存也不易映出倒影，同时隔绝大部分紫外线，保护墨色与卡纸不老化。' } ], cardColumns: 3 },
+      {
+        eyebrow: 'Chapter 05 / 陈设', heading: '全场景陈设搭配指南', intro: '四个位置，四种与「和鸣」相处的方式。', cards: [
+          { name: '卧室边柜', text: '婚庆纪念最常见的去处。置于床头柜或斗柜，与台灯同高，睡前一眼朱色里的祝愿，一天被轻轻收尾。' },
+          { name: '玄关端景', text: '进门第一眼的小圆满。配一盏低位灯，归家开灯即见，家的日子从这里开始计数。' },
+          { name: '书房案头', text: '与砚台、笔洗成组，坐姿平视刚好。两个人里的读书人抬头见字，算是给共同生活留的一句提醒。' },
+          { name: '客厅展示柜', text: '与婚礼请柬、合影、纪念物件同柜陈列——「琴瑟和鸣」在这里是一组记忆的题签。' } ], cardColumns: 2 },
+      {
+        eyebrow: 'Chapter 06 / 包装', heading: '高端礼品包装与开箱系统', intro: '从盒子打开的那一刻起，礼物就已经开始了。', paragraphs: [
+          '外盒为硬质天地盖礼盒，深黑特种纸裱糊，盒面烫印 xiaominART 标识与朱红印鉴；盒内定制卡位固定框体，运输途中不晃动、不磕碰。',
+          '随附风琴折页藏品证书：一面为藏品登记页（作品编号、品名、艺术签名，钤朱红印鉴），一面为使用与养护说明；另配黑色信封一枚，以朱砂火漆封缄——写给这对伴侣的祝辞装在信封里，拆封前谁也没有读过。',
+          '棉绳手提袋、米白便签卡与棉质白手套一并提供。开箱次序我们在证书上写好了：先核证书，再戴手套取框，摆位之后，包装纸留着——那也是设计的一部分。'], image: '/assets/scenes/packaging-set.jpg', imageAlt: 'xiaominART 包装系统：黑色天地盖礼盒与烫印标识、棉绳手提袋、风琴折页藏品证书与使用说明、朱砂火漆封缄信封与便签卡' },
+    ] },
   { slug: 'desk-mountain-keepsake', name: '案上有山 · 雅致贺礼', en: 'A Mountain on the Desk · Keepsake', scene: 'opening', sceneLabel: '开业贺礼', tier: 'keepsake', price: '¥800 以上', meaning: '书房之内，自有山河——大境之气，亦有大静之气。把稳重、开阔与持续生长的祝愿，安放进日常的空间。', recipient: '适合开业、晋升、周年等需要郑重表达的时刻。', dispatch: '预计确认后 14–21 个工作日发出', packaging: '含珍藏礼盒、包装升级与贺卡文字预览', visual: '山', image: '/assets/scenes/theme-desk-mountain.jpg',
     gallery: [
       { src: '/assets/scenes/desk-mountain-dining.jpg', alt: '古文字通景长卷挂于餐厅上方，下方为原木长餐桌与陶器干花', caption: '横幅长卷 · 餐厅上墙｜贺辞与一日三餐相对，日子越过越实' },
@@ -397,7 +439,7 @@ export const giftOccasions = [
   { slug: 'festival', title: '节日问候', en: 'Festival gifts', intro: '让节日礼物从一句问候开始，慢慢抵达日常。', scenes: ['festival', 'thanks'] },
   { slug: 'teacher-thanks', title: '感谢恩师 / 朋友', en: 'Thank-you gifts', intro: '把感谢写下来，送给曾经照亮你的人。', scenes: ['thanks'] },
   { slug: 'opening', title: '开业贺礼', en: 'Opening gifts', intro: '用一份有文化温度的心意，祝愿事业开张。', scenes: ['opening', 'keepsake'] },
-  { slug: 'anniversary', title: '周年与纪念', en: 'Anniversary gifts', intro: '为共同走过的时间，留下一件可以被反复看见的礼物。', scenes: ['opening', 'thanks'] },
+  { slug: 'anniversary', title: '周年与纪念', en: 'Anniversary gifts', intro: '为共同走过的时间，留下一件可以被反复看见的礼物。', scenes: ['opening', 'thanks', 'anniversary'] },
 ];
 
 export const giftRecipients = [
