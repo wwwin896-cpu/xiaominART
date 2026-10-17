@@ -32,7 +32,7 @@ import { zodiacWorks } from '../data/content';
 //     （⚠️ 事件白名单**只增不删**，那两条**保留在册**，不要从三处白名单里删掉 ——
 //       页面改版后不再发的事件也要留，否则会误伤可能仍在上线的旧页面）
 const sceneCards = [
-  { tag: '节日问候', title: '四时一笺', body: '岁有寒暑，月有圆缺——把四季的流转写成一幅字，让问候在案头留得久一点。', image: '/assets/scenes/theme-four-seasons.jpg', href: '/gifts/seasonal-letter-gift/', alt: '书房木案上的四季题跋书法横幅，旁有兰草与砚台' },
+  { tag: '节日问候', title: '四季流转', body: '岁有寒暑，月有圆缺——把四季的流转写成一幅字，让问候在案头留得久一点。', image: '/assets/scenes/theme-four-seasons.jpg', href: '/gifts/seasonal-letter-gift/', alt: '书房木案上的四季题跋书法横幅，旁有兰草与砚台' },
   { tag: '传情达意', title: '一点朱砂', body: '朱砂作底，古字为凭——值得庆祝的事，就该这样郑重地讲出来。', image: '/assets/scenes/theme-cinnabar.jpg', href: '/gifts/cinnabar-note-gift/', alt: '朱砂红卡的「欢喜」古文字书法框，旁有红梅与灯笼' },
   { tag: '文房雅趣', title: '墨有呼吸', body: '书房雅趣，自古值得被记录——一笔一画的浓淡停顿都看得见，写出来的字，才是活的书香。', image: '/assets/scenes/theme-ink-breath.jpg', href: '/gifts/ink-breath-teacher/', alt: '阳光下的毛边纸密字书法作品，笔触清晰可辨' },
   { tag: '风生水起', title: '案上有山', body: '书房之内，自有山河——大境之气，亦有大静之气，把开阔与生长安放进日常。', image: '/assets/scenes/theme-desk-mountain.jpg', href: '/gifts/desk-mountain-keepsake/', alt: '茶室绿墙上的长卷书法与原木长案茶席' },
@@ -215,7 +215,7 @@ const originNodes = [
       不进「文字源流」文化区。卡片链接 /zodiac/ 聚合页（12 件全览+系列规格）。
 
       2026-10-17 三改（业主明确指示）：
-      · 标题保留「一字一源 · 生肖纪岁 / 十二兽语」不动；
+      · 标题保留「一字一源 · 生肖纪岁」不变，主标题 2026-10-17 由「十二兽语」改「十二生肖」；
       · 排版按「客户分享」（story-card）的范式做：边框卡、左图右文；
       · 首页不显示价格，价格只放 /zodiac/ 内页。
 
@@ -226,7 +226,7 @@ const originNodes = [
   <div class="container zodiac-block">
     <div class="zodiac-head">
       <span class="eyebrow">一字一源 · 生肖纪岁</span>
-      <h3 class="serif">十二兽语，刻在时光里的守护。</h3>
+      <h3 class="serif">十二生肖，刻在时光里的守护。</h3>
       <p>三千年前的龟甲上，先民刻下对万物的敬畏。十二个甲骨文字，如今亲笔写下、装进木框——本命年的祈愿、贺岁的心意，都在这一个字里。</p>
       <a class="zodiac-more" href="/zodiac/">看十二件全貌与系列规格 →</a>
     </div>
@@ -323,7 +323,7 @@ const originNodes = [
   /* ── 01 / 一字一源：2 列横版卡（2026-10-16 定版，回到「心意之选」原来的版面）──
      6 张卡各自是一条业务详情页入口，所以卡片本身承担导航职能，
      下方不再有重复的索引条。图 4/3 横版，与 02 客户分享的横版卡同一语言。 */
-  .choice-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 34px 30px; }
+  .choice-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 34px 26px; }
   .choice-card { display: flex; flex-direction: column; }
   .choice-card figure { margin: 0; overflow: hidden; aspect-ratio: 4 / 3; background: var(--paper-deep); }
   .choice-card :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease, filter .5s ease; }
@@ -376,7 +376,7 @@ const originNodes = [
   .closing { text-align: center; border-top: 1px solid var(--line-soft); }
   .closing h2 { font-size: clamp(24px, 2.8vw, 36px); font-weight: 500; margin: 16px 0 12px; }
   .closing p { color: var(--ink-soft); margin: 0 0 28px; }
-  @media (max-width: 900px) { .choice-grid { gap: 20px; } .zodiac-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px 18px; } .story-grid { grid-auto-rows: auto; } .story-card { grid-template-columns: 1fr; } .story-card figure { aspect-ratio: 16 / 9; } }
+  @media (max-width: 900px) { .choice-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 20px; } .zodiac-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px 18px; } .story-grid { grid-auto-rows: auto; } .story-card { grid-template-columns: 1fr; } .story-card figure { aspect-ratio: 16 / 9; } }
   /* Web 端（≥901px）：定制故事横向排开，作品按 3:2 完整呈现不裁切；移动端版式不受影响 */
   @media (min-width: 1100px) {
     .story-grid { grid-template-columns: repeat(4, 1fr); grid-auto-rows: auto; gap: 24px; }
