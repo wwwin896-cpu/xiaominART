@@ -21,9 +21,15 @@ interface Props {
   noindex: boolean;
   /** 已解析完成的面包屑（显式传入优先，否则为按路径自动生成的兜底结果） */
   breadcrumbs: Array<{ name: string; href: string }>;
+  /**
+   * og:type（2026-10-17 新增）。
+   * 此前全站硬编码 'website'，导致商品详情页在微信/社交平台分享时，
+   * 卡片被当作普通网页而非商品。可购买的商品页应传 'product'。
+   */
+  ogType?: 'website' | 'article' | 'product';
 }
 
-const { title, description, url, image, noindex, breadcrumbs } = Astro.props;
+const { title, description, url, image, noindex, breadcrumbs, ogType = 'website' } = Astro.props;
 ---
 
 <meta charset="UTF-8" />
@@ -33,7 +39,7 @@ const { title, description, url, image, noindex, breadcrumbs } = Astro.props;
 <link rel="canonical" href={url} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
-<meta property="og:type" content="website" />
+<meta property="og:type" content={ogType} />
 <meta property="og:url" content={url} />
 <meta property="og:site_name" content="XIAOMINART" />
 <meta property="og:locale" content="zh_CN" />

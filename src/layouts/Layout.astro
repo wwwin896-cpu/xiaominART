@@ -36,7 +36,19 @@ import WishlistDrawer from '../components/WishlistDrawer.astro';
 import SearchModal from '../components/SearchModal.astro';
 import CookieConsent from '../components/CookieConsent.astro';
 
-const { title = '小民艺术｜用心好礼', description = '小民艺术，用心为你写一份好礼。以亲笔书写为起点，见字如面，心意表达。', canonical, image = '/assets/images/og-image.png', noindex = false, breadcrumbs = [], bodyData } = Astro.props;
+interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string;
+  image?: string;
+  noindex?: boolean;
+  breadcrumbs?: Array<{ name: string; href: string }>;
+  bodyData?: Record<string, string>;
+  /** og:type（2026-10-17）：商品详情页传 'product'，其余默认 'website' */
+  ogType?: 'website' | 'article' | 'product';
+}
+
+const { title = '小民艺术｜用心好礼', description = '小民艺术，用心为你写一份好礼。以亲笔书写为起点，见字如面，心意表达。', canonical, image = '/assets/images/og-image.png', noindex = false, breadcrumbs = [], bodyData, ogType = 'website' } = Astro.props;
 
 /**
  * 页面级 body data-* 属性（2026-10-14 加）。
@@ -109,7 +121,7 @@ const baiduId = trackPage ? BAIDU_TONGJI_ID : undefined;
 ---
 <html lang="zh-CN">
   <head>
-    <SeoHead title={seoTitle} description={description} url={url} image={image} noindex={noindex} breadcrumbs={effectiveBreadcrumbs} />
+    <SeoHead title={seoTitle} description={description} url={url} image={image} noindex={noindex} breadcrumbs={effectiveBreadcrumbs} ogType={ogType} />
     <AnalyticsScript gaId={gaId} umamiSrc={umamiSrc} umamiId={umamiId} clarityId={clarityId} baiduId={baiduId} />
     <link rel="icon" href="/assets/brand/xiaominart-logo-icon.svg" />
     <title>{seoTitle}</title>
