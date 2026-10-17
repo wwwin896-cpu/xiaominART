@@ -22,6 +22,7 @@ export const prerender = true;
             <span class="mono zoo-char">{w.char} · {w.en}</span>
             <h2 class="serif">{w.name}</h2>
             <p class="zoo-blessing">「{w.blessing}」</p>
+            <p class="zoo-price">{w.price}<span>含礼盒与释读说明</span></p>
             <p class="zoo-story">{w.story}</p>
             <a class="zoo-link" href={`/custom-commission/?context=${encodeURIComponent('生肖礼物')}&inspiration=${encodeURIComponent(w.name)}`} data-event="gift_advice_click">以此为灵感 →</a>
           </div>
@@ -38,6 +39,7 @@ export const prerender = true;
     <dl class="spec-table">
       <div><dt>画芯</dt><dd>16 × 8 cm，手工书写甲骨文，随附释读说明一页</dd></div>
       <div><dt>外框</dt><dd>A4 竖幅，黑胡桃实木框，45° 拼角，内置桌面支架，亦可挂墙</dd></div>
+      <div><dt>价格</dt><dd>¥300–500，含释读说明一页与礼盒包装</dd></div>
       <div><dt>题字</dt><dd>主文为甲骨文生肖字，跋文题吉语并落款钤印</dd></div>
       <div><dt>适用</dt><dd>本命年祈福、生肖贺岁、新生儿纪念与书桌案头的日常相伴</dd></div>
     </dl>
@@ -67,6 +69,8 @@ export const prerender = true;
   .zoo-char { display: block; color: var(--cinnabar); font-size: 12px; letter-spacing: .14em; margin: 0 0 4px; }
   .zoo-copy h2 { font-size: 21px; font-weight: 500; margin: 0 0 6px; }
   .zoo-blessing { color: var(--cinnabar-deep); font-size: 14px; margin: 0 0 8px; }
+  .zoo-price { font-size: 15px; letter-spacing: .02em; margin: 0 0 10px; }
+  .zoo-price span { color: var(--ink-soft); font-size: 11.5px; margin-left: 8px; letter-spacing: 0; }
   .zoo-story { color: var(--ink-soft); font-size: 13.5px; line-height: 1.85; margin: 0 0 12px; }
   .zoo-link { color: var(--cinnabar); font-size: 12.5px; white-space: nowrap; }
   .specs { border-top: 1px solid var(--line); padding-top: 56px; }
