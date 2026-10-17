@@ -217,8 +217,13 @@ const originNodes = [
       2026-10-17 三改（业主明确指示）：
       · 标题保留「一字一源 · 生肖纪岁 / 十二兽语」不动；
       · 排版按「客户分享」（story-card）的范式做：边框卡、左图右文；
-      · 首页不显示价格，价格只放 /zodiac/ 内页。 ── */}
-  <div class="zodiac-block">
+      · 首页不显示价格，价格只放 /zodiac/ 内页。
+
+      2026-10-17 四改（业主：与上下板块首字对齐、12 件 4 列 3 排、图上文下）：
+      · 外层补 container —— 此前 .zodiac-block 自带外边距，没有 container，
+        左右贴边，与上方「一字一源 · 四时一笺」和下方「客户分享」首字对不齐；
+      · 网格改 4 列 3 排，卡片改竖向（图上文下），图压小。 ── */}
+  <div class="container zodiac-block">
     <div class="zodiac-head">
       <span class="eyebrow">一字一源 · 生肖纪岁</span>
       <h3 class="serif">十二兽语，刻在时光里的守护。</h3>
@@ -328,23 +333,26 @@ const originNodes = [
   .choice-copy h3 { font-size: 20px; font-weight: 500; margin: 0 0 8px; }
   .choice-copy p { color: var(--ink-soft); font-size: 14px; line-height: 1.8; margin: 0 0 14px; }
   .choice-meta { display: flex; justify-content: flex-end; align-items: baseline; }
-  /* ── 01b / 生肖纪岁（字游记第一辑，2026-10-17 三改）──
-     排版沿用「客户分享」story-card 的范式：带边框浅纸底卡、左图右文。
-     卡内 = 吉语标题 + 字源故事 + 出处小签；价格不放首页，只在 /zodiac/ 内页。 */
+  /* ── 01b / 生肖纪岁（字游记第一辑，2026-10-17 四改）──
+     业主指示：与上下板块首字对齐（靠外层 .container）、12 件 4 列 3 排、
+     图上文下、图压小。卡内仍沿用 story-card 的「边框 + 浅纸底 + 出处小签」语言。
+     价格不放首页，只在 /zodiac/ 内页。 */
   .zodiac-block { margin-top: 64px; }
-  .zodiac-head { max-width: 560px; margin-bottom: 44px; }
+  .zodiac-head { max-width: 560px; margin-bottom: 40px; }
   .zodiac-head h3 { font-size: clamp(24px, 2.8vw, 38px); font-weight: 500; line-height: 1.4; margin: 14px 0 12px; letter-spacing: .02em; }
   .zodiac-head p { color: var(--ink-soft); line-height: 1.9; margin: 0 0 14px; }
   .zodiac-more { color: var(--cinnabar); font-size: 13px; }
-  .zodiac-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px; }
-  .zodiac-card { display: grid; grid-template-columns: .9fr 1.1fr; border: 1px solid var(--line); background: var(--paper-light); }
-  .zodiac-card figure { margin: 0; overflow: hidden; min-height: 240px; background: var(--paper-deep); }
+  /* 4 列 × 3 排：12 件正好铺满，不留半排 */
+  .zodiac-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 26px 22px; }
+  .zodiac-card { display: flex; flex-direction: column; border: 1px solid var(--line); background: var(--paper-light); }
+  /* 图压小：16/9 横版，单卡图高约 110–130px */
+  .zodiac-card figure { margin: 0; overflow: hidden; aspect-ratio: 16 / 9; background: var(--paper-deep); }
   .zodiac-card :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease, filter .5s ease; }
   .zodiac-card:hover :global(img) { transform: scale(1.03); filter: brightness(1.05); }
-  .zodiac-copy { padding: 26px 26px 24px; display: flex; flex-direction: column; gap: 12px; }
-  .zodiac-copy h3 { font-size: 19px; font-weight: 500; margin: 0; line-height: 1.5; color: var(--ink); }
-  .zodiac-copy p { margin: 0; color: var(--ink-soft); font-size: 13.5px; line-height: 1.9; }
-  .zodiac-tag { margin-top: auto; color: var(--muted); font-size: 11px; letter-spacing: .08em; }
+  .zodiac-copy { padding: 14px 14px 16px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .zodiac-copy h3 { font-size: 15px; font-weight: 500; margin: 0; line-height: 1.4; color: var(--ink); }
+  .zodiac-copy p { margin: 0; color: var(--ink-soft); font-size: 12px; line-height: 1.8; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .zodiac-tag { margin-top: auto; color: var(--muted); font-size: 10.5px; letter-spacing: .06em; }
   .choice-meta .card-link { color: var(--cinnabar); font-size: 12px; white-space: nowrap; }
   .choices, .stories, .process, .closing { border-top: 1px solid var(--line-soft); }
   .section-lead { max-width: 560px; margin-bottom: 44px; }
@@ -368,7 +376,7 @@ const originNodes = [
   .closing { text-align: center; border-top: 1px solid var(--line-soft); }
   .closing h2 { font-size: clamp(24px, 2.8vw, 36px); font-weight: 500; margin: 16px 0 12px; }
   .closing p { color: var(--ink-soft); margin: 0 0 28px; }
-  @media (max-width: 900px) { .choice-grid { gap: 20px; } .zodiac-grid { gap: 20px; } .zodiac-card { grid-template-columns: 1fr; } .zodiac-card figure { min-height: 0; aspect-ratio: 16 / 9; } .story-grid { grid-auto-rows: auto; } .story-card { grid-template-columns: 1fr; } .story-card figure { aspect-ratio: 16 / 9; } }
+  @media (max-width: 900px) { .choice-grid { gap: 20px; } .zodiac-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px 18px; } .story-grid { grid-auto-rows: auto; } .story-card { grid-template-columns: 1fr; } .story-card figure { aspect-ratio: 16 / 9; } }
   /* Web 端（≥901px）：定制故事横向排开，作品按 3:2 完整呈现不裁切；移动端版式不受影响 */
   @media (min-width: 1100px) {
     .story-grid { grid-template-columns: repeat(4, 1fr); grid-auto-rows: auto; gap: 24px; }
@@ -406,8 +414,11 @@ const originNodes = [
     .brand-facts { gap: 12px 28px; }
     /* 一字一源：移动端单列，横版图 4/3 */
     .choice-grid { grid-template-columns: 1fr; gap: 34px; }
-    .zodiac-grid { grid-template-columns: 1fr; gap: 18px; }
-    .zodiac-copy { padding: 20px 18px 18px; gap: 10px; }
+    .zodiac-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 12px; }
+    .zodiac-copy { padding: 11px 11px 13px; gap: 6px; }
+    .zodiac-copy h3 { font-size: 13.5px; }
+    .zodiac-copy p { font-size: 11.5px; -webkit-line-clamp: 3; }
+    .zodiac-tag { font-size: 10px; }
     .story-grid { grid-template-columns: 1fr; gap: 20px; }
     .process-rail { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 16px; padding-bottom: 8px; margin: 0 -16px; padding-inline: 16px; }
     .process-card { flex: 0 0 74%; scroll-snap-align: start; }
