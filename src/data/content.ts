@@ -457,6 +457,36 @@ export const giftTierLabels = {
   keepsake: { name: '珍藏款', en: 'Keepsake gift', range: '¥800 以上', body: '适合开业、周年、谢师等重要时刻。' },
 };
 
+// ── 字游记 · 第一辑：甲骨文十二生肖（2026-10-17 业主定档）──────────────────
+// 系列规格（全系列统一，业主 2026-10-17 文档）：外框 A4 竖幅、画芯 16×8 cm、胡桃木框。
+// 扩容方式：业主填 docs/作品批量素材/C-字游记扩容素材表.csv，助手按表批量追加。
+// ⚠️ blessing（吉语）按作品实物题字校对后填写——当前为助手按图与通行吉语拟定，待业主核。
+export type ZodiacWork = {
+  slug: string;
+  char: string;
+  name: string;
+  en: string;
+  blessing: string;
+  story: string;
+  image: string;
+  alt: string;
+};
+
+export const zodiacWorks: ZodiacWork[] = [
+  { slug: 'shu', char: '鼠', name: '甲骨文 · 鼠', en: 'Rat', blessing: '子鼠开天', story: '甲骨文的「鼠」张着尖嘴，垂着碎屑般的长尾，像刚从粮囤边溜过。传说天地混沌未开，是鼠咬破混沌漏下第一道光——「鼠咬天开」，一天时辰从子时开始。', image: '/assets/zodiac/zodiac-shu.jpg', alt: '甲骨文「鼠」字书法摆件，珊瑚橘暗纹笺，黑胡桃木框装裱，陈设于客厅木质边柜，旁有陶瓶花枝与碗' },
+  { slug: 'niu', char: '牛', name: '甲骨文 · 牛', en: 'Ox', blessing: '俯首甘为孺子牛', story: '一对弯角是甲骨文「牛」字最醒目的笔画。牛拉动农耕文明三千年，古文字里的「物」字就从牛而来——万物之「物」，本义是一头毛色纯正的牛。', image: '/assets/zodiac/zodiac-niu.jpg', alt: '甲骨文「牛」字书法摆件，藕粉云纹笺，黑胡桃木框装裱，陈设于展厅木案，旁有陶瓶花枝与深色陶碗' },
+  { slug: 'hu', char: '虎', name: '甲骨文 · 虎', en: 'Tiger', blessing: '虎啸风生', story: '甲骨文的「虎」张着巨口、遍体斑纹，威势扑面而来。先民画虎于门以驱邪祟——虎是山林之长，也是大人放在孩子枕边的勇气。', image: '/assets/zodiac/zodiac-hu.jpg', alt: '甲骨文「虎」字书法摆件，橘黄洒金笺，黑胡桃木框装裱，陈设于茶室木案，旁有黑陶茶壶与青瓷杯' },
+  { slug: 'tu', char: '兔', name: '甲骨文 · 兔', en: 'Rabbit', blessing: '赤兔呈瑞', story: '长耳、短尾、腾跃的身姿，甲骨文的「兔」一眼可辨。月宫捣药的玉兔是温柔的仙兽——「兔」与「瑞」相伴，愿你所求皆有回响。', image: '/assets/zodiac/zodiac-tu.jpg', alt: '甲骨文「兔」字书法摆件，豆绿暗纹笺，黑胡桃木框装裱，陈设于茶室原木长桌，旁有青瓷茶杯' },
+  { slug: 'long', char: '龙', name: '甲骨文 · 龙', en: 'Dragon', blessing: '飞龙在天', story: '顶着角冠、曲身昂首，甲骨文的「龙」是先民想象力的集大成：沟通天地、司掌风雨。十二生肖里唯一不存在于现实的神物，却活在每一个中国人的名字里。', image: '/assets/zodiac/zodiac-long.jpg', alt: '甲骨文「龙」字书法摆件，黄笺墨字，黑胡桃木框装裱，陈设于玄关端景木案，旁有铜鹤摆件与陶瓶' },
+  { slug: 'she', char: '蛇', name: '甲骨文 · 蛇', en: 'Snake', blessing: '金蛇献瑞', story: '蜿蜒的线条是「蛇」的本形——古文字里「它」字本义就是蛇，古人见面互问「无它乎」，便是「最近没遇上蛇吧」。蛇蜕皮新生，被称作小龙，是智慧与蜕变。', image: '/assets/zodiac/zodiac-she.jpg', alt: '甲骨文「蛇」字书法摆件，朱红暗纹笺，黑胡桃木框装裱，陈设于书房木案，旁有陶壶书册与青瓷杯' },
+  { slug: 'ma', char: '马', name: '甲骨文 · 马', en: 'Horse', blessing: '马到功成', story: '鬃毛飞扬、长尾奋蹄，甲骨文的「马」天生带着速度。《易》以乾卦配马，「天行健」的意象里始终有一匹奔跑的马——愿你不倦，一往无前。', image: '/assets/zodiac/zodiac-ma.jpg', alt: '甲骨文「马」字书法摆件，明黄笺墨字，黑胡桃木框装裱，陈设于茶室木案，旁有茶壶与青瓷茶杯' },
+  { slug: 'yang', char: '羊', name: '甲骨文 · 羊', en: 'Goat', blessing: '三羊开泰', story: '一对温顺的弯角，是甲骨文「羊」的全部温柔。古文字里「美」从羊、「善」从羊、「祥」从羊——先民把世间一切美好，都托付给了这个字。', image: '/assets/zodiac/zodiac-yang.jpg', alt: '甲骨文「羊」字书法摆件，金黄洒金笺，黑胡桃木框装裱，陈设于书房木案，旁有白瓷茶杯与石镇纸' },
+  { slug: 'hou', char: '猴', name: '甲骨文 · 猴', en: 'Monkey', blessing: '金猴献瑞', story: '灵长的手与目，在甲骨文里刻画得活灵活现。「猴」与「侯」相通，封侯进禄的期许都落在它身上——机敏、聪慧，自有主张。', image: '/assets/zodiac/zodiac-hou.jpg', alt: '甲骨文「猴」字书法摆件，朱红暗纹笺，黑胡桃木框装裱，陈设于书房书堆旁，旁有太湖石与毛笔' },
+  { slug: 'ji', char: '鸡', name: '甲骨文 · 鸡', en: 'Rooster', blessing: '雄鸡一唱天下白', story: '高冠长尾，甲骨文的「鸡」昂首如鸣。雄鸡司晨，风雨无改——「守信」二字，先民最早是从一只鸡身上读懂的。', image: '/assets/zodiac/zodiac-ji.jpg', alt: '甲骨文「鸡」字书法摆件，素白宣笺，黑胡桃木框装裱，陈设于书房木案，旁有书堆、笔洗与文房清供' },
+  { slug: 'gou', char: '狗', name: '甲骨文 · 狗', en: 'Dog', blessing: '犬守平安', story: '甲骨文的「狗（犬）」翘着尾巴、竖着耳朵，一副警觉的模样。犬是人类最古老的伙伴，守夜护院、不离不弃——它守的是家门，也是人心的安稳。', image: '/assets/zodiac/zodiac-gou.jpg', alt: '甲骨文「狗」字书法摆件，朱红暗纹笺，黑胡桃木框装裱，陈设于玄关木质边柜，旁有陶瓶花枝与石雕摆件' },
+  { slug: 'zhu', char: '猪', name: '甲骨文 · 猪', en: 'Pig', blessing: '诸事如意', story: '圆润丰腴的甲骨文「猪（豕）」。屋下有豕方为「家」——「家」字的宝盖头下，住的就是这头猪。富足、安定、烟火气，都从它开始。', image: '/assets/zodiac/zodiac-zhu.jpg', alt: '甲骨文「猪」字书法摆件，橘黄云纹笺，黑胡桃木框装裱，陈设于玄关木柜，旁有铜环摆件与方形铜盒' },
+];
+
 export type ReadyMadeWork = {
   slug: string;
   title: string;

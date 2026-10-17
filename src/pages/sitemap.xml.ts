@@ -73,6 +73,8 @@ const staticRoutes: { path: string; files: string[] }[] = [
   { path: 'works/', files: [P('works/index.astro'), ...CONTENT] },
   { path: 'stories/', files: [P('stories/index.astro')] },
   { path: 'seasons/', files: [P('seasons/index.astro')] },
+  // 字游记 · 第一辑（2026-10-17）：甲骨文十二生肖聚合页（业主《一字一源版块扩容》）
+  { path: 'zodiac/', files: [P('zodiac/index.astro'), ...CONTENT] },
   // 作品编码查询入口（2026-10-14 新增，防伪体系）
   { path: 'verify/', files: [P('verify/index.astro'), 'src/lib/code-registry.ts', ...CONTENT] },
 ];

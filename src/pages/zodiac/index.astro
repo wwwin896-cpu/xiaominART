@@ -1,0 +1,88 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { zodiacWorks } from '../../data/content';
+export const prerender = true;
+---
+<Layout
+  title="甲骨文十二生肖摆件｜本命年的守护字｜小民艺术"
+  description="十二个甲骨文字，十二种藏在时光里的守护。黑胡桃木框摆件，画芯 16×8cm，本命年、贺岁与启蒙的心意之选。三千年前的字，守着今天的家。"
+>
+  <section class="container page-head">
+    <span class="eyebrow">一字一源 · 生肖纪岁</span>
+    <h1 class="serif">十二兽语，<br />刻在时光里的守护。</h1>
+    <p>三千年前的龟甲上，先民刻下对万物的敬畏与祈愿。十二生肖，不仅是岁月的轮回，更是藏在汉字深处的生命图腾。我们把古老的象形文字亲笔写下、装进木框，让它带着远古的温度，守在你的案头。</p>
+  </section>
+
+  <section class="container section zoo-grid-wrap" aria-label="十二生肖作品">
+    <div class="zoo-grid">
+      {zodiacWorks.map((w) => (
+        <article class="zoo-card" id={w.slug}>
+          <figure><img src={w.image} alt={w.alt} loading="lazy" decoding="async" width={1280} height={720} /></figure>
+          <div class="zoo-copy">
+            <span class="mono zoo-char">{w.char} · {w.en}</span>
+            <h2 class="serif">{w.name}</h2>
+            <p class="zoo-blessing">「{w.blessing}」</p>
+            <p class="zoo-story">{w.story}</p>
+            <a class="zoo-link" href={`/custom-commission/?context=${encodeURIComponent('生肖礼物')}&inspiration=${encodeURIComponent(w.name)}`} data-event="gift_advice_click">以此为灵感 →</a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="container section specs" aria-labelledby="specs-title">
+    <div class="specs-lead">
+      <span class="eyebrow">系列规格</span>
+      <h2 id="specs-title" class="serif">一只框的讲究，全系列一致。</h2>
+    </div>
+    <dl class="spec-table">
+      <div><dt>画芯</dt><dd>16 × 8 cm，手工书写甲骨文，随附释读说明一页</dd></div>
+      <div><dt>外框</dt><dd>A4 竖幅，黑胡桃实木框，45° 拼角，内置桌面支架，亦可挂墙</dd></div>
+      <div><dt>题字</dt><dd>主文为甲骨文生肖字，跋文题吉语并落款钤印</dd></div>
+      <div><dt>适用</dt><dd>本命年祈福、生肖贺岁、新生儿纪念与书桌案头的日常相伴</dd></div>
+    </dl>
+    <div class="specs-cta">
+      <a class="btn btn-primary" href="/custom-commission/?context=生肖礼物&inspiration=甲骨文十二生肖" data-event="gift_advice_click">带上你的生肖，与我们聊聊 →</a>
+    </div>
+  </section>
+
+  <section class="container section tale-note">
+    <span class="eyebrow">字游记 · 第一辑</span>
+    <h2 class="serif">这是「字游记」的第一站。</h2>
+    <p>十二生肖之后，字游记会继续往山川风物、人文器物与寻常情感里走——每一个有来处的字，都值得被讲一遍。欢迎常回来看看，下一个字正在路上。</p>
+  </section>
+</Layout>
+
+<style>
+  .page-head { padding: 96px 0 56px; max-width: 780px; }
+  .page-head h1 { font-size: clamp(46px, 6.4vw, 78px); line-height: 1.14; margin: 20px 0; }
+  .page-head > p { color: var(--ink-soft); font-size: 17px; line-height: 1.9; margin: 0; }
+  .zoo-grid-wrap { padding-top: 0; }
+  .zoo-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 44px 30px; }
+  .zoo-card { display: flex; flex-direction: column; }
+  .zoo-card figure { margin: 0; overflow: hidden; aspect-ratio: 16 / 9; background: var(--paper-deep); }
+  .zoo-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease, filter .5s ease; }
+  .zoo-card:hover img { transform: scale(1.035); filter: brightness(1.05); }
+  .zoo-copy { padding: 16px 2px 0; }
+  .zoo-char { display: block; color: var(--cinnabar); font-size: 12px; letter-spacing: .14em; margin: 0 0 4px; }
+  .zoo-copy h2 { font-size: 21px; font-weight: 500; margin: 0 0 6px; }
+  .zoo-blessing { color: var(--cinnabar-deep); font-size: 14px; margin: 0 0 8px; }
+  .zoo-story { color: var(--ink-soft); font-size: 13.5px; line-height: 1.85; margin: 0 0 12px; }
+  .zoo-link { color: var(--cinnabar); font-size: 12.5px; white-space: nowrap; }
+  .specs { border-top: 1px solid var(--line); padding-top: 56px; }
+  .specs-lead h2 { font-size: clamp(30px, 4vw, 44px); margin: 14px 0 26px; }
+  .spec-table { display: grid; grid-template-columns: 1fr; max-width: 820px; border-top: 1px solid var(--border); }
+  .spec-table > div { display: grid; grid-template-columns: 110px 1fr; border-bottom: 1px solid var(--border); }
+  .spec-table dt { padding: 14px 0; font-weight: 500; }
+  .spec-table dd { margin: 0; padding: 14px 0; color: var(--ink-soft); }
+  .specs-cta { margin-top: 30px; }
+  .tale-note { border-top: 1px solid var(--line); max-width: 780px; }
+  .tale-note h2 { font-size: clamp(26px, 3.4vw, 38px); margin: 12px 0 14px; }
+  .tale-note p { color: var(--ink-soft); line-height: 1.9; margin: 0; }
+  @media (max-width: 900px) { .zoo-grid { grid-template-columns: repeat(2, 1fr); gap: 28px 20px; } }
+  @media (max-width: 640px) {
+    .page-head { padding: 56px 0 40px; }
+    .zoo-grid { grid-template-columns: 1fr; gap: 34px; }
+    .spec-table > div { grid-template-columns: 88px 1fr; }
+  }
+</style>
