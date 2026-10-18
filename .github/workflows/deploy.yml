@@ -153,10 +153,19 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add .baidu-pushed.json
           git commit -m "chore(baidu): 更新主动推送进度 [skip ci]"
-          # deploy 组已串行化，但人工推送可能插队 → rebase 后重试，避免状态丢失
+          # deploy 组已串行化，但人工推送可能插队 → 先 rebase 再推，失败重试。
+          # rebase 失败（如被 force-push 打乱）则退化为一次合并，并保留本地进度（-X ours）：
+          # 进度文件只有本步骤会写，冲突时以刚跑完的这份为准，不能丢。
           for i in 1 2 3; do
-            if git pull --rebase --autostash origin main && git push origin HEAD:main; then
-              echo "✓ 进度已回写 main"
+            git fetch origin main
+            if git rebase origin/main; then
+              :
+            else
+              git rebase --abort || true
+              git merge --no-edit -X ours -m "chore(baidu): 合并远端后回写推送进度 [skip ci]" origin/main || true
+            fi
+            if git push origin HEAD:main; then
+              echo "✓ 进度已回写 main（$(git rev-parse --short HEAD)）"
               exit 0
             fi
             echo "第 ${i} 次回写失败，3 秒后重试…"
