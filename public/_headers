@@ -94,9 +94,15 @@
 # 唯一需要留意的是 WebAssembly：Pagefind 的可选分词器会用到 wasm，
 # 若将来开启 wasm 分片，需在 script-src 加 'wasm-unsafe-eval'。
 # 当前构建未启用，故不加。
+# ── 第三方实时聊天（Knocket，2026-10-18）──
+# SDK 从 trtc.io 加载；消息链路走腾讯 IM：api.trtc.io（配置）+ wss://*.im.qcloud.com（长连接）。
+# ⚠️ 2026-10-18 实测教训：**新接第三方脚本必须同步改 CSP，否则 script-src 直接拦掉，
+#    SDK 静默不执行，`window.contactWidget` 永远不存在，表现就是「点了没反应」且无报错。**
+# 腾讯 IM 的 wss 主机按地域分布（wssidn / wssjpn / wsskr …），只能按二级域通配；
+# 不要试图枚举返回调度列表里的裸 IP（162.14.x.x），那份列表随时变。
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), interest-cohort=()
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://hm.baidu.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://hm.baidu.com https://*.baidu.com; font-src 'self' data:; connect-src 'self' https://hm.baidu.com https://*.baidu.com; form-action 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://hm.baidu.com https://trtc.io https://*.trtc.io; style-src 'self' 'unsafe-inline' https://*.trtc.io; img-src 'self' data: https://hm.baidu.com https://*.baidu.com https://trtc.io https://*.trtc.io https://*.qcloud.com; font-src 'self' data:; media-src 'self' blob: https://*.trtc.io https://*.qcloud.com; connect-src 'self' https://hm.baidu.com https://*.baidu.com https://trtc.io https://*.trtc.io https://*.qcloud.com wss://*.qcloud.com wss://*.tim.qq.com; frame-src 'self' https://*.trtc.io https://*.qcloud.com; form-action 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'

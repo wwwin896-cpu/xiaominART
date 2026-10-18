@@ -78,6 +78,16 @@ import { siteContact } from '../data/site';
   const trigger = () => document.querySelector<HTMLButtonElement>('.dm-bar');
 
   /**
+   * 点击反馈。底栏「私信」原来的问题是：SDK 没加载出来时，
+   * 要等 1.8 秒轮询超时才回退，用户感受是「点了没反应」。
+   * 所以点击瞬间就把文字换成「连接中」，让动作立刻有回执。
+   */
+  function setBarLabel(text: string) {
+    const el = document.querySelector<HTMLElement>('.dm-bar .bar-zh');
+    if (el) el.textContent = text;
+  }
+
+  /**
    * 拉起 Knocket 聊天面板。
    *
    * ⚠️ Knocket SDK 是 async 加载，且 `contactWidget.showChat` 在初始化完成前
@@ -92,11 +102,14 @@ import { siteContact } from '../data/site';
       try { widget()?.showChat?.(); } catch { /* 未就绪：忽略，等下一次补调 */ }
     };
 
+    setBarLabel('连接中');
+
     if (widget()) {
       trackEvent('dm_open', { path, channel: 'web_chat' });
       fire();
       window.setTimeout(fire, 500);
       window.setTimeout(fire, 1400);
+      window.setTimeout(() => setBarLabel('私信'), 1600);
       return true;
     }
 
@@ -105,8 +118,14 @@ import { siteContact } from '../data/site';
     trackEvent('dm_open', { path, channel: 'web_chat_loading' });
     const wait = () => {
       tries += 1;
-      if (widget()) { fire(); window.setTimeout(fire, 500); return; }
+      if (widget()) {
+        fire();
+        window.setTimeout(fire, 500);
+        window.setTimeout(() => setBarLabel('私信'), 1600);
+        return;
+      }
       if (tries < 12) { window.setTimeout(wait, 150); return; }
+      setBarLabel('私信');
       openFallback(path, 'web_chat_timeout');
     };
     wait();
