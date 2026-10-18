@@ -10,6 +10,7 @@
     "check:sitemap": "node scripts/check-sitemap.mjs",
     "push:baidu": "node scripts/baidu-push.mjs",
     "push:baidu:dry": "node scripts/baidu-push.mjs --dry-run",
+    "test:baidu": "node scripts/tests/verify-baidu-cursor.mjs",
     "preview": "astro preview",
     "check": "astro check",
     "search:index": "node scripts/build-search.mjs",

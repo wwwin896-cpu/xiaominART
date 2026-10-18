@@ -11,6 +11,32 @@
 //   node scripts/baidu-push.mjs --dry-run       # 只打印将要推送的 URL，不发请求
 //   node scripts/baidu-push.mjs --limit=10      # 最多推送 10 条（保护今日配额）
 //   node scripts/baidu-push.mjs --urls=a,b      # 只推送指定 URL（适合增量推送）
+//   node scripts/baidu-push.mjs --force         # 忽略进度记录，全量重推（慎用，会烧配额）
+//
+// ── 进度状态（2026-10-18 新增，修复「每天重复推前 10 条」）──
+//
+//   症状：脚本每次从 sitemap 索引 0 开始 splice，没有任何游标。
+//         10-17 与 10-18 两次运行推的都是同一批 10 条（首页 → /business-gifts/space/），
+//         第 11 条之后永远进不了队列 —— 配额天天照烧，进度天天为零。
+//
+//   修法：把「哪些 URL 已推过」持久化到仓库根目录 `.baidu-pushed.json`，
+//         每次只从 sitemap 里挑**从未推过**或**推送后又被修改过**的 URL。
+//         状态文件由 CI 在推送后自动提交回 main（见 deploy.yml
+//         "Persist Baidu push progress" 步骤），因此进度跨运行、跨机器都不会丢。
+//
+//   为什么不用「按日期轮换」或「按 offset 切片」：
+//     · offset 无法处理 sitemap 增删（新增一页会让偏移全部错位，漏推或重推）；
+//     · 按 URL 记录可精确去重，且天然支持断点续推（中途超时/Hard fail 也不丢进度）；
+//     · 顺带能回答业主真正关心的问题：「这 77 页里哪些百度已经知道？哪天推的？」
+//
+//   重新入队规则（默认）：
+//     · 状态里没有该 URL            → 入队（新页面）
+//     · sitemap 的 lastmod 晚于记录 → 入队（页面改过，值得再推一次）
+//     · 其余                         → 跳过（已推过且未变更）
+//
+//   `--recheck-days=N`：额外的兜底保鲜策略，推送超过 N 天的 URL 重新入队。
+//     默认 0 = 关闭。关闭是有意的 —— 定期重推会让「全部推完」这个终止信号永远
+//     不出现，本任务就无法自动收尾；只在业主明确要求「每月全量刷一遍」时才开。
 //
 // 环境变量：
 //   BAIDU_PUSH_TOKEN   必填（或写入 .env.baidu，见下）。CI 里从 Repository Secrets 注入。
@@ -39,8 +65,16 @@
 //
 // 退出码：0 = 推送成功或无需推送；1 = 配置/网络/接口错误（CI 会因此标红）。
 // ─────────────────────────────────────────────────────────────
-import { readFileSync, existsSync } from 'node:fs';
-import { join } from 'node:path';
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { join, resolve } from 'node:path';
+import {
+  parseSitemap,
+  emptyState,
+  normalizeState,
+  selectPending,
+  applyPushed,
+  countPushed,
+} from './lib/baidu-queue.mjs';
 
 const ROOT = process.cwd();
 const SITE = 'https://xiaominart.com';
@@ -66,7 +100,10 @@ const getOpt = (name) => {
 };
 
 const dryRun = hasFlag('dry-run');
+const force = hasFlag('force');
 const limit = Number.parseInt(getOpt('limit') ?? '', 10);
+const recheckDaysRaw = Number.parseInt(getOpt('recheck-days') ?? '0', 10);
+const recheckDays = Number.isFinite(recheckDaysRaw) && recheckDaysRaw > 0 ? recheckDaysRaw : 0;
 const explicitUrls = (getOpt('urls') ?? '')
   .split(',')
   .map((s) => s.trim())
@@ -86,18 +123,25 @@ function resolveToken() {
 }
 
 // ---------- 收集待推送 URL ----------
-/** 从 dist/sitemap.xml 读 URL —— 保证推送的永远是「站点真实存在且可索引」的页面 */
+/**
+ * 从 dist/sitemap.xml 读 URL + lastmod —— 保证推送的永远是「站点真实存在且可索引」的页面。
+ * lastmod 用于判断「推送之后页面是否又改过」，是实现增量重推的依据。
+ * 解析逻辑见 lib/baidu-queue.mjs（纯函数，可单测）。
+ */
 function urlsFromSitemap() {
   const sitemapPath = join(ROOT, 'dist', 'sitemap.xml');
   if (!existsSync(sitemapPath)) {
     console.error('✗ 未找到 dist/sitemap.xml，请先执行 npm run build');
     process.exit(1);
   }
-  const xml = readFileSync(sitemapPath, 'utf8');
-  return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].trim());
+  return parseSitemap(readFileSync(sitemapPath, 'utf8'));
 }
 
-const allUrls = explicitUrls.length > 0 ? explicitUrls : urlsFromSitemap();
+/** @type {import('./lib/baidu-queue.mjs').UrlEntry[]} */
+const entries = explicitUrls.length > 0
+  ? explicitUrls.map((u) => ({ loc: u, lastmod: null }))
+  : urlsFromSitemap();
+const allUrls = entries.map((e) => e.loc);
 
 // 域名校验：百度要求推送 URL 与站点是同一域名，混入外域会被整批拒绝
 const foreign = allUrls.filter((u) => {
@@ -109,13 +153,99 @@ if (foreign.length > 0) {
   process.exit(1);
 }
 
-const target = Number.isFinite(limit) && limit > 0 ? allUrls.slice(0, limit) : allUrls;
+// ---------- 进度状态 ----------
+// 结构（version 固定 1，升级时按 version 分支迁移）：
+// {
+//   "version": 1,
+//   "site": "https://xiaominart.com",
+//   "updatedAt": "2026-10-19T01:10:00.000Z",   // 最后一次写入时间（UTC）
+//   "urls": {
+//     "https://xiaominart.com/": {              // key 为完整 URL，天然幂等
+//       "pushedAt": "2026-10-18",               // 最后一次成功推送的日期（本地时区无关，取 UTC 日期）
+//       "lastmod": "2026-10-17",                // 推送时 sitemap 里该页的 lastmod，用于判断后续是否变更
+//       "count": 1                              // 累计推送次数，便于发现「反复重推」的异常页
+//     }
+//   }
+// }
+// ⚠️ 用 resolve 而非 join：join(ROOT, 'C:/x/y') 会拼成 'ROOT\\C:\\x\\y' 这种非法路径，
+//    表现为「传了 --state 却像没传」——状态读不到 → 空状态 → 全量重推烧配额。
+const stateArg = getOpt('state');
+const STATE_FILE = stateArg ? resolve(ROOT, stateArg) : join(ROOT, '.baidu-pushed.json');
+
+/** @returns {import('./lib/baidu-queue.mjs').PushState} */
+function loadState() {
+  if (!existsSync(STATE_FILE)) return emptyState(SITE);
+
+  let parsed;
+  try {
+    parsed = JSON.parse(readFileSync(STATE_FILE, 'utf8'));
+  } catch (err) {
+    // 损坏时**不能**静默当作空状态 —— 那会导致下一次全量重推，白烧好几天配额。
+    // 直接硬失败，让人看一眼文件（它只是记录，删掉即可重建，但必须是人的决定）。
+    console.error(`✗ 进度文件解析失败：${STATE_FILE}`);
+    console.error(`  ${err instanceof Error ? err.message : String(err)}`);
+    console.error('  处理：确认内容无误后删除该文件（会从头重推，慎用），或从 git 历史恢复。');
+    process.exit(1);
+  }
+
+  try {
+    return normalizeState(parsed, SITE);
+  } catch (err) {
+    console.error(`✗ 进度文件结构不符：${STATE_FILE}`);
+    console.error(`  ${err instanceof Error ? err.message : String(err)}`);
+    process.exit(1);
+  }
+}
+
+const state = loadState();
+
+/** 落盘（只在真实推送后调用；dry-run 绝不写文件）
+ * @param {import('./lib/baidu-queue.mjs').PushState} next */
+function saveState(next) {
+  writeFileSync(STATE_FILE, `${JSON.stringify(next, null, 2)}\n`, 'utf8');
+}
+
+/** UTC 日期 YYYY-MM-DD。用 UTC 而非本地时区，避免 CI（UTC）与本地（+8）记录不一致 */
+function todayStr() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+const { pending: pendingEntries, alreadyDone } = selectPending(entries, state, { force, recheckDays });
+
+// limit 作用在**待推队列**上（而非全量），这样 --limit=10 才是「今天最多推 10 条」
+const selected = Number.isFinite(limit) && limit > 0 ? pendingEntries.slice(0, limit) : pendingEntries;
+const target = selected.map((e) => e.loc);
+/** url → lastmod，推送成功后写进状态 */
+const lastmodOf = new Map(selected.map((e) => [e.loc, e.lastmod]));
+
+// 进度口径：只统计「仍在 sitemap 里」的记录，避免已删除页面长期挂在分母外造成误判
+const pushedCount = countPushed(state, allUrls);
 
 // ---------- 干跑 ----------
 if (dryRun) {
-  console.log(`[dry-run] 将从 ${explicitUrls.length > 0 ? '命令行参数' : 'dist/sitemap.xml'} 推送 ${target.length} 条 URL：`);
-  target.forEach((u, i) => console.log(`  ${String(i + 1).padStart(3)}. ${u}`));
-  console.log(`\n[dry-run] 未发送任何请求。去掉 --dry-run 即真实推送。`);
+  console.log(`[dry-run] 数据源：${explicitUrls.length > 0 ? '命令行参数' : 'dist/sitemap.xml'}`);
+  console.log(`[dry-run] sitemap ${entries.length} 条 | 已推过 ${alreadyDone.length} 条 | 本次待推 ${selected.length} 条${force ? '（--force 忽略进度）' : ''}`);
+  console.log(`[dry-run] 待推队列（按 sitemap 顺序）：`);
+  selected.forEach((e, i) => console.log(`  ${String(i + 1).padStart(3)}. ${e.loc}${e.lastmod ? `  (lastmod ${e.lastmod})` : ''}`));
+  if (selected.length === 0) {
+    console.log('\n[dry-run] 没有待推 URL —— 全部已推过，且 sitemap 无新增/变更。');
+  }
+  console.log(`\n[dry-run] 未发送任何请求、未修改进度文件。去掉 --dry-run 即真实推送。`);
+  process.exit(0);
+}
+
+// ---------- 无待推项：直接收工 ----------
+/** 状态文件在日志里显示为仓库相对路径，便于人直接去 GitHub 上点开 */
+const stateRel = STATE_FILE.replace(ROOT, '').replace(/^[\\/]+/, '') || STATE_FILE;
+
+// 没有待推项 → **不探测、不发请求、不烧配额**，也不要求 token（没活要干就别拦人）。
+// 这同时是「任务已完成」的终止信号：日志出现这句，业主就可以停掉每日任务。
+if (selected.length === 0) {
+  console.log(`百度主动推送：sitemap ${entries.length} 条 URL 全部已推送过，本次无需推送。`);
+  console.log(`进度：${pushedCount} / ${entries.length} 条已推（记录于 ${stateRel}）`);
+  console.log('✓ 无待推 URL —— 本任务可停止。');
+  console.log('  后续：站点新增页面、或页面更新导致 sitemap lastmod 变化时，会自动重新入队。');
+  console.log('  如需无视记录全量重推：npm run push:baidu -- --force（会消耗配额，慎用）。');
   process.exit(0);
 }
 
@@ -210,8 +340,9 @@ function leftovers(json) {
   return out;
 }
 
-console.log(`百度主动推送：共 ${target.length} 条 URL（自适应分批）`);
+console.log(`百度主动推送：sitemap ${entries.length} 条 | 已推 ${pushedCount} 条 | 待推 ${pendingEntries.length} 条 | 本次计划 ${target.length} 条（自适应分批）`);
 console.log(`站点 ${SITE}`);
+console.log(`进度文件 ${stateRel}`);
 console.log('');
 
 // ⚠️ 这些变量被下方 runBatch() 读写。tsconfig 开了 checkJs，
@@ -227,6 +358,24 @@ let hardFailure = false;
 let quotaHit = false;
 const pending = [...target];
 let batchNo = 0;
+
+/** 当前进度：每批成功后被替换为新对象（applyPushed 不改入参） */
+let liveState = state;
+
+/**
+ * 把本批「确认成功」的 URL 写进状态文件并落盘。
+ * 每批成功就写一次（而不是跑完统一写）：中途超时/被取消时已推的部分不丢，
+ * 明天不会重复烧配额推同一批。
+ * @param {string[]} batch
+ * @param {Record<string, any>} json
+ * @returns {number} 实际记录条数
+ */
+function recordBatch(batch, json) {
+  const result = applyPushed(liveState, batch, json, lastmodOf, todayStr());
+  liveState = result.state;
+  if (result.recorded > 0) saveState(liveState);
+  return result.recorded;
+}
 
 /** 推一批并统一处理返回；返回 'stop' 表示应终止循环
  * @param {string[]} batch
@@ -257,17 +406,24 @@ async function runBatch(batch) {
     console.log('  ⚠ 今日配额已用尽，剩余 URL 请改日再推（脚本可重复执行，已收录的重复推送不影响）');
     return 'stop';
   }
-  // remain 归零但本批仍有成功：配额刚好用完，同样按软失败收工
-  if (lastRemain === 0) {
-    quotaHit = true;
-    console.log('  ⚠ 今日配额已用尽，剩余 URL 请改日再推');
-    return 'stop';
-  }
   // 真·配置错误（token 无效 / 站点未验证 / 接口地址错 / site 参数被编码）：
   // 后续批次必然同样失败，重试无意义 → 立即止损并 exit=1 让 CI 标红。
   // 早先只判 [401,403,404] 把 400 放过了，导致 token 配错时退出码仍为 0，已修正。
   if (result.json.error) {
     hardFailure = true;
+    return 'stop';
+  }
+
+  // 走到这里说明本批被接受 → 记进度（含 remain 刚好归零的那一批，否则会白推）
+  const recorded = recordBatch(batch, result.json);
+  if (recorded < batch.length) {
+    console.log(`  ⚠ ${batch.length - recorded} 条未被接受（格式非法/非本站），已排除出队列，不计入进度`);
+  }
+
+  // remain 归零但本批仍有成功：配额刚好用完，同样按软失败收工
+  if (lastRemain === 0) {
+    quotaHit = true;
+    console.log('  ⚠ 今日配额已用尽，剩余 URL 请改日再推');
     return 'stop';
   }
   return 'continue';
@@ -276,11 +432,8 @@ async function runBatch(batch) {
 // ① 探测批：先发 1 条，换取真实 remain（见文件头 2026-10-15 修复说明）
 if (pending.length > 0) {
   const probe = pending.splice(0, Math.min(PROBE_SIZE, pending.length));
-  const act = await runBatch(probe);
-  if (act === 'stop') {
-    // 探测批就失败 → 直接进入汇总；此时 totalSuccess 已如实统计
-    pending.length = 0;
-  }
+  await runBatch(probe);
+  // 失败时由 hardFailure/quotaHit 阻止后续批次，无需在这里清空 pending
 }
 
 // ② 自适应批：按 remain 决定每批大小（remain 未知时退回保守的 10 条）
@@ -293,8 +446,22 @@ while (pending.length > 0 && !hardFailure && !quotaHit) {
 
 console.log('');
 console.log(`汇总：成功推送 ${totalSuccess} / ${target.length} 条` + (lastRemain !== null ? `，今日剩余配额 ${lastRemain} 条` : ''));
-if (quotaHit) {
-  console.log('说明：本次未推完的 URL 不是错误，明天配额重置后重跑本脚本即可（重复推送幂等，不会产生副作用）。');
+
+// 累计进度（分母用 sitemap 当前条数，分子只算仍在 sitemap 里的记录）
+const pushedNow = countPushed(liveState, allUrls);
+if (pending.length === 0) {
+  console.log(`进度：已推 ${pushedNow} / ${entries.length} 条，无待推项`);
+} else if (pushedNow >= entries.length) {
+  // 全部推过但仍有待推 → 是「内容更新后重新入队」，不是没推过。两者别混淆。
+  console.log(`进度：已推 ${pushedNow} / ${entries.length} 条，其中 ${pending.length} 条因内容更新重新入队，待后续配额`);
+} else {
+  console.log(`进度：已推 ${pushedNow} / ${entries.length} 条，尚未推送 ${pending.length} 条`);
+}
+
+if (pending.length === 0 && !hardFailure) {
+  console.log(`✓ 全部 ${entries.length} 条 URL 已推送完成 —— 本任务可以停止，无需再每天触发。`);
+} else if (quotaHit) {
+  console.log('说明：本次未推完的 URL 不是错误，明天配额重置后重跑本脚本即可（进度已记录，不会重复推同一批）。');
 }
 if (rejected.length > 0) {
   console.log(`未被接受 ${rejected.length} 条（多为超出配额，可改日重推）：`);

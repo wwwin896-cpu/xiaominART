@@ -28,7 +28,15 @@ name: Deploy site
 on:
   push:
     branches: [main]
+    # 只含推送进度的提交不该触发部署：否则「部署→推送→回写进度→再部署」自激循环。
+    # 与提交信息里的 [skip ci] 双保险（前者防循环，后者省一次 run）。
+    paths-ignore:
+      - '.baidu-pushed.json'
   workflow_dispatch: {}
+
+# 进度文件要提交回 main，GITHUB_TOKEN 默认只读，必须显式给写权限。
+permissions:
+  contents: write
 
 concurrency:
   group: deploy-pages
@@ -56,6 +64,11 @@ jobs:
       # 既慢又会在内联脚本上报假错误；tsconfig.json 的 exclude 已排除这些目录。
       - name: Type & template check
         run: npm run check
+
+      # 回归测试：百度推送的游标必须每次前进（2026-10-18 修复「每天重复推前 10 条」）。
+      # 纯离线测试（fetch 被打桩），不消耗真实配额，秒级完成。
+      - name: Baidu push cursor regression test
+        run: npm run test:baidu
 
       - name: Build
         run: npm run build
@@ -118,3 +131,35 @@ jobs:
             exit 0
           fi
           npm run push:baidu
+
+      # 推送进度回写：.baidu-pushed.json 记录「哪些 URL 已经推给百度」，
+      # 脚本据此只推没推过的（或推送后又被修改过的）页面。
+      #
+      # 为什么必须提交回 main：GitHub Actions 的 job 是临时容器，工作区随 run 销毁。
+      # 不回写 = 每天醒来都是空进度 = 天天重复推前 10 条，配额烧完却零进展
+      # （2026-10-17/18 就是这样白烧了两天）。
+      #
+      # [skip ci] 是必须的：这个提交只含进度记录、不影响站点内容，
+      # 不加会让状态提交再触发一次完整构建 + 部署 + 推送，形成自激循环。
+      - name: Persist Baidu push progress
+        if: ${{ always() && github.ref == 'refs/heads/main' }}
+        run: |
+          set -euo pipefail
+          if [ -z "$(git status --porcelain -- .baidu-pushed.json)" ]; then
+            echo "进度无变化，无需提交。"
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .baidu-pushed.json
+          git commit -m "chore(baidu): 更新主动推送进度 [skip ci]"
+          # deploy 组已串行化，但人工推送可能插队 → rebase 后重试，避免状态丢失
+          for i in 1 2 3; do
+            if git pull --rebase --autostash origin main && git push origin HEAD:main; then
+              echo "✓ 进度已回写 main"
+              exit 0
+            fi
+            echo "第 ${i} 次回写失败，3 秒后重试…"
+            sleep 3
+          done
+          echo "⚠ 进度回写失败（不影响站点部署，但明天的推送可能重复今天的批次）"
