@@ -254,7 +254,7 @@ const baiduId = trackPage ? BAIDU_TONGJI_ID : undefined;
     .footer-bottom { display: block; }
      .footer-bottom span { display: block; margin-top: 8px; }
      .site-footer { padding-top: 56px; padding-bottom: 92px; }
-     .mobile-shopping-bar { position: fixed; top: auto; display: grid; grid-template-columns: repeat(4, 1fr); left: 0; right: 0; bottom: 0; z-index: 8; background: rgba(250, 247, 240, .98); border-top: 1px solid var(--line); box-shadow: 0 -8px 24px rgba(77, 56, 34, .08); padding: 7px 8px calc(7px + env(safe-area-inset-bottom)); }
+     .mobile-shopping-bar { position: fixed; top: auto; display: grid; grid-template-columns: repeat(3, 1fr); left: 0; right: 0; bottom: 0; z-index: 8; background: rgba(250, 247, 240, .98); border-top: 1px solid var(--line); box-shadow: 0 -8px 24px rgba(77, 56, 34, .08); padding: 7px 8px calc(7px + env(safe-area-inset-bottom)); }
      /* Cookie 横幅展示期间（body.consent-open）：把移动底栏整体顶到横幅之上，
         否则两者都固定 bottom:0 会重叠、横幅盖住底栏。
         横幅实际高度由内容决定，这里用一个保守估高 + 变量兜底。 */
@@ -265,9 +265,7 @@ const baiduId = trackPage ? BAIDU_TONGJI_ID : undefined;
      .mobile-shopping-bar small { font-size: 9px; color: var(--muted); font-family: var(--font-body-en), sans-serif; letter-spacing: .1em; text-transform: uppercase; }
      .mobile-shopping-bar a:first-child .bar-zh { color: var(--cinnabar); }
      .mobile-shopping-bar span[data-wishlist-count] { color: var(--cinnabar); font-family: var(--font-mono); }
-     .mobile-shopping-bar .wechat-link { justify-self: center; }
-     .mobile-shopping-bar .wechat-link:active .bar-zh, .mobile-shopping-bar .wechat-link[aria-expanded="true"] .bar-zh { color: var(--cinnabar); }
-     .mobile-shopping-bar .wishlist-bar:active .bar-zh { color: var(--cinnabar); }
+     .mobile-shopping-bar .wishlist-bar:active .bar-zh, .mobile-shopping-bar .wishlist-bar[aria-expanded="true"] .bar-zh { color: var(--cinnabar); }
      /* 窄屏用底栏承担工具入口，头部不再重复放一套 */
      .header-tools { display: none; }
   }

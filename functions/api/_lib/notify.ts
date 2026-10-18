@@ -220,3 +220,32 @@ export function notify(env: Env, waitUntil: WaitUntil, n: NotifyPayload): void {
   }
   // 两个都没配 = 邮件通道未启用，静默
 }
+
+/**
+ * 订阅欢迎邮件（2026-10-18）：订阅落库成功后发给订阅者本人。
+ * 发送前提：RESEND_API_KEY + RESEND_FROM_EMAIL（已验证域名下的发件地址）都配置。
+ * 为什么不直接用 onboarding@resend.dev：该地址只能发到 Resend 注册邮箱，
+ * 发给真实订阅者会被 403 拒收，所以域名未验证时这里静默跳过（不报错、不影响落库）。
+ * 退订方式：订阅者直接回复邮件；后续月度简报上线后换成一键退订链接（见 docs/订阅与关注-PRD-2026-10-18.md）。
+ */
+export function sendSubscriberWelcome(env: Env, waitUntil: WaitUntil, email: string): void {
+  const resendKey = env.RESEND_API_KEY;
+  const from = env.RESEND_FROM_EMAIL;
+  if (!resendKey || !from) return; // 通道未启用，静默
+  const subject = '欢迎订阅小民艺术 · 从一个字开始';
+  const html = [
+    '<div style="font-family:Georgia,\'Songti SC\',serif;max-width:560px;margin:0 auto;color:#3d362e;line-height:1.9;">',
+    '<p style="font-size:20px;">你好，</p>',
+    '<p>谢谢你订阅小民艺术的创作笔记。每月最多一封信，只讲三件事：新写好的字、新的字源故事、以及一两句值得带走的话。</p>',
+    '<p>现在正在连载的是<strong>「字游记」</strong>——沿着字源一站一站走。第一站是甲骨文十二生肖，十二个字，十二种藏在时光里的守护：</p>',
+    '<p style="text-align:center;margin:26px 0;"><a href="https://xiaominart.com/zodiac/" style="color:#a83f39;text-decoration:none;border-bottom:1px solid #a83f39;">字游记 · 第一站：十二生肖 →</a></p>',
+    '<p>下一站还没定。等它动笔的时候，你会比所有人先知道。</p>',
+    '<p style="color:#8a7f72;font-size:13px;">小民艺术 · 把古文字写进日常<br>不想要这些信了？直接回复本邮件说一声即可。</p>',
+    '</div>',
+  ].join('');
+  waitUntil(
+    sendResendEmail(resendKey, from, email, subject, html).catch((err: unknown) =>
+      console.error('[welcome] 欢迎邮件发送失败：', err instanceof Error ? err.message : err),
+    ),
+  );
+}

@@ -153,9 +153,7 @@ const capabilities = [
 
   <section class="container section values"><div><span class="mono">01</span><h2 class="serif">慢一点，没关系</h2><p>好的字和好的手艺都急不来。等得起的事，我们慢慢做；等不起的心意，我们有现货。</p></div><div><span class="mono">02</span><h2 class="serif">一人一作</h2><p>同一个词，不同的人写出来是不一样的心事。</p></div><div><span class="mono">03</span><h2 class="serif">字有来处</h2><p>写什么、怎么写，先弄清这句话的来路与去处。懂得多一点，笔下的分寸才稳一点。</p></div><div><span class="mono">04</span><h2 class="serif">一次委托，一段来往</h2><p>很多客人写完一幅，还会回来写第二幅。比起做成一单生意，我们更喜欢这样的来往。</p></div></section>
 
-  <section class="container section capability" id="capability" aria-labelledby="capability-title"><div class="capability-lead"><span class="eyebrow">Where to begin / 从哪里开始</span><h2 id="capability-title" class="serif">不知道从哪里开始？<br />从你心里那句话开始。</h2><p>有人想尽快送出一份心意，有人想把一面空墙安顿好，有人想带孩子亲手摸一摸传统，也有人想替一群人说声谢谢。这四件事我们都在做，也都乐意做——选不选得好，来了聊几句就知道了。</p></div><div class="capability-grid">{capabilities.map((item) => <article class="cap-card"><span class="eyebrow">{item.tag}</span><h3 class="serif">{item.title}</h3><dl><dt>适合谁</dt><dd>{item.fit}</dd><dt>你会得到</dt><dd>{item.gain}</dd></dl><a class="btn btn-link" href={item.href}>{item.cta} →</a></article>)}</div><p class="capability-note">哪一条都拿不准也没关系，直接来说说你的情况就好。<a href="/custom-commission/">来聊聊 →</a></p></section>
-
-  <section class="container section about-cta"><h2 class="serif">如果你有一句还没说出口的话，<br />我们帮你写下来。</h2><a class="btn btn-primary" href="/custom-commission/">开始聊聊 / Start a conversation →</a></section>
+  <section class="container section capability" id="capability" aria-labelledby="capability-title"><div class="capability-lead"><span class="eyebrow">Where to begin / 从哪里开始</span><h2 id="capability-title" class="serif">不知道从哪里开始？<br />从你心里那句话开始。</h2><p>有人想尽快送出一份心意，有人想把一面空墙安顿好，有人想带孩子亲手摸一摸传统，也有人想替一群人说声谢谢。这四件事我们都在做，也都乐意做——选不选得好，来了聊几句就知道了。</p></div><div class="capability-grid">{capabilities.map((item) => <article class="cap-card"><span class="eyebrow">{item.tag}</span><h3 class="serif">{item.title}</h3><dl><dt>适合谁</dt><dd>{item.fit}</dd><dt>你会得到</dt><dd>{item.gain}</dd></dl><a class="btn btn-link" href={item.href}>{item.cta} →</a></article>)}</div></section>
 </Layout>
 <style>
 .page-head{padding:94px 0 72px}
@@ -177,8 +175,6 @@ const capabilities = [
 .cap-card dt{color:var(--muted);font-size:11px;letter-spacing:.12em}
 .cap-card dd{margin:5px 0 13px;color:var(--ink-soft);font-size:14px;line-height:1.8}
 .cap-card .btn{margin-top:auto;align-self:flex-start}
-.capability-note{margin:18px 0 0;color:var(--muted);font-size:12px}
-.capability-note a{color:var(--cinnabar)}
 /* 品牌名的来处 */
 .name-meaning{border-top:1px solid var(--line)}
 .name-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}
@@ -247,8 +243,6 @@ const capabilities = [
 .values .mono{color:var(--cinnabar)}
 .values h2{font-size:clamp(24px,2.6vw,34px);font-weight:500;margin:30px 0 8px}
 .values p{color:var(--ink-soft);font-size:14px}
-.about-cta{border-bottom:1px solid var(--line)}
-.about-cta h2{font-size:clamp(38px,5vw,64px);font-weight:500;line-height:1.3;margin-top:0}
 @media(max-width:1023px){
 .philosophy-grid{grid-template-columns:1fr}
 .philo-card,.philo-card+.philo-card{padding:22px 0;border-left:0}

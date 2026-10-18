@@ -5,7 +5,9 @@
 // 两者放在同一文件的原因：微信弹层**只**由底栏的「微信直联」按钮触发，
 // 二者是一组完整的「触发 → 弹层」交互，拆开反而要在两处对着改。
 //
-// 底栏 4 格：礼物 / 心愿单 / 微信直联 / 分享。
+// 底栏 3 格（2026-10-18 业主指示：原 4 格「礼物/心愿单/微信直联/分享」精简为 3 格）：
+// 收藏（心愿单）/ 私信（跳飞书留言，feishuUrl 未配时兜底到定制咨询页）/ 分享。
+// 微信直联弹层保留：页内 [data-wechat-open] 触发点仍唤起它，只是底栏不再有入口。
 // 注意：这一组按钮是移动端唯一的工具入口 —— 桌面端用的是
 // SiteHeader 的 .header-tools（心愿单 + 搜索），两者不可互换。
 //
@@ -17,7 +19,7 @@
 import { siteContact } from '../data/site';
 ---
 
-<nav class="mobile-shopping-bar" aria-label="移动端底部导航"><a href="/gifts/" aria-label="浏览小民好礼"><span class="bar-zh">礼物</span><small lang="en">Gifts</small></a><button class="wishlist-bar" type="button" data-wishlist-open aria-label="打开心愿单"><span class="bar-zh">心愿单</span><small lang="en">Saved <span data-wishlist-count></span></small></button><button class="wechat-link" type="button" aria-controls="wechat-sheet" aria-expanded="false" aria-label="加微信直接聊"><span class="bar-zh">微信直联</span><small lang="en">WeChat</small></button><button class="bar-share" type="button" data-share-button data-event="share_click" aria-label="分享本页给微信好友或朋友圈"><span class="bar-zh">分享</span><small lang="en">Share</small></button></nav>
+<nav class="mobile-shopping-bar" aria-label="移动端底部导航"><button class="wishlist-bar" type="button" data-wishlist-open aria-label="打开收藏夹"><span class="bar-zh">收藏</span><small lang="en">Saved <span data-wishlist-count></span></small></button><a href={siteContact.feishuUrl || '/custom-commission/'} {...(siteContact.feishuUrl ? { target: '_blank', rel: 'noopener' } : {})} data-event="contact_channel_click" aria-label="私信留言"><span class="bar-zh">私信</span><small lang="en">Message</small></a><button class="bar-share" type="button" data-share-button data-event="share_click" aria-label="分享本页给微信好友或朋友圈"><span class="bar-zh">分享</span><small lang="en">Share</small></button></nav>
 <div class="wechat-sheet" id="wechat-sheet" role="dialog" aria-modal="true" aria-labelledby="wechat-sheet-title" hidden>
   <div class="wechat-sheet-card">
     <button class="wechat-sheet-close" type="button" aria-label="关闭">×</button>

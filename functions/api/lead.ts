@@ -15,7 +15,7 @@
 // 失败不影响用户提交；未配置环境变量 = 通道静默关闭。
 // ─────────────────────────────────────────────────────────────
 
-import { notify, type Env, type WaitUntil } from './_lib/notify';
+import { notify, sendSubscriberWelcome, type Env, type WaitUntil } from './_lib/notify';
 
 const CLOUD_REST_BASE = 'https://xiaominart-forms.app.workbuddy.host/.cloud/database/rest';
 const MAX_BODY_BYTES = 16 * 1024;
@@ -91,6 +91,9 @@ async function handleLead(request: Request, env: Env, waitUntil: WaitUntil): Pro
     }
     if (res.status === 201) {
       notify(env, waitUntil, { kind: 'subscribe', name: '', contact: '', email });
+      // 2026-10-18：给订阅者本人发欢迎邮件（含字游记第一辑入口）；
+      // 发件域名未验证时静默跳过，不影响订阅落库。
+      sendSubscriberWelcome(env, waitUntil, email);
       return jsonResponse({ ok: true });
     }
     if (res.status === 409) {

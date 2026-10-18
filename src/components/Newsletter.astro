@@ -1,7 +1,7 @@
 <section class="newsletter" aria-labelledby="newsletter-title">
   <span class="eyebrow">Journal / 创作笔记</span>
   <h2 id="newsletter-title" class="serif">订阅和关注</h2>
-  <p>订阅创作笔记，获取最新案例与艺术灵感。每月最多一封，随时可退订。</p>
+  <p>订阅创作笔记，获取最新案例与艺术灵感。每月最多一封，随时可退订。订阅后即刻收到「字游记」第一站的邀请。</p>
   <p lang="en">Subscribe and follow studio notes, new references and quiet inspiration.</p>
   <form class="newsletter-form" data-newsletter-form>
     <label class="sr-only" for="newsletter-email">邮箱 / Email</label>
@@ -9,6 +9,13 @@
     <button class="btn btn-secondary" type="submit">订阅 / Subscribe</button>
   </form>
   <p class="newsletter-status" data-newsletter-status aria-live="polite" role="status"></p>
+  <div class="newsletter-series">
+    <span class="eyebrow">Series / 正在连载</span>
+    <p class="series-title serif">字游记 · 第一站：十二生肖</p>
+    <p>沿着字源一站一站走。第一站是甲骨文十二生肖——十二个字，十二种藏在时光里的守护。新的一站动笔时，订阅者第一时间收到。</p>
+    <a href="/zodiac/">去第一站看看 →</a>
+  </div>
+  <p class="newsletter-follow">不方便留邮箱？也可以用阅读器关注本站更新：<a href="/rss.xml" data-event="contact_channel_click">RSS 订阅源</a></p>
 </section>
 <script>
   import { subscribeEmail, CONTACT_FALLBACK } from '../scripts/cloud-forms';
@@ -42,6 +49,12 @@
   .newsletter-form input:focus { border-color: var(--cinnabar); }
   .newsletter-form .btn { min-width: 132px; }
   .newsletter-status { min-height: 1.8em; color: var(--cinnabar-deep) !important; font-size: 13px; margin-top: 12px !important; }
+  .newsletter-series { margin-top: 28px; border: 1px solid var(--line); background: var(--paper-light); padding: 22px 24px; max-width: 620px; }
+  .newsletter-series .series-title { font-size: 18px; font-weight: 500; margin: 10px 0 6px; }
+  .newsletter-series p { font-size: 13.5px; }
+  .newsletter-series a { color: var(--cinnabar); font-size: 13px; }
+  .newsletter-follow { font-size: 12.5px; color: var(--muted); }
+  .newsletter-follow a { color: var(--cinnabar); }
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
   @media (max-width: 767px) {
     .newsletter { margin-top: 44px; padding-top: 28px; }

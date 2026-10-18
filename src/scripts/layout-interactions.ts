@@ -137,9 +137,11 @@ window.addEventListener('xiaominart:event', (event) => {
 const wechatTrigger = document.querySelector<HTMLButtonElement>('.wechat-link');
 const wechatSheet = document.querySelector<HTMLElement>('#wechat-sheet');
 const closeWechat = () => {
-  if (!wechatSheet || !wechatTrigger) return;
+  // 2026-10-18：底栏「微信直联」格已移除（改 3 格），.wechat-link 可能为 null；
+  // 关闭只依赖弹层本身存在，否则页内 [data-wechat-open] 打开后将关不掉。
+  if (!wechatSheet) return;
   wechatSheet.hidden = true;
-  wechatTrigger.setAttribute('aria-expanded', 'false');
+  wechatTrigger?.setAttribute('aria-expanded', 'false');
 };
 const openWechat = (source?: string) => {
   if (!wechatSheet) return;
