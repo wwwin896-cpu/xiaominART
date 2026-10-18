@@ -111,10 +111,18 @@
 #    IM 还会按地域回退到 wss://wss.im.tencent.cn、wss://wss.tim.qq.com
 #    甚至裸 IP（wss://162.14.x.x）。IP 无法在 CSP 里通配，故 connect-src 直接
 #    放行 `wss:`（本站自身不使用 WebSocket，风险可控）。
+#
+# ⚠️ 2026-10-18 第四坑（真正的总根因）：TIM SDK 用
+#    URL.createObjectURL(new Blob(...)) 创建 socket/timer 两个 Worker。
+#    worker-src 未设置时回退到 script-src，而 script-src 没有 blob:
+#    → new Worker(blobURL) 抛 SecurityError（SDK 吞掉不打印）→ IM 会话
+#    永远起不来 → 输入框 contenteditable=false。必须显式加
+#    `worker-src 'self' blob:`。
 /*
+
 
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), interest-cohort=()
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://hm.baidu.com https://trtc.io https://*.trtc.io; style-src 'self' 'unsafe-inline' https://trtc.io https://*.trtc.io; img-src 'self' data: https://hm.baidu.com https://*.baidu.com https://trtc.io https://*.trtc.io https://*.qcloud.com https://console.trtc.io; font-src 'self' data: https://fonts.gstatic.com; media-src 'self' blob: https://trtc.io https://*.trtc.io https://*.qcloud.com; connect-src 'self' https://hm.baidu.com https://*.baidu.com https://trtc.io https://*.trtc.io https://*.qcloud.com https://*.myqcloud.com https://*.my-imcloud.com https://*.tencent.cn https://*.tim.qq.com https://console.trtc.io wss:; frame-src 'self' https://trtc.io https://*.trtc.io https://*.qcloud.com; form-action 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://hm.baidu.com https://trtc.io https://*.trtc.io; style-src 'self' 'unsafe-inline' https://trtc.io https://*.trtc.io; img-src 'self' data: https://hm.baidu.com https://*.baidu.com https://trtc.io https://*.trtc.io https://*.qcloud.com https://console.trtc.io; font-src 'self' data: https://fonts.gstatic.com; media-src 'self' blob: https://trtc.io https://*.trtc.io https://*.qcloud.com; connect-src 'self' https://hm.baidu.com https://*.baidu.com https://trtc.io https://*.trtc.io https://*.qcloud.com https://*.myqcloud.com https://*.my-imcloud.com https://*.tencent.cn https://*.tim.qq.com https://console.trtc.io wss:; frame-src 'self' https://trtc.io https://*.trtc.io https://*.qcloud.com; worker-src 'self' blob:; form-action 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'
