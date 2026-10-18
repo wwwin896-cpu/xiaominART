@@ -119,6 +119,13 @@ const clarityId = trackPage ? (import.meta.env.PUBLIC_CLARITY_ID as string | und
 // 不构成密钥（与 GA4 measurement id 同性质）。同样受 noindex 闸门约束。
 const BAIDU_TONGJI_ID = 'ecd08d2b5b02b8982ae7fdf7836e8a3b';
 const baiduId = trackPage ? BAIDU_TONGJI_ID : undefined;
+
+// Knocket SDK 地址（2026-10-18）。identifier 为空时整段不渲染，页面零变化。
+const chatSdkSrc = chatConfig.knocketIdentifier
+  ? `https://trtc.io/knocket-sdk/sdk.js?identifier=${encodeURIComponent(chatConfig.knocketIdentifier)}${
+      chatConfig.knocketVersion ? `&amp;v=${encodeURIComponent(chatConfig.knocketVersion)}` : ''
+    }`
+  : '';
 ---
 <html lang="zh-CN">
   <head>
@@ -147,10 +154,8 @@ const baiduId = trackPage ? BAIDU_TONGJI_ID : undefined;
         未配 identifier 时**完全不加载**，页面体积与行为零变化。
         async 加载、不阻塞渲染；访客点底栏「私信」时由 MobileBar 调
         window.contactWidget.showChat() 拉起面板。 */}
-    {chatConfig.knocketIdentifier ? (
-      <Fragment
-        set:html={`<script src="https://trtc.io/knocket-sdk/sdk.js?identifier=${encodeURIComponent(chatConfig.knocketIdentifier)}" async></script>`}
-      />
+    {chatSdkSrc ? (
+      <Fragment set:html={`<script src="${chatSdkSrc}" async></script>`} />
     ) : null}
     <SiteFooter isHome={currentPath === '/'} />
   </body>

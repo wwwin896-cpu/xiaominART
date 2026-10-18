@@ -53,8 +53,18 @@ export const siteContact = {
 export const chatConfig = {
   /** 微信客服链接；空字符串 = 未接入 */
   wechatKfUrl: '',
-  /** Knocket 网页组件的 identifier；空字符串 = 未接入 */
-  knocketIdentifier: '',
+  /**
+   * Knocket 网页组件的 identifier；空字符串 = 未接入。
+   * 2026-10-18 业主提供的控制台脚本：
+   * <script src="https://trtc.io/knocket-sdk/sdk.js?identifier=a12dfcc17aefaa02c7&v=1792313199304" async></script>
+   */
+  knocketIdentifier: 'a12dfcc17aefaa02c7',
+  /**
+   * 控制台脚本里的 `v` 参数。它不是业务配置，而是**缓存破坏戳**——
+   * 控制台改完外观重新生成脚本时这个值会变。带上它，访客不会吃到旧版 SDK。
+   * 留空则 URL 里不带 v，也能正常工作。
+   */
+  knocketVersion: '1792313199304',
 };
 
 /** 是否已接入任意一条实时通道（决定「私信」按钮的行为） */
