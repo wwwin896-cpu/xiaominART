@@ -196,7 +196,11 @@ async function sendResendEmail(
 export function notify(env: Env, waitUntil: WaitUntil, n: NotifyPayload): void {
   const feishuUrl = env.FEISHU_WEBHOOK_URL;
   if (feishuUrl) {
-    const text = buildFeishuText(n);
+    // 2026-10-18：飞书机器人若开了「自定义关键词」安全设置，消息必须包含该关键词，
+    // 否则返回 19024 Key Words Not Found 且静默丢消息。
+    // 业主把关键词填到环境变量 FEISHU_KEYWORD 即可（不改代码）。
+    const keyword = env.FEISHU_KEYWORD;
+    const text = keyword ? `${keyword} ${buildFeishuText(n)}` : buildFeishuText(n);
     waitUntil(
       sendFeishu(feishuUrl, text).catch((err: unknown) =>
         console.error('[notify] 飞书通知失败：', err instanceof Error ? err.message : err),

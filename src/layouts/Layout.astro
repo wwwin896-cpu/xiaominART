@@ -282,4 +282,18 @@ const baiduId = trackPage ? BAIDU_TONGJI_ID : undefined;
   .wechat-sheet-id code { font-family: var(--font-mono); font-size: 15px; color: var(--ink); background: var(--paper); padding: 5px 12px; border: 1px solid var(--line); }
   .wechat-sheet-note { font-size: 13px; color: var(--muted); margin: 16px 0 0; line-height: 1.8; }
   .wechat-sheet-note a { color: var(--cinnabar); }
+  /* ── 私信弹层（2026-10-18）：与微信弹层同视觉基调，内容是表单 ── */
+  .dm-sheet { position: fixed; inset: 0; z-index: 16; display: grid; place-items: center; padding: 18px; background: rgba(24, 22, 19, .5); }
+  .dm-sheet[hidden] { display: none; }
+  .dm-sheet-card { position: relative; width: min(420px, 100%); max-height: calc(100vh - 36px); overflow: auto; padding: 30px 26px 24px; background: var(--paper-light); border: 1px solid var(--line); box-shadow: var(--shadow); }
+  .dm-sheet-close { position: absolute; right: 14px; top: 10px; border: 0; background: transparent; font-size: 26px; line-height: 1; color: var(--ink); cursor: pointer; }
+  .dm-sheet-card h2 { font-size: 23px; font-weight: 500; margin: 12px 0 8px; }
+  .dm-sheet-hint { font-size: 13px; color: var(--ink-soft); margin: 0 0 18px; }
+  .dm-form { display: grid; gap: 10px; }
+  .dm-form input, .dm-form textarea { width: 100%; min-height: 46px; border: 1px solid var(--line); border-radius: 0; background: var(--paper); color: var(--ink); padding: 11px 12px; font: inherit; font-size: 14px; }
+  .dm-form textarea { min-height: 92px; resize: vertical; }
+  .dm-form input:focus, .dm-form textarea:focus { border-color: var(--cinnabar); outline: none; }
+  .dm-form .btn { min-height: 46px; }
+  .dm-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+  .dm-status { min-height: 1.6em; margin: 0; font-size: 12.5px; color: var(--cinnabar-deep); }
 </style>
