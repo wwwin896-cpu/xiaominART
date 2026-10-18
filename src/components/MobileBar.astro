@@ -5,10 +5,14 @@
 //
 // 底栏 3 格（2026-10-18 业主指示）：收藏（心愿单）/ 私信 / 分享。
 //
-// 私信 = 弹层留言，提交后经 /api/lead（formType: quick_message）落到云数据库，
-// 并由服务端推送到飞书群 —— 业主在飞书直接看到，访客不需要跳转到任何技术页面。
+// 私信 = **实时对话入口**（2026-10-18 二次改造）。访客不填表、不加好友，点开即可说话：
+//   · 微信内 → 跳「微信客服」会话（企业微信，业主回复后访客微信有消息提醒）
+//   · 其他浏览器 → 拉起 Knocket 网页聊天面板（不离开站点）
+//   · 两者未配置 → 回退留言弹层（/api/lead quick_message → 云数据库 + 推飞书群）
+// 通道凭据在 src/data/site.ts 的 chatConfig，填值即生效，无需改此处代码。
+//
 // ⚠️ 飞书机器人 webhook 只能被程序 POST，**不能**做成访客可点的链接
-//    （浏览器打开只会看到错误页），所以这里用弹层 + 服务端转发，而不是外链。
+//    （浏览器打开只会看到错误页），所以通知侧始终走服务端转发。
 //
 // 微信直联弹层保留：页内 [data-wechat-open] 触发点仍唤起它，只是底栏不再有入口。
 // 注意：这一组按钮是移动端唯一的工具入口 —— 桌面端用的是
@@ -20,7 +24,7 @@
 import { siteContact } from '../data/site';
 ---
 
-<nav class="mobile-shopping-bar" aria-label="移动端底部导航"><button class="wishlist-bar" type="button" data-wishlist-open aria-label="打开收藏夹"><span class="bar-zh">收藏</span><small lang="en">Saved <span data-wishlist-count></span></small></button><button class="dm-bar" type="button" data-dm-open aria-controls="dm-sheet" aria-expanded="false" aria-label="私信留言"><span class="bar-zh">私信</span><small lang="en">Message</small></button><button class="bar-share" type="button" data-share-button data-event="share_click" aria-label="分享本页给微信好友或朋友圈"><span class="bar-zh">分享</span><small lang="en">Share</small></button></nav>
+<nav class="mobile-shopping-bar" aria-label="移动端底部导航"><button class="wishlist-bar" type="button" data-wishlist-open aria-label="打开收藏夹"><span class="bar-zh">收藏</span><small lang="en">Saved <span data-wishlist-count></span></small></button><button class="dm-bar" type="button" data-dm-open aria-controls="dm-sheet" aria-expanded="false" aria-label="和工作室对话"><span class="bar-zh">私信</span><small lang="en">Message</small></button><button class="bar-share" type="button" data-share-button data-event="share_click" aria-label="分享本页给微信好友或朋友圈"><span class="bar-zh">分享</span><small lang="en">Share</small></button></nav>
 
 <div class="dm-sheet" id="dm-sheet" role="dialog" aria-modal="true" aria-labelledby="dm-sheet-title" hidden>
   <div class="dm-sheet-card">
@@ -54,18 +58,86 @@ import { siteContact } from '../data/site';
 
 <script>
   import { submitLead, isHoneypotFilled, trackEvent } from '../scripts/cloud-forms';
+  import { chatConfig } from '../data/site';
 
-  // 事件委托到 document：底栏与弹层由组件运行时插入，直接绑定会静默失效
+  // ─────────────────────────────────────────────────────────────
+  // 「私信」三路分流（2026-10-18 业主选定「两个都要」）
+  //
+  //   ① 微信内 + 配了微信客服链接 → 原生跳转进客服会话（无需加好友）
+  //   ② 配了 Knocket → 拉起网页聊天面板（不离开站点）
+  //   ③ 都没配 / 拉不起来 → 回退留言弹层（写库 + 推飞书群）
+  //
+  // 分流的唯一目的是「让访客少走一步」：能直接说话就绝不让他填表。
+  // 留言弹层保留为最后兜底，任何时候都不留死入口。
+  // ─────────────────────────────────────────────────────────────
+
+  // 微信内置浏览器（含企业微信）。桌面版微信同样命中，跳客服链接也可用。
+  const isWeChat = () => /MicroMessenger/i.test(navigator.userAgent);
+
   const sheet = () => document.querySelector<HTMLElement>('#dm-sheet');
   const trigger = () => document.querySelector<HTMLButtonElement>('.dm-bar');
 
-  function openDm() {
+  /**
+   * 拉起 Knocket 聊天面板。
+   *
+   * ⚠️ Knocket SDK 是 async 加载，且 `contactWidget.showChat` 在初始化完成前
+   *    是**空函数占位**（调用无报错、也无反应）—— 典型的静默失效。
+   *    因此这里做两件事：先等对象出现（最多 ~1.8s），出现后再补两次调用
+   *    （showChat 幂等，重复调用只是把面板置为打开态，无副作用）。
+   */
+  function openWebChat(path: string): boolean {
+    const widget = () => (window as unknown as { contactWidget?: { showChat?: () => void } }).contactWidget;
+
+    const fire = () => {
+      try { widget()?.showChat?.(); } catch { /* 未就绪：忽略，等下一次补调 */ }
+    };
+
+    if (widget()) {
+      trackEvent('dm_open', { path, channel: 'web_chat' });
+      fire();
+      window.setTimeout(fire, 500);
+      window.setTimeout(fire, 1400);
+      return true;
+    }
+
+    // SDK 还在下载：轮询等待，超时则回退留言弹层（不留空点击）
+    let tries = 0;
+    trackEvent('dm_open', { path, channel: 'web_chat_loading' });
+    const wait = () => {
+      tries += 1;
+      if (widget()) { fire(); window.setTimeout(fire, 500); return; }
+      if (tries < 12) { window.setTimeout(wait, 150); return; }
+      openFallback(path, 'web_chat_timeout');
+    };
+    wait();
+    return true;
+  }
+
+  /** 兜底：留言弹层（原行为） */
+  function openFallback(path: string, channel = 'form') {
     const el = sheet();
     if (!el) return;
     el.hidden = false;
     trigger()?.setAttribute('aria-expanded', 'true');
-    trackEvent('dm_open', { path: window.location.pathname });
+    trackEvent('dm_open', { path, channel });
     el.querySelector<HTMLInputElement>('#dm-contact')?.focus();
+  }
+
+  function openDm() {
+    const path = window.location.pathname;
+
+    // ① 微信内 → 微信客服会话页（业主回复后访客微信有消息提醒）
+    if (chatConfig.wechatKfUrl && isWeChat()) {
+      trackEvent('dm_open', { path, channel: 'wechat_kf' });
+      window.location.href = chatConfig.wechatKfUrl;
+      return;
+    }
+
+    // ② 网页聊天
+    if (chatConfig.knocketIdentifier && openWebChat(path)) return;
+
+    // ③ 兜底
+    openFallback(path);
   }
 
   function closeDm() {

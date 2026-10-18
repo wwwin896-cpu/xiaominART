@@ -35,6 +35,7 @@ import ShareButton from '../components/ShareButton.astro';
 import WishlistDrawer from '../components/WishlistDrawer.astro';
 import SearchModal from '../components/SearchModal.astro';
 import CookieConsent from '../components/CookieConsent.astro';
+import { chatConfig } from '../data/site';
 
 interface Props {
   title?: string;
@@ -142,6 +143,15 @@ const baiduId = trackPage ? BAIDU_TONGJI_ID : undefined;
     <SearchModal />
     <CookieConsent />
     <MobileBar />
+    {/* 网页实时聊天（Knocket，2026-10-18）。
+        未配 identifier 时**完全不加载**，页面体积与行为零变化。
+        async 加载、不阻塞渲染；访客点底栏「私信」时由 MobileBar 调
+        window.contactWidget.showChat() 拉起面板。 */}
+    {chatConfig.knocketIdentifier ? (
+      <Fragment
+        set:html={`<script src="https://trtc.io/knocket-sdk/sdk.js?identifier=${encodeURIComponent(chatConfig.knocketIdentifier)}" async></script>`}
+      />
+    ) : null}
     <SiteFooter isHome={currentPath === '/'} />
   </body>
 </html>
