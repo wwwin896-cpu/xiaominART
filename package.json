@@ -14,7 +14,10 @@
     "preview": "astro preview",
     "check": "astro check",
     "search:index": "node scripts/build-search.mjs",
-    "deploy": "npm run build && wrangler pages deploy dist --project-name=xiaominart --branch=main"
+    "deploy": "npm run build && wrangler pages deploy dist --project-name=xiaominart --branch=main",
+    "build:server": "node server/build.mjs",
+    "deploy:aliyun": "bash deploy/deploy.sh",
+    "nginx:redirects": "node deploy/gen-nginx-redirects.mjs"
   },
   "dependencies": {
     "@astrojs/check": "latest",

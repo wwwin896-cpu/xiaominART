@@ -1,0 +1,44 @@
+[Unit]
+Description=XIAOMINART API (forms / events / keystatic)
+Documentation=file:///var/www/xiaominart/server/index.mjs
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=xiaominart
+Group=xiaominart
+WorkingDirectory=/var/www/xiaominart
+
+# 只监听 127.0.0.1，外网必须经 nginx 进来
+Environment=NODE_ENV=production
+Environment=PORT=8787
+Environment=HOST=127.0.0.1
+# 密钥从 .env 读（权限 600，只有本用户可读）
+EnvironmentFile=/var/www/xiaominart/.env
+
+ExecStart=/usr/bin/node /var/www/xiaominart/server/index.mjs
+
+# 崩溃自动重启；10 秒内连续崩 5 次就停手，避免死循环刷日志
+Restart=always
+RestartSec=3
+StartLimitBurst=5
+StartLimitIntervalSec=60
+
+# ── 安全加固 ──
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/www/xiaominart
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=xiaominart-api
+
+[Install]
+WantedBy=multi-user.target
