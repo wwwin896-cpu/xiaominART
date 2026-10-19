@@ -7,8 +7,9 @@
 # ─────────────────────────────────────────────────────────────
 
 # ── 一、旧地址 301（由原 vercel.json 迁移）──
-/custom /custom-commission/ 301
-/custom/ /custom-commission/ 301
+# ⚠️ 2026-10-19：原 `/custom` → `/custom-commission/` 两条 301 已删除。
+#    「定制业务」聚合页现在正式使用 /custom/（见 src/pages/custom/index.astro）。
+#    该路径此前从未上线过独立页面，删规则无外链价值损失。
 /commission /custom-commission/ 301
 /commission/ /custom-commission/ 301
 /en/custom /custom-commission/ 301

@@ -26,21 +26,28 @@
 // 2026-10-05 调整：
 //   · 「送礼指南」从「小民好礼」二级菜单移除，该下拉只留 现货好礼 / 定制好礼 两条找礼路径。
 //     /gift-guide/ 页面仍保留（页脚、/scenes/ 的「礼」、心愿单等入口可进入），不再出现在主导航。
+// 2026-10-19 导航改版（业主《定制服务页面架构方案》+ 三问三答裁决）：
+//   · 新增「一字一源」一级菜单，二级为「字游记」（/zodiac/，甲骨十二生肖第一辑）
+//     与「创作笔记」（/notes/，取字过程记录）
+//   · 「小民好礼」取消二级菜单，点击直接进在线商城（当前站内 /gifts/；
+//     若将来商城独立域名，只改这一个 href，其余五处（面包屑/结构化数据/
+//     sitemap/移动端/页脚）都跟随本数组）
+//   · 「企业礼赠」更名「定制业务」，二级为企业定制 / 个人定制两条线。
+//     ⚠️ 企业侧地址**仍是 /business-gifts/**，不改 /custom/corporate ——
+//        该页已有收录与内链，改地址等于把 SEO/GEO 积累推倒重来（业主 2026-10-19 同意）
+//   · 「机构合作」「关于我们」保持不变
 export const navItems = [
   {
-    href: '/gifts/', zh: '小民好礼', en: 'Xiaomin Gifts', children: [
-      { href: '/gifts/ready-made/', zh: '现货好礼', en: 'Ready to Ship' },
-      { href: '/custom-commission/', zh: '定制好礼', en: 'Made to Order' },
+    href: '/zodiac/', zh: '一字一源', en: 'One Character', children: [
+      { href: '/zodiac/', zh: '字游记', en: 'Character Journal' },
+      { href: '/notes/', zh: '创作笔记', en: 'Studio Notes' },
     ],
   },
+  { href: '/gifts/', zh: '小民好礼', en: 'Xiaomin Gifts' },
   {
-    href: '/business-gifts/', zh: '企业礼赠', en: 'Corporate Gifts', children: [
-      // 2026-10-15：子项由锚点改为独立页面 —— 每条业务线现在有自己的详情页，
-      // 导航应直接指向该页，而不是跳回主页再滚动。
-      { href: '/business-gifts/gifts/', zh: '商务伴手礼', en: 'For Giving' },
-      { href: '/business-gifts/keep/', zh: '庆典墨宝礼', en: 'For Keeping' },
-      { href: '/business-gifts/space/', zh: '空间书法礼', en: 'For Spaces' },
-      { href: '/business-gifts/campus/', zh: '校园纪念礼', en: 'For Campus' },
+    href: '/custom/', zh: '定制业务', en: 'Custom', children: [
+      { href: '/business-gifts/', zh: '企业定制', en: 'For Business' },
+      { href: '/custom/personal/', zh: '个人定制', en: 'For Individuals' },
     ],
   },
   {

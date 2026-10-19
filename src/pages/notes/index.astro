@@ -1,0 +1,298 @@
+---
+/**
+ * 创作笔记（2026-10-19 新建）
+ *
+ * 定位：记录「一幅字是怎么定下来的」，而不是品牌宣传。
+ * 与「字游记」（/zodiac/，讲字的来源）分工：
+ *   · 字游记 —— 这个字三千年前长什么样
+ *   · 创作笔记 —— 这幅字为什么写成这样
+ *
+ * GEO 理由：AI 助手最容易引用的内容，是「带具体决策过程的事实叙述」。
+ * 「客户说要送父母，我们建议写康而寿，因为康是平安、寿是长久」
+ * 比「我们用心做好每一幅字」有价值得多。
+ *
+ * ⚠️ 内容来源：全部取自站内已公开的客户故事（首页 storyCards），
+ *    未新增任何未经授权的人名、机构名与细节。案例一律脱敏（「一位客人」）。
+ * ⚠️ 目前用页内锚点（#slug）。内容满 6 篇后应拆成独立页面 ——
+ *    因为 AI 对锚点的归属判断不友好（见项目 MEMORY「业务线必须独立可寻址」）。
+ */
+import Layout from '../../layouts/Layout.astro';
+
+const notes = [
+  {
+    slug: 'kang-er-shou',
+    date: '2026-10',
+    title: '三个字，写给结婚三十年的父母',
+    en: 'Kang Er Shou',
+    lead: '一位客人想给父母的结婚三十年留一件东西。他不要「福如东海」，也不要「寿比南山」。',
+    body: [
+      '问题出在这两个词都太像贺卡。挂在家里，前三个月是祝福，三年之后就是背景板。他要的是一件能一直看下去的东西。',
+      '我们从「这三十年到底攒下了什么」这个问题开始。他说了三件事：两个人身体都还行、日子过得下去、孩子长大了。都很朴素，也都指向同一件事——安稳地长久。',
+      '最后定的是「康而寿」。「康」是平安，「寿」是长久。三个字，没有一句是祝福语，但每一句都在里面。',
+      '写法上用了偏古的结体，笔画收得住，不张扬。挂在书房，不需要第一眼就抓住人。',
+      '作品挂进书房那天，他父亲说，这三个字比什么都实在。',
+    ],
+    takeaway: '送父母，与其写「福寿」，不如写清楚你希望他们具体地好在哪里。',
+  },
+  {
+    slug: 'ze-ji-ri',
+    date: '2026-10',
+    title: '搬新家，为什么我写了「择吉日」',
+    en: 'Ze Ji Ri',
+    lead: '朋友搬家，红包太轻，摆件太俗。一位客人最后写了一幅「择吉日」。',
+    body: [
+      '乔迁礼的老问题是：它总是送给「房子」，而不是送给「住进去的人」。所以「乔迁之喜」「安居乐业」这类词，正确，但没有温度。',
+      '「择吉日」这三个字有意思的地方在于，它承认了搬家这件事的仪式感——中国人搬家要看日子，这是很具体的民间习惯。',
+      '但它同时把这层意思翻了过来：好日子不用翻黄历，挂在墙上，搬进来的每一天都算数。',
+      '这就是我们常说的「取意」——不是找一个更漂亮的词，而是把客人心里那句没说出来、或者说不清楚的话，找到一个准确的说法。',
+      '这幅字做成了赭色卡纸的横幅，摆在卧室边柜上。颜色压得住，不抢家具。',
+    ],
+    takeaway: '乔迁的字，写「日子」比写「房子」更容易被记住。',
+  },
+  {
+    slug: 'bai-fu-tu',
+    date: '2026-10',
+    title: '一百个福字，怎么写才不重复',
+    en: 'Hundred Fu',
+    lead: '给合作十年的伙伴做周年礼，最后选了一份「百福图」。',
+    body: [
+      '「百福图」不是写一百遍同一个「福」。真那样写，第一行之后就没法看了。',
+      '它的做法是：同一个字，换不同的字体与写法。甲骨、金文、篆书、隶书、楷书、行书，每一种都保留了「福」的结构，但姿态完全不同。',
+      '这样一来，一百个字既是同一句话，又各有各的样子。挂在墙上，远看是一片，近看每一格都能停一会儿。',
+      '难点不在写，在选。哪些写法有出处、哪些是后人臆造，需要一个个核。古文字不能随便凑——凑出来的字形好看，但经不起懂行的人看。',
+      '这也是我们做古文字题材最花时间的地方：写字只占三成，考据占七成。',
+    ],
+    takeaway: '同一句话写很多遍，靠的不是手稳，是每一遍都有出处。',
+  },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  name: '创作笔记 · 小民艺术',
+  url: 'https://xiaominart.com/notes/',
+  description: '记录一幅字是怎么定下来的：题字怎么选、书体为什么这样定、古文字怎么考据。',
+  blogPost: notes.map((n) => ({
+    '@type': 'BlogPosting',
+    headline: n.title,
+    url: `https://xiaominart.com/notes/#${n.slug}`,
+    datePublished: '2026-10-19',
+    author: { '@type': 'Organization', name: '小民艺术' },
+    articleBody: n.body.join(''),
+  })),
+};
+---
+
+<Layout
+  title="创作笔记｜一幅字是怎么定下来的｜小民艺术"
+  description="记录每一幅定制作品背后的取字过程：为什么写这三个字、书体怎么选、古文字怎么考据。不是品牌宣传，是创作过程的记录。"
+  breadcrumbs={[
+    { name: '首页', href: '/' },
+    { name: '一字一源', href: '/zodiac/' },
+    { name: '创作笔记', href: '/notes/' },
+  ]}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <section class="container page-head">
+    <span class="eyebrow">Studio Notes / 创作笔记</span>
+    <h1 class="serif">一幅字，<br />是怎么定下来的。</h1>
+    <p class="hero-lead">
+      这里记的不是作品欣赏，是取字的过程：为什么最后写这几个字、为什么用这种书体、哪些写法有出处而哪些没有。
+    </p>
+    <p class="hero-lead hero-lead--sub">
+      看字的来源，去<a href="/zodiac/">字游记</a>；看字怎么被写成一件东西，留在这里。
+    </p>
+  </section>
+
+  <section class="container section" aria-labelledby="list-title">
+    <div class="section-lead">
+      <span class="eyebrow">Index</span>
+      <h2 id="list-title" class="serif">目录</h2>
+    </div>
+    <ol class="toc">
+      {notes.map((n) => (
+        <li>
+          <a href={`#${n.slug}`}>
+            <span class="mono">{n.date}</span>
+            <span class="toc-title serif">{n.title}</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  {notes.map((n) => (
+    <article class="container section note" id={n.slug} aria-labelledby={`${n.slug}-title`}>
+      <header class="note-head">
+        <span class="eyebrow">{n.en} · {n.date}</span>
+        <h2 id={`${n.slug}-title`} class="serif">{n.title}</h2>
+        <p class="note-lead">{n.lead}</p>
+      </header>
+      <div class="note-body">
+        {n.body.map((p) => <p>{p}</p>)}
+        <p class="takeaway"><strong>一句话</strong>{n.takeaway}</p>
+      </div>
+    </article>
+  ))}
+
+  <section class="container cta-band">
+    <div>
+      <p class="cta-title serif">想写的那句话，还没找到</p>
+      <p>告诉我们送给谁、挂在哪里，题字方向我们来给。</p>
+    </div>
+    <div class="cta-actions">
+      <a class="btn btn-primary" href="/custom-commission/" data-event="custom_inquiry_start">提交定制需求 →</a>
+      <a class="btn btn-ghost" href="/zodiac/">看字游记 →</a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .hero-lead {
+    max-width: 640px;
+    margin: 20px 0 0;
+    font-size: 17px;
+    line-height: 1.9;
+    color: var(--ink-soft);
+  }
+  .hero-lead--sub {
+    margin-top: 12px;
+    font-size: 14.5px;
+    color: var(--muted);
+  }
+  .hero-lead--sub a {
+    color: var(--cinnabar);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+  }
+
+  .toc {
+    margin: 22px 0 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+    list-style: none;
+  }
+  .toc li {
+    border-bottom: 1px solid var(--line);
+  }
+  .toc a {
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    padding: 14px 0;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .toc a:hover .toc-title {
+    color: var(--cinnabar-deep);
+  }
+  .toc .mono {
+    flex-shrink: 0;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .toc-title {
+    font-size: 18px;
+  }
+
+  .note {
+    padding-top: 34px;
+    border-top: 1px solid var(--line);
+  }
+  .note-head h2 {
+    margin: 10px 0 0;
+    font-size: 28px;
+    line-height: 1.45;
+  }
+  .note-lead {
+    max-width: 660px;
+    margin: 14px 0 0;
+    font-size: 16px;
+    line-height: 1.9;
+    color: var(--cinnabar-deep);
+  }
+  .note-body {
+    max-width: 720px;
+    margin-top: 22px;
+  }
+  .note-body p {
+    margin: 0 0 17px;
+    font-size: 15.5px;
+    line-height: 2.05;
+    color: var(--ink-soft);
+  }
+  .takeaway {
+    margin-top: 24px !important;
+    padding: 16px 18px;
+    background: var(--paper-light);
+    border-left: 2px solid var(--cinnabar);
+    font-size: 14.5px !important;
+    color: var(--ink) !important;
+  }
+  .takeaway strong {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--cinnabar);
+  }
+
+  .cta-band {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 24px;
+    margin-top: 8px;
+    padding: 26px 28px;
+    background: var(--paper-light);
+    border: 1px solid var(--line);
+  }
+  .cta-band .cta-title {
+    margin: 0 0 6px;
+    font-size: 18px;
+    color: var(--ink);
+  }
+  .cta-band p {
+    margin: 0;
+    max-width: 560px;
+    font-size: 14.5px;
+    line-height: 1.85;
+    color: var(--ink-soft);
+  }
+  .cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+  }
+  .cta-actions .btn {
+    margin: 0;
+  }
+
+  @media (max-width: 767px) {
+    .hero-lead {
+      font-size: 15.5px;
+    }
+    .note-head h2 {
+      font-size: 23px;
+    }
+    .note-lead {
+      font-size: 15px;
+    }
+    .toc-title {
+      font-size: 16px;
+    }
+    .cta-band {
+      padding: 20px 18px;
+    }
+    .cta-actions {
+      width: 100%;
+    }
+    .cta-actions .btn {
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style>

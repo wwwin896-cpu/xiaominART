@@ -1,0 +1,440 @@
+---
+/**
+ * 个人定制 · 索引页（2026-10-19 新建）
+ *
+ * 作用有两个：
+ * ① 让不知道该选哪个方向的访客，用一张「你想解决什么」的对照表快速分流；
+ * ② 给五个方向页一个共同的父页面（面包屑与 GEO 的层级都需要它）。
+ *
+ * 文案准则：C 端访客不是采购商，但同样在筛选。所以首屏不放抒情句，
+ * 放「送给谁 / 什么时候要 / 挂在哪儿」三个能立刻自我判断的问题。
+ */
+import Layout from '../../../layouts/Layout.astro';
+
+const directions = [
+  {
+    href: '/custom/personal/gifting/',
+    no: '01',
+    name: '送礼定制',
+    en: 'Gifting',
+    forWho: '送老师、长辈、领导或合作伙伴',
+    trigger: '教师节 · 寿辰 · 升职 · 节日问候',
+    words: '师恩难忘 · 康而寿 · 厚德载物',
+  },
+  {
+    href: '/custom/personal/wedding/',
+    no: '02',
+    name: '婚庆纪念',
+    en: 'Wedding',
+    forWho: '订婚结婚、周年纪念、新生儿',
+    trigger: '婚礼 · 结婚纪念日 · 满月与周岁',
+    words: '琴瑟和鸣 · 执子之手 · 平安喜乐',
+  },
+  {
+    href: '/custom/personal/housewarming/',
+    no: '03',
+    name: '乔迁新居',
+    en: 'Housewarming',
+    forWho: '朋友搬家、父母换房、公司乔迁',
+    trigger: '暖房酒 · 入宅日 · 装修完成',
+    words: '安居乐业 · 室雅人和 · 择吉日',
+  },
+  {
+    href: '/custom/personal/study/',
+    no: '04',
+    name: '自用雅趣',
+    en: 'For Yourself',
+    forWho: '书房、茶室、工作室与个人斋号',
+    trigger: '装修完成 · 换工作 · 只是想给自己一件东西',
+    words: '宁静致远 · 禅茶一味 · 半山',
+  },
+  {
+    href: '/custom/personal/festival/',
+    no: '05',
+    name: '节日定制',
+    en: 'Festive',
+    forWho: '春节、中秋、端午、重阳与七夕',
+    trigger: '年前 · 节前 · 送多位亲友',
+    words: '新春大吉 · 花好月圆 · 岁岁安康',
+  },
+];
+
+const guide = [
+  ['要送给一个具体的人', '送礼定制', '/custom/personal/gifting/'],
+  ['为婚礼、纪念日或孩子', '婚庆纪念', '/custom/personal/wedding/'],
+  ['为一件刚搬进去的房子', '乔迁新居', '/custom/personal/housewarming/'],
+  ['挂在自己的书房或茶室', '自用雅趣', '/custom/personal/study/'],
+  ['赶一个节日，或要送好几位', '节日定制', '/custom/personal/festival/'],
+];
+
+const faqs = [
+  {
+    q: '五个方向可以混着来吗？',
+    a: '可以。分类只是帮你快速找到起点，实际内容按你的场景定。例如搬家又逢父母寿辰，可以写一句同时承载两件事的话——告诉我们背景，我们来判断字数与书体。',
+  },
+  {
+    q: '不知道选哪个方向怎么办？',
+    a: '直接提交需求，不用先分类。说明送给谁、什么时候要、大概挂在哪里，我们会告诉你属于哪一类，并给出题字方向。',
+  },
+  {
+    q: '一个方向里能改内容吗？',
+    a: '能。每个方向给出的题字只是参考，可以整句换掉，也可以保留其中一两个字。字数变化会连带影响尺寸与装裱选择，我们会一起调整。',
+  },
+  {
+    q: '个人定制能做多幅吗？',
+    a: '可以，但要看内容是否相同。同一句吉语写多幅、每幅单独落款，周期与单幅接近；每幅内容都不同，则需要更长周期。超过 20 幅建议走企业定制线，报价与排期更合适。',
+  },
+];
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
+
+const itemListJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: '个人书法定制方向',
+  itemListElement: directions.map((d, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: d.name,
+    url: `https://xiaominart.com${d.href}`,
+  })),
+};
+---
+
+<Layout
+  title="个人书法定制｜送礼、婚庆、乔迁、自用与节庆｜小民艺术"
+  description="个人书法定制五个方向：送礼定制、婚庆纪念、乔迁新居、自用雅趣、节日定制。按对象与场合给题字建议，单幅起做，含装裱与礼盒，常规 7–14 个工作日发出，签收后 7 天内可提出退换。"
+  breadcrumbs={[
+    { name: '首页', href: '/' },
+    { name: '定制业务', href: '/custom/' },
+    { name: '个人定制', href: '/custom/personal/' },
+  ]}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
+  <script type="application/ld+json" set:html={JSON.stringify(itemListJsonLd)} />
+
+  <section class="container page-head">
+    <span class="eyebrow">Personal Custom / 个人定制</span>
+    <h1 class="serif">写给一个具体的人，<br />或者一间具体的屋子。</h1>
+    <p class="hero-lead">
+      五个方向，按「送给谁、为什么送」来分。单幅起做，含装裱与礼盒，常规 7–14 个工作日发出。
+    </p>
+  </section>
+
+  <section class="container section" aria-labelledby="guide-title">
+    <div class="section-lead">
+      <span class="eyebrow">Quick Match</span>
+      <h2 id="guide-title" class="serif">先对号入座</h2>
+      <p>一句话找到你的情况，点过去看题字方向与尺寸建议。</p>
+    </div>
+    <ul class="guide-list">
+      {guide.map((row) => (
+        <li>
+          <span class="g-q">{row[0]}</span>
+          <a href={row[2]} data-event="custom_entry">{row[1]} <span aria-hidden="true">→</span></a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="container section" aria-labelledby="dir-title">
+    <div class="section-lead">
+      <span class="eyebrow">Directions</span>
+      <h2 id="dir-title" class="serif">五个方向</h2>
+    </div>
+    <div class="dir-grid">
+      {directions.map((d) => (
+        <a class="dir-card" href={d.href} data-event="custom_entry">
+          <span class="mono dir-no">{d.no}</span>
+          <h3 class="serif">{d.name}<small lang="en">{d.en}</small></h3>
+          <dl>
+            <div><dt>适合</dt><dd>{d.forWho}</dd></div>
+            <div><dt>常见时候</dt><dd>{d.trigger}</dd></div>
+            <div><dt>常写</dt><dd class="d-words">{d.words}</dd></div>
+          </dl>
+          <span class="dir-more">查看这个方向 <span aria-hidden="true">→</span></span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="container section" aria-labelledby="process-title">
+    <div class="section-lead">
+      <span class="eyebrow">Process</span>
+      <h2 id="process-title" class="serif">怎么开始</h2>
+    </div>
+    <ol class="process-list">
+      <li><span class="mono">01</span><h3 class="serif">说清楚三件事</h3><p>送给谁、什么时候要、大概挂在哪里。想不清写什么没关系。</p></li>
+      <li><span class="mono">02</span><h3 class="serif">拿到题字方向</h3><p>我们给 3–5 个方向，附书体、尺寸与报价，你选一个。</p></li>
+      <li><span class="mono">03</span><h3 class="serif">确认后动笔</h3><p>内容逐字确认，写完先给成品看，不满意可以重写。</p></li>
+      <li><span class="mono">04</span><h3 class="serif">装裱寄出</h3><p>含装裱与礼盒，7–14 个工作日发出，签收后 7 天内可退换。</p></li>
+    </ol>
+  </section>
+
+  <section class="container section biz-note">
+    <div>
+      <h2 class="serif">如果是为公司采购</h2>
+      <p>企业定制是另一条线：50 份起订，可定制企业标识，对公结算、可开增值税专票，常规 25–45 个工作日交付，支持分地址寄送。</p>
+    </div>
+    <a class="btn btn-secondary" href="/business-gifts/">进入企业定制 →</a>
+  </section>
+
+  <section class="container section" aria-labelledby="faq-title">
+    <div class="section-lead">
+      <span class="eyebrow">FAQ</span>
+      <h2 id="faq-title" class="serif">常见问题</h2>
+    </div>
+    <div class="faq-list">
+      {faqs.map((item) => (
+        <details>
+          <summary>{item.q}</summary>
+          <p>{item.a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <section class="container cta-band">
+    <p>还没决定写哪几个字？把对象和场合告诉我们，方向我们来给。</p>
+    <a class="btn btn-primary" href="/custom-commission/" data-event="custom_inquiry_start">提交定制需求 →</a>
+  </section>
+</Layout>
+
+<style>
+  .hero-lead {
+    max-width: 640px;
+    margin: 20px 0 0;
+    font-size: 17px;
+    line-height: 1.9;
+    color: var(--ink-soft);
+  }
+
+  .guide-list {
+    margin: 24px 0 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+    list-style: none;
+  }
+  .guide-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .g-q {
+    font-size: 15px;
+    color: var(--ink);
+  }
+  .guide-list a {
+    flex-shrink: 0;
+    font-size: 14.5px;
+    color: var(--cinnabar);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .dir-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1px;
+    margin-top: 26px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+  .dir-card {
+    display: flex;
+    flex-direction: column;
+    padding: 26px 24px;
+    background: var(--paper);
+    color: var(--ink);
+    text-decoration: none;
+    transition: background 0.25s;
+  }
+  .dir-card:hover {
+    background: var(--paper-light);
+  }
+  .dir-no {
+    font-size: 12px;
+    color: var(--cinnabar);
+  }
+  .dir-card h3 {
+    margin: 8px 0 16px;
+    font-size: 22px;
+  }
+  .dir-card h3 small {
+    margin-left: 8px;
+    font-family: var(--font-body-en);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .dir-card dl {
+    margin: 0;
+    flex: 1;
+  }
+  .dir-card dl > div {
+    display: grid;
+    grid-template-columns: 66px 1fr;
+    gap: 10px;
+    padding: 7px 0;
+    font-size: 13.5px;
+    line-height: 1.75;
+  }
+  .dir-card dt {
+    color: var(--muted);
+  }
+  .dir-card dd {
+    margin: 0;
+    color: var(--ink-soft);
+  }
+  .d-words {
+    letter-spacing: 0.04em;
+  }
+  .dir-more {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    font-size: 14px;
+    color: var(--cinnabar);
+  }
+
+  .process-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin: 26px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .process-list li {
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+  .process-list .mono {
+    font-size: 12px;
+    color: var(--cinnabar);
+  }
+  .process-list h3 {
+    margin: 8px 0 6px;
+    font-size: 16px;
+  }
+  .process-list p {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.85;
+    color: var(--ink-soft);
+  }
+
+  .biz-note {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px 26px;
+    padding: 26px 28px;
+    background: var(--paper-light);
+    border: 1px solid var(--line);
+  }
+  .biz-note h2 {
+    margin: 0 0 8px;
+    font-size: 19px;
+  }
+  .biz-note p {
+    margin: 0;
+    max-width: 620px;
+    font-size: 14.5px;
+    line-height: 1.85;
+    color: var(--ink-soft);
+  }
+  .biz-note .btn {
+    margin: 0;
+  }
+
+  .faq-list {
+    margin-top: 22px;
+    border-top: 1px solid var(--line);
+  }
+  .faq-list details {
+    border-bottom: 1px solid var(--line);
+  }
+  .faq-list summary {
+    padding: 16px 0;
+    cursor: pointer;
+    font-size: 15.5px;
+    color: var(--ink);
+  }
+  .faq-list p {
+    margin: 0 0 18px;
+    max-width: 760px;
+    font-size: 14.5px;
+    line-height: 1.95;
+    color: var(--ink-soft);
+  }
+
+  .cta-band {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 24px;
+    margin-top: 8px;
+    padding: 24px 28px;
+    background: var(--paper-light);
+    border: 1px solid var(--line);
+  }
+  .cta-band p {
+    margin: 0;
+    max-width: 600px;
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--ink-soft);
+  }
+  .cta-band .btn {
+    margin: 0;
+  }
+
+  @media (max-width: 860px) {
+    .process-list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .hero-lead {
+      font-size: 15.5px;
+    }
+    .guide-list li {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .process-list {
+      grid-template-columns: 1fr;
+    }
+    .biz-note {
+      padding: 20px 18px;
+    }
+    .biz-note .btn {
+      width: 100%;
+      text-align: center;
+    }
+    .cta-band {
+      padding: 20px 18px;
+    }
+    .cta-band .btn {
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style>

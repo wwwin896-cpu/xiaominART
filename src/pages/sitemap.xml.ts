@@ -53,6 +53,17 @@ const staticRoutes: { path: string; files: string[] }[] = [
   { path: 'business-gifts/keep/', files: [P('business-gifts/keep.astro'), GH('BusinessCaseWall.astro'), GH('BusinessDetailPage.astro')] },
   { path: 'business-gifts/space/', files: [P('business-gifts/space.astro'), GH('BusinessCaseWall.astro'), GH('BusinessDetailPage.astro')] },
   { path: 'business-gifts/campus/', files: [P('business-gifts/campus.astro'), GH('BusinessCaseWall.astro'), GH('BusinessDetailPage.astro')] },
+  // 定制业务（2026-10-19 导航改版）：聚合页 + 个人定制索引 + 五个方向页
+  // ⚠️ 企业侧地址仍是 business-gifts/*，不改 /custom/corporate —— 保护已有收录。
+  { path: 'custom/', files: [P('custom/index.astro')] },
+  { path: 'custom/personal/', files: [P('custom/personal/index.astro')] },
+  { path: 'custom/personal/gifting/', files: [P('custom/personal/gifting.astro'), GH('CustomDetailPage.astro')] },
+  { path: 'custom/personal/wedding/', files: [P('custom/personal/wedding.astro'), GH('CustomDetailPage.astro')] },
+  { path: 'custom/personal/housewarming/', files: [P('custom/personal/housewarming.astro'), GH('CustomDetailPage.astro')] },
+  { path: 'custom/personal/study/', files: [P('custom/personal/study.astro'), GH('CustomDetailPage.astro')] },
+  { path: 'custom/personal/festival/', files: [P('custom/personal/festival.astro'), GH('CustomDetailPage.astro')] },
+  // 创作笔记（2026-10-19）：一字一源二级项，记录取字过程
+  { path: 'notes/', files: [P('notes/index.astro')] },
   // 机构合作（注意：这四个页面是平铺文件 xxx.astro，不是 xxx/index.astro）
   { path: 'partners/', files: [P('partners/index.astro')] },
   { path: 'partners/publishing/', files: [P('partners/publishing.astro')] },

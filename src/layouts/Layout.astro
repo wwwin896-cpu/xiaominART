@@ -77,8 +77,9 @@ const isCurrent = (href: string) => { const normalized = href.replace(/\/$/, '')
 // 显式传入 breadcrumbs 的页面照旧；未传入的页面按路径自动生成：
 // 深度 1（/about/）→ 首页 / 关于我们；深度 2+（/seasons/spring/）→ 首页 / 四季节气 / {title 首段}。
 const SECTION_LABELS: Record<string, string> = {
-  'about': '关于我们', 'business-gifts': '企业礼赠', 'contact': '联系我们',
-  'custom-commission': '定制创作', 'gift-guide': '选礼指南', 'gifts': '小民好礼', 'help': '帮助中心',
+  'about': '关于我们', 'business-gifts': '企业定制', 'contact': '联系我们',
+  'custom': '定制业务', 'custom-commission': '定制创作', 'notes': '创作笔记', 'zodiac': '字游记',
+  'gift-guide': '选礼指南', 'gifts': '小民好礼', 'help': '帮助中心',
   'progress': '定制进度', 'scenes': '灵感参考',
   'stories': '墙上的故事', 'wishlist': '心愿单', 'works': '作品档案',
   'artists': '艺术家', 'seasons': '四季节气', 'occasions': '送礼场合',
@@ -237,6 +238,10 @@ const chatSdkSrc = chatConfig.knocketIdentifier
   .muted { color: var(--ink-soft); }
   .footer-bottom { border-top: 1px solid var(--line); margin-top: 58px; padding-top: 16px; display: flex; justify-content: space-between; gap: 16px; color: var(--ink-soft); font-size: 11px; }
   @media (max-width: 1100px) { .header-inner { gap: 16px; } nav { gap: 12px; font-size: 16px; } }
+  /* 2026-10-19：主导航由 4 项增至 5 项（新增「一字一源」），
+     中英双行在 1000px 以下会顶到品牌区与工具区。此处只关英文副标，
+     中文主项保持 —— 移动端（767px）本来就隐藏英文，视觉一致。 */
+  @media (max-width: 1000px) { nav a small { display: none; } }
   @media (max-width: 767px) {
     .header-inner { min-height: 72px; position: relative; }
     .brand { display: flex; min-width: 0; max-width: calc(100% - 118px); gap: 5px; align-items: center; }

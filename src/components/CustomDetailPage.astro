@@ -1,0 +1,587 @@
+---
+/**
+ * 个人定制（C 端）详情页共用版面。
+ *
+ * 为什么与企业定制分开：docx《定制服务页面架构方案》第三节明确要求
+ * 「B/C 端分离 —— 在视觉风格、文案调性、案例展示上明确区分」。
+ * 企业侧（BusinessDetailPage）首屏是采购决策条件表（起订量 / 发票 / 交期）；
+ * 个人侧首屏是「这是不是你想要的 / 要花多少钱和多少时间 / 怎么开始」。
+ *
+ * GEO 准则（业主 2026-10-15 定调）：每个方向必须有独立可寻址 URL，
+ * 因为 AI 助手回答「乔迁送什么书法」时需要能指到具体页面，而不是一段锚点。
+ * 本组件为每页输出 Service + FAQPage + BreadcrumbList 三条结构化数据。
+ *
+ * 文案准则（2026-10-15 业主两次批评后确立）：写客户的决策依据，不写我们的说明。
+ * 因此本组件刻意不写「立即预约专属顾问」这类话术 —— C 端客户要的是
+ * 「写给谁 / 写什么 / 多大 / 多久 / 多少钱 / 不满意怎么办」。
+ *
+ * ⚠️ 事实口径来源：周期与售后沿用 /help/ 页已公开的表述，不新增任何承诺。
+ *    价格一律不写数字 —— 站内现有价格口径存在新旧两版（¥1,000 起 / ¥3,000 起），
+ *    在业主裁决前不复制任何一版，改为「按内容、尺寸与装裱计价，方案确认后报价」。
+ */
+import Layout from '../layouts/Layout.astro';
+
+export type CustomFaq = { q: string; a: string };
+
+interface Props {
+  /** 方向中文名，如「乔迁新居」 */
+  name: string;
+  /** 英文名，用于眉标 */
+  nameEn: string;
+  /** 一句话定位 */
+  tagline: string;
+  seoTitle: string;
+  seoDescription: string;
+  /** 首屏四格：写给谁 / 多大 / 多久 / 怎么开始 */
+  quickFacts: { label: string; value: string }[];
+  intro: string[];
+  /** 典型场景，帮访客对号入座 */
+  scenarios: { title: string; body: string }[];
+  /** 题字方向参考表 */
+  wordings: { scene: string; words: string; note: string }[];
+  /** 规格与条件 */
+  specs: { label: string; value: string }[];
+  /** 真实案例（可选，仅在有已交付作品时传） */
+  cases?: { title: string; image: string; alt: string; note: string }[];
+  faqs: CustomFaq[];
+  /** 同系列其它方向 */
+  siblings: { href: string; name: string; desc: string }[];
+  /** 表单预填用的上下文值，如「乔迁新居」 */
+  contextValue: string;
+}
+
+const {
+  name,
+  nameEn,
+  tagline,
+  seoTitle,
+  seoDescription,
+  quickFacts,
+  intro,
+  scenarios,
+  wordings,
+  specs,
+  cases = [],
+  faqs,
+  siblings,
+  contextValue,
+} = Astro.props;
+
+const canonicalPath = Astro.url.pathname;
+const formHref = `/custom-commission/?context=${encodeURIComponent(contextValue)}`;
+
+const serviceJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: `${name} · 书法定制`,
+  serviceType: '书法作品定制',
+  description: seoDescription,
+  url: `https://xiaominart.com${canonicalPath}`,
+  areaServed: { '@type': 'Country', name: 'China' },
+  provider: { '@type': 'Organization', name: '小民艺术', url: 'https://xiaominart.com' },
+};
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
+
+// 面包屑交给 Layout 统一输出（它会在 SeoHead 里生成 BreadcrumbList JSON-LD）。
+// ⚠️ 不要在这里再手写一条 —— 同一页两条 BreadcrumbList 属于结构化数据错误。
+const crumbs = [
+  { name: '首页', href: '/' },
+  { name: '定制业务', href: '/custom/' },
+  { name: '个人定制', href: '/custom/personal/' },
+  { name, href: canonicalPath },
+];
+---
+
+<Layout title={seoTitle} description={seoDescription} breadcrumbs={crumbs}>
+  <script type="application/ld+json" set:html={JSON.stringify(serviceJsonLd)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
+
+  <section class="container page-head">
+    <nav class="crumb" aria-label="面包屑">
+      <a href="/custom/">定制业务</a>
+      <span aria-hidden="true">/</span>
+      <a href="/custom/personal/">个人定制</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">{name}</span>
+    </nav>
+    <span class="eyebrow">{nameEn} / 个人定制</span>
+    <h1 class="serif">{tagline}</h1>
+    <dl class="quick-facts">
+      {quickFacts.map((f) => (
+        <div>
+          <dt>{f.label}</dt>
+          <dd>{f.value}</dd>
+        </div>
+      ))}
+    </dl>
+    <div class="head-cta">
+      <a class="btn btn-primary" href={formHref} data-event="custom_inquiry_start">说说你的想法 →</a>
+      <a class="btn btn-ghost" href="#process">先看怎么开始</a>
+    </div>
+  </section>
+
+  <section class="container section intro" aria-labelledby="intro-title">
+    <div class="lead">
+      <span class="eyebrow">Overview</span>
+      <h2 id="intro-title" class="serif">{name}，写的是什么</h2>
+    </div>
+    <div class="body">
+      {intro.map((p) => <p>{p}</p>)}
+    </div>
+  </section>
+
+  <section class="container section" aria-labelledby="scene-title">
+    <div class="lead">
+      <span class="eyebrow">Scenarios</span>
+      <h2 id="scene-title" class="serif">你会在这几种时候用到</h2>
+    </div>
+    <ul class="scene-list">
+      {scenarios.map((s) => (
+        <li>
+          <h3 class="serif">{s.title}</h3>
+          <p>{s.body}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="container section" aria-labelledby="words-title">
+    <div class="lead">
+      <span class="eyebrow">Wording</span>
+      <h2 id="words-title" class="serif">不知道写什么，从这里选</h2>
+      <p>以下是常用方向，可以直接选，也可以换成你自己的那句话。</p>
+    </div>
+    <div class="word-table">
+      {wordings.map((w) => (
+        <div class="word-row">
+          <span class="w-scene">{w.scene}</span>
+          <span class="w-words">{w.words}</span>
+          <span class="w-note">{w.note}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="container section" aria-labelledby="spec-title">
+    <div class="lead">
+      <span class="eyebrow">Specification</span>
+      <h2 id="spec-title" class="serif">尺寸、周期与费用</h2>
+    </div>
+    <div class="spec-table">
+      {specs.map((row) => (
+        <div class="spec-row">
+          <span class="s-label">{row.label}</span>
+          <span class="s-value">{row.value}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  {cases.length > 0 && (
+    <section class="container section" aria-labelledby="case-title">
+      <div class="lead">
+        <span class="eyebrow">Delivered</span>
+        <h2 id="case-title" class="serif">已经送出去的作品</h2>
+      </div>
+      <div class="case-grid">
+        {cases.map((c) => (
+          <figure class="case-card">
+            <img src={c.image} alt={c.alt} loading="lazy" decoding="async" width={1280} height={720} />
+            <figcaption>
+              <h3 class="serif">{c.title}</h3>
+              <p>{c.note}</p>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <section class="container section" id="process" aria-labelledby="process-title">
+    <div class="lead">
+      <span class="eyebrow">Process</span>
+      <h2 id="process-title" class="serif">从一句话到一幅字</h2>
+    </div>
+    <ol class="process-list">
+      <li><span class="mono">01</span><h3 class="serif">倾听</h3><p>写给谁、挂在哪里、想留下什么。一段话就够，不用写得完整。</p></li>
+      <li><span class="mono">02</span><h3 class="serif">取意</h3><p>我们给出题字方向、书体与尺寸建议，你确认后再动笔。</p></li>
+      <li><span class="mono">03</span><h3 class="serif">创作</h3><p>亲笔书写，完成后先给你看成品，不满意可以重写。</p></li>
+      <li><span class="mono">04</span><h3 class="serif">抵达</h3><p>装裱、包装、寄出。签收后 7 天内可提出退换，定制品同样适用。</p></li>
+    </ol>
+  </section>
+
+  <section class="container section" aria-labelledby="faq-title">
+    <div class="lead">
+      <span class="eyebrow">FAQ</span>
+      <h2 id="faq-title" class="serif">常见问题</h2>
+    </div>
+    <div class="faq-list">
+      {faqs.map((item) => (
+        <details>
+          <summary>{item.q}</summary>
+          <p>{item.a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <section class="container section siblings" aria-labelledby="sib-title">
+    <div class="lead">
+      <span class="eyebrow">Other directions</span>
+      <h2 id="sib-title" class="serif">还有这些方向</h2>
+    </div>
+    <div class="sib-grid">
+      {siblings.map((s) => (
+        <a href={s.href} data-event="custom_entry">
+          <strong class="serif">{s.name}</strong>
+          <span>{s.desc}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="container cta-band">
+    <p>不用先想好写哪几个字。告诉我们送给谁、为什么送，剩下的我们给建议。</p>
+    <a class="btn btn-primary" href={formHref} data-event="custom_inquiry_start">提交定制需求 →</a>
+  </section>
+</Layout>
+
+<style>
+  .crumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .crumb a {
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .crumb a:hover {
+    color: var(--cinnabar-deep);
+  }
+  .page-head h1 {
+    max-width: 18em;
+    margin: 10px 0 0;
+    font-size: 40px;
+    line-height: 1.45;
+  }
+
+  .quick-facts {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    margin: 34px 0 0;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+  .quick-facts > div {
+    padding: 16px 18px;
+    background: var(--paper);
+  }
+  .quick-facts dt {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .quick-facts dd {
+    margin: 6px 0 0;
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+
+  .head-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+    margin-top: 28px;
+  }
+  .head-cta .btn {
+    margin-top: 0;
+  }
+
+  .lead h2 {
+    margin: 8px 0 0;
+    font-size: 26px;
+  }
+  .lead p {
+    margin: 10px 0 0;
+    max-width: 640px;
+    font-size: 14.5px;
+    line-height: 1.9;
+    color: var(--ink-soft);
+  }
+  .body {
+    max-width: 720px;
+    margin-top: 22px;
+  }
+  .body p {
+    margin: 0 0 16px;
+    font-size: 15.5px;
+    line-height: 2;
+    color: var(--ink-soft);
+  }
+
+  .scene-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    margin: 26px 0 0;
+    padding: 0;
+    background: var(--line);
+    border: 1px solid var(--line);
+    list-style: none;
+  }
+  .scene-list li {
+    padding: 22px 20px;
+    background: var(--paper);
+  }
+  .scene-list h3 {
+    margin: 0 0 8px;
+    font-size: 17px;
+  }
+  .scene-list p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.85;
+    color: var(--ink-soft);
+  }
+
+  .word-table {
+    margin-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+  .word-row {
+    display: grid;
+    grid-template-columns: 160px 1fr 1fr;
+    gap: 20px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 14.5px;
+    line-height: 1.8;
+  }
+  .w-scene {
+    color: var(--muted);
+  }
+  .w-words {
+    color: var(--ink);
+    letter-spacing: 0.04em;
+  }
+  .w-note {
+    color: var(--ink-soft);
+    font-size: 13.5px;
+  }
+
+  .spec-table {
+    margin-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+  .spec-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 24px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .s-label {
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .s-value {
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--ink);
+  }
+
+  .case-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 22px;
+    margin-top: 24px;
+  }
+  .case-card {
+    margin: 0;
+  }
+  .case-card img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+  .case-card figcaption {
+    padding-top: 14px;
+  }
+  .case-card h3 {
+    margin: 0 0 6px;
+    font-size: 16px;
+  }
+  .case-card p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.85;
+    color: var(--ink-soft);
+  }
+
+  .process-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin: 26px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .process-list li {
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+  .process-list .mono {
+    font-size: 12px;
+    color: var(--cinnabar);
+  }
+  .process-list h3 {
+    margin: 8px 0 6px;
+    font-size: 17px;
+  }
+  .process-list p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.85;
+    color: var(--ink-soft);
+  }
+
+  .faq-list {
+    margin-top: 22px;
+    border-top: 1px solid var(--line);
+  }
+  .faq-list details {
+    border-bottom: 1px solid var(--line);
+  }
+  .faq-list summary {
+    padding: 16px 0;
+    cursor: pointer;
+    font-size: 15.5px;
+    color: var(--ink);
+  }
+  .faq-list p {
+    margin: 0 0 18px;
+    max-width: 760px;
+    font-size: 14.5px;
+    line-height: 1.95;
+    color: var(--ink-soft);
+  }
+
+  .sib-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1px;
+    margin-top: 24px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+  .sib-grid a {
+    display: block;
+    padding: 20px 18px;
+    background: var(--paper);
+    text-decoration: none;
+    color: var(--ink);
+    transition: background 0.25s;
+  }
+  .sib-grid a:hover {
+    background: var(--paper-light);
+  }
+  .sib-grid strong {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .sib-grid span {
+    font-size: 13.5px;
+    line-height: 1.8;
+    color: var(--ink-soft);
+  }
+
+  .cta-band {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 24px;
+    margin-top: 8px;
+    padding: 26px 28px;
+    background: var(--paper-light);
+    border: 1px solid var(--line);
+  }
+  .cta-band p {
+    margin: 0;
+    max-width: 620px;
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--ink-soft);
+  }
+  .cta-band .btn {
+    margin: 0;
+  }
+
+  @media (max-width: 900px) {
+    .quick-facts {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .scene-list {
+      grid-template-columns: 1fr;
+    }
+    .process-list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .page-head h1 {
+      font-size: 28px;
+    }
+    .quick-facts {
+      grid-template-columns: 1fr;
+      margin-top: 26px;
+    }
+    .head-cta .btn {
+      width: 100%;
+      text-align: center;
+    }
+    .word-row,
+    .spec-row {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+    .w-scene {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+    }
+    .s-label {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+    }
+    .process-list {
+      grid-template-columns: 1fr;
+    }
+    .cta-band {
+      padding: 20px 18px;
+    }
+    .cta-band .btn {
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style>
