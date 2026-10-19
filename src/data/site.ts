@@ -67,6 +67,35 @@ export const chatConfig = {
   knocketVersion: '1792321822713',
 };
 
+/**
+ * 备案信息（2026-10-19 建立，配合 ICP 备案提交）。
+ *
+ * 法规要求：网站**底部**须标明 ICP 备案号，且备案号须链接到工信部查询站
+ * （beian.miit.gov.cn）。这不是装饰，是备案通过后的硬性检查项，
+ * 管局抽查发现"未标明备案号"会被责令整改。
+ *
+ * 「未就绪即静默降级」原则：字段留空时页脚**完全不渲染**任何备案元素，
+ * 不会出现空括号或死链。备案号下来后只改这一个字符串，无需动组件。
+ *
+ * 同时预留公安联网备案号：ICP 通过后 30 日内须到
+ * beian.mps.gov.cn 办理公安备案，编号形如「苏公网安备3201XXXXXXXX号」。
+ * 该编号通常要求在页脚与 ICP 备案号并排展示。
+ */
+export const siteLegal = {
+  /** ICP 备案号，如 '苏ICP备2026XXXXXX号-1'。空字符串 = 未通过，页脚不渲染 */
+  icp: '',
+  /** 公安联网备案号，如 '苏公网安备 3201XXXXXXXX号'。空字符串 = 未办理 */
+  police: '',
+  /**
+   * 公安备案的 8 位编码（编号末段，如 '3201XXXXXXXX'），
+   * 用于生成正确的公安备案链接。留空则只显示文字、不做外链。
+   */
+  policeCode: '',
+};
+
+/** 是否已有任一备案号（决定页脚是否渲染合规栏） */
+export const hasFiling = Boolean(siteLegal.icp || siteLegal.police);
+
 /** 是否已接入任意一条实时通道（决定「私信」按钮的行为） */
 export const hasLiveChat = Boolean(chatConfig.wechatKfUrl || chatConfig.knocketIdentifier);
 

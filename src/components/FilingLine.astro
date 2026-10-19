@@ -1,0 +1,38 @@
+---
+// ─────────────────────────────────────────────────────────────
+// 页脚合规栏（2026-10-19，配合 ICP 备案）
+//
+// 为什么单独成组件：首页用完整页脚、内页用精简页脚，两条分支都要展示备案号。
+// 抽成一处，将来 ICP 换号、补公安备案只改 `src/data/site.ts`，不用碰两个分支。
+//
+// 法规要点：
+//   · ICP 备案号必须出现在网站**底部**，且链接到工信部 beian.miit.gov.cn
+//   · 公安联网备案号同样须在底部展示（ICP 通过后 30 日内办理）
+//
+// 降级：两个字段都空 → 整体不渲染，不会有空括号或死链。
+// 样式在 Layout.astro 的 <style> 中（.footer-filing），与页脚其余规则同处。
+// ─────────────────────────────────────────────────────────────
+import { siteLegal } from '../data/site';
+
+const { icp, police, policeCode } = siteLegal;
+const show = Boolean(icp || police);
+---
+
+{show && (
+  <span class="footer-filing">
+    {icp ? (
+      <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer nofollow">{icp}</a>
+    ) : null}
+    {police ? (
+      policeCode ? (
+        <a
+          href={`https://beian.mps.gov.cn/#/query/webSearch?code=${policeCode}`}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+        >{police}</a>
+      ) : (
+        <span>{police}</span>
+      )
+    ) : null}
+  </span>
+)}

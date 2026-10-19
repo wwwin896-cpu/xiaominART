@@ -22,6 +22,7 @@
 // ─────────────────────────────────────────────────────────────
 import { siteContact } from '../data/site';
 import Newsletter from './Newsletter.astro';
+import FilingLine from './FilingLine.astro';
 
 /** 是否为首页。路由由 Layout 传入（`Astro.url.pathname` 在本组件里不可靠）。 */
 const { isHome = false } = Astro.props;
@@ -46,7 +47,7 @@ const { isHome = false } = Astro.props;
     </div>
     <div class="container trust-signals" aria-label="信息边界 / Information boundaries"><div><span class="eyebrow">Artist / 艺术家</span><strong>由具体创作方向与沟通内容开始</strong></div><div><span class="eyebrow">Projects / 项目</span><strong>已确认内容才会公开呈现</strong></div><div class="trust-privacy"><span class="eyebrow">Privacy / 隐私</span><strong>客户故事与图像获得授权后发布</strong></div><p>我们不使用未经核验的客户数量、媒体曝光或合作机构作为背书。</p></div>
     <div class="container footer-newsletter"><Newsletter /></div>
-    <div class="container footer-bottom"><span>© {new Date().getFullYear()} XIAOMINART | 守艺 · 传情</span><span>世间无双，只此一幅 | Every piece is one of a kind.</span></div>
+    <div class="container footer-bottom"><span>© {new Date().getFullYear()} XIAOMINART | 守艺 · 传情</span><FilingLine /><span>世间无双，只此一幅 | Every piece is one of a kind.</span></div>
   </footer>
 ) : (
   <footer class="site-footer is-slim" data-component="site-footer">
@@ -57,6 +58,7 @@ const { isHome = false } = Astro.props;
         <a href="/help/#after-sales">售后与退换</a>
         <a href="/privacy/">隐私政策</a>
       </nav>
+      <FilingLine />
     </div>
   </footer>
 )}

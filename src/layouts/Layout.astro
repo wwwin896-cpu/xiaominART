@@ -237,6 +237,12 @@ const chatSdkSrc = chatConfig.knocketIdentifier
   .footer-claim { font-size: 24px; line-height: 1.5; margin: 18px 0 0; }
   .muted { color: var(--ink-soft); }
   .footer-bottom { border-top: 1px solid var(--line); margin-top: 58px; padding-top: 16px; display: flex; justify-content: space-between; gap: 16px; color: var(--ink-soft); font-size: 11px; }
+  /* 备案号（2026-10-19）：法规要求出现在页面底部，且须链到工信部查询站。
+     显式 inline + min-height:0 —— 防止被 `.footer-grid a` 这类容器级选择器
+     撑成按钮块（本项目 10-16 踩过的「按钮墙」）。 */
+  .footer-filing { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 3px 12px; }
+  .footer-filing a, .footer-filing span { display: inline; min-height: 0; margin: 0; color: var(--ink-soft); font-size: 11px; letter-spacing: .03em; }
+  .footer-filing a:hover { color: var(--cinnabar); }
   @media (max-width: 1100px) { .header-inner { gap: 16px; } nav { gap: 12px; font-size: 16px; } }
   /* 2026-10-19：主导航由 4 项增至 5 项（新增「一字一源」），
      中英双行在 1000px 以下会顶到品牌区与工具区。此处只关英文副标，
@@ -273,6 +279,9 @@ const chatSdkSrc = chatConfig.knocketIdentifier
     .footer-contact .wechat-qr { width: 132px; height: 132px; }
     .footer-bottom { display: block; }
      .footer-bottom span { display: block; margin-top: 8px; }
+     /* 备案号在移动端保持同一行内联，避免两条备案被拆成两个大块 */
+     .footer-bottom .footer-filing { display: flex; flex-wrap: wrap; gap: 2px 12px; }
+     .footer-bottom .footer-filing a, .footer-bottom .footer-filing span { display: inline; margin: 0; }
      .site-footer { padding-top: 56px; padding-bottom: 92px; }
      .mobile-shopping-bar { position: fixed; top: auto; display: grid; grid-template-columns: repeat(3, 1fr); left: 0; right: 0; bottom: 0; z-index: 8; background: rgba(250, 247, 240, .98); border-top: 1px solid var(--line); box-shadow: 0 -8px 24px rgba(77, 56, 34, .08); padding: 7px 8px calc(7px + env(safe-area-inset-bottom)); }
      /* Cookie 横幅展示期间（body.consent-open）：把移动底栏整体顶到横幅之上，
