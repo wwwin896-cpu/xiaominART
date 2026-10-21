@@ -5,7 +5,28 @@ import { getGiftCatalog } from '../../lib/keystatic';
 export const prerender = true;
 export function getStaticPaths() { return getGiftCatalog().products.map((product) => ({ params: { slug: product.slug }, props: { product } })); }
 const { product } = Astro.props;
+
+// 解析价格区间的低值用于结构化数据
+const priceMatch = (product.price || '').match(/\d+/);
+const numericPrice = priceMatch ? priceMatch[0] : '300';
+const productSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: `${product.name}｜手写书法礼品`,
+  description: `${product.meaning} ${product.recipient} ${product.packaging}`,
+  image: product.image ? [new URL(product.image, Astro.site ?? 'https://xiaominart.com').href] : undefined,
+  brand: { '@type': 'Brand', name: 'XIAOMINART 小民艺术' },
+  offers: {
+    '@type': 'Offer',
+    price: numericPrice,
+    priceCurrency: 'CNY',
+    availability: 'https://schema.org/InStock',
+    itemCondition: 'https://schema.org/NewCondition',
+    url: new URL(`/gifts/${product.slug}/`, Astro.site ?? 'https://xiaominart.com').href,
+  },
+};
 ---
-<Layout title={`${product.name}｜小民好礼｜小民艺术`} description={`${product.meaning}${product.recipient}${product.packaging}`} ogType="product">
+<Layout title={`${product.name}｜手写书法礼品定制｜小民艺术`} description={`${product.meaning}${product.recipient}${product.packaging} 价格区间：${product.price}，${product.dispatch}。`} ogType="product" breadcrumbs={[{ name: '首页', href: '/' }, { name: '小民好礼', href: '/gifts/' }, { name: product.name, href: `/gifts/${product.slug}/` }]}>
+  <script type="application/ld+json" set:html={JSON.stringify(productSchema)} />
   <GiftProductDetail product={product} />
 </Layout>
