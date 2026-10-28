@@ -1,7 +1,7 @@
 {
   "version": 1,
   "site": "https://xiaominart.com",
-  "updatedAt": "2026-10-19T01:23:25.187Z",
+  "updatedAt": "2026-10-28T23:44:38.330Z",
   "urls": {
     "https://xiaominart.com/": {
       "pushedAt": "2026-10-18",
@@ -9,19 +9,19 @@
       "count": 2
     },
     "https://xiaominart.com/gifts/": {
-      "pushedAt": "2026-10-18",
-      "lastmod": "2026-10-14",
-      "count": 2
-    },
-    "https://xiaominart.com/gifts/ready-made/": {
-      "pushedAt": "2026-10-19",
-      "lastmod": "2026-10-19",
+      "pushedAt": "2026-10-28",
+      "lastmod": "2026-10-29",
       "count": 3
     },
+    "https://xiaominart.com/gifts/ready-made/": {
+      "pushedAt": "2026-10-28",
+      "lastmod": "2026-10-29",
+      "count": 4
+    },
     "https://xiaominart.com/gift-guide/": {
-      "pushedAt": "2026-10-18",
-      "lastmod": "2026-10-14",
-      "count": 2
+      "pushedAt": "2026-10-28",
+      "lastmod": "2026-10-29",
+      "count": 3
     },
     "https://xiaominart.com/scenes/": {
       "pushedAt": "2026-10-18",
@@ -29,9 +29,9 @@
       "count": 2
     },
     "https://xiaominart.com/artists/": {
-      "pushedAt": "2026-10-19",
-      "lastmod": "2026-10-19",
-      "count": 3
+      "pushedAt": "2026-10-28",
+      "lastmod": "2026-10-29",
+      "count": 4
     },
     "https://xiaominart.com/business-gifts/": {
       "pushedAt": "2026-10-19",
@@ -71,6 +71,36 @@
     "https://xiaominart.com/custom/personal/gifting/": {
       "pushedAt": "2026-10-19",
       "lastmod": "2026-10-19",
+      "count": 1
+    },
+    "https://xiaominart.com/custom/personal/wedding/": {
+      "pushedAt": "2026-10-28",
+      "lastmod": "2026-10-19",
+      "count": 1
+    },
+    "https://xiaominart.com/custom/personal/housewarming/": {
+      "pushedAt": "2026-10-28",
+      "lastmod": "2026-10-19",
+      "count": 1
+    },
+    "https://xiaominart.com/custom/personal/study/": {
+      "pushedAt": "2026-10-28",
+      "lastmod": "2026-10-19",
+      "count": 1
+    },
+    "https://xiaominart.com/custom/personal/festival/": {
+      "pushedAt": "2026-10-28",
+      "lastmod": "2026-10-19",
+      "count": 1
+    },
+    "https://xiaominart.com/notes/": {
+      "pushedAt": "2026-10-28",
+      "lastmod": "2026-10-29",
+      "count": 1
+    },
+    "https://xiaominart.com/partners/": {
+      "pushedAt": "2026-10-28",
+      "lastmod": "2026-10-29",
       "count": 1
     }
   }
