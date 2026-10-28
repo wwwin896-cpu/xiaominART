@@ -19,6 +19,8 @@
     "xiaominart-test-site",
     "keystatic.config.ts",
     ".workspace-trash",
-    "scripts/tests"
+    "scripts/tests",
+    "server",
+    "deploy"
   ]
 }

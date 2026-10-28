@@ -1,0 +1,56 @@
+---
+// ─────────────────────────────────────────────────────────────
+// 页面常见问题（可见问答列表 + FAQPage 结构化数据）(2026-10-28)
+//
+// 一个组件同时输出两样东西，因为这两样必须同源：
+//   ① 页面上真实可见的问答（用户能读、能被 AI 抓取）
+//   ② FAQPage JSON-LD（结构化数据）
+//
+// 分开写最容易出的错是「结构化数据里有，页面上看不到」—— 搜索引擎会
+// 判为违规。这里从同一个 items 数组出，做不到不一致。
+//
+// 视觉沿用 /help/ 与 /gift-guide/ 已有的 <details> 折叠样式（.faq-grid），
+// 不新造一套外观。
+// ─────────────────────────────────────────────────────────────
+import type { FaqItem } from '../data/page-faqs';
+import { faqPageJsonLd } from '../data/page-faqs';
+
+interface Props {
+  items: FaqItem[];
+  /** 区块标题，默认「常见问题」 */
+  heading?: string;
+  /** 小标题（英文眉标） */
+  eyebrow?: string;
+}
+
+const { items, heading = '常见问题', eyebrow = 'FAQ / 常见问题' } = Astro.props;
+const jsonLd = faqPageJsonLd(items);
+---
+
+{items.length ? (
+  <section class="container section page-faq" aria-labelledby="page-faq-title">
+    <span class="eyebrow">{eyebrow}</span>
+    <h2 class="serif" id="page-faq-title">{heading}</h2>
+    <div class="faq-grid">
+      {items.map((item) => (
+        <details>
+          <summary>{item.q}</summary>
+          <p>{item.a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+) : null}
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+<style>
+  .page-faq { border-top: 1px solid var(--line); padding-top: 52px; }
+  .page-faq h2 { font-size: clamp(26px, 3.4vw, 38px); font-weight: 500; margin: 14px 0 28px; }
+  .page-faq .faq-grid { display: grid; gap: 0; }
+  .page-faq details { border-bottom: 1px solid var(--line); padding: 18px 0; }
+  .page-faq summary { cursor: pointer; font-size: 17px; color: var(--ink); list-style: none; display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
+  .page-faq summary::-webkit-details-marker { display: none; }
+  .page-faq summary::after { content: '＋'; color: var(--cinnabar); flex: 0 0 auto; font-size: 15px; }
+  .page-faq details[open] summary::after { content: '－'; }
+  .page-faq details p { color: var(--ink-soft); font-size: 15px; line-height: 1.85; margin: 12px 0 0; max-width: 780px; }
+</style>

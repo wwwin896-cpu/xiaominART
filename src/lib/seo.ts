@@ -51,7 +51,21 @@ function loadGitMap(): Map<string, string> | null {
 const pad = (n: number) => String(n).padStart(2, '0');
 const localDate = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 
-/** 根据一组信号文件计算 YYYY-MM-DD 格式的 lastmod。 */
+/**
+ * 根据一组信号文件计算 YYYY-MM-DD 格式的 lastmod。
+ *
+ * 两条路径：
+ *   ① 有 git 历史（生产/CI 的正常情况）→ 取该页信号文件里最晚的一次提交日期。
+ *      `git log --format=%cs --name-only` 由新到旧排列，某文件首次出现即其最后提交。
+ *   ② 没有 git 历史（本地解压包、CI 缓存失效等）→ 退回文件 mtime。
+ *
+ * ⚠️ 2026-10-28 审计备注：线上曾观察到 85 条 URL 的 lastmod 全部是同一天，
+ *    当时怀疑是这段逻辑把全站拉平。实际排查后确认**不是**：
+ *    同期线上环境 checkout 时确实带了完整历史，同一天是因为那批文件本来就
+ *    是在同一次提交里落地的。我在本地复现时之所以看到全站一致，是因为
+ *    本地工作副本没有 .git，走的是上面的分支 ② —— 这是测量环境差异，
+ *    不是代码缺陷。此注释保留，避免下次再误判。
+ */
 export function lastmodFor(files: string[]): string {
   const map = loadGitMap();
   if (map) {

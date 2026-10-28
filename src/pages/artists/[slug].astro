@@ -8,7 +8,7 @@ const { artist } = Astro.props;
 // 书者手记只属于升斗小民（书法方向的见解），面塑方向的主理人不适用。
 const creed = artist.slug === 'xiaomin' ? creatorCreed : [];
 ---
-<Layout title={`${artist.name}｜艺术家｜XIAOMINART`} description={`${artist.name} 的创作方向、媒介与定制合作方式。`} breadcrumbs={[{ name: '首页', href: '/' }, { name: '艺术家', href: '/artists/' }, { name: artist.name, href: `/artists/${artist.slug}/` }]}>
+<Layout title={`${artist.name}｜艺术家｜XIAOMINART`} description={`${artist.name}：创作方向、常用媒介、代表作品与定制合作方式。了解取字与书写的来处，以及可以一起完成的作品类型，含礼盒、装裱与交付周期。`} breadcrumbs={[{ name: '首页', href: '/' }, { name: '艺术家', href: '/artists/' }, { name: artist.name, href: `/artists/${artist.slug}/` }]}>
   <section class="artist-hero container"><div class="artist-sign"><span class="serif">{artist.name.slice(-1)}</span><small>ARTIST / XIAOMINART</small></div><div><span class="eyebrow">Artist profile / 艺术家详情</span><h1 class="serif">{artist.name}</h1><p lang="en">{artist.en}</p><p>{artist.bio}</p><div class="tag-row">{artist.styles.map((style) => <span class="status">{style}</span>)}{artist.media.map((medium) => <span class="status">{medium}</span>)}</div></div></section>
   <section class="container section profile-copy"><div><span class="eyebrow">Practice / 创作理念</span><h2 class="serif">{artist.philosophy}</h2></div><div><p>艺术家详情页用于理解其视觉语言、媒介倾向与共同创作方式。页面中的图像和案例只作为创作参考，不代表最终交付效果。</p><p lang="en">This profile introduces an artistic language, not a catalogue. Any commission begins anew from your context.</p><a class="btn btn-primary" href={`/custom-commission/?artist=${encodeURIComponent(artist.name)}&direction=${encodeURIComponent(artist.discipline)}`}>去除，因为我们只有一个书者升斗小民 <span>→</span></a></div></section>
   {creed.length > 0 && (

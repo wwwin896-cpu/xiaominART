@@ -1,6 +1,8 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { zodiacWorks } from '../../data/content';
+import PageFaq from '../../components/PageFaq.astro';
+import { pageFaqs } from '../../data/page-faqs';
 export const prerender = true;
 ---
 <Layout
@@ -53,6 +55,7 @@ export const prerender = true;
     <h2 class="serif">这是「字游记」的第一站。</h2>
     <p>十二生肖之后，字游记会继续往山川风物、人文器物与寻常情感里走——每一个有来处的字，都值得被讲一遍。欢迎常回来看看，下一个字正在路上。</p>
   </section>
+  <PageFaq items={pageFaqs['zodiac']} heading="关于十二生肖字的常见问题" />
 </Layout>
 
 <style>

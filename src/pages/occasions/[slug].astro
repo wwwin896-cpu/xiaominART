@@ -2,16 +2,34 @@
 import Layout from '../../layouts/Layout.astro';
 import GiftCard from '../../components/GiftCard.astro';
 import { getGiftCatalog, getGiftsForScene } from '../../lib/keystatic';
+import { channelPages } from '../../data/content';
 export const prerender = true;
 export function getStaticPaths() { return getGiftCatalog().occasions.map((item) => ({ params: { slug: item.slug }, props: { item } })); }
 const { item } = Astro.props;
 const products = getGiftsForScene(item.scenes);
+// 2026-10-28 审计修复：描述优先用 YAML 的 seoDescription，其次 content.ts 的 desc 兜底。
+// 不再用 `${item.intro} + 模板尾巴` 拼——那样只有 38 字，搜索结果里等于半截话。
+const metaDesc = item.seoDescription ?? item.desc ?? item.intro;
+const metaTitle = item.seoTitle ?? `${item.title}怎么选｜手写书法礼品｜小民艺术`;
+// 2026-10-28 审计修复：/channel/{slug}/ 两个渠道落地页此前全站零入链。
+// 它们的 ctaUrl 指向对应场合页，那这里就反向给出入口 —— 也是真实用户在找的东西。
+const relatedChannels = channelPages.filter((page) => page.ctaUrl === `/occasions/${item.slug}/`);
 ---
-<Layout title={`${item.title}｜送礼场合｜小民艺术`} description={`${item.intro} 小民艺术提供有东方审美的小民好礼建议。`}>
+<Layout title={metaTitle} description={metaDesc}>
   <section class="container page-head"><span class="eyebrow">Occasion / {item.en}</span><h1 class="serif">{item.title}</h1><p lang="en">{item.en}</p><p>{item.intro} 从预算、对象、包装和交付时间开始，找到更合适的表达。</p><a class="btn btn-primary" href="/gift-guide/">返回选礼指南 →</a></section>
   <section class="container section related"><span class="eyebrow">Xiaomin Gifts / 相关小民好礼</span><h2 class="serif">适合这个时刻的礼物方向</h2><div class="gift-grid">{products.length ? products.map((product) => <GiftCard product={product} />) : <p>相关礼物正在整理中，可以先提交送礼建议。</p>}</div></section>
+  {relatedChannels.length ? (
+    <section class="container section channel-ref"><span class="eyebrow">From / 来自</span>
+      <ul>{relatedChannels.map((page) => <li><a href={`/channel/${page.slug}/`}>{page.title.replace('小红书｜', '')}</a><span>小红书渠道专题，可直接在这里看承接方向 →</span></li>)}</ul>
+    </section>
+  ) : null}
   <section class="container section next-step"><h2 class="serif">还不确定？告诉我们你想表达什么。</h2><a class="btn btn-primary" href={`/custom-commission/?context=${encodeURIComponent(item.title)}`} data-event="gift_advice_click">获取送礼建议 →</a></section>
 </Layout>
 <style>
+  .channel-ref { border-top: 1px solid var(--border); padding-top: 28px; }
+  .channel-ref ul { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 10px; }
+  .channel-ref li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; }
+  .channel-ref a { border-bottom: 1px solid var(--border); color: var(--ink); }
+  .channel-ref span { color: var(--meta); font-size: 13px; }
   .page-head { padding: 90px 0 66px; } .page-head h1 { font-size: clamp(52px, 7vw, 90px); font-weight: 500; margin: 20px 0 8px; } .page-head p { max-width: 700px; color: var(--ink-soft); font-size: 18px; } .page-head p[lang='en'] { font: 25px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); } .page-head .btn { margin-top: 18px; } .related, .next-step { border-top: 1px solid var(--line); } .related h2, .next-step h2 { font-size: clamp(38px, 5vw, 64px); font-weight: 500; margin: 18px 0 32px; } .gift-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 44px 24px; } @media (max-width: 767px) { .page-head { padding: 56px 0 42px; } .page-head h1 { font-size: 48px; } .page-head p { font-size: 16px; } .gift-grid { grid-template-columns: 1fr; } }
 </style>

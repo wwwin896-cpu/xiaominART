@@ -6,8 +6,11 @@ export const prerender = true;
 export function getStaticPaths() { return getGiftCatalog().recipients.map((item) => ({ params: { slug: item.slug }, props: { item } })); }
 const { item } = Astro.props;
 const products = getGiftsForScene(item.scenes);
+// 2026-10-28 审计修复：同 occasions/[slug].astro —— 用 YAML 的 seoDescription 优先。
+const metaDesc = item.seoDescription ?? item.desc ?? item.intro;
+const metaTitle = item.seoTitle ?? `${item.title}礼物怎么选｜手写书法礼品｜小民艺术`;
 ---
-<Layout title={`${item.title}｜送礼对象｜小民艺术`} description={`${item.intro} 从关系和场合开始选择小民艺术的小民好礼。`}>
+<Layout title={metaTitle} description={metaDesc}>
   <section class="container page-head"><span class="eyebrow">Recipient / {item.en}</span><h1 class="serif">{item.title}</h1><p lang="en">{item.en}</p><p>{item.intro} 先确认关系的分寸，再查看礼物寓意、预算、包装和交付参考。</p><a class="btn btn-primary" href="/gift-guide/">返回选礼指南 →</a></section>
   <section class="container section related"><span class="eyebrow">Xiaomin Gifts / 相关小民好礼</span><h2 class="serif">适合这段关系的礼物方向</h2><div class="gift-grid">{products.length ? products.map((product) => <GiftCard product={product} />) : <p>相关礼物正在整理中，可以先提交送礼建议。</p>}</div></section>
   <section class="container section next-step"><h2 class="serif">想让礼物更贴合你们的故事？</h2><a class="btn btn-primary" href={`/custom-commission/?context=${encodeURIComponent(item.title)}`} data-event="gift_advice_click">获取送礼建议 →</a></section>

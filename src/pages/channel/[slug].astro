@@ -5,7 +5,7 @@ export const prerender = true;
 export function getStaticPaths() { return channelPages.map((page) => ({ params: { slug: page.slug }, props: { page } })); }
 const { page } = Astro.props;
 ---
-<Layout title={`${page.title}｜小民艺术`} description={`${page.intro} 小民艺术为小红书种草内容提供具体礼赠承接。`}>
+<Layout title={`${page.title}｜小民艺术`} description={`${page.intro} 承接小红书种草内容的具体礼赠需求：按对象与场合给题字建议，含装裱与礼盒，¥300 起，可先看现货再决定。`}>
   <section class="container channel-hero"><span class="eyebrow">Xiaohongshu / 小红书专题</span><h1 class="serif">{page.title}</h1><p lang="en">A focused landing page for a real gifting moment.</p><p>{page.intro} 这里不重复讲一遍品牌，而是从具体的送礼任务开始，帮助你继续了解场合、对象、预算和包装。</p><a class="btn btn-primary" href={page.ctaUrl} data-event="channel_landing_view">{page.ctaLabel} →</a></section>
   <section class="container section channel-path"><span class="eyebrow">How to continue / 下一步</span><div class="path-grid"><article><b>01</b><h2 class="serif">先确认场合</h2><p>看清这份礼物适合什么时刻，以及它想表达怎样的关系。</p></article><article><b>02</b><h2 class="serif">再看礼物细节</h2><p>了解寓意、包装、手写贺卡和制作 / 发货参考。</p></article><article><b>03</b><h2 class="serif">进入小程序或咨询</h2><p>已确认商品会进入微信小程序；未配置时提供送礼建议，不展示虚构链接。</p></article></div><a class="btn btn-secondary" href="/gift-guide/">不知道怎么选？进入选礼指南 →</a></section>
 </Layout>

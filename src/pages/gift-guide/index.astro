@@ -66,7 +66,7 @@ const recipientOptions = giftRecipients.map((item) => ({ slug: item.slug, title:
 const occasionOptions = giftOccasions.map((item) => ({ slug: item.slug, title: item.title, en: item.en, scenes: item.scenes }));
 const decisionData = { products, recipients: recipientOptions, occasions: occasionOptions };
 ---
-<Layout title="选礼指南｜按场合与对象挑一件对的书法礼物｜小民艺术" description="按送礼对象与场合筛出 2–3 个方向，标明价格起点、形式与时间参考，再决定要不要咨询。">
+<Layout title="选礼指南｜按场合与对象挑一件对的书法礼物｜小民艺术" description="送礼指南：按送礼对象与场合筛出 2–3 个合适方向，每个方向标明价格起点、成品形式、交付时间与包装，先缩小范围，再决定要不要咨询。">
   <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
   <section class="container page-head"><span class="eyebrow">Gift Guide / 选礼指南</span><h1 class="serif">先想送给谁，<br />再想知道要说什么。</h1><p lang="en">Start with who it is for, not with a shelf.</p><p>不用先做功课。下面两个问题选完，会直接给出 2–3 个合适的方向，并标明价格起点、形式与时间参考——不满意再回头换条件，不必留下联系方式。</p></section>
 
@@ -92,6 +92,23 @@ const decisionData = { products, recipients: recipientOptions, occasions: occasi
         <button class="btn btn-secondary" type="button" data-result-reset>重新选一次</button>
         <a class="btn btn-link" href="/gifts/ready-made/" data-event="gift_guide_ready_made">想更快送出？看已经写好的现货 →</a>
       </div>
+    </div>
+  </section>
+
+  {/* 2026-10-28 全站审计修复：16 个「零入链」页面。
+      /occasions/{slug}/ 与 /recipients/{slug}/ 这 12 个落地页在 sitemap 里、
+      内容也不薄，但全站没有一个可爬取的链接指向它们 —— 因为选礼指南用的是
+      JS 筛选按钮（不是 <a>），索引页又在 9-30 被 301 到 /gifts/ 了。
+      这里补一组纯 <a> 文字链，让爬虫和 AI 都能顺着链接走到这 12 个页面。 */}
+  <section class="container section entry-links" aria-labelledby="entry-links-title">
+    <h2 class="serif" id="entry-links-title">也可以按场合或对象直接看</h2>
+    <div class="entry-group">
+      <span class="eyebrow">Occasions / 按场合</span>
+      <ul class="entry-list">{occasionOptions.map((item) => <li><a href={`/occasions/${item.slug}/`}>{item.title}</a></li>)}</ul>
+    </div>
+    <div class="entry-group">
+      <span class="eyebrow">Recipients / 按对象</span>
+      <ul class="entry-list">{recipientOptions.map((item) => <li><a href={`/recipients/${item.slug}/`}>{item.title}</a></li>)}</ul>
     </div>
   </section>
 
@@ -165,6 +182,15 @@ const decisionData = { products, recipients: recipientOptions, occasions: occasi
   render();
 </script>
 <style>
+  .entry-links { border-top: 1px solid var(--line); padding-top: 46px; }
+  .entry-links h2 { font-size: clamp(24px, 3vw, 34px); font-weight: 500; margin: 0 0 26px; }
+  .entry-group { display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .entry-group:last-child { border-bottom: 0; }
+  .entry-group .eyebrow { flex: 0 0 auto; min-width: 100px; color: var(--meta); }
+  .entry-list { display: flex; flex-wrap: wrap; gap: 10px 18px; margin: 0; padding: 0; list-style: none; }
+  .entry-list a { color: var(--ink); border-bottom: 1px solid var(--line); padding-bottom: 2px; }
+  .entry-list a:hover { border-bottom-color: var(--cinnabar); color: var(--cinnabar-deep); }
+
   .page-head { padding: 90px 0 58px; }
   .page-head h1 { font-size: clamp(30px, 4vw, 52px); line-height: 1.3; font-weight: 400; margin: 20px 0; }
   .page-head p { max-width: 700px; color: var(--ink-soft); font-size: 18px; }

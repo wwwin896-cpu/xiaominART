@@ -224,6 +224,12 @@ const chatSdkSrc = chatConfig.knocketIdentifier
   .footer-contact a[href^="/custom-commission"] { color: var(--cinnabar); border-bottom: 1px solid var(--cinnabar); }
   .footer-policy { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line-soft); display: flex; flex-wrap: wrap; gap: 4px 18px; }
   .footer-policy a { color: var(--cinnabar); font-size: 13px; border-bottom: 1px solid var(--cinnabar); display: inline-block; margin: 0; min-height: 0; }
+  /* 2026-10-28：页脚「继续看」区。给 /scenes/ /seasons/ /works/ 三个此前零入链的页面
+     一个可见入口。字号与 footer-policy 同级但不用朱砂色，避免和合规链接抢注意力。 */
+  .footer-explore { margin-top: 20px; display: flex; flex-direction: column; gap: 6px; }
+  .footer-explore .eyebrow { color: var(--meta); font-size: 12px; letter-spacing: .12em; }
+  .footer-explore a { color: var(--ink-soft); font-size: 13px; border-bottom: 1px solid var(--line-soft); display: inline-block; margin: 0; min-height: 0; width: fit-content; }
+  .footer-explore a:hover { color: var(--cinnabar-deep); border-bottom-color: var(--cinnabar); }
   .footer-contact .wechat-qr { display: block; border: 1px solid var(--line); background: var(--paper-light); padding: 4px; }
   .footer-contact .wechat-qr-link { display: inline-block; margin: 10px 0 0; min-height: 0; line-height: 0; }
   .footer-contact small { color: var(--muted); font-size: 11px; }
@@ -256,8 +262,18 @@ const chatSdkSrc = chatConfig.knocketIdentifier
     .menu-toggle { display: block; }
     .back-btn { display: inline-flex; align-items: center; gap: 2px; flex: none; background: transparent; border: 1px solid var(--line); color: var(--ink); font-size: 13px; letter-spacing: .1em; padding: 7px 11px 7px 8px; min-height: 40px; cursor: pointer; }
     .back-btn .back-arrow { font-size: 17px; line-height: 1; color: var(--cinnabar-deep); }
-    nav { display: none; position: absolute; left: 0; right: 0; top: 72px; padding: 10px 16px 14px; background: var(--paper); border-bottom: 1px solid var(--line); box-shadow: var(--shadow); }
+    /* 2026-10-28：移动端菜单改为左侧抽屉。
+       nav 固定在屏幕左侧、默认滑出视口外（display:none 隐藏），
+       .open 时滑入；内容区点击由 layout-interactions.ts 的
+       「点菜单以外任意处关闭」逻辑负责收起。 */
+    nav { display: none; position: fixed; left: 0; top: 0; bottom: 0; width: min(78vw, 320px); margin: 0; padding: 88px 20px 24px; background: var(--paper); border-right: 1px solid var(--line); box-shadow: var(--shadow); overflow-y: auto; z-index: 9; align-content: start; }
     nav.open { display: grid; gap: 0; }
+    /* 抽屉展开时：锁滚动 + 头部（含菜单按钮）浮到抽屉之上，可再点按钮关闭。
+       ⚠️ 头部的 backdrop-filter 会成为 fixed 后代的包含块，
+       导致 #site-nav 的 fixed 定位被限制在头部高度内 —— 移动端必须去掉。 */
+    .site-header { backdrop-filter: none; background: rgba(244, 239, 229, .99); }
+    body.menu-open { overflow: hidden; }
+    body.menu-open .site-header { z-index: 10; }
     nav a { padding: 11px 0; border-bottom: 1px solid var(--line); min-height: 0; }
     nav a small { display: none; }
     .nav-item:last-child > a { border-bottom: 0; }
@@ -283,7 +299,7 @@ const chatSdkSrc = chatConfig.knocketIdentifier
      .footer-bottom .footer-filing { display: flex; flex-wrap: wrap; gap: 2px 12px; }
      .footer-bottom .footer-filing a, .footer-bottom .footer-filing span { display: inline; margin: 0; }
      .site-footer { padding-top: 56px; padding-bottom: 92px; }
-     .mobile-shopping-bar { position: fixed; top: auto; display: grid; grid-template-columns: repeat(3, 1fr); left: 0; right: 0; bottom: 0; z-index: 8; background: rgba(250, 247, 240, .98); border-top: 1px solid var(--line); box-shadow: 0 -8px 24px rgba(77, 56, 34, .08); padding: 7px 8px calc(7px + env(safe-area-inset-bottom)); }
+     .mobile-shopping-bar { position: fixed; top: auto; display: grid; grid-template-columns: repeat(2, 1fr); left: 0; right: 0; bottom: 0; z-index: 8; background: rgba(250, 247, 240, .98); border-top: 1px solid var(--line); box-shadow: 0 -8px 24px rgba(77, 56, 34, .08); padding: 7px 8px calc(7px + env(safe-area-inset-bottom)); }
      /* Cookie 横幅展示期间（body.consent-open）：把移动底栏整体顶到横幅之上，
         否则两者都固定 bottom:0 会重叠、横幅盖住底栏。
         横幅实际高度由内容决定，这里用一个保守估高 + 变量兜底。 */

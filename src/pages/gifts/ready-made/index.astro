@@ -2,6 +2,8 @@
 import Layout from '../../../layouts/Layout.astro';
 import Pic from '../../../components/Pic.astro';
 import { getReadyMadeWorks } from '../../../lib/ready-made';
+import PageFaq from '../../../components/PageFaq.astro';
+import { pageFaqs } from '../../../data/page-faqs';
 ---
 <Layout title="现货书法作品｜已写好、可直接发出的小幅书法｜小民艺术" description="已经写好，等一个懂它的人。每一幅都有独立作品编码，可扫码验真，装裱完成、48 小时内顺丰发出。¥300 起，一幅只有一个。">
   <section class="container page-head"><span class="eyebrow">Ready to Ship / 现货好礼</span><h1 class="serif">已经写好，<br />等一个懂它的人。</h1><p lang="en">Already written. Ready to go.</p><p>下面这些，是小民已经完成的小幅书法作品。每一幅都只有一件，装裱完成即可直接发货——你在页面上看到的这一幅，就是将来到家的那一幅。</p></section>
@@ -12,6 +14,7 @@ import { getReadyMadeWorks } from '../../../lib/ready-made';
     <p class="works-fineprint">每幅作品均附唯一编号与藏品证书（一物一码）。框体为榫卯结构实木框（无钉无胶），木种有柚木与胡桃木两种，胡桃木色泽更深。页面标价为人民币含装裱价：案头摆件 ¥199（装框后 A4 幅面 21 × 29.7 cm）、圆光小品《禅》¥299（50 × 50 cm）、墙面悬挂 ¥399（60 × 33 cm）；以上均为外框尺寸，具体画心与纸墨细节随作品档案在咨询时提供。</p>
   </section>
   <section class="container section not-sure"><span class="eyebrow">Not found / 没有挑到合适的</span><h2 class="serif">现货之外，还可以从一句话开始，<br />定制一幅只属于你们的。</h2><div class="not-sure-actions"><a class="btn btn-primary" href="/custom-commission/" data-event="custom_entry">进入定制环节 →</a></div></section>
+  <PageFaq items={pageFaqs['gifts-ready-made']} heading="关于现货的常见问题" />
 </Layout>
 <style>
   .page-head { padding: 90px 0 58px; } .page-head h1 { font-size: clamp(30px, 4vw, 52px); line-height: 1.3; font-weight: 500; margin: 20px 0; } .page-head p { max-width: 700px; color: var(--ink-soft); font-size: 18px; } .page-head p[lang='en'] { font: 24px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); }

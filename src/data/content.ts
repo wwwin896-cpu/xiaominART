@@ -446,22 +446,45 @@ export const giftScenes = [
   { slug: 'thanks', name: '感谢恩师 / 朋友', en: 'Thank you', body: '把感谢写下来，送给曾经照亮你的人。' },
 ];
 
+/**
+ * 送礼场合。
+ *
+ * `desc` 是 meta description 兜底文案（2026-10-28 审计后补）。
+ * 优先级：YAML 的 `seoDescription` > 这里的 `desc` > `intro` 拼接。
+ * 此前模板只用 `intro`（20 字上下）拼一句尾巴，导致 6 个场合页描述全部偏短。
+ */
 export const giftOccasions = [
-  { slug: 'birthday', title: '生日心意', en: 'Birthday gifts', intro: '不追逐热闹，认真表达对一个人的在意。', scenes: ['birthday', 'thanks'] },
-  { slug: 'housewarming', title: '乔迁之喜', en: 'Housewarming gifts', intro: '为新居添一处书香静气，也为新的生活留一份祝愿。', scenes: ['housewarming'] },
-  { slug: 'festival', title: '节日问候', en: 'Festival gifts', intro: '让节日礼物从一句问候开始，慢慢抵达日常。', scenes: ['festival', 'thanks'] },
-  { slug: 'teacher-thanks', title: '感谢恩师 / 朋友', en: 'Thank-you gifts', intro: '把感谢写下来，送给曾经照亮你的人。', scenes: ['thanks'] },
-  { slug: 'opening', title: '开业贺礼', en: 'Opening gifts', intro: '用一份有文化温度的心意，祝愿事业开张。', scenes: ['opening', 'keepsake'] },
-  { slug: 'anniversary', title: '周年与纪念', en: 'Anniversary gifts', intro: '为共同走过的时间，留下一件可以被反复看见的礼物。', scenes: ['opening', 'thanks', 'anniversary'] },
+  { slug: 'birthday', title: '生日心意', en: 'Birthday gifts', intro: '不追逐热闹，认真表达对一个人的在意。', scenes: ['birthday', 'thanks'],
+    desc: '生日礼物怎么选：不追逐热闹，认真表达对一个人的在意。手写书法小品、案头摆件与礼盒，含实木装裱与手写贺卡，¥300 起，可按下单对象定制题字。' },
+  { slug: 'housewarming', title: '乔迁之喜', en: 'Housewarming gifts', intro: '为新居添一处书香静气，也为新的生活留一份祝愿。', scenes: ['housewarming'],
+    desc: '乔迁礼物怎么选：为新居添一处书香静气。手写书法挂字与案头小品，按玄关、客厅、书房给题字建议，含装裱与礼盒，可直接送到对方手上，¥300 起。' },
+  { slug: 'festival', title: '节日问候', en: 'Festival gifts', intro: '让节日礼物从一句问候开始，慢慢抵达日常。', scenes: ['festival', 'thanks'],
+    desc: '节日礼物怎么选：让心意从一句问候开始，慢慢抵达日常。按春节、中秋、教师节等节令推荐手写书法小品与礼盒，含手写贺卡，¥300 起，支持定制。' },
+  { slug: 'teacher-thanks', title: '感谢恩师 / 朋友', en: 'Thank-you gifts', intro: '把感谢写下来，送给曾经照亮你的人。', scenes: ['thanks'],
+    desc: '谢师礼怎么选：把感谢写下来，送给曾经照亮你的人。手写书法小品配释读一页，说明字义的来处，比礼品卡更郑重，¥300 起，可定制题字与贺卡。' },
+  { slug: 'opening', title: '开业贺礼', en: 'Opening gifts', intro: '用一份有文化温度的心意，祝愿事业开张。', scenes: ['opening', 'keepsake'],
+    desc: '开业贺礼怎么选：用一份有文化温度的心意祝愿事业开张。书法墨宝、匾额式挂字与空间陈设小品，可按行业与店名题字，含上门交付评估，¥300 起。' },
+  { slug: 'anniversary', title: '周年与纪念', en: 'Anniversary gifts', intro: '为共同走过的时间，留下一件可以被反复看见的礼物。', scenes: ['opening', 'thanks', 'anniversary'],
+    desc: '周年纪念礼物怎么选：为共同走过的时间留一件可以被反复看见的礼物。手写书法小品可题两个人的名字、一句话或一个日期，含装裱，¥300 起。' },
 ];
 
+/**
+ * 送礼对象。
+ * `desc` 用途同上：YAML `seoDescription` > 本字段 > `intro` 拼接。
+ */
 export const giftRecipients = [
-  { slug: 'parents', title: '送长辈', en: 'For parents and elders', intro: '选择一份稳重、温和、可以进入日常的心意。', scenes: ['thanks', 'festival'] },
-  { slug: 'partner', title: '送伴侣', en: 'For a partner', intro: '从你们共同拥有的一句话、一段时间或一个空间开始。', scenes: ['birthday', 'festival'] },
-  { slug: 'friends', title: '送朋友', en: 'For friends', intro: '为朋友的小聚、生日或新的生活阶段准备一份不喧哗的礼。', scenes: ['birthday', 'housewarming'] },
-  { slug: 'teachers', title: '送老师', en: 'For teachers', intro: '用书写、纸本和墨色表达长久的感谢与敬意。', scenes: ['thanks'] },
-  { slug: 'clients', title: '送客户 / 合作伙伴', en: 'For clients and partners', intro: '让一份礼物替关系留下清晰、克制而有温度的表达。', scenes: ['opening', 'festival'] },
-  { slug: 'team', title: '送员工 / 团队', en: 'For teams', intro: '适合团队纪念、节日慰问和需要共同分享的时刻。', scenes: ['festival', 'opening'] },
+  { slug: 'parents', title: '送长辈', en: 'For parents and elders', intro: '选择一份稳重、温和、可以进入日常的心意。', scenes: ['thanks', 'festival'],
+    desc: '送长辈礼物怎么选：一份稳重、温和、可以进入日常的心意。手写「寿」「福」「安」字小品，实木装裱，字义可查，比保健品更耐看，¥300 起。' },
+  { slug: 'partner', title: '送伴侣', en: 'For a partner', intro: '从你们共同拥有的一句话、一段时间或一个空间开始。', scenes: ['birthday', 'festival'],
+    desc: '送伴侣礼物怎么选：从你们共同拥有的一句话、一段时间开始。手写书法小品可题你们的纪念日或昵称，一物一件，含装裱与手写贺卡，¥300 起。' },
+  { slug: 'friends', title: '送朋友', en: 'For friends', intro: '为朋友的小聚、生日或新的生活阶段准备一份不喧哗的礼。', scenes: ['birthday', 'housewarming'],
+    desc: '送朋友礼物怎么选：为小聚、生日或新的生活阶段准备一份不喧哗的礼。手写书法小品与案头摆件，含礼盒包装，百元级价位，可加手写贺卡。' },
+  { slug: 'teachers', title: '送老师', en: 'For teachers', intro: '用书写、纸本和墨色表达长久的感谢与敬意。', scenes: ['thanks'],
+    desc: '送老师礼物怎么选：用书写、纸本和墨色表达长久的感谢与敬意。手写书法小品配释读一页，说明字义出处，谢师礼不落俗，¥300 起，可定制。' },
+  { slug: 'clients', title: '送客户 / 合作伙伴', en: 'For clients and partners', intro: '让一份礼物替关系留下清晰、克制而有温度的表达。', scenes: ['opening', 'festival'],
+    desc: '送客户礼物怎么选：让一份礼物替关系留下清晰、克制而有温度的表达。企业礼赠 50 份起订，可定制企业标识与贺卡，对公结算开专票，可评估交付。' },
+  { slug: 'team', title: '送员工 / 团队', en: 'For teams', intro: '适合团队纪念、节日慰问和需要共同分享的时刻。', scenes: ['festival', 'opening'],
+    desc: '团队礼物怎么选：适合团队纪念、节日慰问与需要共同分享的时刻。手写书法小品可统一题字、逐人落款，50 份起订，含企业名义贺卡，对公结算。' },
 ];
 
 export const giftTierLabels = {
@@ -637,7 +660,7 @@ export const blogPosts = [
   { slug: 'quiet-art-gifts', title: '一份不急着被拆开的艺术礼物', en: 'An art gift that does not rush to be opened', pillar: '礼赠 / Gifts', date: '阅读时间 3 min', excerpt: '礼物可以拥有更长的时间：从共同取意开始，直到它在对方的日常里找到位置。' },
 ];
 
-export const work = { slug: 'seasonal-blessing', title: '四季福愿 · 心事成字', en: 'Seasonal Blessing · Your Story in Original Calligraphy', summary: '这是一个可继续讨论的定制方向，不是现货商品。我们从你的场景、关系与一句话开始，共同确认创作方向。', status: 'concept', delivery: 'commission', isConceptVisual: true };
+export const work = { slug: 'seasonal-blessing', title: '四季福愿 · 心事成字', en: 'Seasonal Blessing · Your Story in Original Calligraphy', summary: '这是一个可继续讨论的定制方向，不是现货商品。我们从你的场景、关系与一句话开始，共同确认创作方向，再谈形式、尺寸与交付时间。', status: 'concept', delivery: 'commission', isConceptVisual: true };
 
 export const blessings = [
   { slug: 'fu', title: '福', pinyin: 'Fú', en: 'A sense of wholeness', meaning: '关于安稳、圆满与被好好接住。', scene: '适合家庭、乔迁与想为日常留一笔的时刻。' },
@@ -647,11 +670,31 @@ export const blessings = [
   { slug: 'cai', title: '财', pinyin: 'Cái', en: 'A life in abundance', meaning: '关于丰足、流动与把日子经营好的心愿。', scene: '适合开业、乔迁与为生活添一份笃定。' },
 ];
 
+/**
+ * 四季节气。
+ *
+ * `desc` 是 meta description 专用字段（2026-10-28 全站审计后补）。
+ * 此前页面模板里写死了 `${name}季内容与祝愿入口。` —— 固定 10 个字，
+ * 是站内最短的描述，搜索结果里等于没有摘要。现改为内容侧给文案、模板只读。
+ * 长度目标 65–80 字（中文摘要显示上限约 75–80 字）。
+ */
 export const seasons = [
-  { slug: 'spring', name: '春', line: '春生福', note: '万物开始有了方向。' },
-  { slug: 'summer', name: '夏', line: '夏纳喜', note: '把好消息留在手边。' },
-  { slug: 'autumn', name: '秋', line: '秋守财', note: '收拢一年的丰足。' },
-  { slug: 'winter', name: '冬', line: '冬安寿', note: '在安静里照看日常。' },
+  {
+    slug: 'spring', name: '春', line: '春生福', note: '万物开始有了方向。',
+    desc: '春生福：写给新一年的开端，也写给正在起步的事。手写书法小品，取甲骨、青铜或碑刻里的「福」字，装裱完成即可挂起，¥300 起，可定制题字。',
+  },
+  {
+    slug: 'summer', name: '夏', line: '夏纳喜', note: '把好消息留在手边。',
+    desc: '夏纳喜：把这个季节的好消息留在手边。手写书法小品，一字一意，黑胡桃实木装裱，随附释读一页，现货直发或按你的故事重写，¥300 起。',
+  },
+  {
+    slug: 'autumn', name: '秋', line: '秋守财', note: '收拢一年的丰足。',
+    desc: '秋守财：收拢一年的丰足，也为来年留个念想。手写书法小品与书房挂字，取古文字本义，装裱后可直接悬挂，¥300 起，支持按场景定制。',
+  },
+  {
+    slug: 'winter', name: '冬', line: '冬安寿', note: '在安静里照看日常。',
+    desc: '冬安寿：在安静里照看日常，送给长辈最贴切。手写书法小品，一字一祝愿，含实木装裱与释读页，¥300 起，可按对象与场合定制题字。',
+  },
 ];
 
 export const faqs = [
