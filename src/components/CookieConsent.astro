@@ -76,8 +76,14 @@ const CONSENT_KEY = 'xiaominart-consent';
   .cookie-actions { display: flex; gap: 10px; flex: none; }
   .cookie-actions .btn { min-height: 40px; }
   @media (max-width: 639px) {
-    .cookie-inner { width: calc(100% - 32px); }
+    /* 移动端：从全宽贴边大块收成紧凑悬浮卡（业主反馈「毫无审美」的主要元凶之一）。
+       底部给底栏（悬浮胶囊，bottom≈10px+safe-area，高≈64px）留出位置。 */
+    .cookie-banner { left: 10px; right: 10px; bottom: calc(78px + env(safe-area-inset-bottom)); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 10px 34px rgba(60, 50, 30, .22); padding: 14px 14px 14px; transition: opacity .25s ease; }
+    /* 商品流弹层/分类面板打开时：横幅让位（否则 z-index 60 会压在弹层上） */
+    :global(body.mshow-open) .cookie-banner { opacity: 0; pointer-events: none; }
+    .cookie-inner { width: 100%; gap: 10px; }
+    .cookie-text { font-size: 12px; line-height: 1.7; }
     .cookie-actions { width: 100%; }
-    .cookie-actions .btn { flex: 1; }
+    .cookie-actions .btn { flex: 1; border-radius: 999px; }
   }
 </style>

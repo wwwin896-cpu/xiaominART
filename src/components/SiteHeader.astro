@@ -28,7 +28,14 @@ const { isCurrent } = Astro.props;
   <div class="container header-inner">
     <button class="back-btn" type="button" data-back-button aria-label="返回上一页"><span class="back-arrow" aria-hidden="true">‹</span>返回</button>
     <a class="brand" href="/" aria-label="小民艺术｜用心好礼首页"><img class="brand-logo" src="/assets/brand/xiaominart-logo-full.png" width="270" height="51" alt="小民艺术 XIAOMINART｜方寸之境，也藏山河" /></a>
-    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">菜单 / Menu</button>
+    {/* 移动端汉堡（demo .burger 的语言）。桌面端 .menu-toggle 本就 display:none。
+        旧版是一颗「菜单 / Menu」文字方框，占宽且突兀；改为图标后头部干净一截。
+        三条线用 span 画，aria-label 保留无障碍语义。 */}
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="打开菜单">
+      <span class="burger-line" aria-hidden="true"></span>
+      <span class="burger-line" aria-hidden="true"></span>
+      <span class="burger-line" aria-hidden="true"></span>
+    </button>
     <nav id="site-nav" aria-label="主导航">
       {navItems.map((item) => <div class="nav-item"><a href={item.href} class:list={{ current: isCurrent(item.href) }} aria-current={isCurrent(item.href) ? 'page' : undefined}><span>{item.zh}</span><small lang="en">{item.en}</small></a>{item.children?.length ? <div class="nav-dropdown">{item.children.map((child) => <a href={child.href}><span>{child.zh}</span><small lang="en">{child.en}</small></a>)}</div> : null}</div>)}
     </nav>

@@ -56,24 +56,23 @@ const { priceFrom, itemCount } = Astro.props;
   .mhero { display: none; }
 
   @media (max-width: 767px) {
-    .mhero { display: block; padding: 22px 0 0; background: var(--paper); border-bottom: 1px solid var(--line-soft); }
+    .mhero { display: block; padding: 24px 0 0; background: var(--paper); border-bottom: 1px solid var(--line-soft); }
     .mhero-inner { padding: 0 16px; }
-    .mhero h1 { font-size: 27px; line-height: 1.42; font-weight: 500; letter-spacing: .02em; margin: 10px 0 10px; }
-    .mhero-sub { margin: 0 0 16px; color: var(--ink-soft); font-size: 13.5px; line-height: 1.85; }
+    .mhero h1 { font-size: 28px; line-height: 1.45; font-weight: 500; letter-spacing: .06em; margin: 10px 0 10px; }
+    .mhero-sub { margin: 0 0 18px; color: var(--ink-soft); font-size: 13.5px; line-height: 1.85; letter-spacing: .04em; }
 
-    /* 三个硬事实：价格 / 在册件数 / 现货时效。这是首屏唯一必须被读到的东西 */
-    .mhero-facts { display: flex; align-items: baseline; gap: 0; margin: 0 0 16px; padding: 12px 0; list-style: none; border-top: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft); }
-    .mhero-facts li { flex: 1; display: flex; align-items: baseline; gap: 3px; justify-content: center; }
-    .mhero-facts li + li { border-left: 1px solid var(--line-soft); }
-    .mhero-facts strong { font: 500 19px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); letter-spacing: .01em; }
-    .mhero-facts span { color: var(--muted); font-size: 11.5px; }
+    /* 三个硬事实：改为三张小圆角卡（demo 瓷片语言），不再是「分数线」式一行 */
+    .mhero-facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 0 14px; padding: 0; list-style: none; }
+    .mhero-facts li { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 12px 4px 10px; background: var(--card, #fffdf7); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 2px 8px rgba(60, 50, 30, .06); }
+    .mhero-facts strong { font: 600 20px var(--font-display-en), Georgia, serif; color: var(--cinnabar); letter-spacing: .01em; }
+    .mhero-facts span { color: var(--ink-soft); font-size: 11px; letter-spacing: .08em; }
 
-    .mhero-actions { margin: 0 0 16px; }
-    .mhero-search { width: 100%; min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 7px; border: 1px solid var(--line); background: var(--paper-light); color: var(--ink-soft); font: inherit; font-size: 13.5px; }
-    .mhero-search span[aria-hidden] { font-size: 16px; color: var(--cinnabar); line-height: 1; }
+    .mhero-actions { margin: 0 0 18px; }
+    /* 搜索框：胶囊（demo .drawer-search 语言） */
+    .mhero-search { width: 100%; min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 7px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255, 255, 255, .7); color: var(--ink-soft); font: inherit; font-size: 13.5px; letter-spacing: .04em; }
 
-    /* 主图压到 16/8，只作情绪锚点，不占首屏 */
-    .mhero-fig { aspect-ratio: 16 / 8; overflow: hidden; background: var(--paper-deep); }
+    /* 主图：圆角卡压到 16/8，只作情绪锚点 */
+    .mhero-fig { margin: 0 16px; aspect-ratio: 16 / 8; overflow: hidden; background: var(--paper-deep); border-radius: 14px; border: 1px solid rgba(120, 100, 60, .15); }
     .mhero-fig img { width: 100%; height: 100%; object-fit: cover; object-position: center 42%; display: block; }
   }
 </style>

@@ -186,8 +186,7 @@ const chatSdkSrc = chatConfig.knocketIdentifier
   .nav-dropdown a { padding: 9px 0; border-bottom: 1px solid var(--line-soft); font-size: 13px; min-height: 44px; }
   .nav-dropdown a:last-child { border-bottom: 0; }
   .nav-item:hover .nav-dropdown, .nav-item:focus-within .nav-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
-  .menu-toggle { display: none; margin-left: auto; background: transparent; border: 1px solid var(--ink); color: var(--ink); padding: 9px 12px; min-height: 44px; }
-  /* 桌面端工具区：心愿单 + 搜索。
+  .menu-toggle { display: none; margin-left: auto; background: transparent; border: 1px solid var(--ink); color: var(--ink); padding: 9px 12px; min-height: 44px; }  /* 桌面端工具区：心愿单 + 搜索。
      不放进主导航 —— 业主要求 4 个导航项保持不动（2026-10-08 裁决）。 */
   .header-tools { display: flex; align-items: center; gap: 4px; margin-left: 6px; padding-left: 16px; border-left: 1px solid var(--line); }
   .header-tools button { display: flex; align-items: center; gap: 7px; min-height: 44px; padding: 0 10px; border: 0; background: transparent; color: var(--ink-soft); font: inherit; font-size: 13px; cursor: pointer; }
@@ -259,7 +258,13 @@ const chatSdkSrc = chatConfig.knocketIdentifier
     .brand { display: flex; min-width: 0; max-width: calc(100% - 118px); gap: 5px; align-items: center; }
     .brand-logo { width: clamp(180px, 52vw, 240px); }
     .brand-subtitle { display: none; }
-    .menu-toggle { display: block; }
+    /* 汉堡按钮（demo .burger）：38px 圆形热区、三条 2px 线，替代旧文字方框 */
+    .menu-toggle { display: flex; flex-direction: column; gap: 5px; align-items: center; justify-content: center; width: 40px; height: 40px; min-height: 0; margin-left: auto; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: rgba(255, 255, 255, .6); }
+    .burger-line { width: 18px; height: 2px; border-radius: 2px; background: var(--ink); transition: transform .25s ease, opacity .25s ease; }
+    /* 菜单展开时三条线变 ✕（纯 CSS，无需额外 JS） */
+    body.menu-open .burger-line:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    body.menu-open .burger-line:nth-child(2) { opacity: 0; }
+    body.menu-open .burger-line:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
     .back-btn { display: inline-flex; align-items: center; gap: 2px; flex: none; background: transparent; border: 1px solid var(--line); color: var(--ink); font-size: 13px; letter-spacing: .1em; padding: 7px 11px 7px 8px; min-height: 40px; cursor: pointer; }
     .back-btn .back-arrow { font-size: 17px; line-height: 1; color: var(--cinnabar-deep); }
     /* 2026-10-28：移动端菜单改为左侧抽屉。
@@ -298,21 +303,43 @@ const chatSdkSrc = chatConfig.knocketIdentifier
      /* 备案号在移动端保持同一行内联，避免两条备案被拆成两个大块 */
      .footer-bottom .footer-filing { display: flex; flex-wrap: wrap; gap: 2px 12px; }
      .footer-bottom .footer-filing a, .footer-bottom .footer-filing span { display: inline; margin: 0; }
-     .site-footer { padding-top: 56px; padding-bottom: 92px; }
-     .mobile-shopping-bar { position: fixed; top: auto; display: grid; grid-template-columns: repeat(2, 1fr); left: 0; right: 0; bottom: 0; z-index: 8; background: rgba(250, 247, 240, .98); border-top: 1px solid var(--line); box-shadow: 0 -8px 24px rgba(77, 56, 34, .08); padding: 7px 8px calc(7px + env(safe-area-inset-bottom)); }
-     /* Cookie 横幅展示期间（body.consent-open）：把移动底栏整体顶到横幅之上，
-        否则两者都固定 bottom:0 会重叠、横幅盖住底栏。
-        横幅实际高度由内容决定，这里用一个保守估高 + 变量兜底。 */
-     body.consent-open .mobile-shopping-bar { bottom: var(--consent-h, 168px); }
-     .mobile-shopping-bar a, .mobile-shopping-bar button { min-height: 50px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--ink-soft); font: inherit; }
+     .site-footer { padding-top: 56px; padding-bottom: 96px; }
+     /* ── 移动端底栏 v2（2026-10-29，按风格 demo 换肤）──────────────────
+        旧版：贴边直角三格，像系统工具条。业主反馈「毫无审美」。
+        新版：悬浮玻璃胶囊（demo .tabbar 的语言）——
+        左右留 10px 悬浮、圆角 999、毛玻璃、「咨询」格做成朱砂渐变主 CTA。
+        三格内容与 data-* 钩子不变，只换皮。 */
+     .mobile-shopping-bar {
+       position: fixed; top: auto; display: grid; grid-template-columns: 1fr 1.35fr 1fr;
+       left: 10px; right: 10px; bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 8;
+       gap: 8px; padding: 8px;
+       background: rgba(250, 247, 238, .78);
+       backdrop-filter: blur(16px) saturate(1.3); -webkit-backdrop-filter: blur(16px) saturate(1.3);
+       border: 1px solid rgba(255, 255, 255, .7); border-radius: 999px;
+       box-shadow: 0 8px 30px rgba(60, 50, 30, .22);
+     }
+     /* Cookie 横幅展示期间（body.consent-open）：底栏顶到横幅之上。
+        横幅现在是悬浮卡（bottom ≈ 78px + safe-area），底栏位置 = 横幅底 + 横幅高 + 12px 间距。
+        --consent-h 由 consent 脚本实测高度写入。 */
+     body.consent-open .mobile-shopping-bar { bottom: calc(78px + env(safe-area-inset-bottom) + var(--consent-h, 168px) + 12px); }
+     .mobile-shopping-bar a, .mobile-shopping-bar button {
+       min-height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+       color: var(--ink-soft); font: inherit; border-radius: 999px;
+       transition: transform .15s ease, background-color .2s ease;
+     }
+     .mobile-shopping-bar a:active, .mobile-shopping-bar button:active { transform: scale(.95); }
      .mobile-shopping-bar button { background: transparent; border: 0; padding: 0; cursor: pointer; }
-     .mobile-shopping-bar .bar-zh { font-size: 13px; letter-spacing: .12em; }
-     .mobile-shopping-bar small { font-size: 9px; color: var(--muted); font-family: var(--font-body-en), sans-serif; letter-spacing: .1em; text-transform: uppercase; }
-     .mobile-shopping-bar a:first-child .bar-zh { color: var(--cinnabar); }
+     .mobile-shopping-bar .bar-zh { font-size: 13px; letter-spacing: .14em; font-family: var(--font-display-zh); }
+     .mobile-shopping-bar small { font-size: 8.5px; color: var(--muted); font-family: var(--font-body-en), sans-serif; letter-spacing: .12em; text-transform: uppercase; }
+     /* 「咨询」= 主 CTA：朱砂渐变胶囊（demo .tab-consult） */
+     .mobile-shopping-bar .dm-bar { color: #fff !important; background: linear-gradient(135deg, var(--cinnabar), var(--cinnabar-deep)); box-shadow: 0 4px 14px rgba(160, 44, 32, .35); }
+     .mobile-shopping-bar .dm-bar small { color: rgba(255, 255, 255, .8); }
+     /* 「收藏」格：白底幽灵胶囊（demo .tab-fav） */
+     .mobile-shopping-bar .wishlist-bar { background: rgba(255, 255, 255, .6); border: 1px solid var(--line); }
+     .mobile-shopping-bar .wishlist-bar .bar-zh { color: var(--ink); }
+     .mobile-shopping-bar a:first-child .bar-zh { color: var(--ink); }
      .mobile-shopping-bar span[data-wishlist-count] { color: var(--cinnabar); font-family: var(--font-mono); }
-     /* 收藏数字角标（2026-10-29）：<small> 里的数字提成右下角小圆点，
-        收藏 0 件时自动隐藏（脚本给空文本，:empty 生效），
-        收藏有货时它是最强的一条「回去看看」提示。 */
+     /* 收藏数字角标：0 件隐藏，有货时是最强的「回去看看」提示 */
      .mobile-shopping-bar .wishlist-bar { position: relative; }
      .mobile-shopping-bar .wishlist-bar small { display: inline-flex; align-items: center; gap: 3px; }
      .mobile-shopping-bar [data-wishlist-count]:not(:empty) {
@@ -322,6 +349,12 @@ const chatSdkSrc = chatConfig.knocketIdentifier
        font: 10px/1 var(--font-mono); letter-spacing: 0;
      }
      .mobile-shopping-bar .wishlist-bar:active .bar-zh, .mobile-shopping-bar .wishlist-bar[aria-expanded="true"] .bar-zh { color: var(--cinnabar); }
+     .mobile-shopping-bar .wishlist-bar.is-fav-active .bar-zh { color: var(--cinnabar); }
+     /* 移动端全局按钮语言对齐 demo：胶囊 + 主按钮朱砂渐变。
+        （只作用 767px 以下；桌面端按钮保持直角定版样式） */
+     .btn { border-radius: 999px; }
+     .btn-primary { background: linear-gradient(135deg, var(--cinnabar), var(--cinnabar-deep)); border-color: transparent; box-shadow: 0 6px 18px rgba(160, 44, 32, .3); }
+     .btn-primary:hover { background: linear-gradient(135deg, var(--cinnabar-deep), var(--cinnabar-deep)); }
      /* 窄屏用底栏承担工具入口，头部不再重复放一套 */
      .header-tools { display: none; }
   }
