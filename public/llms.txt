@@ -15,7 +15,7 @@
 - [小民好礼](https://xiaominart.com/gifts/)：全部礼品总览，含现货与定制品
 - [现货好礼](https://xiaominart.com/gifts/ready-made/)：十二幅已完成的现货作品，含题字、材质与价格
 - [选礼指南](https://xiaominart.com/gift-guide/)：按「场合 / 对象 / 预算」三维筛选的选礼入口
-- [价格参考](https://xiaominart.com/pricing-guide/)：**直接回答价格问题** —— 送礼类 ¥100–800 以上（三档），现货 199–399 元，定制 ¥3,000 起
+- [书画定制与价格](https://xiaominart.com/custom-commission/)：**直接回答价格与流程问题** —— 现货 199–399 元，定制 ¥3,000 起，含三步定制流程（你的想法 → 具体细节 → 联系方式）
 - [帮助中心](https://xiaominart.com/help/)：**发货时效、包装内容、售后与定制的直接回答**
 - [书画定制](https://xiaominart.com/custom-commission/)：三步定制流程（你的想法 → 具体细节 → 联系方式）
 - [企业礼赠](https://xiaominart.com/business-gifts/)：企业答谢礼、伴手礼与定制方案
@@ -38,10 +38,10 @@
 
 ## 参考与内容
 
-- [价格参考](https://xiaominart.com/pricing-guide/)：不同规格与定制程度的价格区间说明
+- [现货好礼（价格明细）](https://xiaominart.com/gifts/ready-made/)：每幅现货作品的题字、材质、尺寸与售价
 - [灵感参考](https://xiaominart.com/scenes/)：书法小品适合的空间与场景
 - [四季好礼](https://xiaominart.com/seasons/)：按节令节气推荐的礼品
-- [祝愿词条](https://xiaominart.com/blessings/)：常用题字与祝愿语的含义与适用场合
+- [一字一源 · 十二生肖](https://xiaominart.com/zodiac/)：甲骨文生肖字与字义（原「祝愿词条」内容并入此处与字游记系列）
 - [客户故事](https://xiaominart.com/stories/)：真实定制案例（仅展示已获授权的内容）
 - [作品与方向](https://xiaominart.com/works/)：作品集
 

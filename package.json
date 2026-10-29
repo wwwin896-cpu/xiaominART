@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "node scripts/gen-webp.mjs && astro build && node scripts/build-search.mjs",
+    "build": "node scripts/gen-webp.mjs && astro build && node scripts/build-search.mjs && node scripts/check-llms.mjs",
     "assets:webp": "node scripts/gen-webp.mjs",
     "check:sitemap": "node scripts/check-sitemap.mjs",
     "push:baidu": "node scripts/baidu-push.mjs",
@@ -17,7 +17,8 @@
     "deploy": "npm run build && wrangler pages deploy dist --project-name=xiaominart --branch=main",
     "build:server": "node server/build.mjs",
     "deploy:aliyun": "bash deploy/deploy.sh",
-    "nginx:redirects": "node deploy/gen-nginx-redirects.mjs"
+    "nginx:redirects": "node deploy/gen-nginx-redirects.mjs",
+    "check:llms": "node scripts/check-llms.mjs"
   },
   "dependencies": {
     "@astrojs/check": "latest",

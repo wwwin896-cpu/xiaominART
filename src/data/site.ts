@@ -83,7 +83,7 @@ export const chatConfig = {
  */
 export const siteLegal = {
   /** ICP 备案号，如 '苏ICP备2026XXXXXX号-1'。空字符串 = 未通过，页脚不渲染 */
-  icp: '',
+  icp: '苏ICP备2026082876号-1',
   /** 公安联网备案号，如 '苏公网安备 3201XXXXXXXX号'。空字符串 = 未办理 */
   police: '',
   /**

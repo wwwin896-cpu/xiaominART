@@ -1,45 +1,41 @@
 # ─────────────────────────────────────────────────────────────
-# 自动部署：main 分支有新提交（含后台保存的内容）→ 构建静态站 → 部署 Cloudflare Pages
+# 自动部署（阿里云主通道）：main 分支有新提交 → 质量门禁 → 构建 → rsync 到服务器
 #
-# 首次启用前，需在 GitHub 仓库配置两个 Actions secret：
-#   （仓库页面 → Settings → Secrets and variables → Actions → New repository secret）
-#   CLOUDFLARE_API_TOKEN   Cloudflare API 令牌（Pages Edit 权限，与手动部署用同一个）
-#   CLOUDFLARE_ACCOUNT_ID  Cloudflare 账户 ID：fc5bdc20f05edbbfa43081b6a8f6c672
+# 2026-10-28 切换：部署目标从 Cloudflare Pages 改为阿里云轻量服务器
+# （47.97.192.90，域名已备案：苏ICP备2026082876号-1）。
+# Cloudflare 版保留在 deploy-cloudflare-rollback.yml，仅手动触发，作回滚通道。
 #
-# Pages Functions 运行时变量（2026-10-09 新增，替代 Cloudflare 面板配置）：
-#   Secrets（加密，Settings → Secrets and variables → Actions → Secrets）：
-#     FORMS_ACCESS_KEY   云数据库访问密钥（/api/lead、/api/event、/api/progress）
-#     RESEND_API_KEY     邮件通道 Resend 密钥
-#     ADMIN_ACCESS_KEY   进度录入后台口令（/api/admin/progress，可选）
-#     BAIDU_PUSH_TOKEN   百度「主动推送」准入密钥（可选，未配置则跳过推送）
-#                        取处：百度搜索资源平台 → 普通收录 → API 提交
-#   Variables（明文，同一页面的 Variables 标签）：
-#     FEISHU_WEBHOOK_URL 飞书群机器人 Webhook（表单通知主通道）
-#     RESEND_TO_EMAIL    通知收件邮箱
-#   未配置的变量在下方步骤会显示「⚠ 为空」；对应功能会静默降级（如未配 key 则 /api/lead 返回 503）。
+# 首次启用前，在 GitHub 仓库配置 4 个 Actions Secret
+# （Settings → Secrets and variables → Actions → New repository secret）：
+#   ALIYUN_SSH_HOST    47.97.192.90
+#   ALIYUN_SSH_USER    root（或具备写 /var/www/xiaominart 权限的账号）
+#   ALIYUN_SSH_PORT    22
+#   ALIYUN_SSH_KEY     私钥全文（ssh-keygen 生成，公钥追加到服务器 ~/.ssh/authorized_keys）
 #
-# 百度收录策略（2026-10-09）：
-#   sitemap 提交对新验证站点有配额释放期（面板显示「今日上限 0 条」，需 1-3 天），
-#   故改用「主动推送」（快速收录 API）——当天可用、实时进抓取队列，本站配额 10 条/天。
-#   因配额有限，单次部署通常只能推一部分 URL，剩余的在后续部署中滚动补推（重复推送幂等）。
+# 服务器侧环境变量（/api/* 运行时读取，不经过本工作流）：
+#   /var/www/xiaominart/server/.env —— FORMS_ACCESS_KEY / RESEND_API_KEY /
+#   FEISHU_WEBHOOK_URL / RESEND_TO_EMAIL / ADMIN_ACCESS_KEY / BAIDU_PUSH_TOKEN
+#   （10-19 迁移时已建 .env，缺 RESEND_FROM_EMAIL / RESEND_TO_EMAIL / FEISHU_KEYWORD）
+#
+# API 服务：functions/api/*.ts 经 server/build.mjs 编译为 server/dist/*.mjs，
+# 由 systemd 服务 xiaominart-api（deploy/xiaominart-api.service）常驻 8787 端口。
+# 静态站由 nginx 直接托管（deploy/nginx.conf）。
 # ─────────────────────────────────────────────────────────────
-name: Deploy site
+name: Deploy site (Aliyun)
 
 on:
   push:
     branches: [main]
     # 只含推送进度的提交不该触发部署：否则「部署→推送→回写进度→再部署」自激循环。
-    # 与提交信息里的 [skip ci] 双保险（前者防循环，后者省一次 run）。
     paths-ignore:
       - '.baidu-pushed.json'
   workflow_dispatch: {}
 
-# 进度文件要提交回 main，GITHUB_TOKEN 默认只读，必须显式给写权限。
 permissions:
   contents: write
 
 concurrency:
-  group: deploy-pages
+  group: deploy-aliyun
   cancel-in-progress: false
 
 jobs:
@@ -47,8 +43,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        # 完整历史：sitemap 的 lastmod 取每个内容源文件的最后一次 git 提交时间（src/lib/seo.ts）
         with:
-          # 完整历史：sitemap 的 lastmod 取每个内容源文件的最后一次 git 提交时间（src/lib/seo.ts）
           fetch-depth: 0
 
       - uses: actions/setup-node@v4
@@ -59,88 +55,119 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
-      # 质量门禁：类型/模板诊断不过就不部署。
-      # 注意：必须在 Build 之前跑 —— astro check 会把 dist/ 等构建产物一并扫描，
-      # 既慢又会在内联脚本上报假错误；tsconfig.json 的 exclude 已排除这些目录。
+      # 质量门禁：类型/模板诊断不过就不部署。tsconfig 已排除 server/、deploy/
+      # （它们由 build:server 用 esbuild 校验，见 deploy/xiaominart-api.service）。
       - name: Type & template check
         run: npm run check
 
-      # 回归测试：百度推送的游标必须每次前进（2026-10-18 修复「每天重复推前 10 条」）。
-      # 纯离线测试（fetch 被打桩），不消耗真实配额，秒级完成。
       - name: Baidu push cursor regression test
         run: npm run test:baidu
 
-      - name: Build
+      - name: Build static site
         run: npm run build
         env:
-          # 后台界面把 App slug 内联进构建产物（import.meta.env.PUBLIC_*），
-          # GitHub 上没有 .env，需要在这里显式提供。此值公开，非密钥。
           PUBLIC_KEYSTATIC_GITHUB_APP_SLUG: wwwin896-cpu-keystatic
 
-      # 发布校验（T-08「上线即入图」）：任何可索引页漏出 sitemap 或 sitemap 出现死图都会失败
       - name: Sitemap consistency check
         run: npm run check:sitemap
 
-      # Pages Functions 运行时变量：写成 --env-file 供 wrangler pages deploy 注入。
-      # 敏感值（FORMS_ACCESS_KEY / RESEND_API_KEY）来自 Repository Secrets；
-      # 非敏感值（Webhook URL、收件邮箱）来自 Repository Variables（vars）。
-      - name: Write Pages runtime env file
+      # API 服务打包：functions/api/*.ts → server/dist/*.mjs（与 CF Pages 共用同一份源码）
+      - name: Build API bundle
+        run: npm run build:server
+
+      # ── 发布到阿里云 ──────────────────────────────────────
+      # rsync --delete 保证 dist 与构建产物完全一致；--checksum 减少 SFTP 小文件开销。
+      - name: Upload static site
+        uses: easingthemes/ssh-deploy@v5
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.ALIYUN_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.ALIYUN_SSH_HOST }}
+          REMOTE_USER: ${{ secrets.ALIYUN_SSH_USER }}
+          REMOTE_PORT: ${{ secrets.ALIYUN_SSH_PORT }}
+          ARGS: '-rlgoDzvc --delete'
+          SOURCE: 'dist/'
+          TARGET: '/var/www/xiaominart/dist/'
+          EXCLUDE: '/node_modules/'
+
+      - name: Upload API bundle
+        uses: easingthemes/ssh-deploy@v5
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.ALIYUN_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.ALIYUN_SSH_HOST }}
+          REMOTE_USER: ${{ secrets.ALIYUN_SSH_USER }}
+          REMOTE_PORT: ${{ secrets.ALIYUN_SSH_PORT }}
+          ARGS: '-rlgoDzvc'
+          SOURCE: 'server/dist/ server/package.json'
+          TARGET: '/var/www/xiaominart/server/'
+
+      - name: Restart API service
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.ALIYUN_SSH_HOST }}
+          username: ${{ secrets.ALIYUN_SSH_USER }}
+          port: ${{ secrets.ALIYUN_SSH_PORT }}
+          key: ${{ secrets.ALIYUN_SSH_KEY }}
+          script: |
+            set -e
+            systemctl restart xiaominart-api
+            systemctl is-active xiaominart-api
+            curl -fsS -o /dev/null http://127.0.0.1:8787/api/event && echo "✓ /api/event 可达"
+
+      # 健康检查：部署后确认公网首页与接口都活着，失败即标红。
+      - name: Smoke test (public)
         run: |
           set -euo pipefail
-          {
-            echo "FORMS_ACCESS_KEY=${{ secrets.FORMS_ACCESS_KEY }}"
-            echo "RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}"
-            echo "FEISHU_WEBHOOK_URL=${{ vars.FEISHU_WEBHOOK_URL }}"
-            echo "RESEND_TO_EMAIL=${{ vars.RESEND_TO_EMAIL }}"
-            echo "ADMIN_ACCESS_KEY=${{ secrets.ADMIN_ACCESS_KEY }}"
-          } > .env.pages-runtime
-          # 安全：只打印变量名与是否有值，绝不打印值本身
-          echo "已写入 .env.pages-runtime，各变量状态："
-          awk -F= '{ printf "  %-22s %s\n", $1, (length($2)>0 ? "已设置("length($2)"字符)" : "⚠ 为空") }' .env.pages-runtime
+          for i in 1 2 3; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' https://xiaominart.com/ || true)
+            [ "$code" = "200" ] && break
+            echo "第 $i 次探测返回 $code，3 秒后重试…"; sleep 3
+          done
+          [ "$code" = "200" ] || { echo "✗ 首页不可达（$code）"; exit 1; }
+          echo "✓ https://xiaominart.com/ 返回 200"
 
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          # --env-file 让 Pages Functions 拿到运行时变量（FORMS_ACCESS_KEY 等）。
-          # 2026-10-09 起因 Cloudflare 面板入口不可用，改为由 GitHub Actions 注入：
-          # 敏感值存 Repository Secrets，非敏感值用 vars，构建时写入临时 env 文件。
-          # 文件在 CI 临时工作区生成、随 run 结束销毁，不落入仓库。
-          command: pages deploy dist --project-name=xiaominart --branch=main --commit-dirty=true --env-file=.env.pages-runtime
+      # ── CDN 缓存刷新 ─────────────────────────────────────
+      # 阿里云 CDN 全球加速开启后，HTML 走短缓存，必须每次部署后刷新，
+      # 否则国内用户在 TTL 内拿到旧页面。需要 secret：ALIYUN_CDN_ACCESS_KEY_ID / ALIYUN_CDN_ACCESS_KEY_SECRET
+      # （建议创建只含 CDN 刷新权限的 RAM 子账号，不要用主账号 AK）。
+      # 未配置时跳过：CDN 面板手动刷新也可（刷新类型：目录 https://xiaominart.com/）。
+      - name: Purge CDN cache
+        if: ${{ secrets.ALIYUN_CDN_ACCESS_KEY_ID != '' }}
+        continue-on-error: true
+        env:
+          ALICLOUD_ACCESS_KEY: ${{ secrets.ALIYUN_CDN_ACCESS_KEY_ID }}
+          ALICLOUD_SECRET_KEY: ${{ secrets.ALIYUN_CDN_ACCESS_KEY_SECRET }}
+          PUID: ${{ secrets.ALIYUN_CDN_ACCESS_KEY_ID }}
+        run: |
+          if [ -z "${ALICLOUD_ACCESS_KEY}" ]; then
+            echo "⚠ 未配置 CDN 刷新密钥，跳过。请在 CDN 控制台手动刷新目录 https://xiaominart.com/"
+            exit 0
+          fi
+          curl -sG "https://cdn.aliyuncs.com/" \
+            --data-urlencode "Action=RefreshObjectCaches" \
+            --data-urlencode "ObjectPath=https://xiaominart.com/" \
+            --data-urlencode "ObjectType=Directory" \
+            --data-urlencode "Format=JSON" \
+            --data-urlencode "Version=2018-05-10" \
+            --data-urlencode "AccessKeyId=${ALICLOUD_ACCESS_KEY}" \
+            --data-urlencode "SignatureMethod=HMAC-SHA1" \
+            --data-urlencode "SignatureVersion=1.0" \
+            --data-urlencode "SignatureNonce=$(head -c16 /dev/urandom | od -An -tx1 | tr -d ' \n')" \
+            --data-urlencode "Timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            -o /dev/null -w "CDN 刷新请求已提交（结果见阿里云控制台）\n" \
+            || echo "⚠ CDN 刷新 API 调用失败（不阻塞部署），请到控制台手动刷新"
 
-      # 百度「主动推送」：把本次构建出的 sitemap URL 推给百度，加快收录。
-      # 为什么不用 sitemap 提交：百度对新验证站点的 sitemap 配额会显示「今日上限 0 条」
-      # 且需 1-3 天释放；主动推送配额独立、当天可用、实时进入抓取队列（实测总配额 10 条/天）。
-      #
-      # ⚠️ 必须放在 Deploy 之后：宁可站点没更新也不要把用户导向 404 的 URL。
-      # 注意 pages deploy 是即时生效的（不像 Worker 有传播延迟），此处顺序仅为语义正确。
-      #
-      # 设计取舍：本步骤失败**不会**让整个 workflow 标红（continue-on-error: true）——
-      # 推送失败的原因都在百度侧（配额用尽、接口抖动），与站点质量无关，
-      # 不该阻塞、也不该掩盖真正的构建/部署失败。详情看步骤日志。
+      # ── 百度主动推送（沿用原机制）──────────────────────────
       - name: Push URLs to Baidu (active submit)
-        if: ${{ github.ref == 'refs/heads/main' }}
         continue-on-error: true
         env:
           BAIDU_PUSH_TOKEN: ${{ secrets.BAIDU_PUSH_TOKEN }}
         run: |
           if [ -z "${BAIDU_PUSH_TOKEN}" ]; then
             echo "⚠ BAIDU_PUSH_TOKEN 未配置，跳过百度主动推送。"
-            echo "  启用方法：GitHub → Settings → Secrets and variables → Actions → Secrets → 添加 BAIDU_PUSH_TOKEN"
             exit 0
           fi
           npm run push:baidu
 
-      # 推送进度回写：.baidu-pushed.json 记录「哪些 URL 已经推给百度」，
-      # 脚本据此只推没推过的（或推送后又被修改过的）页面。
-      #
-      # 为什么必须提交回 main：GitHub Actions 的 job 是临时容器，工作区随 run 销毁。
-      # 不回写 = 每天醒来都是空进度 = 天天重复推前 10 条，配额烧完却零进展
-      # （2026-10-17/18 就是这样白烧了两天）。
-      #
-      # [skip ci] 是必须的：这个提交只含进度记录、不影响站点内容，
-      # 不加会让状态提交再触发一次完整构建 + 部署 + 推送，形成自激循环。
       - name: Persist Baidu push progress
         if: ${{ always() && github.ref == 'refs/heads/main' }}
         run: |
@@ -153,9 +180,6 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add .baidu-pushed.json
           git commit -m "chore(baidu): 更新主动推送进度 [skip ci]"
-          # deploy 组已串行化，但人工推送可能插队 → 先 rebase 再推，失败重试。
-          # rebase 失败（如被 force-push 打乱）则退化为一次合并，并保留本地进度（-X ours）：
-          # 进度文件只有本步骤会写，冲突时以刚跑完的这份为准，不能丢。
           for i in 1 2 3; do
             git fetch origin main
             if git rebase origin/main; then

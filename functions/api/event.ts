@@ -84,6 +84,10 @@ const ALLOWED_EVENTS = new Set([
   'search_open',
   'search_result_click',
   'wishlist_drawer_open',
+  // 2026-10-28 补录：心愿单抽屉「去选礼指南」引导、合作案例筛选器（此前漏登被静默丢弃）
+  'wishlist_drawer_guide',
+  'case_filter_apply',
+  'case_filter_reset',
   'wechat_direct_open',
   'wechat_id_copy',
   // 2026-10-14 补录：作品档案页扫码转化漏斗（二维码验真 → 关注 → 定制）
