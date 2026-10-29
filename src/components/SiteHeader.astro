@@ -27,7 +27,12 @@ const { isCurrent } = Astro.props;
 <header class="site-header" data-component="site-header">
   <div class="container header-inner">
     <button class="back-btn" type="button" data-back-button aria-label="返回上一页"><span class="back-arrow" aria-hidden="true">‹</span>返回</button>
-    <a class="brand" href="/" aria-label="小民艺术｜用心好礼首页"><img class="brand-logo" src="/assets/brand/xiaominart-logo-full.png" width="270" height="51" alt="小民艺术 XIAOMINART｜方寸之境，也藏山河" /></a>
+    <a class="brand" href="/" aria-label="小民艺术｜用心好礼首页">
+      {/* 桌面端用横版 logo 图；移动端换 demo 的「印章 + 字号」品牌（.brand-seal），
+          横长 logo 在胶囊导航里放不下也立不住。两者不同时出现。 */}
+      <img class="brand-logo" src="/assets/brand/xiaominart-logo-full.png" width="270" height="51" alt="小民艺术 XIAOMINART｜方寸之境，也藏山河" />
+      <span class="brand-seal" aria-hidden="true"><i>民</i><em>小民艺术</em></span>
+    </a>
     {/* 移动端汉堡（demo .burger 的语言）。桌面端 .menu-toggle 本就 display:none。
         旧版是一颗「菜单 / Menu」文字方框，占宽且突兀；改为图标后头部干净一截。
         三条线用 span 画，aria-label 保留无障碍语义。 */}

@@ -254,10 +254,21 @@ const chatSdkSrc = chatConfig.knocketIdentifier
      中文主项保持 —— 移动端（767px）本来就隐藏英文，视觉一致。 */
   @media (max-width: 1000px) { nav a small { display: none; } }
   @media (max-width: 767px) {
-    .header-inner { min-height: 72px; position: relative; }
-    .brand { display: flex; min-width: 0; max-width: calc(100% - 118px); gap: 5px; align-items: center; }
-    .brand-logo { width: clamp(180px, 52vw, 240px); }
-    .brand-subtitle { display: none; }
+    /* ── 移动端头部：demo 玻璃胶囊导航（2026-10-29 v2）─────────────
+       旧版是通栏白底条。新版：脱离通栏、悬浮玻璃胶囊条（左印章品牌右汉堡）。
+       ⚠️ backdrop-filter 必须放在 ::before 伪元素上——若放在 .header-inner 本体，
+       它会成为 fixed 后代（#site-nav 抽屉）的包含块，抽屉定位直接废掉
+       （2026-10-28 已踩过一次，见下方抽屉注释）。 */
+    .site-header { position: sticky; top: 8px; z-index: 5; background: transparent; border-bottom: 0; backdrop-filter: none; }
+    .header-inner { position: relative; width: calc(100% - 20px); min-height: 56px; margin: 0 auto; padding: 0 10px 0 14px; gap: 10px; background: transparent; }
+    .header-inner::before { content: ''; position: absolute; inset: 0; border-radius: 999px; background: rgba(250, 247, 238, .92); backdrop-filter: blur(16px) saturate(1.3); -webkit-backdrop-filter: blur(16px) saturate(1.3); border: 1px solid rgba(255, 255, 255, .7); box-shadow: 0 4px 24px rgba(60, 50, 30, .12); }
+    .header-inner > :not(#site-nav) { position: relative; z-index: 1; }
+    /* 品牌：横版 logo 换成 demo 的「印章 + 字号」 */
+    .brand { display: flex; min-width: 0; max-width: none; gap: 9px; align-items: center; }
+    .brand-logo { display: none; }
+    .brand-seal { display: inline-flex; align-items: center; gap: 8px; }
+    .brand-seal i { font-style: normal; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 5px; background: var(--cinnabar); color: #fff; font: 500 12px var(--font-display-zh); box-shadow: 0 1px 4px rgba(165, 72, 59, .4); }
+    .brand-seal em { font-style: normal; font-family: var(--font-display-zh); font-size: 15px; font-weight: 500; letter-spacing: .14em; color: var(--ink); }
     /* 汉堡按钮（demo .burger）：38px 圆形热区、三条 2px 线，替代旧文字方框 */
     .menu-toggle { display: flex; flex-direction: column; gap: 5px; align-items: center; justify-content: center; width: 40px; height: 40px; min-height: 0; margin-left: auto; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: rgba(255, 255, 255, .6); }
     .burger-line { width: 18px; height: 2px; border-radius: 2px; background: var(--ink); transition: transform .25s ease, opacity .25s ease; }
@@ -265,8 +276,8 @@ const chatSdkSrc = chatConfig.knocketIdentifier
     body.menu-open .burger-line:nth-child(1) { transform: translateY(7px) rotate(45deg); }
     body.menu-open .burger-line:nth-child(2) { opacity: 0; }
     body.menu-open .burger-line:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-    .back-btn { display: inline-flex; align-items: center; gap: 2px; flex: none; background: transparent; border: 1px solid var(--line); color: var(--ink); font-size: 13px; letter-spacing: .1em; padding: 7px 11px 7px 8px; min-height: 40px; cursor: pointer; }
-    .back-btn .back-arrow { font-size: 17px; line-height: 1; color: var(--cinnabar-deep); }
+    .back-btn { display: inline-flex; align-items: center; justify-content: center; flex: none; width: 36px; height: 36px; padding: 0; background: rgba(255, 255, 255, .6); border: 1px solid var(--line); border-radius: 50%; color: var(--ink); font-size: 12px; letter-spacing: 0; min-height: 0; cursor: pointer; }
+    .back-btn .back-arrow { font-size: 19px; line-height: 1; color: var(--cinnabar-deep); margin-right: -2px; }
     /* 2026-10-28：移动端菜单改为左侧抽屉。
        nav 固定在屏幕左侧、默认滑出视口外（display:none 隐藏），
        .open 时滑入；内容区点击由 layout-interactions.ts 的
@@ -276,7 +287,9 @@ const chatSdkSrc = chatConfig.knocketIdentifier
     /* 抽屉展开时：锁滚动 + 头部（含菜单按钮）浮到抽屉之上，可再点按钮关闭。
        ⚠️ 头部的 backdrop-filter 会成为 fixed 后代的包含块，
        导致 #site-nav 的 fixed 定位被限制在头部高度内 —— 移动端必须去掉。 */
-    .site-header { backdrop-filter: none; background: rgba(244, 239, 229, .99); }
+    /* v2（胶囊头部）后：通栏背景必须恒为透明——
+       玻璃感由 .header-inner::before 承担，此条原是抽屉打开时压毛玻璃的，现在统一收口。 */
+    .site-header { backdrop-filter: none; background: transparent; }
     body.menu-open { overflow: hidden; }
     body.menu-open .site-header { z-index: 10; }
     nav a { padding: 11px 0; border-bottom: 1px solid var(--line); min-height: 0; }
@@ -310,7 +323,7 @@ const chatSdkSrc = chatConfig.knocketIdentifier
         左右留 10px 悬浮、圆角 999、毛玻璃、「咨询」格做成朱砂渐变主 CTA。
         三格内容与 data-* 钩子不变，只换皮。 */
      .mobile-shopping-bar {
-       position: fixed; top: auto; display: grid; grid-template-columns: 1fr 1.35fr 1fr;
+       position: fixed; top: auto; display: grid; grid-template-columns: 1fr 1.35fr;
        left: 10px; right: 10px; bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 8;
        gap: 8px; padding: 8px;
        background: rgba(250, 247, 238, .78);

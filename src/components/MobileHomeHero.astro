@@ -1,18 +1,22 @@
 ---
 // ─────────────────────────────────────────────────────────────
-// 移动端首屏（2026-10-29）
+// 移动端首屏（2026-10-29 v2，按 xiaominart-style-demo.html 视觉重做）
 //
-// 取代手机上的三屏品牌海报轮播。理由：手机访客是网购习惯，
-// 首屏要立刻回答三个问题——「卖什么 / 多少钱 / 能马上要吗」。
-// 海报三屏在手机上要滑 3 次、等 18 秒，看不到一个价格。
+// v1 的问题：结构对了（价签+事实），但排版还是「正式站旧语言」——
+// 左对齐、照片主图、观感与 demo 脱节。业主明确要 demo 效果。
 //
-// 结构：品牌一句（不是三段）→ 三个硬事实条 → 搜索 + 分类入口 → 主图
-// 品牌叙事一点没删，整体下移给 MobileShowcase（商品流）之后的老版块承接。
+// v2 = demo .hero 的本体：
+//   · 居中大标题「一字一礼，把心意写成看得见的样子」
+//   · 副题一行硬承诺
+//   · 双 CTA：挑选礼品（朱砂渐变胶囊）/ 了解定制（幽灵胶囊）
+//   · 两团墨晕（demo .ink-blot）缓慢漂移
+//   · 三张事实瓷片 + 搜索胶囊（保留 v1 的转化件，套新皮肤）
+//   · 照片主图删除——真实照片移到商品卡详情弹层的大图区
 //
-// ⚠️ 桌面端不渲染：根元素 `display: none`，只在 767px 以下出现。
+// ⚠️ 桌面端不渲染：根元素 display:none，只在 767px 以下出现。
 // ─────────────────────────────────────────────────────────────
 interface Props {
-  /** 最低价，由 index.astro 从三套商品数据里算出 */
+  /** 最低价，由 index.astro 从现货数据里算出 */
   priceFrom: number;
   /** 在册件数（礼品 + 生肖 + 现货） */
   itemCount: number;
@@ -22,33 +26,28 @@ const { priceFrom, itemCount } = Astro.props;
 ---
 
 <section class="mhero" aria-labelledby="mhero-title">
+  <span class="mhero-blot mhero-blot1" aria-hidden="true"></span>
+  <span class="mhero-blot mhero-blot2" aria-hidden="true"></span>
+
   <div class="mhero-inner">
-    <span class="eyebrow">XIAOMINART / 手写书法礼品</span>
-    <h1 id="mhero-title" class="serif">一个字，<br />替你说完那句没说出口的话。</h1>
-    <p class="mhero-sub">亲笔手写，取自古文字有出处。送长辈、送老师，或为乔迁、开业、生日备一份。</p>
+    <span class="mhero-eyebrow">XIAOMINART / 手写书法礼品</span>
+    <h1 id="mhero-title" class="serif">一字一礼，<br />把心意写成<br />看得见的样子</h1>
+    <p class="mhero-sub">每一件都由小民亲笔书写 · 宣纸装裱 · 附赠手写贺语</p>
+
+    <div class="mhero-cta">
+      <a class="btn btn-primary mhero-cta-main" href="/gifts/" data-event="hero_cta_click">挑选礼品</a>
+      <a class="btn mhero-cta-ghost" href="/custom-commission/" data-event="custom_entry">了解定制</a>
+    </div>
 
     <ul class="mhero-facts">
       <li><strong>{priceFrom}</strong><span>元起</span></li>
       <li><strong>{itemCount}</strong><span>件在册</span></li>
-      <li><strong>现货</strong><span>3–5 天发出</span></li>
+      <li><strong class="mhero-facts-zh">现货</strong><span>3–5 天发出</span></li>
     </ul>
 
-    <div class="mhero-actions">
-      <button class="mhero-search" type="button" data-search-open aria-label="搜索站内作品">
-        <span aria-hidden="true">⌕</span>想找什么字？先搜一下
-      </button>
-    </div>
-  </div>
-
-  <div class="mhero-fig">
-    <img
-      src="/assets/scenes/theme-cinnabar.jpg"
-      alt="朱砂红卡的「欢喜」古文字书法框，旁有红梅与灯笼"
-      width={800}
-      height={600}
-      loading="eager"
-      decoding="async"
-    />
+    <button class="mhero-search" type="button" data-search-open aria-label="搜索站内作品">
+      <span aria-hidden="true">⌕</span>想找什么字？先搜一下
+    </button>
   </div>
 </section>
 
@@ -56,23 +55,37 @@ const { priceFrom, itemCount } = Astro.props;
   .mhero { display: none; }
 
   @media (max-width: 767px) {
-    .mhero { display: block; padding: 24px 0 0; background: var(--paper); border-bottom: 1px solid var(--line-soft); }
-    .mhero-inner { padding: 0 16px; }
-    .mhero h1 { font-size: 28px; line-height: 1.45; font-weight: 500; letter-spacing: .06em; margin: 10px 0 10px; }
-    .mhero-sub { margin: 0 0 18px; color: var(--ink-soft); font-size: 13.5px; line-height: 1.85; letter-spacing: .04em; }
+    .mhero {
+      position: relative; display: block; overflow: hidden;
+      padding: 34px 20px 26px; text-align: center;
+    }
+    /* demo .ink-blot：两团缓慢漂移的墨晕，给纸面呼吸感 */
+    .mhero-blot { position: absolute; border-radius: 50%; filter: blur(40px); opacity: .35; pointer-events: none; }
+    .mhero-blot1 { width: 240px; height: 240px; left: -70px; top: 40px; background: radial-gradient(circle, #e5d9bd, transparent 70%); animation: mhero-drift 12s ease-in-out infinite; }
+    .mhero-blot2 { width: 210px; height: 210px; right: -60px; top: 140px; background: radial-gradient(circle, rgba(165, 72, 59, .2), transparent 70%); animation: mhero-drift 15s ease-in-out infinite reverse; }
+    @keyframes mhero-drift { 50% { transform: translateY(24px) scale(1.06); } }
+    @media (prefers-reduced-motion: reduce) { .mhero-blot { animation: none; } }
 
-    /* 三个硬事实：改为三张小圆角卡（demo 瓷片语言），不再是「分数线」式一行 */
+    .mhero-inner { position: relative; z-index: 1; }
+    .mhero-eyebrow { display: block; margin-bottom: 12px; color: var(--cinnabar); font-size: 11.5px; letter-spacing: .3em; font-family: var(--font-body-en), var(--font-body-zh); text-transform: uppercase; }
+    .mhero h1 { font-size: 30px; line-height: 1.5; font-weight: 500; letter-spacing: .12em; margin: 0 0 14px; }
+    .mhero-sub { margin: 0 0 20px; color: var(--ink-soft); font-size: 13px; line-height: 1.9; letter-spacing: .06em; }
+
+    /* 双 CTA：朱砂渐变主胶囊 + 幽灵胶囊（demo .hero-cta） */
+    .mhero-cta { display: flex; justify-content: center; gap: 12px; margin: 0 0 22px; }
+    .mhero-cta .btn { min-height: 46px; padding: 11px 24px; font-size: 14px; letter-spacing: .2em; border-radius: 999px; }
+    .mhero-cta-main { box-shadow: 0 6px 18px rgba(160, 44, 32, .3); }
+    .mhero-cta-ghost { color: var(--ink); border: 1px solid var(--line); background: rgba(255, 255, 255, .55); }
+
+    /* 三张事实瓷片（转化件，保留） */
     .mhero-facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 0 14px; padding: 0; list-style: none; }
-    .mhero-facts li { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 12px 4px 10px; background: var(--card, #fffdf7); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 2px 8px rgba(60, 50, 30, .06); }
+    .mhero-facts li { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 12px 4px 10px; background: rgba(255, 253, 247, .8); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 2px 8px rgba(60, 50, 30, .06); }
     .mhero-facts strong { font: 600 20px var(--font-display-en), Georgia, serif; color: var(--cinnabar); letter-spacing: .01em; }
+    .mhero-facts .mhero-facts-zh { font-family: var(--font-display-zh); font-size: 17px; font-weight: 500; }
     .mhero-facts span { color: var(--ink-soft); font-size: 11px; letter-spacing: .08em; }
 
-    .mhero-actions { margin: 0 0 18px; }
-    /* 搜索框：胶囊（demo .drawer-search 语言） */
+    /* 搜索胶囊（移动端唯一的搜索入口，保留） */
     .mhero-search { width: 100%; min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 7px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255, 255, 255, .7); color: var(--ink-soft); font: inherit; font-size: 13.5px; letter-spacing: .04em; }
-
-    /* 主图：圆角卡压到 16/8，只作情绪锚点 */
-    .mhero-fig { margin: 0 16px; aspect-ratio: 16 / 8; overflow: hidden; background: var(--paper-deep); border-radius: 14px; border: 1px solid rgba(120, 100, 60, .15); }
-    .mhero-fig img { width: 100%; height: 100%; object-fit: cover; object-position: center 42%; display: block; }
+    .mhero-search span[aria-hidden] { font-size: 16px; color: var(--cinnabar); line-height: 1; }
   }
 </style>

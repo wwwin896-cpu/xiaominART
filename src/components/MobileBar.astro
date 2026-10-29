@@ -3,7 +3,8 @@
 // 移动端底部导航栏 + 咨询弹层 + 微信直联弹层
 // （2026-10-12 从 Layout.astro 抽出；2026-10-18 加私信弹层、底栏精简为 3 格）
 //
-// 底栏 3 格：收藏（心愿单）/ 咨询 / 分享。
+// 底栏 2 格（2026-10-29 v3，业主指认 demo 形态）：收藏（心愿单）/ 咨询。
+// 分享格移除——站内 ShareButton 与页内分享按钮已有入口，底栏只留最强双动作。
 // 2026-10-29：第二格文案由「私信」改「咨询」——移动端访客不认「私信」这个词，
 // 认的是「咨询」。行为完全不变（仍是那三路分流），只动文案与 aria-label。
 //
@@ -26,7 +27,7 @@
 import { siteContact } from '../data/site';
 ---
 
-<nav class="mobile-shopping-bar" aria-label="移动端底部导航"><button class="wishlist-bar" type="button" data-wishlist-open aria-label="打开收藏夹"><span class="bar-zh">收藏</span><small lang="en">Saved <span data-wishlist-count></span></small></button><button class="dm-bar" type="button" data-dm-open aria-controls="dm-sheet" aria-expanded="false" aria-label="咨询工作室"><span class="bar-zh">咨询</span><small lang="en">Ask</small></button><button class="bar-share" type="button" data-share-button data-event="share_click" aria-label="分享本页给微信好友或朋友圈"><span class="bar-zh">分享</span><small lang="en">Share</small></button></nav>
+<nav class="mobile-shopping-bar" aria-label="移动端底部导航"><button class="wishlist-bar" type="button" data-wishlist-open aria-label="打开收藏夹"><span class="bar-zh">收藏</span><small lang="en">Saved <span data-wishlist-count></span></small></button><button class="dm-bar" type="button" data-dm-open aria-controls="dm-sheet" aria-expanded="false" aria-label="咨询工作室"><span class="bar-zh">咨询</span><small lang="en">Ask</small></button></nav>
 
 <div class="dm-sheet" id="dm-sheet" role="dialog" aria-modal="true" aria-labelledby="dm-sheet-title" hidden>
   <div class="dm-sheet-card">

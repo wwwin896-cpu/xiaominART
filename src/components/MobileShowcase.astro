@@ -23,7 +23,6 @@
 //
 // 数据：giftProducts + zodiacWorks + readyMadeWorks 构建期烘焙，客户端只拿渲染好的 JSON。
 // ─────────────────────────────────────────────────────────────
-import Pic from './Pic.astro';
 import { giftProducts, zodiacWorks, readyMadeWorks } from '../data/content';
 
 type Tile = {
@@ -35,6 +34,8 @@ type Tile = {
   char: string;
   title: string;
   tag: string;
+  /** 卡面右上角小签：场景/系列的短词（demo .tag 的语言） */
+  tagShort: string;
   price: string;
   desc: string;
   specs: Array<[string, string]>;
@@ -56,6 +57,7 @@ for (const p of giftProducts) {
     char: p.visual || '禮',
     title: p.name,
     tag: `${p.sceneLabel} · ${p.price}`,
+    tagShort: p.sceneLabel,
     price: p.price,
     desc: p.meaning,
     specs: [
@@ -78,6 +80,7 @@ for (const z of zodiacWorks) {
     char: z.char,
     title: z.name,
     tag: `生肖 · ${z.price}`,
+    tagShort: '字游记',
     price: z.price,
     desc: z.story,
     specs: [
@@ -100,6 +103,7 @@ for (const w of readyMadeWorks) {
     char: w.title.slice(0, 1),
     title: w.title,
     tag: `现货 · ¥${w.price}`,
+    tagShort: w.form === '挂墙' ? '可挂' : '案头',
     price: `¥${w.price}`,
     desc: w.note,
     specs: [
@@ -151,8 +155,8 @@ const tilesJson = JSON.stringify(tiles);
 
 <section class="mshow" aria-labelledby="mshow-title" data-ms>
   <div class="mshow-head">
-    <h2 id="mshow-title" class="serif">挑一件，看字与来处。</h2>
-    <p>都是亲笔手写，取自古文字有出处。点开看详情，右下角可以收着。</p>
+    <h2 id="mshow-title" class="serif">今季之选</h2>
+    <p>点击卡片看详情 · 右下角可收藏</p>
   </div>
 
   <div class="mshow-chips" role="group" aria-label="按类型筛选">
@@ -175,14 +179,16 @@ const tilesJson = JSON.stringify(tiles);
         data-ms-groups={tile.groups.join(' ')}
         hidden={i >= FIRST_BATCH ? true : undefined}
       >
+        {/* 卡面 = demo .art 的大字艺术卡：纸底渐变 + 双线框 + 题字大字做主视觉；
+            真实商品照片放进详情弹层的大图区（点卡片时看），美学与信息两不丢 */}
         <button class="mshow-tile-main" type="button" data-ms-open={tile.id}>
           <span class="mshow-tile-fig">
-            <Pic src={tile.image} alt={tile.alt} width={640} height={480} loading={i < 4 ? 'eager' : 'lazy'} decoding="async" />
             <span class="mshow-tile-char serif" aria-hidden="true">{tile.char}</span>
+            <span class="mshow-tag" aria-hidden="true">{tile.tagShort}</span>
           </span>
           <span class="mshow-tile-copy">
             <strong class="serif">{tile.title}</strong>
-            <small>{tile.tag}</small>
+            <small>{tile.price}</small>
           </span>
         </button>
         <button class="mshow-fav" type="button" data-ms-wish={tile.id} aria-pressed="false" aria-label={`收藏 ${tile.title}`}>
@@ -473,9 +479,10 @@ const tilesJson = JSON.stringify(tiles);
 
   @media (max-width: 767px) {
     .mshow { display: block; padding: 26px 0 34px; border-top: 1px solid var(--line-soft); }
-    .mshow-head { padding: 0 16px 16px; }
-    .mshow-head h2 { font-size: 22px; line-height: 1.4; margin: 0 0 8px; letter-spacing: .06em; }
-    .mshow-head p { margin: 0; color: var(--ink-soft); font-size: 13px; line-height: 1.8; }
+    /* demo .sec-title：serif 大字距标题 + 右侧小字说明，同行 baseline */
+    .mshow-head { display: flex; align-items: baseline; gap: 10px; padding: 0 16px 16px; }
+    .mshow-head h2 { font-size: 21px; font-weight: 500; letter-spacing: .34em; margin: 0; white-space: nowrap; }
+    .mshow-head p { margin: 0; color: var(--ink-soft); font-size: 11.5px; letter-spacing: .02em; }
 
     /* chip 条：胶囊化（demo 语言：圆角 999、选中朱砂渐变） */
     .mshow-chips { display: flex; gap: 8px; overflow-x: auto; padding: 0 16px 14px; scrollbar-width: none; }
@@ -490,17 +497,19 @@ const tilesJson = JSON.stringify(tiles);
     .mshow-tile:active { transform: scale(.98); }
     .mshow-tile[hidden] { display: none; }
     .mshow-tile-main { display: block; width: 100%; padding: 0; border: 0; background: transparent; text-align: left; font: inherit; color: inherit; }
-    .mshow-tile-fig { position: relative; display: block; aspect-ratio: 4 / 3; overflow: hidden; background: var(--paper-deep); }
-    /* 图比例统一裁切；.mshow-tile-char 是图片未加载完成时的墨字占位 */
-    .mshow-tile-fig :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .45s ease; }
-    .mshow-tile-main:active .mshow-tile-fig :global(img) { transform: scale(1.02); }
-    .mshow-tile-char { position: absolute; inset: 0; display: grid; place-items: center; font-size: 46px; color: var(--cinnabar); opacity: .09; pointer-events: none; }
+    /* demo .art：纸底渐变 + 内框线，题字大字是卡面绝对主角 */
+    .mshow-tile-fig { position: relative; display: grid; place-items: center; aspect-ratio: 1 / 1; overflow: hidden; background: linear-gradient(160deg, #fbf8f0, #f1e9d6); border-bottom: 1px solid rgba(120, 100, 60, .15); }
+    .mshow-tile-fig::after { content: ''; position: absolute; inset: 7px; border: 1px solid rgba(120, 100, 60, .18); border-radius: 8px; pointer-events: none; }
+    .mshow-tile-char { font-size: clamp(58px, 18vw, 84px); color: var(--ink); text-shadow: 0 2px 6px rgba(43, 43, 43, .12); letter-spacing: .04em; }
     .mshow-tile-copy { display: block; padding: 10px 12px 12px; }
-    .mshow-tile-copy strong { display: block; font-family: var(--font-display-zh); font-size: 15px; font-weight: 500; letter-spacing: .04em; line-height: 1.4; }
-    .mshow-tile-copy small { display: block; margin-top: 4px; color: var(--cinnabar); font-size: 11.5px; letter-spacing: .02em; }
+    .mshow-tile-copy strong { display: block; font-family: var(--font-display-zh); font-size: 15px; font-weight: 500; letter-spacing: .06em; line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mshow-tile-copy small { display: block; margin-top: 4px; color: var(--cinnabar); font: 600 13px var(--font-display-en), Georgia, serif; letter-spacing: .02em; }
+
+    /* demo .tag：右上角朱砂细签 */
+    .mshow-tag { position: absolute; top: 10px; right: 10px; z-index: 3; padding: 3px 10px; border: 1px solid rgba(165, 72, 59, .4); border-radius: 999px; background: rgba(165, 72, 59, .06); color: var(--cinnabar); font-size: 10.5px; letter-spacing: .18em; }
 
     /* 右下角收藏：毛玻璃圆钮（demo .fav），38px 命中区 */
-    .mshow-fav { position: absolute; right: 8px; bottom: 52px; z-index: 2; width: 36px; height: 36px; display: grid; place-items: center; padding: 0; border: 1px solid rgba(255, 255, 255, .7); border-radius: 50%; background: rgba(255, 255, 255, .82); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); box-shadow: 0 2px 8px rgba(43, 41, 36, .16); }
+    .mshow-fav { position: absolute; right: 8px; bottom: 56px; z-index: 2; width: 36px; height: 36px; display: grid; place-items: center; padding: 0; border: 1px solid rgba(255, 255, 255, .7); border-radius: 50%; background: rgba(255, 255, 255, .82); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); box-shadow: 0 2px 8px rgba(43, 41, 36, .16); }
     .mshow-fav svg { width: 19px; height: 19px; display: block; }
     .mshow-fav svg path { fill: none; stroke: var(--ink-soft); stroke-width: 1.6; stroke-linejoin: round; }
     .mshow-fav.is-saved { background: rgba(192, 57, 43, .08); border-color: rgba(192, 57, 43, .5); }
