@@ -131,7 +131,6 @@ jobs:
       # （建议创建只含 CDN 刷新权限的 RAM 子账号，不要用主账号 AK）。
       # 未配置时跳过：CDN 面板手动刷新也可（刷新类型：目录 https://xiaominart.com/）。
       - name: Purge CDN cache
-        if: ${{ secrets.ALIYUN_CDN_ACCESS_KEY_ID != '' }}
         continue-on-error: true
         env:
           ALICLOUD_ACCESS_KEY: ${{ secrets.ALIYUN_CDN_ACCESS_KEY_ID }}
