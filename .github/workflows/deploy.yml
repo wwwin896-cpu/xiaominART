@@ -78,7 +78,7 @@ jobs:
       # ── 发布到阿里云 ──────────────────────────────────────
       # rsync --delete 保证 dist 与构建产物完全一致；--checksum 减少 SFTP 小文件开销。
       - name: Upload static site
-        uses: easingthemes/ssh-deploy@v5
+        uses: easingthemes/ssh-deploy@v6
         with:
           SSH_PRIVATE_KEY: ${{ secrets.ALIYUN_SSH_KEY }}
           REMOTE_HOST: ${{ secrets.ALIYUN_SSH_HOST }}
@@ -90,7 +90,7 @@ jobs:
           EXCLUDE: '/node_modules/'
 
       - name: Upload API bundle
-        uses: easingthemes/ssh-deploy@v5
+        uses: easingthemes/ssh-deploy@v6
         with:
           SSH_PRIVATE_KEY: ${{ secrets.ALIYUN_SSH_KEY }}
           REMOTE_HOST: ${{ secrets.ALIYUN_SSH_HOST }}
