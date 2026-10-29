@@ -84,12 +84,15 @@ jobs:
           U: ${{ secrets.ALIYUN_SSH_USER }}
           P: ${{ secrets.ALIYUN_SSH_PORT }}
         run: |
-          echo "HOST: ${H:-<空>}"
-          echo "USER: ${U:-<空>}"
-          echo "PORT: ${P:-<空>}"
-          echo "KEY 长度: ${#K} 字符"
-          echo "KEY 首 40 字符: $(printf '%s' "$K" | head -c 40)"
-          echo "KEY 尾 30 字符: $(printf '%s' "$K" | tail -c 30)"
+          KLEN=${#K}
+          HEAD40=$(printf '%s' "$K" | head -c 40 | tr -d '\n')
+          TAIL30=$(printf '%s' "$K" | tail -c 30 | tr -d '\n')
+          LINES=$(printf '%s' "$K" | wc -l)
+          HAS_CR=$(printf '%s' "$K" | grep -c $'\r' || true)
+          echo "::notice::诊断 HOST=${H:-空} USER=${U:-空} PORT=${P:-空}"
+          echo "::notice::诊断 KEY 长度=${KLEN} 行数=${LINES} 含CR=${HAS_CR}"
+          echo "::notice::诊断 KEY 开头=[${HEAD40}]"
+          echo "::notice::诊断 KEY 结尾=[${TAIL30}]"
           if [ -z "$K" ]; then
             echo "::error::ALIYUN_SSH_KEY 读不到值。请确认它是 Repository secret（非 Environment secret），名字拼写完全一致"
             exit 1
