@@ -82,3 +82,7 @@ Production host: `https://xiaominart.com` (`www` 301-redirects to the apex). Env
 ## Pending owner confirmations
 
 Real product images, materials, dimensions, packaging, prices, shipping, lead times, capacity, refunds, contact destination and media licenses must be confirmed before publishing transactional certainty. Client stories publish only after explicit authorisation (`clientStories.authorization`).
+
+## 部署通道
+
+阿里云 SSH 自动部署已启用（需配置 ALIYUN_SSH_* Secrets）。Cloudflare 通道仅作手动回滚，见 .github/workflows/deploy-cloudflare-rollback.yml。
