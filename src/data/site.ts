@@ -57,14 +57,19 @@ export const chatConfig = {
    * Knocket 网页组件的 identifier；空字符串 = 未接入。
    * 2026-10-18 业主提供的控制台脚本：
    * <script src="https://trtc.io/knocket-sdk/sdk.js?identifier=a12dfcc17aefaa02c7&v=1792321822713" async></script>
+   *
+   * ⚠️ 2026-10-29 业主指定「移动端底部的在线聊天功能去除」——SDK 置空下线。
+   * 它加载后自带右下角悬浮聊天气泡（无开关可藏），要去掉浮球只能不加载 SDK。
+   * 底栏「咨询」按钮不受影响：Knocket 缺席时自动走留言弹层兜底（写库 + 推飞书）。
+   * 恢复方法：把下面的 identifier/version 填回原值即可，无需改任何组件代码。
    */
-  knocketIdentifier: 'a12dfcc17aefaa02c7',
+  knocketIdentifier: '',
   /**
    * 控制台脚本里的 `v` 参数。它不是业务配置，而是**缓存破坏戳**——
    * 控制台改完外观重新生成脚本时这个值会变。带上它，访客不会吃到旧版 SDK。
    * 留空则 URL 里不带 v，也能正常工作。
    */
-  knocketVersion: '1792321822713',
+  knocketVersion: '',
 };
 
 /**

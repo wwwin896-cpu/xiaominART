@@ -167,14 +167,36 @@ const chatSdkSrc = chatConfig.knocketIdentifier
   import '../scripts/layout-interactions';
 </script>
 <style is:global>
-  .site-header { position: sticky; top: 0; z-index: 5; background: rgba(244, 239, 229, .96); border-bottom: 1px solid var(--line); backdrop-filter: blur(8px); }
-  .header-inner { min-height: 80px; display: flex; align-items: center; gap: 26px; }
+  /* ── 玻璃拟态悬浮导航（2026-10-29，新中式底座 + 现代交互层）──────────
+     ① 玻璃层一律挂 .header-inner::before 伪元素，绝不挂本体 ——
+        本体上的 backdrop-filter 会成为 absolute/fixed 后代的包含块，
+        桌面 .nav-dropdown 的 absolute 定位会被劫持到胶囊头上（移动端已踩过同坑）。
+     ② 悬浮 = sticky + 上边距 + 圆角胶囊，不再是通栏色带。
+     ③ --radius 阶梯值见 tokens.css（sm 6 / md 10 / lg 14）。 */
+  .site-header { position: sticky; top: 12px; z-index: 5; background: transparent; border-bottom: 0; backdrop-filter: none; }
+  .site-header .container.header-inner,
+  .header-inner { position: relative; display: flex; align-items: center; gap: 26px; min-height: 64px; padding: 0 10px 0 22px; border-radius: var(--radius-lg); background: transparent; }
+  .header-inner::before { content: ''; position: absolute; inset: 0; border-radius: var(--radius-lg); background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); }
+  .header-inner > :not(#site-nav) { position: relative; z-index: 1; }
+  /* ⚠️ nav 自身定位策略：桌面端 nav 是 flex 流内元素，保持默认；
+        上一行 `.header-inner > *` 的 relative 对桌面无害（dropdown 仍锚定 .nav-item），
+        但移动端 #site-nav 是 fixed 抽屉 —— 那边已有 :not(#site-nav) 豁免，别动。 */
   .brand { display: flex; align-items: center; min-width: 280px; flex-shrink: 0; }
   .brand-logo { display: block; width: 270px; height: auto; }
   .brand-subtitle { color: var(--ink-soft); width: 280px; font-size: 12px; letter-spacing: .08em; line-height: 1.3; white-space: nowrap; text-align: left; }
   .mobile-shopping-bar { display: none; }
   nav { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-left: auto; font-size: 16px; }
   .nav-item { position: relative; }
+  /* ── 磁吸印章滑块（2026-10-29）─────────────────────────────────
+     「当前态」不再只是文字变红 + 下划线，而是一枚吸过去的淡朱砂印：
+     ① 印泥底（rgba 朱砂 .1）+ 细印框，不遮文字、不反转颜色 —— 中式印是「盖章在纸上」，不是「高亮选中」；
+     ② 位移曲线用 --ease-magnet（轻微回弹），才有「磁吸」手感；
+     ③ 仅桌面端显示，移动抽屉里这颗元素被 display:none 掉；
+     ④ JS 未激活时 opacity:0，无 JS 环境零痕迹。 */
+  nav { position: relative; }
+  .nav-magnet { position: absolute; top: 50%; left: 0; width: 0; height: 52px; transform: translate(0, -50%); border-radius: var(--radius-md); background: rgba(165, 72, 59, .09); border: 1px solid rgba(165, 72, 59, .16); box-shadow: inset 0 0 14px rgba(165, 72, 59, .06); opacity: 0; pointer-events: none; transition: transform .38s var(--ease-magnet), width .38s var(--ease-magnet), opacity .25s ease; }
+  .nav-magnet.on { opacity: 1; }
+  .nav-magnet::after { content: ''; position: absolute; left: 50%; bottom: 7px; width: 16px; height: 2px; transform: translateX(-50%); background: var(--cinnabar); border-radius: 1px; opacity: .55; }
   nav a { display: flex; flex-direction: column; gap: 2px; white-space: nowrap; line-height: inherit; font-weight: inherit; }
   .nav-dropdown { z-index: 6; }
   .nav-dropdown a { flex-direction: column; }
@@ -265,10 +287,13 @@ const chatSdkSrc = chatConfig.knocketIdentifier
     .header-inner > :not(#site-nav) { position: relative; z-index: 1; }
     /* 品牌：横版 logo 换成 demo 的「印章 + 字号」 */
     .brand { display: flex; min-width: 0; max-width: none; gap: 9px; align-items: center; }
-    .brand-logo { display: none; }
-    .brand-seal { display: inline-flex; align-items: center; gap: 8px; }
-    .brand-seal i { font-style: normal; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 5px; background: var(--cinnabar); color: #fff; font: 500 12px var(--font-display-zh); box-shadow: 0 1px 4px rgba(165, 72, 59, .4); }
-    .brand-seal em { font-style: normal; font-family: var(--font-display-zh); font-size: 15px; font-weight: 500; letter-spacing: .14em; color: var(--ink); }
+    /* ── 移动端品牌（2026-10-29 业主指定）──────────────────────────
+       LOGO 不换 —— 桌面横版 logo 图直接复用，仅按视口自适应缩放：
+       高度锁 26px（胶囊头部 56px 高内立得住），宽度按原比例跟随，
+       窄屏（≤360px）再降一档。此前的「印章 + 字号」brand-seal 停用。 */
+    .brand-logo { display: block; width: auto; height: 26px; }
+    .brand { min-width: 0; }
+    .brand-seal { display: none; }
     /* 汉堡按钮（demo .burger）：38px 圆形热区、三条 2px 线，替代旧文字方框 */
     .menu-toggle { display: flex; flex-direction: column; gap: 5px; align-items: center; justify-content: center; width: 40px; height: 40px; min-height: 0; margin-left: auto; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: rgba(255, 255, 255, .6); }
     .burger-line { width: 18px; height: 2px; border-radius: 2px; background: var(--ink); transition: transform .25s ease, opacity .25s ease; }
@@ -279,11 +304,18 @@ const chatSdkSrc = chatConfig.knocketIdentifier
     .back-btn { display: inline-flex; align-items: center; justify-content: center; flex: none; width: 36px; height: 36px; padding: 0; background: rgba(255, 255, 255, .6); border: 1px solid var(--line); border-radius: 50%; color: var(--ink); font-size: 12px; letter-spacing: 0; min-height: 0; cursor: pointer; }
     .back-btn .back-arrow { font-size: 19px; line-height: 1; color: var(--cinnabar-deep); margin-right: -2px; }
     /* 2026-10-28：移动端菜单改为左侧抽屉。
-       nav 固定在屏幕左侧、默认滑出视口外（display:none 隐藏），
-       .open 时滑入；内容区点击由 layout-interactions.ts 的
-       「点菜单以外任意处关闭」逻辑负责收起。 */
-    nav { display: none; position: fixed; left: 0; top: 0; bottom: 0; width: min(78vw, 320px); margin: 0; padding: 88px 20px 24px; background: var(--paper); border-right: 1px solid var(--line); box-shadow: var(--shadow); overflow-y: auto; z-index: 9; align-content: start; }
-    nav.open { display: grid; gap: 0; }
+       2026-10-29 加滑入/滑出动画：@starting-style 提供入场首帧
+       （display:none → grid 的过渡必须靠它），旧浏览器不认识时
+       退化为直接出现 —— 功能不受损。
+       收起动画同理：open 类移除前先把 transform 拉回屏外，
+       transitionend 后由 JS 移除 open（见 layout-interactions.ts ①节）。 */
+    nav { display: none; position: fixed; left: 0; top: 0; bottom: 0; width: min(78vw, 320px); margin: 0; padding: 88px 20px 24px; background: var(--paper); border-right: 1px solid var(--line); box-shadow: var(--shadow); overflow-y: auto; z-index: 9; align-content: start; transform: translateX(-102%); transition: transform .34s var(--ease-out); }
+    /* 磁吸滑块是桌面导航专属，移动抽屉里绝不出现 */
+    .nav-magnet { display: none; }
+    nav.open { display: grid; gap: 0; transform: translateX(0); }
+    nav.open.closing { transform: translateX(-102%); }
+    @starting-style { nav.open { transform: translateX(-102%); } }
+    @media (prefers-reduced-motion: reduce) { nav, nav.open { transition: none; transform: none; } @starting-style { nav.open { transform: none; } } }
     /* 抽屉展开时：锁滚动 + 头部（含菜单按钮）浮到抽屉之上，可再点按钮关闭。
        ⚠️ 头部的 backdrop-filter 会成为 fixed 后代的包含块，
        导致 #site-nav 的 fixed 定位被限制在头部高度内 —— 移动端必须去掉。 */

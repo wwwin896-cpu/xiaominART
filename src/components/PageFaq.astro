@@ -31,17 +31,69 @@ const jsonLd = faqPageJsonLd(items);
   <section class="container section page-faq" aria-labelledby="page-faq-title">
     <span class="eyebrow">{eyebrow}</span>
     <h2 class="serif" id="page-faq-title">{heading}</h2>
-    <div class="faq-grid">
+    <div class="faq-grid" data-faq-accordion>
       {items.map((item) => (
         <details>
-          <summary>{item.q}</summary>
-          <p>{item.a}</p>
+          <summary aria-expanded="false">{item.q}</summary>
+          <div class="faq-body"><p>{item.a}</p></div>
         </details>
       ))}
     </div>
   </section>
 ) : null}
 <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+<script>
+  // ── 手风琴交互（2026-10-29，新中式底座 + 现代交互层）────────────────
+  // ① 高度过渡：原生 <details> 开合是瞬跳，这里在 toggle 前量内容高、
+  //    写死 --lb-h 再放开，配合 CSS grid-rows 过渡做出顺滑展开；
+  // ② 单开互斥：同组一次只展开一项（FAQ 是「找答案」，摊开一片反而难扫读）；
+  // ③ aria-expanded 与 details[open] 永远同步 —— 无 JS 时 details 原生可用，
+  //    此脚本只增强，不承载功能。
+  function initFaq(root: ParentNode) {
+    const wrap = root.querySelector<HTMLElement>('[data-faq-accordion]');
+    if (!wrap || wrap.dataset.faqBound) return;
+    wrap.dataset.faqBound = '1';
+    const list = Array.from(wrap.querySelectorAll<HTMLDetailsElement>('details'));
+    list.forEach((details) => {
+      const summary = details.querySelector<HTMLElement>('summary');
+      const body = details.querySelector<HTMLElement>('.faq-body');
+      if (!summary || !body) return;
+      summary.addEventListener('click', (event) => {
+        event.preventDefault();
+        const willOpen = !details.open;
+        // 单开：先收起其他项
+        if (willOpen) list.forEach((d) => { if (d !== details && d.open) collapse(d); });
+        if (willOpen) expand(details);
+        else collapse(details);
+      });
+      if (details.open) summary.setAttribute('aria-expanded', 'true');
+    });
+    const expand = (details: HTMLDetailsElement) => {
+      const body = details.querySelector<HTMLElement>('.faq-body');
+      const summary = details.querySelector<HTMLElement>('summary');
+      if (!body) { details.open = true; return; }
+      details.open = true;
+      body.style.gridTemplateRows = '0fr';
+      requestAnimationFrame(() => { body.style.gridTemplateRows = '1fr'; });
+      summary?.setAttribute('aria-expanded', 'true');
+    };
+    const collapse = (details: HTMLDetailsElement) => {
+      const body = details.querySelector<HTMLElement>('.faq-body');
+      const summary = details.querySelector<HTMLElement>('summary');
+      if (!body || !details.open) { details.open = false; return; }
+      body.style.gridTemplateRows = '1fr';
+      requestAnimationFrame(() => {
+        body.style.gridTemplateRows = '0fr';
+        body.addEventListener('transitionend', () => { details.open = false; body.style.gridTemplateRows = ''; }, { once: true });
+      });
+      summary?.setAttribute('aria-expanded', 'false');
+    };
+  }
+  initFaq(document);
+  // Astro 视图导航（若启用）换页后重绑
+  document.addEventListener('astro:page-load', () => initFaq(document));
+</script>
 
 <style>
   .page-faq { border-top: 1px solid var(--line); padding-top: 52px; }
@@ -50,7 +102,11 @@ const jsonLd = faqPageJsonLd(items);
   .page-faq details { border-bottom: 1px solid var(--line); padding: 18px 0; }
   .page-faq summary { cursor: pointer; font-size: 17px; color: var(--ink); list-style: none; display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
   .page-faq summary::-webkit-details-marker { display: none; }
-  .page-faq summary::after { content: '＋'; color: var(--cinnabar); flex: 0 0 auto; font-size: 15px; }
+  .page-faq summary::after { content: '＋'; color: var(--cinnabar); flex: 0 0 auto; font-size: 15px; transition: transform .3s var(--ease-out); }
   .page-faq details[open] summary::after { content: '－'; }
-  .page-faq details p { color: var(--ink-soft); font-size: 15px; line-height: 1.85; margin: 12px 0 0; max-width: 780px; }
+  /* 高度过渡：rows 由脚本在 0fr ↔ 1fr 间切换（内联样式）。
+     无 JS 时无内联样式，details 原生瞬跳，功能不受损。 */
+  .page-faq .faq-body { display: grid; grid-template-rows: 1fr; transition: grid-template-rows .34s var(--ease-out); }
+  .page-faq .faq-body > p { color: var(--ink-soft); font-size: 15px; line-height: 1.85; margin: 0; max-width: 780px; min-height: 0; overflow: hidden; }
+  .page-faq details[open] .faq-body > p { padding-top: 12px; }
 </style>

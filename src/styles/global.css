@@ -6,6 +6,27 @@ html { scroll-behavior: smooth; }
 button, input, textarea, select, summary { accent-color: var(--cinnabar); }
 input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, textarea:-webkit-autofill, select:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px var(--paper-light) inset; -webkit-text-fill-color: var(--ink); caret-color: var(--ink); }
 body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font-body-zh); line-height: var(--leading-body); font-size: var(--text-base); }
+/* ── 宣纸纹理底座（2026-10-29）────────────────────────────────────
+   用 SVG feTurbulence 生成内联噪点，不新增任何二进制素材：
+   ① baseFrequency 0.9 出的是细颗粒（纤维感），0.02 那档会是云雾，不要；
+   ② opacity 只有 .035 —— 目的是让大块纸色「不干」，不是让人看出花纹。
+      过 .06 就会像脏屏，和「克制项」冲突；
+   ③ 只在桌面端铺（@media 见下），移动端纸色保持纯净，省一次全屏合成。
+   pointer-events:none + fixed 保证它不参与命中测试、不随滚动重绘。 */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  /* 负 z-index：让纹理沉到所有内容之下。若用 0 或正值，
+     会盖住 z-index:auto 的兄弟元素（.site-header 等），玻璃模糊也会把颗粒一起糊掉。 */
+  z-index: -1;
+  pointer-events: none;
+  opacity: .035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+}
+@media (max-width: 767px) { body::before { display: none; } }
+@media (prefers-reduced-transparency: reduce) { body::before { display: none; } }
 body.menu-open { overflow: hidden; }
 a { color: inherit; text-decoration: none; }
 a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, summary:focus-visible { outline: none; box-shadow: var(--focus); }

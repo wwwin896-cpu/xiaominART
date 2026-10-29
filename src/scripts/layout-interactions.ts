@@ -32,9 +32,17 @@ const nav = document.querySelector('#site-nav');
 const isMenuOpen = () => toggle?.getAttribute('aria-expanded') === 'true';
 const closeMenu = () => {
   if (!toggle || !nav) return;
+  if (!nav.classList.contains('open')) { toggle.setAttribute('aria-expanded', 'false'); document.body.classList.remove('menu-open'); return; }
   toggle.setAttribute('aria-expanded', 'false');
-  nav.classList.remove('open');
   document.body.classList.remove('menu-open');
+  // 滑出动画（2026-10-29）：保持 open（display:grid）把 transform 拉回屏外，
+  // 过渡结束后再真正移除 open。reduced-motion / 旧浏览器 transition 不跑，
+  // 用 360ms 兜底定时器保证 close 一定完成，不会卡在半开态。
+  let done = false;
+  const finish = () => { if (done) return; done = true; nav.classList.remove('open'); nav.classList.remove('closing'); };
+  nav.classList.add('closing');
+  nav.addEventListener('transitionend', finish, { once: true });
+  window.setTimeout(finish, 360);
 };
 
 toggle?.addEventListener('click', () => {
@@ -68,6 +76,42 @@ window.addEventListener('scroll', () => { if (isMenuOpen()) closeMenu(); }, { pa
 // 若仍留着 open 类会让桌面导航状态与 aria-expanded 不一致，这里一并复位。
 const wideQuery = window.matchMedia('(min-width: 768px)');
 wideQuery.addEventListener('change', (e) => { if (e.matches) closeMenu(); });
+
+// ── ①b 磁吸印章滑块（2026-10-29，桌面端专属）──────────────────────
+// 当前项默认被一枚淡朱砂「印」吸住；悬停其他项时印吸过去，离开回到当前项。
+// 只在 ≥768px 且指针支持悬停的设备激活；触屏上没有 hover，滑块永远停在当前项
+//（用 opacity:0 起步，激活时才 .on，无 JS / 移动端零痕迹）。
+// 性能：只监听 mouseenter/mouseleave 两个冒泡点，不做 scroll/resize 高频回调；
+//       resize 后由下一次 hover 自然重算（current 项位置变化可接受）。
+const magnet = document.querySelector<HTMLElement>('.nav-magnet');
+const desktopNav = document.querySelector<HTMLElement>('#site-nav');
+if (magnet && desktopNav && wideQuery.matches && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+  const items = Array.from(desktopNav.querySelectorAll<HTMLElement>('.nav-item'));
+  const snapTo = (item: HTMLElement) => {
+    // .nav-item 是定位基准；印的位置相对 nav（magnet 的 offsetParent）
+    const navBox = desktopNav.getBoundingClientRect();
+    const box = item.getBoundingClientRect();
+    magnet.style.width = `${Math.round(box.width + 8)}px`;
+    magnet.style.transform = `translate(${Math.round(box.left - navBox.left - 4)}px, -50%)`;
+    magnet.classList.add('on');
+  };
+  const current = desktopNav.querySelector<HTMLElement>('.nav-item a.current')?.closest<HTMLElement>('.nav-item');
+  // 初次定位：等字体加载完成再量，否则衬线字体换帧会量偏。
+  // 首页等导航里没有当前页的页面：无 current，印保持熄灭（悬停才出现）。
+  const snapCurrent = () => { if (current) snapTo(current); else magnet.classList.remove('on'); };
+  if (document.fonts?.ready) document.fonts.ready.then(snapCurrent);
+  else snapCurrent();
+  desktopNav.addEventListener('mouseover', (event) => {
+    const item = (event.target as HTMLElement).closest<HTMLElement>('.nav-item');
+    if (item) snapTo(item);
+  });
+  desktopNav.addEventListener('mouseleave', snapCurrent);
+  // 窗口跨过桌面断点后重新吸回当前项；回到移动端则熄灭
+  wideQuery.addEventListener('change', (e) => {
+    if (e.matches) snapCurrent();
+    else magnet.classList.remove('on');
+  });
+}
 
 // ── ② 移动端返回键 ────────────────────────────────────────────
 // 非首页显示，优先浏览器历史回退，无历史则回首页。

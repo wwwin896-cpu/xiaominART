@@ -1,0 +1,160 @@
+---
+// ─────────────────────────────────────────────────────────────
+// 作品灯箱（2026-10-29，新中式底座 + 现代交互层）
+//
+// 首页作品卡（生肖 12 件、一字一源场景卡）点开大图弹层：
+//   大图 + 题名 + 一段介绍 + 「就这件咨询」CTA。
+//
+// 设计裁决（2026-10-29）：
+//   · 生肖卡本体是 <a href="/zodiac/#slug">，点击被灯箱劫持 —— 聚合页
+//     的信息（系列规格）灯箱内用「看系列全貌」链接承接，不丢入口；
+//   · 一字一源卡承担业务导航职能（业主 2026-10-16 裁决定版），
+//     链接**不能**劫持 —— 灯箱入口做成图右上角的放大按钮（.lb-zoom）；
+//   · 触发属性用 data-lb-*：⚠️ 全站脚本对 [data-wishlist] 做全文档扫描，
+//     新组件绝不能借用 wish 前缀，避免误伤收藏逻辑。
+//
+// 数据不另建 JSON：全部从被点卡片 DOM 现读（img / 标题 / 说明），
+// 灯箱与卡片永远同源，不会出现「弹层里的图和卡片对不上」。
+// ─────────────────────────────────────────────────────────────
+---
+
+<div class="work-lightbox" id="work-lightbox" role="dialog" aria-modal="true" aria-label="作品大图" hidden>
+  <div class="lb-backdrop" data-lb-close></div>
+  <figure class="lb-card">
+    <button class="lb-close" type="button" data-lb-close aria-label="关闭灯箱">×</button>
+    <div class="lb-media"><img data-lb-img src="" alt="" /></div>
+    <figcaption class="lb-info">
+      <span class="eyebrow" data-lb-eyebrow></span>
+      <h3 class="serif" data-lb-title></h3>
+      <p data-lb-desc></p>
+      <div class="lb-actions">
+        <a class="btn btn-primary" data-lb-cta href="/custom-commission/">就这件咨询 →</a>
+        <a class="lb-secondary" data-lb-more href="/zodiac/">看系列全貌 →</a>
+      </div>
+    </figcaption>
+  </figure>
+  <button class="lb-nav lb-prev" type="button" data-lb-prev aria-label="上一件">‹</button>
+  <button class="lb-nav lb-next" type="button" data-lb-next aria-label="下一件">›</button>
+</div>
+
+<style>
+  .work-lightbox { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: 22px; }
+  .work-lightbox[hidden] { display: none; }
+  .lb-backdrop { position: absolute; inset: 0; background: rgba(24, 22, 19, .62); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+  .lb-card { position: relative; display: grid; grid-template-columns: 1.25fr 1fr; width: min(980px, 100%); max-height: min(86vh, 720px); margin: 0; background: var(--paper-light); border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 30px 80px rgba(24, 22, 19, .4); }
+  .lb-media { background: var(--paper-deep); min-height: 320px; }
+  .lb-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .lb-info { padding: 34px 32px 28px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+  .lb-info h3 { font-size: clamp(22px, 2.4vw, 30px); margin: 0; }
+  .lb-info p { color: var(--ink-soft); font-size: 14.5px; line-height: 2; margin: 0; flex: 1; }
+  .lb-actions { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+  .lb-secondary { color: var(--ink-soft); font-size: 13px; border-bottom: 1px solid var(--line); padding-bottom: 2px; }
+  .lb-secondary:hover { color: var(--cinnabar); border-bottom-color: var(--cinnabar); }
+  .lb-close { position: absolute; top: 12px; right: 12px; z-index: 2; width: 40px; height: 40px; border: 0; border-radius: 50%; background: var(--glass-bg-strong); backdrop-filter: blur(8px); color: var(--ink); font-size: 22px; line-height: 1; cursor: pointer; box-shadow: var(--glass-shadow); }
+  .lb-nav { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; width: 46px; height: 46px; border: 1px solid var(--glass-border); border-radius: 50%; background: var(--glass-bg); backdrop-filter: var(--glass-blur); color: var(--ink); font-size: 26px; line-height: 1; cursor: pointer; box-shadow: var(--glass-shadow); transition: transform .25s var(--ease-out), background .25s ease; }
+  .lb-nav:hover { background: var(--glass-bg-strong); transform: translateY(-50%) scale(1.06); }
+  .lb-prev { left: 22px; }
+  .lb-next { right: 22px; }
+  .lb-nav[disabled] { opacity: 0; pointer-events: none; }
+  @media (max-width: 767px) {
+    .lb-card { grid-template-columns: 1fr; max-height: calc(100dvh - 36px); border-radius: 20px 20px 0 0; align-self: end; width: 100%; }
+    .work-lightbox { padding: 0; align-items: end; }
+    .lb-media { aspect-ratio: 4 / 3; min-height: 0; }
+    .lb-info { padding: 22px 20px calc(20px + env(safe-area-inset-bottom)); }
+    .lb-nav { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .lb-nav, .lb-close { transition: none; } }
+</style>
+
+<script>
+  // 打开方式：卡片带 [data-lb-group]（整卡劫持，如生肖卡），
+  // 或卡内 [data-lb-zoom] 放大按钮（保留链接职能，如一字一源卡）。
+  // 组成员 = 打开瞬间按同 group 名现查 DOM，不预缓存。
+  type LbCardData = { img: string; alt: string; eyebrow: string; title: string; desc: string; more: string };
+  const box = document.getElementById('work-lightbox') as HTMLElement | null;
+  if (box) {
+    const imgEl = box.querySelector('[data-lb-img]') as HTMLImageElement;
+    const eyebrowEl = box.querySelector('[data-lb-eyebrow]') as HTMLElement;
+    const titleEl = box.querySelector('[data-lb-title]') as HTMLElement;
+    const descEl = box.querySelector('[data-lb-desc]') as HTMLElement;
+    const moreEl = box.querySelector('[data-lb-more]') as HTMLAnchorElement;
+    const ctaEl = box.querySelector('[data-lb-cta]') as HTMLAnchorElement;
+    let group: HTMLElement[] = [];
+    let index = 0;
+    let lastFocus: HTMLElement | null = null;
+
+    const readCard = (card: HTMLElement): LbCardData => {
+      const img = card.querySelector('img');
+      const title = card.querySelector('h3')?.textContent?.trim() || card.querySelector('.choice-copy h3')?.textContent?.trim() || '';
+      const eyebrow = card.querySelector('.zodiac-tag, .choice-tag')?.textContent?.trim() || '';
+      const desc = card.querySelector('.zodiac-copy p, .choice-copy p')?.textContent?.trim() || '';
+      const more = card.getAttribute('href') || '/zodiac/';
+      return { img: img?.getAttribute('src') || '', alt: img?.getAttribute('alt') || title, eyebrow, title, desc, more };
+    };
+
+    const render = () => {
+      const data = readCard(group[index]);
+      imgEl.src = data.img; imgEl.alt = data.alt;
+      eyebrowEl.textContent = data.eyebrow;
+      titleEl.textContent = data.title;
+      descEl.textContent = data.desc;
+      moreEl.href = data.more;
+      // CTA 带上作品名：与 MobileShowcase 的「就这件咨询」同一行为语言
+      ctaEl.setAttribute('data-lb-ask', `${data.title}`);
+      const single = group.length < 2;
+      (box.querySelector('[data-lb-prev]') as HTMLButtonElement).disabled = single;
+      (box.querySelector('[data-lb-next]') as HTMLButtonElement).disabled = single;
+    };
+
+    const open = (card: HTMLElement, name?: string) => {
+      const gname = name || card.dataset.lbGroup || 'home';
+      group = Array.from(document.querySelectorAll<HTMLElement>(`[data-lb-group="${gname}"], [data-lb-zoom][data-lb-group="${gname}"]`))
+        .map((el) => (el.matches('[data-lb-zoom]') ? (el.closest('.choice-card') as HTMLElement) : el))
+        .filter((el, i, arr) => el && arr.indexOf(el) === i);
+      index = Math.max(0, group.indexOf(card));
+      lastFocus = document.activeElement as HTMLElement;
+      render();
+      box.hidden = false;
+      document.body.style.overflow = 'hidden';
+      (box.querySelector('.lb-close') as HTMLButtonElement).focus();
+    };
+    const close = () => {
+      box.hidden = true;
+      document.body.style.overflow = '';
+      lastFocus?.focus();
+    };
+    const step = (dir: 1 | -1) => {
+      if (group.length < 2) return;
+      index = (index + dir + group.length) % group.length;
+      render();
+    };
+
+    document.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement | null;
+      if (!target) return;
+      const zoom = target.closest<HTMLElement>('[data-lb-zoom]');
+      if (zoom) {
+        event.preventDefault(); event.stopPropagation();
+        // ⚠️ 必须先取最近的卡片容器 —— 按钮自身也带 data-lb-group，
+        //    closest 同时匹配两种选择器时会命中按钮，导致 index 永远落在第一张。
+        const card = zoom.closest<HTMLElement>('.choice-card, .zodiac-card') || zoom.parentElement;
+        if (card) open(card, zoom.dataset.lbGroup);
+        return;
+      }
+      const whole = target.closest<HTMLElement>('[data-lb-group]');
+      if (whole && whole.tagName === 'A') { event.preventDefault(); open(whole); return; }
+      if (target.closest('[data-lb-close]')) { close(); return; }
+    });
+    document.addEventListener('keydown', (event) => {
+      if (box.hidden) return;
+      if (event.key === 'Escape') close();
+      if (event.key === 'ArrowLeft') step(-1);
+      if (event.key === 'ArrowRight') step(1);
+    });
+    // 「就这件咨询」带上作品名跳定制页（页面锚点由 /custom-commission/ 表单承接）
+    ctaEl.addEventListener('click', () => {
+      const title = titleEl.textContent || '';
+      try { window.sessionStorage.setItem('lbAsk', title); } catch { /* 隐私模式忽略 */ }
+    });
+  }
+</script>
