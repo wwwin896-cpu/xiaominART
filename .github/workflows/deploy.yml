@@ -76,6 +76,28 @@ jobs:
         run: npm run build:server
 
       # ── 发布到阿里云 ──────────────────────────────────────
+      # 预检：验证私钥格式 + 实际 SSH 登录一次，把真实错误暴露在日志里
+      - name: Preflight SSH (key & connectivity)
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.ALIYUN_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.ALIYUN_SSH_HOST }}
+          REMOTE_USER: ${{ secrets.ALIYUN_SSH_USER }}
+          REMOTE_PORT: ${{ secrets.ALIYUN_SSH_PORT }}
+        run: |
+          if [ -z "${SSH_PRIVATE_KEY}" ]; then echo "✗ ALIYUN_SSH_KEY 为空：Secret 未配置"; exit 1; fi
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" | sed 's/\r$//' > ~/.ssh/id_ci
+          chmod 600 ~/.ssh/id_ci
+          if ! ssh-keygen -y -f ~/.ssh/id_ci >/dev/null 2>&1; then
+            echo "✗ 私钥格式无效（常见原因：粘贴时丢失换行/带 CRLF/贴了 .pub 公钥）"; exit 1
+          fi
+          echo "✓ 私钥格式有效"
+          PORT="${REMOTE_PORT:-22}"
+          ssh-keyscan -p "$PORT" "$REMOTE_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          OUT=$(ssh -i ~/.ssh/id_ci -o BatchMode=yes -o StrictHostKeyChecking=no -p "$PORT" "$REMOTE_USER@$REMOTE_HOST" 'echo CONNECT_OK' 2>&1 | tail -3)
+          echo "$OUT"
+          echo "$OUT" | grep -q CONNECT_OK && echo "✓ SSH 登录成功" || { echo "✗ SSH 登录失败（密钥未装到服务器 authorized_keys / 用户名不对）"; exit 1; }
+
       # rsync --delete 保证 dist 与构建产物完全一致；--checksum 减少 SFTP 小文件开销。
       - name: Upload static site
         uses: easingthemes/ssh-deploy@v6
