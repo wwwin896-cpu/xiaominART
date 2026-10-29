@@ -1,7 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Pic from '../components/Pic.astro';
-import { zodiacWorks } from '../data/content';
+import MobileHomeHero from '../components/MobileHomeHero.astro';
+import MobileShowcase from '../components/MobileShowcase.astro';
+import { zodiacWorks, giftProducts, readyMadeWorks } from '../data/content';
 // ── 01 / 一字一源（2026-10-16 业主二次裁决）──────────────────────────────
 // 演进路径，不要走回头路：
 //   ① 原版 = 「01 / 心意之选」6 张送礼场景卡（讲「什么时候送」）
@@ -60,9 +62,34 @@ const originNodes = [
   { era: '先秦', name: '石鼓文', keyword: '古拙', body: '刻于鼓形碣石，猎猎犹闻车马声。' },
   { era: '秦', name: '秦篆', keyword: '雄浑', body: '书同文的范式，线条圆劲而匀整。' },
 ];
+
+// ── 移动端首屏数据（2026-10-29）────────────────────────────────────────
+// 手机端首屏不再用品牌海报，改成「价签 + 商品流」。这里只算数字，
+// 不复制任何文案 —— 文案在 MobileHomeHero / MobileShowcase 里各自维护。
+//
+// ⚠️ 价格取的是「现货线」最低价，不是全站最低价。
+//   全站最低是「静入 · 书房小礼 ¥100–300」（入门款），但首屏写「100 元起」
+//    ① 与站内 lass="description" 里对外的「¥300 起」口径打架；
+//    ② 会把一个「书房小礼」推成整站的价格锚点，削弱手写礼品的定位。
+//   现货 12 幅是能立刻发货、最像「网购」的那批，用它的最低价做锚点最诚实。
+const priceCandidates = readyMadeWorks
+  .map((w) => Number(w.price))
+  .filter((n) => Number.isFinite(n) && n > 0);
+const priceFrom = priceCandidates.length > 0 ? Math.min(...priceCandidates) : 199;
+const itemCount = giftProducts.length + zodiacWorks.length + readyMadeWorks.length;
 ---
 <Layout title="小民艺术｜手写书法礼品与书画定制" description="每一幅字都亲笔手写，取自古文字有出处。送老师、送长辈，或为乔迁、开业、婚庆纪念备一份礼物，可选现货或定制，¥300 起。查看选礼指南 →">
-  <section class="hero" aria-label="品牌横幅">
+  {/* ── 移动端首屏（2026-10-29）──────────────────────────────────────
+      手机端不再用下面那块三屏轮播做首屏：网购习惯的访客要立刻看到
+      「卖什么 / 多少钱 / 能不能马上要」。品牌叙事一点没删，只是下移。
+      · MobileHomeHero —— 一句话品牌 + 三个硬事实（价 / 件数 / 现货时效）
+      · MobileShowcase —— 分类 chip + 2 列商品流 + 详情弹层 + 卡片收藏
+      ⚠️ 两者都是 `display:none` 起步、只在 767px 以下出现；
+         桌面端的 DOM 顺序与样式一行没动。 */}
+  <MobileHomeHero priceFrom={priceFrom} itemCount={itemCount} />
+  <MobileShowcase />
+
+  <section class="hero hero--desktop" aria-label="品牌横幅">
     <div class="hero-slide is-active hero-slide--soft" data-hero-slide>
       <div class="hero-media" aria-hidden="true"><Pic src="/assets/scenes/hero-shiguwen-light.jpg" alt="" width={1536} height={1024} loading="eager" /></div>
       <div class="container hero-inner">
@@ -393,6 +420,10 @@ const originNodes = [
     .story-copy { padding: 22px; }
   }
   @media (max-width: 767px) {
+    /* 移动端首屏已换成 MobileHomeHero，这块轮播整段不参与渲染。
+       用 display:none 而不是不渲染：轮播脚本按 [data-hero-slide] 取节点，
+       节点还在，脚本不会因取不到元素报错（本页脚本有 hero? 判空，但保留更稳）。 */
+    .hero.hero--desktop { display: none; }
     .hero { min-height: 78vh; }
     .hero-inner { width: min(var(--container), calc(100% - 32px)); }
     .hero-dots { right: 16px; bottom: 18px; }

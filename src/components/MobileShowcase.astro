@@ -1,0 +1,552 @@
+---
+// ─────────────────────────────────────────────────────────────
+// 移动端首屏商品流（2026-10-29）
+//
+// 解决的问题：首页首屏在手机上是一张「品牌海报」——三屏轮播文案 + 见山河 +
+// 文字源流 + 见自己 + 见来处，要滑过四屏才第一次看到作品卡片。
+// 手机访客是网购习惯：进来先看货，看不到就走。
+//
+// 形态（参照 /workspace/xiaominart-style-demo.html 那套浏览交互）：
+//   · 分类 chip 条（横滑吸顶）→ 点开底部分类面板（场合 / 对象 / 看全部）
+//   · 2 列商品卡：图 + 题字 + 品类签 + 价格，**右下角收藏心形**
+//   · 点卡片 → 底部详情弹层（大图 / 价格 / 释义 / 规格 / 收藏 + 咨询）
+//
+// ⚠️ 桌面端完全不参与渲染：本组件根元素 `display: none`，
+//    只在 `@media (max-width: 767px)` 里出现。桌面首页的顺序与样式一行没动。
+//
+// ⚠️ 收藏按钮**不能**用 `data-wishlist`：
+//    GiftCard.astro / GiftProductDetail / ready-made 详情页三处脚本都用
+//    `querySelectorAll('[data-wishlist]')` 全文档扫描，若本组件也用同一属性，
+//    那些页面上会把本弹层里的按钮一并绑走（GiftCard 目前只在 /gifts/ 出现，
+//    但一旦以后把它放进首页就会互相污染）。所以这里用 `data-ms-wish`，
+//    收藏读写仍走 src/scripts/wishlist.ts 的唯一入口。
+//
+// 数据：giftProducts + zodiacWorks + readyMadeWorks 构建期烘焙，客户端只拿渲染好的 JSON。
+// ─────────────────────────────────────────────────────────────
+import Pic from './Pic.astro';
+import { giftProducts, zodiacWorks, readyMadeWorks } from '../data/content';
+
+type Tile = {
+  id: string;
+  kind: 'gift' | 'zodiac' | 'ready';
+  href: string;
+  image: string;
+  alt: string;
+  char: string;
+  title: string;
+  tag: string;
+  price: string;
+  desc: string;
+  specs: Array<[string, string]>;
+  /** 分类归属：场合 chip / 对象 chip 的并集，用于筛选 */
+  groups: string[];
+};
+
+const tiles: Tile[] = [];
+
+// ① 礼品线（/gifts/…）：每件本身就是一条业务详情页
+for (const p of giftProducts) {
+  if (p.published === false) continue;
+  tiles.push({
+    id: p.slug,
+    kind: 'gift',
+    href: `/gifts/${p.slug}/`,
+    image: p.image || '/assets/scenes/study-desk-scroll.jpg',
+    alt: `${p.name}｜${p.sceneLabel}`,
+    char: p.visual || '禮',
+    title: p.name,
+    tag: `${p.sceneLabel} · ${p.price}`,
+    price: p.price,
+    desc: p.meaning,
+    specs: [
+      ['适合谁', p.recipient],
+      ['时间', p.dispatch],
+      ['含', p.packaging],
+    ],
+    groups: ['all', 'gift', p.scene],
+  });
+}
+
+// ② 生肖线（/zodiac/ 聚合页内有 12 件全览与规格）
+for (const z of zodiacWorks) {
+  tiles.push({
+    id: z.slug,
+    kind: 'zodiac',
+    href: `/zodiac/#${z.slug}`,
+    image: z.image,
+    alt: z.alt,
+    char: z.char,
+    title: z.name,
+    tag: `生肖 · ${z.price}`,
+    price: z.price,
+    desc: z.story,
+    specs: [
+      ['吉语', z.blessing],
+      ['形制', '外框 A4 竖幅 · 画芯 16×8 cm · 胡桃木框'],
+      ['时间', '现货，确认后 3–5 个工作日发出'],
+    ],
+    groups: ['all', 'zodiac', 'festival', 'birthday'],
+  });
+}
+
+// ③ 现货线（已写完、可立即发货，每幅世间唯一）
+for (const w of readyMadeWorks) {
+  tiles.push({
+    id: w.slug,
+    kind: 'ready',
+    href: `/gifts/ready-made/${w.slug}/`,
+    image: w.image,
+    alt: w.alt,
+    char: w.title.slice(0, 1),
+    title: w.title,
+    tag: `现货 · ¥${w.price}`,
+    price: `¥${w.price}`,
+    desc: w.note,
+    specs: [
+      ['出处', w.source ? `${w.source.char} · ${w.source.origin}` : '古文字有出处'],
+      ['材质', w.material || '手写书法原作 · 实木装裱'],
+      ['尺寸', w.size ? `外框 ${w.size.w} × ${w.size.h} cm · ${w.form}` : w.form],
+    ],
+    groups: ['all', 'ready', 'housewarming', 'opening', 'thanks'],
+  });
+}
+
+// ── 分类 chip ──
+// 「全部 / 现货」两个常驻 + 三个最高频的送礼场景。
+// 完整场合与对象列表收进底部「分类」面板，避免首屏 chip 条变成横向垃圾场。
+const quickChips = [
+  { key: 'all', label: '全部' },
+  { key: 'ready', label: '现货可发' },
+  { key: 'housewarming', label: '乔迁' },
+  { key: 'birthday', label: '生日' },
+  { key: 'thanks', label: '谢师' },
+];
+
+const sceneGroups = [
+  { key: 'housewarming', label: '乔迁之喜' },
+  { key: 'opening', label: '开业贺礼' },
+  { key: 'birthday', label: '生日心意' },
+  { key: 'festival', label: '节日问候' },
+  { key: 'thanks', label: '感谢恩师' },
+];
+const kindGroups = [
+  { key: 'gift', label: '礼品套装', href: '/gifts/' },
+  { key: 'zodiac', label: '十二生肖', href: '/zodiac/' },
+  { key: 'ready', label: '现货小品', href: '/gifts/ready-made/' },
+];
+const recipientGroups = [
+  { key: 'parents', label: '送长辈', href: '/recipients/parents/' },
+  { key: 'teachers', label: '送老师', href: '/recipients/teachers/' },
+  { key: 'partner', label: '送伴侣', href: '/recipients/partner/' },
+  { key: 'friends', label: '送朋友', href: '/recipients/friends/' },
+  { key: 'clients', label: '送客户', href: '/recipients/clients/' },
+  { key: 'team', label: '送员工', href: '/recipients/team/' },
+];
+
+// 首屏只发前 8 件：再多就是让首屏变回一条长列表。
+// 「看全部 30 件」按钮把其余的一并展开（不跳页，留在当前滚动位置）。
+const FIRST_BATCH = 8;
+const tilesJson = JSON.stringify(tiles);
+---
+
+<section class="mshow" aria-labelledby="mshow-title" data-ms>
+  <div class="mshow-head">
+    <h2 id="mshow-title" class="serif">挑一件，看字与来处。</h2>
+    <p>都是亲笔手写，取自古文字有出处。点开看详情，右下角可以收着。</p>
+  </div>
+
+  <div class="mshow-chips" role="group" aria-label="按类型筛选">
+    {quickChips.map((chip, i) => (
+      <button
+        class:list={['mshow-chip', { 'is-on': i === 0 }]}
+        type="button"
+        data-ms-chip={chip.key}
+        aria-pressed={i === 0 ? 'true' : 'false'}
+      >{chip.label}</button>
+    ))}
+    <button class="mshow-chip mshow-chip--more" type="button" data-ms-more aria-haspopup="dialog" aria-controls="mshow-sheet">分类 ▾</button>
+  </div>
+
+  <div class="mshow-grid" data-ms-grid>
+    {tiles.map((tile, i) => (
+      <article
+        class:list={['mshow-tile', { 'is-extra': i >= FIRST_BATCH }]}
+        data-ms-tile={tile.id}
+        data-ms-groups={tile.groups.join(' ')}
+        hidden={i >= FIRST_BATCH ? true : undefined}
+      >
+        <button class="mshow-tile-main" type="button" data-ms-open={tile.id}>
+          <span class="mshow-tile-fig">
+            <Pic src={tile.image} alt={tile.alt} width={640} height={480} loading={i < 4 ? 'eager' : 'lazy'} decoding="async" />
+            <span class="mshow-tile-char serif" aria-hidden="true">{tile.char}</span>
+          </span>
+          <span class="mshow-tile-copy">
+            <strong class="serif">{tile.title}</strong>
+            <small>{tile.tag}</small>
+          </span>
+        </button>
+        <button class="mshow-fav" type="button" data-ms-wish={tile.id} aria-pressed="false" aria-label={`收藏 ${tile.title}`}>
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.6 4.9 13.7A4.6 4.6 0 0 1 12 7.4a4.6 4.6 0 0 1 7.1 6.3Z" /></svg>
+        </button>
+      </article>
+    ))}
+  </div>
+
+  <button class="mshow-all" type="button" data-ms-expand>看全部 {tiles.length} 件 ▾</button>
+
+  <a class="mshow-guide" href="/gift-guide/">不知道送什么？两分钟选礼指南 →</a>
+</section>
+
+{/* ── 底部详情弹层 ── */}
+<div class="mshow-detail" id="mshow-detail" role="dialog" aria-modal="true" aria-labelledby="mshow-detail-title" hidden>
+  <div class="mshow-detail-panel">
+    <span class="mshow-grab" aria-hidden="true"></span>
+    <button class="mshow-close" type="button" data-ms-close aria-label="关闭">×</button>
+    <div class="mshow-detail-fig" data-ms-detail-fig></div>
+    <div class="mshow-detail-body">
+      <span class="eyebrow" data-ms-detail-tag></span>
+      <h3 id="mshow-detail-title" class="serif" data-ms-detail-title></h3>
+      <strong class="mshow-price" data-ms-detail-price></strong>
+      <p data-ms-detail-desc></p>
+      <dl class="mshow-specs" data-ms-detail-specs></dl>
+      <div class="mshow-detail-actions">
+        <button class="btn btn-primary" type="button" data-dm-open>就这件，问问看</button>
+        <button class="btn btn-secondary mshow-detail-fav" type="button" data-ms-detail-fav aria-pressed="false">♡ 收藏</button>
+      </div>
+      <a class="mshow-detail-link" data-ms-detail-link href="/gifts/">看完整介绍 →</a>
+    </div>
+  </div>
+</div>
+
+{/* ── 分类面板 ── */}
+<div class="mshow-sheet" id="mshow-sheet" role="dialog" aria-modal="true" aria-labelledby="mshow-sheet-title" hidden>
+  <div class="mshow-sheet-panel">
+    <span class="mshow-grab" aria-hidden="true"></span>
+    <div class="mshow-sheet-head">
+      <h3 id="mshow-sheet-title" class="serif">按什么找？</h3>
+      <button class="mshow-close" type="button" data-ms-close aria-label="关闭">×</button>
+    </div>
+    <div class="mshow-sheet-body">
+      <p class="mshow-sheet-label">看哪一类</p>
+      <div class="mshow-sheet-grid">
+        <a href="/gifts/" class="mshow-sheet-item"><span class="serif">礼</span>全部好礼<small>30 件</small></a>
+        {kindGroups.map((g) => (
+          <a href={g.href} class="mshow-sheet-item"><span class="serif">字</span>{g.label}<small>点开看</small></a>
+        ))}
+      </div>
+      <p class="mshow-sheet-label">什么场合</p>
+      <div class="mshow-sheet-grid">
+        {sceneGroups.map((g) => (
+          <button type="button" class="mshow-sheet-item" data-ms-chip-link={g.key}><span class="serif">礼</span>{g.label}<small>{tiles.filter((t) => t.groups.includes(g.key)).length} 件</small></button>
+        ))}
+      </div>
+      <p class="mshow-sheet-label">送给谁</p>
+      <div class="mshow-sheet-grid">
+        {recipientGroups.map((g) => (
+          <a href={g.href} class="mshow-sheet-item"><span class="serif">人</span>{g.label}<small>点开看</small></a>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="application/json" data-ms-data set:html={tilesJson}></script>
+
+<script>
+  import { isWishlisted, toggleWishlist, onWishlistChange } from '../scripts/wishlist';
+
+  type Tile = {
+    id: string;
+    kind: string;
+    href: string;
+    image: string;
+    alt: string;
+    char: string;
+    title: string;
+    tag: string;
+    price: string;
+    desc: string;
+    specs: Array<[string, string]>;
+    groups: string[];
+  };
+
+  let tiles: Tile[] = [];
+  try {
+    tiles = JSON.parse(document.querySelector('[data-ms-data]')?.textContent || '[]');
+  } catch {
+    tiles = [];
+  }
+  const byId = new Map(tiles.map((t) => [t.id, t]));
+
+  const root = document.querySelector<HTMLElement>('[data-ms]');
+  const grid = document.querySelector<HTMLElement>('[data-ms-grid]');
+  const detail = document.querySelector<HTMLElement>('#mshow-detail');
+  const sheet = document.querySelector<HTMLElement>('#mshow-sheet');
+
+  // ── 收藏状态同步 ──
+  // 一张卡一个按钮 + 弹层里那一个：全部按 slug 重算，避免「卡片点了、弹层没变」。
+  const syncWish = () => {
+    document.querySelectorAll<HTMLButtonElement>('[data-ms-wish]').forEach((btn) => {
+      const saved = isWishlisted(btn.dataset.msWish || '');
+      btn.classList.toggle('is-saved', saved);
+      btn.setAttribute('aria-pressed', String(saved));
+      btn.setAttribute('aria-label', `${saved ? '取消收藏' : '收藏'} ${byId.get(btn.dataset.msWish || '')?.title ?? ''}`);
+    });
+    const dfav = document.querySelector<HTMLButtonElement>('[data-ms-detail-fav]');
+    if (dfav) {
+      const saved = isWishlisted(currentId);
+      dfav.classList.toggle('is-saved', saved);
+      dfav.setAttribute('aria-pressed', String(saved));
+      dfav.textContent = saved ? '♥ 已收藏' : '♡ 收藏';
+    }
+  };
+  onWishlistChange(syncWish);
+
+  document.addEventListener('click', (event) => {
+    const btn = (event.target as HTMLElement | null)?.closest<HTMLButtonElement>('[data-ms-wish]');
+    if (!btn) return;
+    // 卡片按钮在外层按钮内部会触发兄弟按钮的冒泡，这里必须先掐掉
+    event.preventDefault();
+    event.stopPropagation();
+    toggleWishlist(btn.dataset.msWish || '');
+    syncWish();
+  });
+
+  // ── 详情弹层 ──
+  let currentId = '';
+  let lastFocus: HTMLElement | null = null;
+
+  const openDetail = (id: string, trigger?: HTMLElement | null) => {
+    const tile = byId.get(id);
+    if (!tile || !detail) return;
+    currentId = id;
+    lastFocus = trigger || (document.activeElement as HTMLElement | null);
+
+    const fig = detail.querySelector<HTMLElement>('[data-ms-detail-fig]');
+    if (fig) {
+      fig.textContent = '';
+      const img = document.createElement('img');
+      img.src = tile.image;
+      img.alt = tile.alt;
+      img.decoding = 'async';
+      fig.append(img);
+    }
+    const set = (sel: string, text: string) => {
+      const el = detail.querySelector<HTMLElement>(sel);
+      if (el) el.textContent = text;
+    };
+    set('[data-ms-detail-tag]', tile.tag);
+    set('[data-ms-detail-title]', tile.title);
+    set('[data-ms-detail-price]', tile.price);
+    set('[data-ms-detail-desc]', tile.desc);
+
+    const specs = detail.querySelector<HTMLElement>('[data-ms-detail-specs]');
+    if (specs) {
+      specs.textContent = '';
+      tile.specs.forEach(([k, v]) => {
+        if (!v) return;
+        const row = document.createElement('div');
+        const dt = document.createElement('dt');
+        dt.textContent = k;
+        const dd = document.createElement('dd');
+        dd.textContent = v;
+        row.append(dt, dd);
+        specs.append(row);
+      });
+    }
+    const link = detail.querySelector<HTMLAnchorElement>('[data-ms-detail-link]');
+    if (link) link.href = tile.href;
+
+    syncWish();
+    detail.hidden = false;
+    document.body.classList.add('mshow-open');
+    detail.querySelector<HTMLElement>('[data-ms-close]')?.focus();
+  };
+
+  const closeOverlays = () => {
+    let closed = false;
+    if (detail && !detail.hidden) { detail.hidden = true; closed = true; }
+    if (sheet && !sheet.hidden) { sheet.hidden = true; closed = true; }
+    if (closed) {
+      document.body.classList.remove('mshow-open');
+      lastFocus?.focus?.();
+    }
+  };
+
+  document.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement | null;
+    if (!target) return;
+    if (target.closest('[data-ms-close]')) { closeOverlays(); return; }
+    if (target === detail || target === sheet) { closeOverlays(); return; }
+    const opener = target.closest<HTMLElement>('[data-ms-open]');
+    if (opener) { openDetail(opener.dataset.msOpen || '', opener); return; }
+    if (target.closest('[data-ms-more]')) {
+      if (sheet) {
+        lastFocus = document.activeElement as HTMLElement | null;
+        sheet.hidden = false;
+        document.body.classList.add('mshow-open');
+        sheet.querySelector<HTMLElement>('[data-ms-close]')?.focus();
+      }
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeOverlays();
+  });
+
+  // 弹层里的收藏按钮：跟着当前打开的那一件走
+  document.querySelector('[data-ms-detail-fav]')?.addEventListener('click', () => {
+    if (!currentId) return;
+    toggleWishlist(currentId);
+    syncWish();
+  });
+
+  // ── 筛选 chip ──
+  const applyGroup = (key: string) => {
+    document.querySelectorAll<HTMLButtonElement>('[data-ms-chip]').forEach((chip) => {
+      const on = chip.dataset.msChip === key;
+      chip.classList.toggle('is-on', on);
+      chip.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    let shown = 0;
+    grid?.querySelectorAll<HTMLElement>('[data-ms-tile]').forEach((tile) => {
+      const groups = (tile.dataset.msGroups || '').split(' ');
+      const match = key === '' || groups.includes(key);
+      // 筛选后不再遵守「首屏只 8 件」的折叠：用户明确要这一类，就把这一类的全给出来
+      tile.hidden = !match;
+      if (match) {
+        tile.classList.remove('is-extra');
+        shown += 1;
+      }
+    });
+    // 筛选结果为空时给一句话，避免整片空白看起来像加载失败
+    let empty = grid?.parentElement?.querySelector<HTMLElement>('[data-ms-empty]');
+    if (shown === 0) {
+      if (!empty && grid?.parentElement) {
+        empty = document.createElement('p');
+        empty.className = 'mshow-empty';
+        empty.dataset.msEmpty = '';
+        empty.textContent = '这一类暂时没有现货，可以先看看别类，或者直接问我们要什么字。';
+        grid.after(empty);
+      }
+    } else {
+      empty?.remove();
+    }
+  };
+
+  document.querySelectorAll<HTMLButtonElement>('[data-ms-chip]').forEach((chip) => {
+    chip.addEventListener('click', () => {
+      applyGroup(chip.dataset.msChip || '');
+      // chip 条在页面顶部附近，筛选后回到网格顶部，避免用户以为「什么都没发生」
+      const top = root?.getBoundingClientRect().top ?? 0;
+      if (top < 0) root?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    });
+  });
+
+  // 分类面板里的「场合」不是筛选 chip，是跳到网格并筛选
+  document.querySelectorAll<HTMLButtonElement>('[data-ms-chip-link]').forEach((item) => {
+    item.addEventListener('click', () => {
+      const key = item.dataset.msChipLink || '';
+      applyGroup(key);
+      if (sheet) sheet.hidden = true;
+      document.body.classList.remove('mshow-open');
+      root?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    });
+  });
+
+  // ── 展开全部 ──
+  document.querySelector('[data-ms-expand]')?.addEventListener('click', (event) => {
+    const btn = event.currentTarget as HTMLButtonElement;
+    grid?.querySelectorAll<HTMLElement>('[data-ms-tile]').forEach((tile) => {
+      tile.hidden = false;
+      tile.classList.remove('is-extra');
+    });
+    btn.hidden = true;
+  });
+
+  syncWish();
+</script>
+
+<style>
+  /* 桌面端：整块不参与布局、不占位、不加载图片（图片是 lazy，隐藏后不会请求） */
+  .mshow, .mshow-detail, .mshow-sheet { display: none; }
+
+  @media (max-width: 767px) {
+    .mshow { display: block; padding: 26px 0 30px; border-top: 1px solid var(--line-soft); }
+    .mshow-head { padding: 0 16px 16px; }
+    .mshow-head h2 { font-size: 21px; line-height: 1.4; margin: 0 0 8px; letter-spacing: .02em; }
+    .mshow-head p { margin: 0; color: var(--ink-soft); font-size: 13px; line-height: 1.8; }
+
+    /* chip 条：横向滑动，不换行 */
+    .mshow-chips { display: flex; gap: 8px; overflow-x: auto; padding: 0 16px 14px; scrollbar-width: none; }
+    .mshow-chips::-webkit-scrollbar { display: none; }
+    .mshow-chip { flex: 0 0 auto; min-height: 34px; padding: 6px 14px; border: 1px solid var(--line); background: var(--paper-light); color: var(--ink-soft); font: inherit; font-size: 13px; white-space: nowrap; transition: background-color .2s, color .2s, border-color .2s; }
+    .mshow-chip.is-on { background: var(--cinnabar); border-color: var(--cinnabar); color: #fff; }
+    .mshow-chip--more { color: var(--cinnabar); border-color: var(--cinnabar); }
+
+    /* 2 列卡：图在上，下一行题字 + 品类签 */
+    .mshow-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 0 16px; }
+    .mshow-tile { position: relative; background: var(--paper-light); border: 1px solid var(--line-soft); }
+    .mshow-tile[hidden] { display: none; }
+    .mshow-tile-main { display: block; width: 100%; padding: 0; border: 0; background: transparent; text-align: left; font: inherit; color: inherit; }
+    .mshow-tile-fig { position: relative; display: block; aspect-ratio: 4 / 3; overflow: hidden; background: var(--paper-deep); }
+    /* 图比例统一裁切；.mshow-tile-char 是图片未加载完成时的墨字占位 */
+    .mshow-tile-fig :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .45s ease; }
+    .mshow-tile-main:active .mshow-tile-fig :global(img) { transform: scale(1.02); }
+    .mshow-tile-char { position: absolute; inset: 0; display: grid; place-items: center; font-size: 46px; color: var(--cinnabar); opacity: .09; pointer-events: none; }
+    .mshow-tile-copy { display: block; padding: 9px 10px 11px; }
+    .mshow-tile-copy strong { display: block; font-size: 15px; font-weight: 500; line-height: 1.4; }
+    .mshow-tile-copy small { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; letter-spacing: .02em; }
+
+    /* 右下角收藏：34px 命中区压在图上，不占卡片文字位 */
+    .mshow-fav { position: absolute; right: 6px; bottom: 46px; z-index: 2; width: 34px; height: 34px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; background: rgba(250, 247, 240, .9); box-shadow: 0 1px 6px rgba(43, 41, 36, .18); }
+    .mshow-fav svg { width: 19px; height: 19px; display: block; }
+    .mshow-fav svg path { fill: none; stroke: var(--ink-soft); stroke-width: 1.6; stroke-linejoin: round; }
+    .mshow-fav.is-saved svg path { fill: var(--cinnabar); stroke: var(--cinnabar); }
+    .mshow-fav:active { transform: scale(.92); }
+
+    .mshow-all { display: block; width: calc(100% - 32px); margin: 18px 16px 0; min-height: 46px; border: 1px solid var(--line); background: transparent; color: var(--ink); font: inherit; font-size: 14px; }
+    .mshow-all[hidden] { display: none; }
+    .mshow-guide { display: block; margin: 16px 16px 0; color: var(--cinnabar); font-size: 13px; text-align: center; }
+    .mshow-empty { margin: 0 16px; padding: 26px 0; color: var(--ink-soft); font-size: 13px; line-height: 1.9; text-align: center; }
+
+    /* ── 底部弹层通用 ── */
+    .mshow-detail, .mshow-sheet { display: block; position: fixed; inset: 0; z-index: 15; background: rgba(24, 22, 19, .48); }
+    .mshow-detail[hidden], .mshow-sheet[hidden] { display: none; }
+    .mshow-detail-panel, .mshow-sheet-panel { position: absolute; left: 0; right: 0; bottom: 0; max-height: 88vh; overflow-y: auto; background: var(--paper-light); border-top: 1px solid var(--line); border-radius: 14px 14px 0 0; padding-bottom: calc(14px + env(safe-area-inset-bottom)); animation: mshow-up .26s ease-out; -webkit-overflow-scrolling: touch; }
+    @keyframes mshow-up { from { transform: translateY(26px); opacity: .5; } to { transform: none; opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) { .mshow-detail-panel, .mshow-sheet-panel { animation: none; } }
+    .mshow-grab { display: block; width: 36px; height: 4px; margin: 8px auto 0; border-radius: 2px; background: var(--line); }
+    .mshow-close { position: absolute; right: 10px; top: 8px; width: 38px; height: 38px; border: 0; background: transparent; color: var(--ink-soft); font-size: 26px; line-height: 1; }
+
+    /* ── 详情弹层 ── */
+    .mshow-detail-fig { margin-top: 4px; aspect-ratio: 4 / 3; overflow: hidden; background: var(--paper-deep); }
+    .mshow-detail-fig img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .mshow-detail-body { padding: 16px 18px 0; }
+    .mshow-detail-body h3 { font-size: 22px; font-weight: 500; margin: 8px 0 6px; }
+    .mshow-price { display: block; font: 20px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); margin-bottom: 12px; }
+    .mshow-detail-body p { margin: 0 0 14px; color: var(--ink-soft); font-size: 14px; line-height: 1.9; }
+    .mshow-specs { margin: 0 0 16px; border-top: 1px solid var(--line-soft); }
+    .mshow-specs div { display: grid; grid-template-columns: 62px 1fr; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line-soft); }
+    .mshow-specs dt { color: var(--muted); font-size: 12px; }
+    .mshow-specs dd { margin: 0; color: var(--ink); font-size: 13px; line-height: 1.7; }
+    .mshow-detail-actions { display: grid; grid-template-columns: 1.4fr 1fr; gap: 8px; }
+    .mshow-detail-actions .btn { min-height: 48px; font-size: 14px; padding: 10px 12px; }
+    .mshow-detail-fav.is-saved { border-color: var(--cinnabar); color: var(--cinnabar); }
+    .mshow-detail-link { display: block; margin: 14px 0 4px; color: var(--cinnabar); font-size: 13px; text-align: center; }
+
+    /* ── 分类面板 ── */
+    .mshow-sheet-head { padding: 6px 18px 12px; border-bottom: 1px solid var(--line-soft); }
+    .mshow-sheet-head h3 { font-size: 20px; font-weight: 500; margin: 0; }
+    .mshow-sheet-body { padding: 14px 18px 6px; }
+    .mshow-sheet-label { margin: 12px 0 8px; color: var(--muted); font-size: 11.5px; letter-spacing: .12em; }
+    .mshow-sheet-label:first-child { margin-top: 0; }
+    .mshow-sheet-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .mshow-sheet-item { display: grid; justify-items: center; gap: 3px; padding: 12px 4px 10px; border: 1px solid var(--line-soft); background: var(--paper); color: var(--ink); font: inherit; font-size: 13px; text-align: center; }
+    .mshow-sheet-item .serif { color: var(--cinnabar); font-size: 17px; line-height: 1.1; }
+    .mshow-sheet-item small { color: var(--muted); font-size: 10.5px; }
+  }
+
+  /* 弹层 / 分类面板展开时锁住页面滚动 */
+  :global(body.mshow-open) { overflow: hidden; }
+</style>

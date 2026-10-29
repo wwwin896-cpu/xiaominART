@@ -310,6 +310,17 @@ const chatSdkSrc = chatConfig.knocketIdentifier
      .mobile-shopping-bar small { font-size: 9px; color: var(--muted); font-family: var(--font-body-en), sans-serif; letter-spacing: .1em; text-transform: uppercase; }
      .mobile-shopping-bar a:first-child .bar-zh { color: var(--cinnabar); }
      .mobile-shopping-bar span[data-wishlist-count] { color: var(--cinnabar); font-family: var(--font-mono); }
+     /* 收藏数字角标（2026-10-29）：<small> 里的数字提成右下角小圆点，
+        收藏 0 件时自动隐藏（脚本给空文本，:empty 生效），
+        收藏有货时它是最强的一条「回去看看」提示。 */
+     .mobile-shopping-bar .wishlist-bar { position: relative; }
+     .mobile-shopping-bar .wishlist-bar small { display: inline-flex; align-items: center; gap: 3px; }
+     .mobile-shopping-bar [data-wishlist-count]:not(:empty) {
+       display: inline-flex; align-items: center; justify-content: center;
+       min-width: 15px; height: 15px; padding: 0 4px; margin-left: 1px;
+       border-radius: 8px; background: var(--cinnabar); color: #fff;
+       font: 10px/1 var(--font-mono); letter-spacing: 0;
+     }
      .mobile-shopping-bar .wishlist-bar:active .bar-zh, .mobile-shopping-bar .wishlist-bar[aria-expanded="true"] .bar-zh { color: var(--cinnabar); }
      /* 窄屏用底栏承担工具入口，头部不再重复放一套 */
      .header-tools { display: none; }

@@ -1,11 +1,13 @@
 ---
 // ─────────────────────────────────────────────────────────────
-// 移动端底部导航栏 + 私信弹层 + 微信直联弹层
+// 移动端底部导航栏 + 咨询弹层 + 微信直联弹层
 // （2026-10-12 从 Layout.astro 抽出；2026-10-18 加私信弹层、底栏精简为 3 格）
 //
-// 底栏 3 格（2026-10-18 业主指示）：收藏（心愿单）/ 私信 / 分享。
+// 底栏 3 格：收藏（心愿单）/ 咨询 / 分享。
+// 2026-10-29：第二格文案由「私信」改「咨询」——移动端访客不认「私信」这个词，
+// 认的是「咨询」。行为完全不变（仍是那三路分流），只动文案与 aria-label。
 //
-// 私信 = **实时对话入口**（2026-10-18 二次改造）。访客不填表、不加好友，点开即可说话：
+// 咨询 = **实时对话入口**（2026-10-18 二次改造）。访客不填表、不加好友，点开即可说话：
 //   · 微信内 → 跳「微信客服」会话（企业微信，业主回复后访客微信有消息提醒）
 //   · 其他浏览器 → 拉起 Knocket 网页聊天面板（不离开站点）
 //   · 两者未配置 → 回退留言弹层（/api/lead quick_message → 云数据库 + 推飞书群）
@@ -24,12 +26,12 @@
 import { siteContact } from '../data/site';
 ---
 
-<nav class="mobile-shopping-bar" aria-label="移动端底部导航"><button class="wishlist-bar" type="button" data-wishlist-open aria-label="打开收藏夹"><span class="bar-zh">收藏</span><small lang="en">Saved <span data-wishlist-count></span></small></button><button class="dm-bar" type="button" data-dm-open aria-controls="dm-sheet" aria-expanded="false" aria-label="和工作室对话"><span class="bar-zh">私信</span><small lang="en">Message</small></button><button class="bar-share" type="button" data-share-button data-event="share_click" aria-label="分享本页给微信好友或朋友圈"><span class="bar-zh">分享</span><small lang="en">Share</small></button></nav>
+<nav class="mobile-shopping-bar" aria-label="移动端底部导航"><button class="wishlist-bar" type="button" data-wishlist-open aria-label="打开收藏夹"><span class="bar-zh">收藏</span><small lang="en">Saved <span data-wishlist-count></span></small></button><button class="dm-bar" type="button" data-dm-open aria-controls="dm-sheet" aria-expanded="false" aria-label="咨询工作室"><span class="bar-zh">咨询</span><small lang="en">Ask</small></button><button class="bar-share" type="button" data-share-button data-event="share_click" aria-label="分享本页给微信好友或朋友圈"><span class="bar-zh">分享</span><small lang="en">Share</small></button></nav>
 
 <div class="dm-sheet" id="dm-sheet" role="dialog" aria-modal="true" aria-labelledby="dm-sheet-title" hidden>
   <div class="dm-sheet-card">
     <button class="dm-sheet-close" type="button" aria-label="关闭">×</button>
-    <span class="eyebrow">Message / 私信</span>
+    <span class="eyebrow">Ask / 咨询</span>
     <h2 id="dm-sheet-title" class="serif">想说什么，写在这里。</h2>
     <p class="dm-sheet-hint">留言会直接进我们的飞书，看到就回。</p>
     <form class="dm-form" data-dm-form novalidate>
@@ -61,7 +63,7 @@ import { siteContact } from '../data/site';
   import { chatConfig } from '../data/site';
 
   // ─────────────────────────────────────────────────────────────
-  // 「私信」三路分流（2026-10-18 业主选定「两个都要」）
+  // 「咨询」三路分流（2026-10-18 业主选定「两个都要」）
   //
   //   ① 微信内 + 配了微信客服链接 → 原生跳转进客服会话（无需加好友）
   //   ② 配了 Knocket → 拉起网页聊天面板（不离开站点）
@@ -78,7 +80,7 @@ import { siteContact } from '../data/site';
   const trigger = () => document.querySelector<HTMLButtonElement>('.dm-bar');
 
   /**
-   * 点击反馈。底栏「私信」原来的问题是：SDK 没加载出来时，
+   * 点击反馈。底栏「咨询」原来的问题是：SDK 没加载出来时，
    * 要等 1.8 秒轮询超时才回退，用户感受是「点了没反应」。
    * 所以点击瞬间就把文字换成「连接中」，让动作立刻有回执。
    */
@@ -109,7 +111,7 @@ import { siteContact } from '../data/site';
       fire();
       window.setTimeout(fire, 500);
       window.setTimeout(fire, 1400);
-      window.setTimeout(() => setBarLabel('私信'), 1600);
+      window.setTimeout(() => setBarLabel('咨询'), 1600);
       return true;
     }
 
@@ -121,11 +123,11 @@ import { siteContact } from '../data/site';
       if (widget()) {
         fire();
         window.setTimeout(fire, 500);
-        window.setTimeout(() => setBarLabel('私信'), 1600);
+        window.setTimeout(() => setBarLabel('咨询'), 1600);
         return;
       }
       if (tries < 12) { window.setTimeout(wait, 150); return; }
-      setBarLabel('私信');
+      setBarLabel('咨询');
       openFallback(path, 'web_chat_timeout');
     };
     wait();
@@ -197,7 +199,7 @@ import { siteContact } from '../data/site';
     if (submitBtn) submitBtn.disabled = true;
     if (status) status.textContent = '正在发送…';
 
-    const result = await submitLead('quick_message', '移动端私信', contact, {
+    const result = await submitLead('quick_message', '移动端咨询', contact, {
       message: message || '（未填写内容，仅留了联系方式）',
       source: `mobile_bar:${window.location.pathname}`,
     });

@@ -68,7 +68,8 @@ const catalogJson = JSON.stringify(Object.fromEntries(catalog));
       </div>
       <button class="wishlist-drawer-close" type="button" data-wishlist-drawer-close aria-label="关闭心愿单">×</button>
     </div>
-    <p class="wishlist-drawer-empty" data-wishlist-drawer-empty hidden>还是空的。到<a href="/gifts/">小民好礼</a>里挑一件，点「加入心愿单」就会出现在这里。</p>
+    <p class="wishlist-drawer-empty" data-wishlist-drawer-empty hidden>还是空的。到<a href="/gifts/">小民好礼</a>里挑一件，点作品右下角的心形，或者详情页的「加入心愿单」，就会出现在这里。</p>
+    <a class="wishlist-drawer-empty-cta btn btn-secondary" href="/gifts/" data-wishlist-drawer-empty-cta hidden>去挑一件 →</a>
     <ul class="wishlist-drawer-list" data-wishlist-drawer-list></ul>
     <div class="wishlist-drawer-foot" data-wishlist-drawer-foot hidden>
       <a class="btn btn-primary" href="/wishlist/" data-event="wishlist_drawer_guide">带着清单去咨询 →</a>
@@ -95,6 +96,7 @@ const catalogJson = JSON.stringify(Object.fromEntries(catalog));
   const drawer = document.querySelector<HTMLElement>('#wishlist-drawer');
   const listEl = document.querySelector<HTMLElement>('[data-wishlist-drawer-list]');
   const emptyEl = document.querySelector<HTMLElement>('[data-wishlist-drawer-empty]');
+  const emptyCtaEl = document.querySelector<HTMLElement>('[data-wishlist-drawer-empty-cta]');
   const footEl = document.querySelector<HTMLElement>('[data-wishlist-drawer-foot]');
   let lastFocused: HTMLElement | null = null;
 
@@ -165,6 +167,7 @@ const catalogJson = JSON.stringify(Object.fromEntries(catalog));
     }
 
     if (emptyEl) emptyEl.hidden = known.length > 0;
+    if (emptyCtaEl) emptyCtaEl.hidden = known.length > 0;
     if (footEl) footEl.hidden = known.length === 0;
   };
 
@@ -219,6 +222,10 @@ const catalogJson = JSON.stringify(Object.fromEntries(catalog));
   .wishlist-drawer-close { border: 0; background: transparent; font-size: 26px; line-height: 1; color: var(--ink); cursor: pointer; padding: 0 2px; }
   .wishlist-drawer-empty { padding: 30px 24px; color: var(--ink-soft); font-size: 14px; line-height: 1.9; }
   .wishlist-drawer-empty a { color: var(--cinnabar); border-bottom: 1px solid var(--cinnabar); }
+  /* 空清单的「去挑一件」：空状态必须有一个可点的下一步，
+     否则访客点开收藏看到一句话就退出去，等于这次点击白费。 */
+  .wishlist-drawer-empty-cta { display: block; margin: -14px 24px 24px; text-align: center; }
+  .wishlist-drawer-empty-cta[hidden] { display: none; }
   .wishlist-drawer-foot { display: grid; gap: 8px; padding: 18px 24px 0; border-top: 1px solid var(--line); }
   .wishlist-drawer-foot .btn { width: 100%; }
   .wishlist-drawer-clear { justify-self: center; margin-top: 2px; color: var(--muted); font-size: 13px; border-bottom-color: var(--line); }

@@ -1,0 +1,79 @@
+---
+// ─────────────────────────────────────────────────────────────
+// 移动端首屏（2026-10-29）
+//
+// 取代手机上的三屏品牌海报轮播。理由：手机访客是网购习惯，
+// 首屏要立刻回答三个问题——「卖什么 / 多少钱 / 能马上要吗」。
+// 海报三屏在手机上要滑 3 次、等 18 秒，看不到一个价格。
+//
+// 结构：品牌一句（不是三段）→ 三个硬事实条 → 搜索 + 分类入口 → 主图
+// 品牌叙事一点没删，整体下移给 MobileShowcase（商品流）之后的老版块承接。
+//
+// ⚠️ 桌面端不渲染：根元素 `display: none`，只在 767px 以下出现。
+// ─────────────────────────────────────────────────────────────
+interface Props {
+  /** 最低价，由 index.astro 从三套商品数据里算出 */
+  priceFrom: number;
+  /** 在册件数（礼品 + 生肖 + 现货） */
+  itemCount: number;
+}
+
+const { priceFrom, itemCount } = Astro.props;
+---
+
+<section class="mhero" aria-labelledby="mhero-title">
+  <div class="mhero-inner">
+    <span class="eyebrow">XIAOMINART / 手写书法礼品</span>
+    <h1 id="mhero-title" class="serif">一个字，<br />替你说完那句没说出口的话。</h1>
+    <p class="mhero-sub">亲笔手写，取自古文字有出处。送长辈、送老师，或为乔迁、开业、生日备一份。</p>
+
+    <ul class="mhero-facts">
+      <li><strong>{priceFrom}</strong><span>元起</span></li>
+      <li><strong>{itemCount}</strong><span>件在册</span></li>
+      <li><strong>现货</strong><span>3–5 天发出</span></li>
+    </ul>
+
+    <div class="mhero-actions">
+      <button class="mhero-search" type="button" data-search-open aria-label="搜索站内作品">
+        <span aria-hidden="true">⌕</span>想找什么字？先搜一下
+      </button>
+    </div>
+  </div>
+
+  <div class="mhero-fig">
+    <img
+      src="/assets/scenes/theme-cinnabar.jpg"
+      alt="朱砂红卡的「欢喜」古文字书法框，旁有红梅与灯笼"
+      width={800}
+      height={600}
+      loading="eager"
+      decoding="async"
+    />
+  </div>
+</section>
+
+<style>
+  .mhero { display: none; }
+
+  @media (max-width: 767px) {
+    .mhero { display: block; padding: 22px 0 0; background: var(--paper); border-bottom: 1px solid var(--line-soft); }
+    .mhero-inner { padding: 0 16px; }
+    .mhero h1 { font-size: 27px; line-height: 1.42; font-weight: 500; letter-spacing: .02em; margin: 10px 0 10px; }
+    .mhero-sub { margin: 0 0 16px; color: var(--ink-soft); font-size: 13.5px; line-height: 1.85; }
+
+    /* 三个硬事实：价格 / 在册件数 / 现货时效。这是首屏唯一必须被读到的东西 */
+    .mhero-facts { display: flex; align-items: baseline; gap: 0; margin: 0 0 16px; padding: 12px 0; list-style: none; border-top: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft); }
+    .mhero-facts li { flex: 1; display: flex; align-items: baseline; gap: 3px; justify-content: center; }
+    .mhero-facts li + li { border-left: 1px solid var(--line-soft); }
+    .mhero-facts strong { font: 500 19px var(--font-display-en), Georgia, serif; color: var(--cinnabar-deep); letter-spacing: .01em; }
+    .mhero-facts span { color: var(--muted); font-size: 11.5px; }
+
+    .mhero-actions { margin: 0 0 16px; }
+    .mhero-search { width: 100%; min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 7px; border: 1px solid var(--line); background: var(--paper-light); color: var(--ink-soft); font: inherit; font-size: 13.5px; }
+    .mhero-search span[aria-hidden] { font-size: 16px; color: var(--cinnabar); line-height: 1; }
+
+    /* 主图压到 16/8，只作情绪锚点，不占首屏 */
+    .mhero-fig { aspect-ratio: 16 / 8; overflow: hidden; background: var(--paper-deep); }
+    .mhero-fig img { width: 100%; height: 100%; object-fit: cover; object-position: center 42%; display: block; }
+  }
+</style>
