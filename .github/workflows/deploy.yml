@@ -76,10 +76,29 @@ jobs:
         run: npm run build:server
 
       # ── 发布到阿里云 ──────────────────────────────────────
+      # 先诊断 4 个 Secret 是否存在（只看有无与长度，不泄漏内容）
+      - name: Diagnose secrets
+        env:
+          K: ${{ secrets.ALIYUN_SSH_KEY }}
+          H: ${{ secrets.ALIYUN_SSH_HOST }}
+          U: ${{ secrets.ALIYUN_SSH_USER }}
+          P: ${{ secrets.ALIYUN_SSH_PORT }}
+        run: |
+          echo "HOST: ${H:-<空>}"
+          echo "USER: ${U:-<空>}"
+          echo "PORT: ${P:-<空>}"
+          echo "KEY 长度: ${#K} 字符"
+          echo "KEY 首 40 字符: $(printf '%s' "$K" | head -c 40)"
+          echo "KEY 尾 30 字符: $(printf '%s' "$K" | tail -c 30)"
+          if [ -z "$K" ]; then
+            echo "::error::ALIYUN_SSH_KEY 读不到值。请确认它是 Repository secret（非 Environment secret），名字拼写完全一致"
+            exit 1
+          fi
+
       # 预检：验证私钥格式 + 实际 SSH 登录一次，把真实错误暴露在日志里
       - name: Preflight SSH (key & connectivity)
         env:
-          SSH_PRIVATE_KEY: ${{ env.SSH_KEY_FINAL }}
+          SSH_PRIVATE_KEY: ${{ secrets.ALIYUN_SSH_KEY }}
           REMOTE_HOST: ${{ secrets.ALIYUN_SSH_HOST }}
           REMOTE_USER: ${{ secrets.ALIYUN_SSH_USER }}
           REMOTE_PORT: ${{ secrets.ALIYUN_SSH_PORT }}
@@ -121,7 +140,7 @@ jobs:
       - name: Upload static site
         uses: easingthemes/ssh-deploy@v6
         with:
-          SSH_PRIVATE_KEY: ${{ env.SSH_KEY_FINAL }}
+          SSH_PRIVATE_KEY: ${{ secrets.ALIYUN_SSH_KEY }}
           REMOTE_HOST: ${{ secrets.ALIYUN_SSH_HOST }}
           REMOTE_USER: ${{ secrets.ALIYUN_SSH_USER }}
           REMOTE_PORT: ${{ secrets.ALIYUN_SSH_PORT }}
@@ -133,7 +152,7 @@ jobs:
       - name: Upload API bundle
         uses: easingthemes/ssh-deploy@v6
         with:
-          SSH_PRIVATE_KEY: ${{ env.SSH_KEY_FINAL }}
+          SSH_PRIVATE_KEY: ${{ secrets.ALIYUN_SSH_KEY }}
           REMOTE_HOST: ${{ secrets.ALIYUN_SSH_HOST }}
           REMOTE_USER: ${{ secrets.ALIYUN_SSH_USER }}
           REMOTE_PORT: ${{ secrets.ALIYUN_SSH_PORT }}
@@ -147,7 +166,7 @@ jobs:
           host: ${{ secrets.ALIYUN_SSH_HOST }}
           username: ${{ secrets.ALIYUN_SSH_USER }}
           port: ${{ secrets.ALIYUN_SSH_PORT }}
-          key: ${{ env.SSH_KEY_FINAL }}
+          key: ${{ secrets.ALIYUN_SSH_KEY }}
           script: |
             set -e
             systemctl restart xiaominart-api
