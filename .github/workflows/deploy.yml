@@ -79,7 +79,7 @@ jobs:
       # 预检：验证私钥格式 + 实际 SSH 登录一次，把真实错误暴露在日志里
       - name: Preflight SSH (key & connectivity)
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.ALIYUN_SSH_KEY }}
+          SSH_PRIVATE_KEY: ${{ env.SSH_KEY_FINAL }}
           REMOTE_HOST: ${{ secrets.ALIYUN_SSH_HOST }}
           REMOTE_USER: ${{ secrets.ALIYUN_SSH_USER }}
           REMOTE_PORT: ${{ secrets.ALIYUN_SSH_PORT }}
@@ -88,10 +88,24 @@ jobs:
           mkdir -p ~/.ssh
           printf '%s\n' "$SSH_PRIVATE_KEY" | sed 's/\r$//' > ~/.ssh/id_ci
           chmod 600 ~/.ssh/id_ci
+          # 兼容 Base64 存储的密钥（单行，杜绝粘贴换行损坏）：不含 BEGIN 头时按 base64 解码
+          if ! grep -q "BEGIN OPENSSH PRIVATE KEY" ~/.ssh/id_ci; then
+            echo "检测到密钥为 Base64 格式，解码中…"
+            if ! base64 -d <(tr -d ' \n\r' < ~/.ssh/id_ci) > ~/.ssh/id_ci.real 2>/dev/null; then
+              echo "::error::密钥既不是 OpenSSH 私钥也不是有效 Base64。请贴私钥原文（用 pbcopy / Set-Clipboard 复制）或其 Base64 编码"; exit 1
+            fi
+            mv ~/.ssh/id_ci.real ~/.ssh/id_ci && chmod 600 ~/.ssh/id_ci
+          fi
           if ! ssh-keygen -y -f ~/.ssh/id_ci >/dev/null 2>&1; then
-            echo "::error::私钥格式无效（常见原因：粘贴时丢失换行/带 CRLF/贴了 .pub 公钥）"; exit 1
+            echo "::error::私钥格式无效（常见原因：粘贴时丢失换行/带 CRLF/贴了 .pub 公钥）。推荐改用 Base64：见部署操作手册"; exit 1
           fi
           echo "✓ 私钥格式有效"
+          # 把修好的密钥传给后续步骤（ssh-deploy / appleboy 都从 env.SSH_KEY_FINAL 取）
+          {
+            echo 'SSH_KEY_FINAL<<EOF_CIKEY'
+            cat ~/.ssh/id_ci
+            echo 'EOF_CIKEY'
+          } >> "$GITHUB_ENV"
           PORT="${REMOTE_PORT:-22}"
           ssh-keyscan -p "$PORT" "$REMOTE_HOST" >> ~/.ssh/known_hosts 2>/dev/null
           OUT=$(ssh -i ~/.ssh/id_ci -o BatchMode=yes -o StrictHostKeyChecking=no -p "$PORT" "$REMOTE_USER@$REMOTE_HOST" 'echo CONNECT_OK' 2>&1 | tail -3)
@@ -107,7 +121,7 @@ jobs:
       - name: Upload static site
         uses: easingthemes/ssh-deploy@v6
         with:
-          SSH_PRIVATE_KEY: ${{ secrets.ALIYUN_SSH_KEY }}
+          SSH_PRIVATE_KEY: ${{ env.SSH_KEY_FINAL }}
           REMOTE_HOST: ${{ secrets.ALIYUN_SSH_HOST }}
           REMOTE_USER: ${{ secrets.ALIYUN_SSH_USER }}
           REMOTE_PORT: ${{ secrets.ALIYUN_SSH_PORT }}
@@ -119,7 +133,7 @@ jobs:
       - name: Upload API bundle
         uses: easingthemes/ssh-deploy@v6
         with:
-          SSH_PRIVATE_KEY: ${{ secrets.ALIYUN_SSH_KEY }}
+          SSH_PRIVATE_KEY: ${{ env.SSH_KEY_FINAL }}
           REMOTE_HOST: ${{ secrets.ALIYUN_SSH_HOST }}
           REMOTE_USER: ${{ secrets.ALIYUN_SSH_USER }}
           REMOTE_PORT: ${{ secrets.ALIYUN_SSH_PORT }}
@@ -133,7 +147,7 @@ jobs:
           host: ${{ secrets.ALIYUN_SSH_HOST }}
           username: ${{ secrets.ALIYUN_SSH_USER }}
           port: ${{ secrets.ALIYUN_SSH_PORT }}
-          key: ${{ secrets.ALIYUN_SSH_KEY }}
+          key: ${{ env.SSH_KEY_FINAL }}
           script: |
             set -e
             systemctl restart xiaominart-api
