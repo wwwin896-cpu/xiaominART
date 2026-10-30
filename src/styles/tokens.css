@@ -10,6 +10,11 @@
   --line-soft: #e4d9ca;
   --cinnabar: #a5483b;
   --cinnabar-deep: #74352e;
+  /* v5.0（2026-10-30）：墨绿系，仅限「非遗」业务段与深夜深色卡使用 ——
+     全站其余部分保持宣纸/墨/朱砂三色纪律，棕米等参考稿色相一律不入 UI。 */
+  --mo-green: #2f4a42;
+  --mo-green-deep: #243a34;
+  --mo-gold: #c9a86a;
   --celadon: #8fa89e;
   --gilt: #b4945a;
   --bg: var(--paper);

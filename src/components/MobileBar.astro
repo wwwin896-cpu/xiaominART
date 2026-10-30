@@ -1,12 +1,10 @@
 ---
 // ─────────────────────────────────────────────────────────────
-// 移动端底部导航栏 + 咨询弹层 + 微信直联弹层
-// （2026-10-12 从 Layout.astro 抽出；2026-10-18 加私信弹层、底栏精简为 3 格）
+// 移动端底部导航（2026-10-30 v5.0）：四 Tab + 悬浮咨询钮
 //
-// 底栏 2 格（2026-10-29 v3，业主指认 demo 形态）：收藏（心愿单）/ 咨询。
-// 分享格移除——站内 ShareButton 与页内分享按钮已有入口，底栏只留最强双动作。
-// 2026-10-29：第二格文案由「私信」改「咨询」——移动端访客不认「私信」这个词，
-// 认的是「咨询」。行为完全不变（仍是那三路分流），只动文案与 aria-label。
+// 底栏 4 Tab（v5.0 规范定版）：首页 / 书法 / 非遗 / 我的 —— 两大业务直接升为 Tab。
+// 原「收藏」入口移入「我的」页；「咨询」从底栏格改为右下角悬浮圆钮
+// （.mobile-ask-fab，转化入口不让位），复用原有 openDm 三路分流逻辑不动。
 //
 // 咨询 = **实时对话入口**（2026-10-18 二次改造）。访客不填表、不加好友，点开即可说话：
 //   · 微信内 → 跳「微信客服」会话（企业微信，业主回复后访客微信有消息提醒）
@@ -17,17 +15,23 @@
 // ⚠️ 飞书机器人 webhook 只能被程序 POST，**不能**做成访客可点的链接
 //    （浏览器打开只会看到错误页），所以通知侧始终走服务端转发。
 //
-// 微信直联弹层保留：页内 [data-wechat-open] 触发点仍唤起它，只是底栏不再有入口。
-// 注意：这一组按钮是移动端唯一的工具入口 —— 桌面端用的是
-// SiteHeader 的 .header-tools（心愿单 + 搜索），两者不可互换。
+// 微信直联弹层保留：页内 [data-wechat-open] 触发点仍唤起它。
+// 桌面端用 SiteHeader 的 .header-tools（心愿单 + 搜索），与移动底栏不可互换。
 //
-// 相关样式在 Layout.astro 的 <style> 中（.mobile-shopping-bar / .wechat-sheet / .dm-sheet），
-// 因底栏需与页脚 padding、Cookie 横幅高度在同一媒体查询里协同。
+// 相关样式在 Layout.astro 的 <style> 中（.mobile-tabbar / .mobile-ask-fab / .dm-sheet / .wechat-sheet）。
 // ─────────────────────────────────────────────────────────────
 import { siteContact } from '../data/site';
 ---
 
-<nav class="mobile-shopping-bar" aria-label="移动端底部导航"><button class="wishlist-bar" type="button" data-wishlist-open aria-label="打开收藏夹"><span class="bar-zh">收藏</span><small lang="en">Saved <span data-wishlist-count></span></small></button><button class="dm-bar" type="button" data-dm-open aria-controls="dm-sheet" aria-expanded="false" aria-label="咨询工作室"><span class="bar-zh">咨询</span><small lang="en">Ask</small></button></nav>
+<nav class="mobile-tabbar" aria-label="移动端主导航">
+  <a href="/" aria-label="首页"><span class="tab-ico" aria-hidden="true">⌂</span><span class="tab-zh">首页</span></a>
+  <a href="/gifts/" aria-label="书法小品与礼品"><span class="tab-ico serif" aria-hidden="true">墨</span><span class="tab-zh">书法</span></a>
+  <a href="/intangible/" aria-label="南京面塑非遗"><span class="tab-ico serif" aria-hidden="true">承</span><span class="tab-zh">非遗</span></a>
+  <a href="/me/" aria-label="我的收藏与服务"><span class="tab-ico" aria-hidden="true">♡</span><span class="tab-zh">我的</span></a>
+</nav>
+
+{/* 悬浮咨询钮：右下角常驻（v5.0：咨询从底栏格让位给四 Tab，但不消失） */}
+<button class="mobile-ask-fab" type="button" data-dm-open aria-controls="dm-sheet" aria-expanded="false" aria-label="咨询工作室"><span aria-hidden="true">✉</span></button>
 
 <div class="dm-sheet" id="dm-sheet" role="dialog" aria-modal="true" aria-labelledby="dm-sheet-title" hidden>
   <div class="dm-sheet-card">
@@ -78,7 +82,7 @@ import { siteContact } from '../data/site';
   const isWeChat = () => /MicroMessenger/i.test(navigator.userAgent);
 
   const sheet = () => document.querySelector<HTMLElement>('#dm-sheet');
-  const trigger = () => document.querySelector<HTMLButtonElement>('.dm-bar');
+  const trigger = () => document.querySelector<HTMLButtonElement>('.mobile-ask-fab');
 
   /**
    * 点击反馈。底栏「咨询」原来的问题是：SDK 没加载出来时，
@@ -86,8 +90,10 @@ import { siteContact } from '../data/site';
    * 所以点击瞬间就把文字换成「连接中」，让动作立刻有回执。
    */
   function setBarLabel(text: string) {
-    const el = document.querySelector<HTMLElement>('.dm-bar .bar-zh');
-    if (el) el.textContent = text;
+    // v5.0 后咨询钮是圆形 FAB，无文字位：连接中给旋转/降透明反馈
+    const fab = document.querySelector<HTMLElement>('.mobile-ask-fab');
+    if (!fab) return;
+    fab.classList.toggle('connecting', text !== '咨询');
   }
 
   /**

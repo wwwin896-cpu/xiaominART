@@ -1,0 +1,79 @@
+---
+// ─────────────────────────────────────────────────────────────
+// 移动端「我的」Tab（2026-10-30 v5.0）
+//
+// 服务中心轻量版：收藏 / 活动预约（指引）/ 咨询入口 / 企业专线。
+// 一期不做登录：收藏走 localStorage（心愿单抽屉），咨询记录由业主微信跟进。
+// P2 计划：手机号登录、电子票、印信等级（见 docs 内 v5 评审意见）。
+// ─────────────────────────────────────────────────────────────
+import Layout from '../../layouts/Layout.astro';
+import { siteContact } from '../../data/site';
+---
+
+<Layout title="我的｜小民艺术 XIAOMINART" description="收藏夹、活动预约与咨询记录、企业合作专线。小民艺术：手写书法礼品与南京面塑非遗体验。" noindex={true}>
+  <section class="page-head container">
+    <span class="eyebrow">My / 我的服务</span>
+    <h1 class="serif">来过的人，<br />留下印记。</h1>
+    <p>收藏的字、约过的活动、聊过的心意，都在这里。</p>
+  </section>
+
+  <section class="container section me-grid">
+    <button class="me-card" type="button" data-wishlist-open>
+      <span class="me-ico serif" aria-hidden="true">♡</span>
+      <span class="me-copy"><strong class="serif">我的收藏</strong><small>点开看心意清单，选好了就来聊</small></span>
+      <span class="me-arrow" aria-hidden="true">→</span>
+    </button>
+
+    <a class="me-card" href="/intangible/">
+      <span class="me-ico serif" aria-hidden="true">承</span>
+      <span class="me-copy"><strong class="serif">活动预约</strong><small>非遗研学与企业团建的排期与报名</small></span>
+      <span class="me-arrow" aria-hidden="true">→</span>
+    </a>
+
+    <a class="me-card" href="/custom-commission/">
+      <span class="me-ico serif" aria-hidden="true">定制</span>
+      <span class="me-copy"><strong class="serif">定制进度</strong><small>定制意向提交后，我们在微信里同步每一步</small></span>
+      <span class="me-arrow" aria-hidden="true">→</span>
+    </a>
+
+    <div class="me-card me-card--biz">
+      <span class="me-ico serif" aria-hidden="true">企</span>
+      <span class="me-copy">
+        <strong class="serif">企业合作专线</strong>
+        <small>商务伴手礼 · 校庆纪念礼 · 非遗团建</small>
+        <span class="me-lines">
+          <a href={`mailto:${siteContact.email}`}>{siteContact.email}</a>
+          <a href="https://work.weixin.qq.com/kfid/" data-wechat-open>微信直联（扫码最快）</a>
+        </span>
+      </span>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .page-head { padding-top: 40px; }
+  .page-head h1 { font-size: clamp(28px, 6vw, 44px); margin: 12px 0 10px; }
+  .page-head p { color: var(--ink-soft); margin: 0; }
+  .me-grid { display: grid; gap: 14px; padding-top: 28px; padding-bottom: 120px; }
+  .me-card {
+    display: flex; align-items: center; gap: 16px; width: 100%;
+    padding: 18px 18px; text-align: left;
+    border: 1px solid var(--line-soft); border-radius: var(--radius-md);
+    background: var(--paper-light); color: var(--ink);
+    transition: transform .3s var(--ease-out), box-shadow .3s var(--ease-out);
+  }
+  .me-card:hover { transform: translateY(-3px); box-shadow: var(--lift-shadow-sm); }
+  .me-card--biz { cursor: default; }
+  .me-ico {
+    flex: 0 0 46px; width: 46px; height: 46px; display: grid; place-items: center;
+    border-radius: 50%; background: rgba(165, 72, 59, .08);
+    color: var(--cinnabar); font-size: 19px;
+  }
+  .me-copy { flex: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .me-copy strong { font-size: 16.5px; font-weight: 500; }
+  .me-copy small { color: var(--ink-soft); font-size: 12.5px; line-height: 1.7; }
+  .me-lines { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+  .me-lines a { color: var(--cinnabar); font-size: 13.5px; min-height: 0; }
+  .me-arrow { color: var(--meta); font-size: 16px; }
+  @media (min-width: 768px) { .me-grid { grid-template-columns: 1fr 1fr; padding-bottom: 80px; } }
+</style>

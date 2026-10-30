@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Pic from '../components/Pic.astro';
 import MobileHomeHero from '../components/MobileHomeHero.astro';
 import MobileShowcase from '../components/MobileShowcase.astro';
+import MobileCoreCards from '../components/MobileCoreCards.astro';
 import WorkLightbox from '../components/WorkLightbox.astro';
 import { zodiacWorks, giftProducts, readyMadeWorks } from '../data/content';
 // ── 01 / 一字一源（2026-10-16 业主二次裁决）──────────────────────────────
@@ -88,6 +89,8 @@ const itemCount = giftProducts.length + zodiacWorks.length + readyMadeWorks.leng
       ⚠️ 两者都是 `display:none` 起步、只在 767px 以下出现；
          桌面端的 DOM 顺序与样式一行没动。 */}
   <MobileHomeHero priceFrom={priceFrom} itemCount={itemCount} />
+  {/* v5.0 双核分流（书法/非遗）+ 企业专区：仅移动端渲染 */}
+  <MobileCoreCards />
   <MobileShowcase />
 
   <section class="hero hero--desktop" aria-label="品牌横幅">

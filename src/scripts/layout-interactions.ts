@@ -113,6 +113,31 @@ if (magnet && desktopNav && wideQuery.matches && window.matchMedia('(hover: hove
   });
 }
 
+// ── ①c 移动端四 Tab 当前页标记（v5.0）──────────────────────────
+// 底栏是 <a> 链接，浏览器不会自动标 aria-current —— 这里按路径前缀匹配：
+// 首页精确「/」，其余按第一段目录匹配（/gifts/xx 也点亮「书法」）。
+const path = window.location.pathname;
+document.querySelectorAll<HTMLAnchorElement>('.mobile-tabbar a').forEach((a) => {
+  const href = a.getAttribute('href') || '/';
+  const hit = href === '/' ? path === '/' : path === href || path.startsWith(href.slice(0, -1) + '/');
+  if (hit) a.setAttribute('aria-current', 'page');
+});
+
+// ── ①d 回到顶部（v5.0：替代「返回首页」FAB）─────────────────────
+const backTop = document.querySelector<HTMLButtonElement>('[data-back-top]');
+if (backTop) {
+  let btTick = false;
+  window.addEventListener('scroll', () => {
+    if (btTick) return;
+    btTick = true;
+    requestAnimationFrame(() => {
+      btTick = false;
+      backTop.classList.toggle('show', window.scrollY > window.innerHeight * 1.5);
+    });
+  }, { passive: true });
+  backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+}
+
 // ── ② 移动端返回键 ────────────────────────────────────────────
 // 非首页显示，优先浏览器历史回退，无历史则回首页。
 const backBtn = document.querySelector<HTMLButtonElement>('[data-back-button]');

@@ -30,7 +30,10 @@ const { isCurrent } = Astro.props;
     <a class="brand" href="/" aria-label="小民艺术｜用心好礼首页">
       {/* 桌面端用横版 logo 图；移动端换 demo 的「印章 + 字号」品牌（.brand-seal），
           横长 logo 在胶囊导航里放不下也立不住。两者不同时出现。 */}
+      {/* 2026-10-30 v5.0 规范：移动端换官方标准矢量 logo（xiaominart-logo-zh.svg，
+          24px 高、宽度自适应、透明底）。桌面端保持横版 PNG 不动（业主此前指定）。 */}
       <img class="brand-logo" src="/assets/brand/xiaominart-logo-full.png" width="270" height="51" alt="小民艺术 XIAOMINART｜方寸之境，也藏山河" />
+      <img class="brand-logo-zh" src="/assets/brand/xiaominart-logo-zh.svg" alt="小民艺术" loading="eager" />
       <span class="brand-seal" aria-hidden="true"><i>民</i><em>小民艺术</em></span>
     </a>
     {/* 移动端汉堡（demo .burger 的语言）。桌面端 .menu-toggle 本就 display:none。

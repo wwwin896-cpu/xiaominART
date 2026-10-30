@@ -1,0 +1,93 @@
+---
+// ─────────────────────────────────────────────────────────────
+// 「非遗」Tab 落地页（2026-10-30 v5.0）
+//
+// 南京面塑 · 小宁（主理人之一）。v5.0 规范裁决：本 Tab 不设商城，
+// 聚焦三件事——传承人背书 / 研学活动排期 / 企业团建通道。
+// 活动预约暂走 lead 表单（P2 升级电子票）；图片用现有 craft 素材，
+// 拿到面塑专项摄影后替换 src 即可。
+// ─────────────────────────────────────────────────────────────
+import Layout from '../../layouts/Layout.astro';
+import Pic from '../../components/Pic.astro';
+---
+
+<Layout title="南京面塑 · 非遗研学与企业团建｜小民艺术 XIAOMINART" description="南京面塑代表性传承人小宁老师亲授：周末非遗研学雅集、企业非遗团建与文化工坊。月度排期，预约从速。">
+  <section class="page-head container">
+    <span class="eyebrow">Intangible Heritage / 非遗面塑</span>
+    <h1 class="serif">一团面，<br />捏得出千年。</h1>
+    <p>面塑不只是手艺，是能把故事讲给下一代听的方式。</p>
+  </section>
+
+  <section class="container section heritage-master" data-reveal>
+    {/* ⚠️ 占位图：站内暂无面塑专项摄影，先用工艺现场图；业主提供面塑作品照后替换 */}
+    <figure class="master-fig"><Pic src="/assets/craft/step-1-writing.jpg" alt="手工艺现场：桌案上的创作材料与工具" loading="lazy" decoding="async" /></figure>
+    <div class="master-copy">
+      <span class="eyebrow">传承人 / 小宁</span>
+      <h2 class="serif">南京面塑代表性传承人</h2>
+      <p>小宁老师深耕面塑二十余年，作品取材金陵风物与戏曲人物。面在她手里是活的：一团彩面，几分钟里就有了眉眼、衣纹与脾气。</p>
+      <p class="master-note">「手艺要有人坐下来看、伸手去捏，才算活着。」</p>
+    </div>
+  </section>
+
+  <section class="container section events" aria-labelledby="events-title">
+    <div class="section-lead">
+      <span class="eyebrow">周末研学 / 月度排期</span>
+      <h2 id="events-title" class="serif">线下雅集，坐进手艺里。</h2>
+      <p>小班制，亲子与成人均可参加。材料全场提供，作品带走。</p>
+    </div>
+    <div class="event-list">
+      <article class="event-card">
+        <span class="event-date mono">每月<br />第一个周末</span>
+        <div class="event-copy"><h3 class="serif">亲子面塑体验课</h3><p>90 分钟 · 6 组家庭以内 · 做一只自己的生肖</p></div>
+        <a class="btn btn-primary event-cta" href="/custom-commission/">预约</a>
+      </article>
+      <article class="event-card">
+        <span class="event-date mono">每月<br />第三个周末</span>
+        <div class="event-copy"><h3 class="serif">成人雅集 · 面塑小品</h3><p>120 分钟 · 8 人以内 · 金陵风物主题</p></div>
+        <a class="btn btn-primary event-cta" href="/custom-commission/">预约</a>
+      </article>
+      <p class="event-note">具体场次以当月排期为准，报名后我们会提前 3 天在微信确认。</p>
+    </div>
+  </section>
+
+  <section class="container section biz-strip" aria-labelledby="biz-title">
+    <div class="biz-card">
+      <span class="eyebrow">企业非遗团建 · 机构文化工坊</span>
+      <h2 id="biz-title" class="serif">把非遗课，搬进你的团队。</h2>
+      <p>名企案例可查，方案按人数与时长定制，可到场可在馆。</p>
+      <a class="btn btn-primary" href="/custom-commission/">获取定制方案 →</a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .page-head { padding-top: 40px; }
+  .page-head h1 { font-size: clamp(30px, 7vw, 52px); margin: 12px 0 10px; }
+  .page-head p { color: var(--ink-soft); margin: 0; }
+  .heritage-master { display: grid; gap: 22px; }
+  .master-fig { margin: 0; border-radius: var(--radius-md); overflow: hidden; aspect-ratio: 16 / 10; background: var(--paper-deep); }
+  .master-fig :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .master-copy h2 { font-size: clamp(20px, 3.6vw, 30px); margin: 10px 0 12px; }
+  .master-copy p { color: var(--ink-soft); line-height: 2; margin: 0 0 12px; }
+  .master-note { font-family: var(--font-display-zh); color: var(--ink) !important; }
+  .events { border-top: 1px solid var(--line-soft); }
+  .section-lead { max-width: 560px; margin-bottom: 26px; }
+  .section-lead h2 { font-size: clamp(22px, 4.4vw, 34px); margin: 12px 0 10px; }
+  .section-lead p { color: var(--ink-soft); margin: 0; line-height: 1.9; }
+  .event-list { display: grid; gap: 12px; }
+  .event-card { display: flex; align-items: center; gap: 16px; padding: 16px 18px; border: 1px solid var(--line-soft); border-radius: var(--radius-md); background: var(--paper-light); }
+  .event-date { flex: 0 0 64px; text-align: center; color: var(--cinnabar); font-size: 12px; line-height: 1.5; letter-spacing: .06em; }
+  .event-copy { flex: 1; min-width: 0; }
+  .event-copy h3 { font-size: 16px; font-weight: 500; margin: 0 0 4px; }
+  .event-copy p { margin: 0; color: var(--ink-soft); font-size: 12.5px; }
+  .event-cta { min-height: 40px; padding: 8px 18px; }
+  .event-note { color: var(--muted); font-size: 12px; }
+  .biz-strip { border-top: 1px solid var(--line-soft); }
+  .biz-card { padding: 30px 26px; border-radius: var(--radius-md); background: var(--paper-light); border: 1px solid var(--line-soft); }
+  .biz-card h2 { font-size: clamp(22px, 4.4vw, 32px); margin: 10px 0 12px; }
+  .biz-card p { color: var(--ink-soft); line-height: 1.9; margin: 0 0 18px; }
+  @media (min-width: 768px) {
+    .heritage-master { grid-template-columns: 1fr 1fr; align-items: center; gap: 40px; }
+    .event-cta { min-height: 44px; }
+  }
+</style>

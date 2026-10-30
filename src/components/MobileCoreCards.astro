@@ -1,0 +1,70 @@
+---
+// ─────────────────────────────────────────────────────────────
+// 移动端双核分流卡 + 企业专区（2026-10-30 v5.0）
+//
+// v5.0 规范的核心结构：首页把两大业务直接摆出来——
+//   [书法小品 · 美学空间]  小民主理（现货+定制）
+//   [南京面塑 · 非遗研学]  小宁主理（线下雅集+团建，墨绿底 = 全站唯一深色卡）
+//   [企业商务礼赠专区]     B 端三件套横条
+// 仅 767px 以下渲染；桌面端不受影响。
+// ─────────────────────────────────────────────────────────────
+---
+
+<div class="mcore" aria-label="两大业务入口">
+  <a class="mcore-card mcore-calli" href="/gifts/">
+    <span class="mcore-tag" aria-hidden="true">小民主理</span>
+    <strong class="serif">书法小品 · 美学空间</strong>
+    <small>秦篆石鼓文小品 · 宣纸手写真迹装裱<br />¥199 起现货 · 私人/企业定制 · 24h 现货直发</small>
+    <span class="mcore-cta">去看小品 →</span>
+  </a>
+  <a class="mcore-card mcore-heritage" href="/intangible/">
+    <span class="mcore-tag" aria-hidden="true">小宁主理</span>
+    <strong class="serif">南京面塑 · 非遗研学</strong>
+    <small>非遗传承人亲授 · 线下雅集月度排期<br />企业团建 · 校园工坊</small>
+    <span class="mcore-cta">看活动排期 →</span>
+  </a>
+</div>
+
+<a class="mbiz" href="/business-gifts/">
+  <span class="mbiz-copy"><strong class="serif">企业商务礼赠 · 专属定制</strong><small>商务伴手礼 / 校庆纪念礼 / 非遗团建</small></span>
+  <span class="mbiz-arrow" aria-hidden="true">→</span>
+</a>
+
+<style>
+  .mcore { display: grid; gap: 12px; }
+  .mcore-card {
+    position: relative; display: flex; flex-direction: column; gap: 6px;
+    padding: 18px 18px 16px; border-radius: var(--radius-lg);
+    text-decoration: none; overflow: hidden;
+    transition: transform .3s var(--ease-out), box-shadow .3s var(--ease-out);
+  }
+  .mcore-card:active { transform: scale(.98); }
+  .mcore-card:hover { box-shadow: var(--lift-shadow-sm); }
+  .mcore-tag {
+    position: absolute; top: 14px; right: 14px;
+    font-size: 10px; letter-spacing: .18em; padding: 4px 8px;
+    border-radius: 999px;
+  }
+  .mcore-card strong { font-size: 19px; font-weight: 500; letter-spacing: .02em; line-height: 1.4; }
+  .mcore-card small { font-size: 12px; line-height: 1.8; opacity: .8; }
+  .mcore-cta { font-size: 13px; margin-top: 4px; }
+  /* 书法卡：宣纸浅底 */
+  .mcore-calli { background: var(--paper-light); border: 1px solid var(--line-soft); color: var(--ink); }
+  .mcore-calli .mcore-tag { background: rgba(165, 72, 59, .08); color: var(--cinnabar); }
+  .mcore-calli .mcore-cta { color: var(--cinnabar); }
+  /* 非遗卡：墨绿深底（全站唯一深色卡，专用段） */
+  .mcore-heritage { background: var(--mo-green); border: 1px solid rgba(255, 255, 255, .14); color: var(--paper); }
+  .mcore-heritage .mcore-tag { background: rgba(255, 255, 255, .12); color: var(--mo-gold); }
+  .mcore-heritage .mcore-cta { color: var(--mo-gold); }
+  /* B 端横条 */
+  .mbiz {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 14px 16px; border-radius: var(--radius-md);
+    background: rgba(165, 72, 59, .06); border: 1px dashed rgba(165, 72, 59, .3);
+    text-decoration: none;
+  }
+  .mbiz-copy { display: flex; flex-direction: column; gap: 2px; }
+  .mbiz-copy strong { font-size: 14.5px; font-weight: 500; color: var(--ink); }
+  .mbiz-copy small { font-size: 11.5px; color: var(--ink-soft); }
+  .mbiz-arrow { color: var(--cinnabar); }
+</style>

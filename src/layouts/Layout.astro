@@ -151,6 +151,7 @@ const chatSdkSrc = chatConfig.knocketIdentifier
     <SearchModal />
     <CookieConsent />
     <MobileBar />
+    <button class="back-top" type="button" data-back-top aria-label="回到顶部">↑</button>
     {/* 网页实时聊天（Knocket，2026-10-18）。
         未配 identifier 时**完全不加载**，页面体积与行为零变化。
         async 加载、不阻塞渲染；访客点底栏「私信」时由 MobileBar 调
@@ -183,8 +184,12 @@ const chatSdkSrc = chatConfig.knocketIdentifier
         但移动端 #site-nav 是 fixed 抽屉 —— 那边已有 :not(#site-nav) 豁免，别动。 */
   .brand { display: flex; align-items: center; min-width: 280px; flex-shrink: 0; }
   .brand-logo { display: block; width: 270px; height: auto; }
+  .brand-logo-zh { display: none; }
   .brand-subtitle { color: var(--ink-soft); width: 280px; font-size: 12px; letter-spacing: .08em; line-height: 1.3; white-space: nowrap; text-align: left; }
   .mobile-shopping-bar { display: none; }
+  .mobile-tabbar { display: none; }
+  .mobile-ask-fab { display: none; }
+  .back-top { display: none; }
   nav { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-left: auto; font-size: 16px; }
   .nav-item { position: relative; }
   /* ── 磁吸印章滑块（2026-10-29）─────────────────────────────────
@@ -287,11 +292,11 @@ const chatSdkSrc = chatConfig.knocketIdentifier
     .header-inner > :not(#site-nav) { position: relative; z-index: 1; }
     /* 品牌：横版 logo 换成 demo 的「印章 + 字号」 */
     .brand { display: flex; min-width: 0; max-width: none; gap: 9px; align-items: center; }
-    /* ── 移动端品牌（2026-10-29 业主指定）──────────────────────────
-       LOGO 不换 —— 桌面横版 logo 图直接复用，仅按视口自适应缩放：
-       高度锁 26px（胶囊头部 56px 高内立得住），宽度按原比例跟随，
-       窄屏（≤360px）再降一档。此前的「印章 + 字号」brand-seal 停用。 */
-    .brand-logo { display: block; width: auto; height: 26px; }
+    /* ── 移动端品牌（2026-10-30 v5.0）────────────────────────────
+       换官方标准矢量 logo（红黑双色、透明底），高度锁 24px、宽度自适应。
+       桌面横版 PNG（.brand-logo）在移动端隐藏，两者不同时出现。 */
+    .brand-logo { display: none; }
+    .brand-logo-zh { display: block; width: auto; height: 24px; }
     .brand { min-width: 0; }
     .brand-seal { display: none; }
     /* 汉堡按钮（demo .burger）：38px 圆形热区、三条 2px 线，替代旧文字方框 */
@@ -354,47 +359,57 @@ const chatSdkSrc = chatConfig.knocketIdentifier
         新版：悬浮玻璃胶囊（demo .tabbar 的语言）——
         左右留 10px 悬浮、圆角 999、毛玻璃、「咨询」格做成朱砂渐变主 CTA。
         三格内容与 data-* 钩子不变，只换皮。 */
-     .mobile-shopping-bar {
-       position: fixed; top: auto; display: grid; grid-template-columns: 1fr 1.35fr;
+     /* ── v5.0 底栏：四 Tab 链接（2026-10-30）────────────────────────
+   玻璃胶囊保留，内容从双格动作改为 4 个导航链接（首页/书法/非遗/我的）。
+   「咨询」升级为右下角独立悬浮圆钮（.mobile-ask-fab），转化不让位。 */
+     .mobile-tabbar {
+       position: fixed; top: auto; display: grid; grid-template-columns: repeat(4, 1fr);
        left: 10px; right: 10px; bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 8;
-       gap: 8px; padding: 8px;
-       background: rgba(250, 247, 238, .78);
+       padding: 6px 8px;
+       background: rgba(250, 247, 238, .82);
        backdrop-filter: blur(16px) saturate(1.3); -webkit-backdrop-filter: blur(16px) saturate(1.3);
        border: 1px solid rgba(255, 255, 255, .7); border-radius: 999px;
        box-shadow: 0 8px 30px rgba(60, 50, 30, .22);
      }
-     /* Cookie 横幅展示期间（body.consent-open）：底栏顶到横幅之上。
-        横幅现在是悬浮卡（bottom ≈ 78px + safe-area），底栏位置 = 横幅底 + 横幅高 + 12px 间距。
-        --consent-h 由 consent 脚本实测高度写入。 */
-     body.consent-open .mobile-shopping-bar { bottom: calc(78px + env(safe-area-inset-bottom) + var(--consent-h, 168px) + 12px); }
-     .mobile-shopping-bar a, .mobile-shopping-bar button {
-       min-height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
-       color: var(--ink-soft); font: inherit; border-radius: 999px;
-       transition: transform .15s ease, background-color .2s ease;
+     body.consent-open .mobile-tabbar { bottom: calc(78px + env(safe-area-inset-bottom) + var(--consent-h, 168px) + 12px); }
+     .mobile-tabbar a {
+       min-height: 46px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+       color: var(--ink-soft); text-decoration: none; border-radius: 16px;
+       transition: transform .15s ease, color .2s ease;
      }
-     .mobile-shopping-bar a:active, .mobile-shopping-bar button:active { transform: scale(.95); }
-     .mobile-shopping-bar button { background: transparent; border: 0; padding: 0; cursor: pointer; }
-     .mobile-shopping-bar .bar-zh { font-size: 13px; letter-spacing: .14em; font-family: var(--font-display-zh); }
-     .mobile-shopping-bar small { font-size: 8.5px; color: var(--muted); font-family: var(--font-body-en), sans-serif; letter-spacing: .12em; text-transform: uppercase; }
-     /* 「咨询」= 主 CTA：朱砂渐变胶囊（demo .tab-consult） */
-     .mobile-shopping-bar .dm-bar { color: #fff !important; background: linear-gradient(135deg, var(--cinnabar), var(--cinnabar-deep)); box-shadow: 0 4px 14px rgba(160, 44, 32, .35); }
-     .mobile-shopping-bar .dm-bar small { color: rgba(255, 255, 255, .8); }
-     /* 「收藏」格：白底幽灵胶囊（demo .tab-fav） */
-     .mobile-shopping-bar .wishlist-bar { background: rgba(255, 255, 255, .6); border: 1px solid var(--line); }
-     .mobile-shopping-bar .wishlist-bar .bar-zh { color: var(--ink); }
-     .mobile-shopping-bar a:first-child .bar-zh { color: var(--ink); }
-     .mobile-shopping-bar span[data-wishlist-count] { color: var(--cinnabar); font-family: var(--font-mono); }
-     /* 收藏数字角标：0 件隐藏，有货时是最强的「回去看看」提示 */
-     .mobile-shopping-bar .wishlist-bar { position: relative; }
-     .mobile-shopping-bar .wishlist-bar small { display: inline-flex; align-items: center; gap: 3px; }
-     .mobile-shopping-bar [data-wishlist-count]:not(:empty) {
-       display: inline-flex; align-items: center; justify-content: center;
-       min-width: 15px; height: 15px; padding: 0 4px; margin-left: 1px;
-       border-radius: 8px; background: var(--cinnabar); color: #fff;
-       font: 10px/1 var(--font-mono); letter-spacing: 0;
+     .mobile-tabbar a:active { transform: scale(.94); }
+     .mobile-tabbar .tab-ico { font-size: 17px; line-height: 1.2; }
+     .mobile-tabbar .tab-ico.serif { font-family: var(--font-display-zh); font-size: 15px; font-weight: 500; }
+     .mobile-tabbar .tab-zh { font-size: 11px; letter-spacing: .18em; font-family: var(--font-display-zh); }
+     .mobile-tabbar a[href="/"] { color: var(--ink); }
+     /* 当前 Tab 高亮：href 精确匹配由 aria-current 标记（见 layout-interactions） */
+     .mobile-tabbar a[aria-current="page"] { color: var(--cinnabar); }
+     /* ── 悬浮咨询钮（v5.0）：右下角朱砂圆钮，底栏上方浮现 ── */
+     .mobile-ask-fab {
+       position: fixed; right: 14px; bottom: calc(72px + env(safe-area-inset-bottom)); z-index: 9;
+       width: 52px; height: 52px; display: grid; place-items: center;
+       border: 0; border-radius: 50%; cursor: pointer;
+       background: linear-gradient(135deg, var(--cinnabar), var(--cinnabar-deep));
+       color: #fff; font-size: 20px;
+       box-shadow: 0 8px 22px rgba(160, 44, 32, .38);
+       transition: transform .2s var(--ease-out), box-shadow .2s ease, opacity .2s ease;
      }
-     .mobile-shopping-bar .wishlist-bar:active .bar-zh, .mobile-shopping-bar .wishlist-bar[aria-expanded="true"] .bar-zh { color: var(--cinnabar); }
-     .mobile-shopping-bar .wishlist-bar.is-fav-active .bar-zh { color: var(--cinnabar); }
+     .mobile-ask-fab:active { transform: scale(.92); }
+     .mobile-ask-fab.connecting { opacity: .75; }
+     body.consent-open .mobile-ask-fab { bottom: calc(140px + env(safe-area-inset-bottom) + var(--consent-h, 168px)); }
+     /* ── 回到顶部（v5.0 评审裁定：不做「返回首页」FAB，做回顶）──
+        左下角玻璃小圆钮，滚动超过 1.5 屏浮现，避免与右下咨询钮打架。 */
+     .back-top {
+       position: fixed; left: 14px; bottom: calc(72px + env(safe-area-inset-bottom)); z-index: 8;
+       width: 40px; height: 40px; display: grid; place-items: center;
+       border: 1px solid var(--glass-border); border-radius: 50%;
+       background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+       color: var(--ink); font-size: 16px; cursor: pointer;
+       opacity: 0; pointer-events: none; transform: translateY(8px);
+       transition: opacity .3s ease, transform .3s var(--ease-out);
+     }
+     .back-top.show { opacity: 1; pointer-events: auto; transform: none; }
+     body.consent-open .back-top { bottom: calc(140px + env(safe-area-inset-bottom) + var(--consent-h, 168px)); }
      /* 移动端全局按钮语言对齐 demo：胶囊 + 主按钮朱砂渐变。
         （只作用 767px 以下；桌面端按钮保持直角定版样式） */
      .btn { border-radius: 999px; }
