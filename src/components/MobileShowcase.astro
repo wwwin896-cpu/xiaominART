@@ -241,11 +241,16 @@ const tilesJson = JSON.stringify(tiles);
         data-ms-groups={tile.groups.join(' ')}
         hidden={i >= FIRST_BATCH ? true : undefined}
       >
-        {/* 卡面 = demo .art 的大字艺术卡：纸底渐变 + 双线框 + 题字大字做主视觉；
-            真实商品照片放进详情弹层的大图区（点卡片时看），美学与信息两不丢 */}
+        {/* 卡面 = 商品实景图（2026-10-31 业主修正）：
+            原来这里是大字艺术卡（纸底 + 题字大字），业主指出
+            「今季之选列出的『静入』『朱』这些文字，要用完整的全景图片来呈现」——
+            即卡面本身就该是那件作品陈列在空间里的完整实景，
+            而不是把字做成一张字卡。
+            现在：整幅实景图 cover 撑满 1:1 卡面（卡位不变，网格整齐），
+            图上压一层轻渐变保证题名可读；点开详情的图改为 contain 完整呈现。 */}
         <button class="mshow-tile-main" type="button" data-ms-open={tile.id}>
           <span class="mshow-tile-fig">
-            <span class="mshow-tile-char serif" aria-hidden="true">{tile.char}</span>
+            <img src={tile.image} alt={tile.alt} width="800" height="800" loading="lazy" decoding="async" />
             <span class="mshow-tag" aria-hidden="true">{tile.tagShort}</span>
           </span>
           <span class="mshow-tile-copy">
@@ -574,9 +579,15 @@ const tilesJson = JSON.stringify(tiles);
     .mshow-tile:active { transform: scale(.98); }
     .mshow-tile[hidden] { display: none; }
     .mshow-tile-main { display: block; width: 100%; padding: 0; border: 0; background: transparent; text-align: left; font: inherit; color: inherit; }
-    /* demo .art：纸底渐变 + 内框线，题字大字是卡面绝对主角 */
+    /* demo .art：卡面 = 作品实景图（2026-10-31 修正）。
+       fig 保持 1:1 方卡（网格整齐、两列等高），图 cover 铺满；
+       卡面只是「入口」，完整不裁切留给详情弹层。 */
     .mshow-tile-fig { position: relative; display: grid; place-items: center; aspect-ratio: 1 / 1; overflow: hidden; background: linear-gradient(160deg, #fbf8f0, #f1e9d6); border-bottom: 1px solid rgba(120, 100, 60, .15); }
-    .mshow-tile-fig::after { content: ''; position: absolute; inset: 7px; border: 1px solid rgba(120, 100, 60, .18); border-radius: 8px; pointer-events: none; }
+    .mshow-tile-fig img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s var(--ease-out); }
+    .mshow-tile:active .mshow-tile-fig img { transform: scale(1.02); }
+    /* 底部薄渐变：让右下「价格签」与图内的浅色区域拉开层次（不遮主体） */
+    .mshow-tile-fig::before { content: ''; position: absolute; inset: auto 0 0; height: 34%; z-index: 1; background: linear-gradient(180deg, transparent, rgba(28, 22, 14, .26)); pointer-events: none; }
+    .mshow-tile-fig::after { content: ''; position: absolute; inset: 7px; z-index: 2; border: 1px solid rgba(255, 255, 255, .34); border-radius: 8px; pointer-events: none; }
     .mshow-tile-char { font-size: clamp(58px, 18vw, 84px); color: var(--ink); text-shadow: 0 2px 6px rgba(43, 43, 43, .12); letter-spacing: .04em; }
     .mshow-tile-copy { display: block; padding: 10px 12px 12px; }
     .mshow-tile-copy strong { display: block; font-family: var(--font-display-zh); font-size: 15px; font-weight: 500; letter-spacing: .06em; line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -608,8 +619,22 @@ const tilesJson = JSON.stringify(tiles);
     .mshow-close { position: absolute; right: 12px; top: 12px; width: 34px; height: 34px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; background: var(--paper-deep); color: var(--ink-soft); font-size: 16px; line-height: 1; }
 
     /* ── 详情弹层 ── */
-    .mshow-detail-fig { margin-top: 6px; aspect-ratio: 4 / 3; overflow: hidden; background: var(--paper-deep); border-radius: 0; }
-    .mshow-detail-fig img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    /* ── 详情弹层大图（2026-10-31 业主：完整呈现，不要局部）─────────
+       原实现 aspect-ratio: 4/3 + object-fit: cover —— 竖幅作品被裁掉上下，
+       正正就是业主说的「局部」。现改为：
+         · 容器不再固定比例，由图片自身比例撑开（aspect-ratio: auto）
+         · img 用 width:100% / height:auto / object-fit: contain ——
+           宽图按屏宽缩放、竖图按屏高受限，两种都完整可见，永不裁切
+         · max-height: 62vh —— 竖幅长图不至于顶掉下方的价格与按钮，
+           超出的部分仍由 contain 完整缩进，不裁剪
+         · 底色用浅纸色，图片比例与容器不一致时留白是纸感，不是黑边 */
+    .mshow-detail-fig { margin-top: 6px; max-height: 62vh; overflow: hidden; background: var(--paper-deep); border-radius: 0; display: block; text-align: center; line-height: 0; }
+    /* width/height 双 auto + max-* 兜底：竖幅图按「高 62vh 反算宽」自动缩，
+       横幅图按「宽 100% 反算高」，两条约束谁先到先用，图永远完整、永远不溢出。
+       ⚠️ 必须 :global —— 这张 <img> 是脚本 openDetail() 里 createElement 动态插入的，
+       不带 Astro 的 data-astro-cid-xxx 属性，scoped 规则（带 cid 选择器）永远不命中
+       （实测：max-width 计算值为 none，图片按 800px 原始宽度溢出屏幕）。 */
+    .mshow-detail-fig :global(img) { max-width: 100%; max-height: 62vh; width: auto; height: auto; object-fit: contain; display: inline-block; vertical-align: top; }
     .mshow-detail-body { padding: 18px 20px 0; }
     .mshow-detail-body h3 { font-family: var(--font-display-zh); font-size: 21px; font-weight: 500; letter-spacing: .06em; margin: 8px 0 6px; }
     .mshow-price { display: block; font: 700 20px var(--font-display-en), Georgia, serif; color: var(--cinnabar); margin-bottom: 12px; }
