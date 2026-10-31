@@ -1,12 +1,12 @@
 {
   "version": 1,
   "site": "https://xiaominart.com",
-  "updatedAt": "2026-10-28T23:44:38.330Z",
+  "updatedAt": "2026-10-31T05:23:27.312Z",
   "urls": {
     "https://xiaominart.com/": {
-      "pushedAt": "2026-10-18",
-      "lastmod": "2026-10-17",
-      "count": 2
+      "pushedAt": "2026-10-31",
+      "lastmod": "2026-10-31",
+      "count": 3
     },
     "https://xiaominart.com/gifts/": {
       "pushedAt": "2026-10-28",
@@ -14,9 +14,9 @@
       "count": 3
     },
     "https://xiaominart.com/gifts/ready-made/": {
-      "pushedAt": "2026-10-28",
-      "lastmod": "2026-10-29",
-      "count": 4
+      "pushedAt": "2026-10-31",
+      "lastmod": "2026-10-31",
+      "count": 5
     },
     "https://xiaominart.com/gift-guide/": {
       "pushedAt": "2026-10-28",
@@ -29,44 +29,44 @@
       "count": 2
     },
     "https://xiaominart.com/artists/": {
-      "pushedAt": "2026-10-28",
-      "lastmod": "2026-10-29",
-      "count": 4
+      "pushedAt": "2026-10-31",
+      "lastmod": "2026-10-31",
+      "count": 5
     },
     "https://xiaominart.com/business-gifts/": {
-      "pushedAt": "2026-10-19",
-      "lastmod": "2026-10-19",
-      "count": 3
+      "pushedAt": "2026-10-31",
+      "lastmod": "2026-10-31",
+      "count": 4
     },
     "https://xiaominart.com/business-gifts/gifts/": {
-      "pushedAt": "2026-10-19",
-      "lastmod": "2026-10-19",
-      "count": 3
+      "pushedAt": "2026-10-31",
+      "lastmod": "2026-10-31",
+      "count": 4
     },
     "https://xiaominart.com/business-gifts/keep/": {
-      "pushedAt": "2026-10-19",
-      "lastmod": "2026-10-19",
-      "count": 3
+      "pushedAt": "2026-10-31",
+      "lastmod": "2026-10-31",
+      "count": 4
     },
     "https://xiaominart.com/business-gifts/space/": {
-      "pushedAt": "2026-10-19",
-      "lastmod": "2026-10-19",
-      "count": 3
+      "pushedAt": "2026-10-31",
+      "lastmod": "2026-10-31",
+      "count": 4
     },
     "https://xiaominart.com/business-gifts/campus/": {
-      "pushedAt": "2026-10-19",
-      "lastmod": "2026-10-19",
-      "count": 1
+      "pushedAt": "2026-10-31",
+      "lastmod": "2026-10-31",
+      "count": 2
     },
     "https://xiaominart.com/custom/": {
-      "pushedAt": "2026-10-19",
-      "lastmod": "2026-10-19",
-      "count": 1
+      "pushedAt": "2026-10-31",
+      "lastmod": "2026-10-31",
+      "count": 2
     },
     "https://xiaominart.com/custom/personal/": {
-      "pushedAt": "2026-10-19",
-      "lastmod": "2026-10-19",
-      "count": 1
+      "pushedAt": "2026-10-31",
+      "lastmod": "2026-10-31",
+      "count": 2
     },
     "https://xiaominart.com/custom/personal/gifting/": {
       "pushedAt": "2026-10-19",
