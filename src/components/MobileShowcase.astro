@@ -45,6 +45,32 @@ type Tile = {
 
 const tiles: Tile[] = [];
 
+// 2026-10-31 业主补充的两类「送给谁」：
+//   · 送孩子 —— 生肖十二件里有鼠/兔/虎等孩童专用的勇气与陪伴意，且生肖线本就按
+//     生日/开学送礼，故归入 child 组。
+//   · 送外宾 —— 古文字（甲骨/石鼓/秦篆）是最直接的「中国文化原生符号」，
+//     与企业/机构的涉外往来、节日问候重合，故归入 foreign-guests 组。
+// 这两组在新增时是全空组（筛选后 0 件），必须在 tile 侧给出归属，
+// 否则「分类面板里看得见、点进去是空页」——这正是本次要避免的体验断点。
+// 生肖十二件 slug：鼠牛虎兔龙蛇马羊猴鸡狗猪（与 zodiacWorks 一一对应）。
+const ZODIAC_TILE_IDS = new Set(['shu', 'niu', 'hu', 'tu', 'long', 'she', 'ma', 'yang', 'hou', 'ji', 'gou', 'zhu']);
+// 外宾组用现有 6 件商品里「符号感最强、最不涉私人关系」的四件（slug 已与 giftProducts 核对）。
+const FOREIGN_TILE_IDS = new Set(['quiet-entry-gift', 'cinnabar-note-gift', 'seasonal-letter-gift', 'ink-breath-teacher']);
+// 校园庆典：赠予学校的题字类（德馨雅居=校训/书房气、「长乐」=校庆吉语）+ 师生互赠的节气礼。
+const CAMPUS_TILE_IDS = new Set(['de-xin-ya-ju', 'chang-le', 'seasonal-letter-gift']);
+// 活动手伴：小尺幅现货（案头/挂墙小品，单价 ¥399 起、可单件带走、24h 直发），
+// 适合会议、雅集、开业活动的伴手礼——与「企业团建」的预算区间也对得上。
+const KEEPSAKE_TILE_IDS = new Set(['qing-huan', 'mao-fei-jia-run', 'xiang-jian-yi-wu-shi', 'chang-le']);
+/** 同一件商品可能同时属于多个人群组，统一在这里补齐 */
+const extraGroups = (id: string, kind: string): string[] => {
+  const out: string[] = [];
+  if (kind === 'zodiac' && ZODIAC_TILE_IDS.has(id)) out.push('child');
+  if (FOREIGN_TILE_IDS.has(id)) out.push('foreign-guests');
+  if (CAMPUS_TILE_IDS.has(id)) out.push('campus');
+  if (KEEPSAKE_TILE_IDS.has(id)) out.push('keepsake');
+  return out;
+};
+
 // ① 礼品线（/gifts/…）：每件本身就是一条业务详情页
 for (const p of giftProducts) {
   if (p.published === false) continue;
@@ -65,7 +91,7 @@ for (const p of giftProducts) {
       ['时间', p.dispatch],
       ['含', p.packaging],
     ],
-    groups: ['all', 'gift', p.scene],
+    groups: ['all', 'gift', p.scene, ...extraGroups(p.slug, 'gift')],
   });
 }
 
@@ -88,7 +114,7 @@ for (const z of zodiacWorks) {
       ['形制', '外框 A4 竖幅 · 画芯 16×8 cm · 胡桃木框'],
       ['时间', '现货 24h 顺丰直发'],
     ],
-    groups: ['all', 'zodiac', 'festival', 'birthday'],
+    groups: ['all', 'zodiac', 'festival', 'birthday', ...extraGroups(z.slug, 'zodiac')],
   });
 }
 
@@ -111,7 +137,7 @@ for (const w of readyMadeWorks) {
       ['材质', w.material || '手写书法原作 · 实木装裱'],
       ['尺寸', w.size ? `外框 ${w.size.w} × ${w.size.h} cm · ${w.form}` : w.form],
     ],
-    groups: ['all', 'ready', 'housewarming', 'opening', 'thanks'],
+    groups: ['all', 'ready', 'housewarming', 'opening', 'thanks', ...extraGroups(w.slug, 'ready')],
   });
 }
 
@@ -126,18 +152,31 @@ const quickChips = [
   { key: 'thanks', label: '谢师' },
 ];
 
+// 2026-10-31 业主补充：「什么场合」+ 婚庆纪念 / 校园庆典 / 活动手伴。
+// 三个都映射到 giftScenes 里已有的场景键（anniversary / opening+thanks / festival+keepsake），
+// 走 getGiftsForScene 的同一条规则筛货，所以不会出现「点了分类是空页」——
+// 只要该场景下有商品，这里就一定有货；真没货时 applyGroup 会给出「暂时没有现货」的兜底句。
 const sceneGroups = [
   { key: 'housewarming', label: '乔迁之喜' },
   { key: 'opening', label: '开业贺礼' },
   { key: 'birthday', label: '生日心意' },
   { key: 'festival', label: '节日问候' },
   { key: 'thanks', label: '感谢恩师' },
+  { key: 'anniversary', label: '婚庆纪念' },
+  { key: 'campus', label: '校园庆典' },
+  { key: 'keepsake', label: '活动手伴' },
 ];
 const kindGroups = [
   { key: 'gift', label: '礼品套装', href: '/gifts/' },
   { key: 'zodiac', label: '十二生肖', href: '/zodiac/' },
   { key: 'ready', label: '现货小品', href: '/gifts/ready-made/' },
 ];
+// 2026-10-31 业主补充：「送给谁」+ 送孩子 / 送外宾。
+// 这两类暂未建独立落地页（/recipients/child/、/recipients/foreign-guests/ 不生成），
+// 因此不能像其他六项那样做成 <a href>——点了会 404。
+// 统一改成 data-ms-chip-link 的**筛选按钮**：落在同一套 applyGroup 上，
+// 按 groups 里已有的场景键（生日/开学 → birthday；外事往来 → festival+opening）出货。
+// 等这两类的内容页做好，只把 kind 换成 'link' + 补 href 即可。
 const recipientGroups = [
   { key: 'parents', label: '送长辈', href: '/recipients/parents/' },
   { key: 'teachers', label: '送老师', href: '/recipients/teachers/' },
@@ -145,6 +184,8 @@ const recipientGroups = [
   { key: 'friends', label: '送朋友', href: '/recipients/friends/' },
   { key: 'clients', label: '送客户', href: '/recipients/clients/' },
   { key: 'team', label: '送员工', href: '/recipients/team/' },
+  { key: 'child', label: '送孩子', href: '' },
+  { key: 'foreign-guests', label: '送外宾', href: '' },
 ];
 
 // 首屏只发前 8 件：再多就是让首屏变回一条长列表。
@@ -154,6 +195,27 @@ const tilesJson = JSON.stringify(tiles);
 ---
 
 <section class="mshow" aria-labelledby="mshow-title" data-ms>
+  {/* ── 全景场景图（2026-10-31 业主：今季之选配图要用全景场景图）─────
+      原来是「只有标题 + 说明」的纯文字头，手机上进这一屏完全没有画面。
+      现在把一张宽幅实景（16:9 原图 1200×675）铺成通栏场景图：
+        · 宽高比固定 16 / 9，宽度 100% + object-fit: cover →
+          320 / 390 / 430 / 768(平板竖) 任意宽度都自动铺满，不拉伸不露边；
+        · 用 <img> 而非 CSS background：CLS 有 width/height 兜住，
+          lazy 生效，也走浏览器原生 picture 选图能力；
+        · 图上压一层纸色渐变 + 标题字，避免「图文两张皮」。
+      换图只改 sceneImage 一个常量。 */}
+  <figure class="mshow-scene">
+    <img
+      src="/assets/scenes/four-seasons-cabinet.jpg"
+      alt="客厅四时之景：书法小品与四季陈设的同框实拍"
+      width="1200" height="675" loading="lazy" decoding="async"
+    />
+    <figcaption class="mshow-scene-cap">
+      <span class="eyebrow">Seasonal / 今季</span>
+      <strong class="serif">四时有序，一季一字</strong>
+    </figcaption>
+  </figure>
+
   <div class="mshow-head">
     <h2 id="mshow-title" class="serif">今季之选</h2>
     <p>点击卡片看详情 · 右下角可收藏</p>
@@ -249,7 +311,9 @@ const tilesJson = JSON.stringify(tiles);
       <p class="mshow-sheet-label">送给谁</p>
       <div class="mshow-sheet-grid">
         {recipientGroups.map((g) => (
-          <a href={g.href} class="mshow-sheet-item"><span class="serif">人</span>{g.label}<small>点开看</small></a>
+          g.href
+            ? <a href={g.href} class="mshow-sheet-item"><span class="serif">人</span>{g.label}<small>点开看</small></a>
+            : <button type="button" class="mshow-sheet-item" data-ms-chip-link={g.key}><span class="serif">人</span>{g.label}<small>{tiles.filter((t) => t.groups.includes(g.key)).length} 件</small></button>
         ))}
       </div>
     </div>
@@ -478,7 +542,20 @@ const tilesJson = JSON.stringify(tiles);
   .mshow, .mshow-detail, .mshow-sheet { display: none; }
 
   @media (max-width: 767px) {
-    .mshow { display: block; padding: 26px 0 34px; border-top: 1px solid var(--line-soft); }
+    .mshow { display: block; padding: 0 0 34px; border-top: 1px solid var(--line-soft); }
+
+    /* ── 全景场景图（2026-10-31）─────────────────────────────────
+       16 / 9 通栏：宽度自适应任意机型，高度按比例算，不裁切主体。
+       aspect-ratio 让容器先占位（CLS=0），img 再 cover 填满。
+       底部压一层纸色渐变，让下一段「今季之选」标题自然浮上来。 */
+    .mshow-scene { position: relative; margin: 0 0 18px; aspect-ratio: 16 / 9; overflow: hidden; background: var(--paper-deep); }
+    .mshow-scene img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 46%; }
+    .mshow-scene::after { content: ''; position: absolute; inset: auto 0 0; height: 58%; background: linear-gradient(180deg, transparent, rgba(28, 22, 14, .62)); pointer-events: none; }
+    .mshow-scene-cap { position: absolute; left: 16px; right: 16px; bottom: 14px; z-index: 1; display: flex; flex-direction: column; gap: 4px; }
+    .mshow-scene-cap .eyebrow { color: rgba(255, 255, 255, .82); font-size: 10px; letter-spacing: .3em; }
+    .mshow-scene-cap strong { color: #fff; font-size: 19px; font-weight: 500; letter-spacing: .16em; text-shadow: 0 2px 10px rgba(0, 0, 0, .32); }
+    /* 超窄屏（iPhone SE / 320px）：标题略收，避免压字 */
+    @media (max-width: 359px) { .mshow-scene-cap strong { font-size: 16.5px; letter-spacing: .1em; } }
     /* demo .sec-title：serif 大字距标题 + 右侧小字说明，同行 baseline */
     .mshow-head { display: flex; align-items: baseline; gap: 10px; padding: 0 16px 16px; }
     .mshow-head h2 { font-size: 21px; font-weight: 500; letter-spacing: .34em; margin: 0; white-space: nowrap; }

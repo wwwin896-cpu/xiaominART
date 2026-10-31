@@ -45,7 +45,12 @@ const { priceFrom, itemCount } = Astro.props;
       <li><strong class="mhero-facts-zh">现货</strong><span>24h 直发</span></li>
     </ul>
 
-    <button class="mhero-search" type="button" data-search-open aria-label="搜索站内作品">
+    {/* 搜索胶囊（2026-10-31 业主指令隐藏）：
+        首屏下方已有 2 列商品流 + 分类 chip + 「分类」面板，搜索在这里
+        属于「第四种找货方式」，反而把首屏到商品的距离拉长。
+        保留 DOM 与 data-search-open 钩子（桌面端 header 的搜索仍可用），
+        只加 hidden，需要恢复时删掉这个属性即可。 */}
+    <button class="mhero-search" type="button" data-search-open aria-label="搜索站内作品" hidden>
       <span aria-hidden="true">⌕</span>想找什么字？先搜一下
     </button>
   </div>
@@ -86,6 +91,7 @@ const { priceFrom, itemCount } = Astro.props;
 
     /* 搜索胶囊（移动端唯一的搜索入口，保留） */
     .mhero-search { width: 100%; min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 7px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255, 255, 255, .7); color: var(--ink-soft); font: inherit; font-size: 13.5px; letter-spacing: .04em; }
+    .mhero-search[hidden] { display: none; }
     .mhero-search span[aria-hidden] { font-size: 16px; color: var(--cinnabar); line-height: 1; }
   }
 </style>

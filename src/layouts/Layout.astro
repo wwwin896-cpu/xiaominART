@@ -287,16 +287,18 @@ const chatSdkSrc = chatConfig.knocketIdentifier
        它会成为 fixed 后代（#site-nav 抽屉）的包含块，抽屉定位直接废掉
        （2026-10-28 已踩过一次，见下方抽屉注释）。 */
     .site-header { position: sticky; top: 8px; z-index: 5; background: transparent; border-bottom: 0; backdrop-filter: none; }
-    .header-inner { position: relative; width: calc(100% - 20px); min-height: 56px; margin: 0 auto; padding: 0 10px 0 14px; gap: 10px; background: transparent; }
+    /* 2026-10-31：logo 放大到 36px，胶囊高度随之抬到 64px（等比留白 14px 上下） */
+    .header-inner { position: relative; width: calc(100% - 20px); min-height: 64px; margin: 0 auto; padding: 0 10px 0 14px; gap: 10px; background: transparent; }
     .header-inner::before { content: ''; position: absolute; inset: 0; border-radius: 999px; background: rgba(250, 247, 238, .92); backdrop-filter: blur(16px) saturate(1.3); -webkit-backdrop-filter: blur(16px) saturate(1.3); border: 1px solid rgba(255, 255, 255, .7); box-shadow: 0 4px 24px rgba(60, 50, 30, .12); }
     .header-inner > :not(#site-nav) { position: relative; z-index: 1; }
     /* 品牌：横版 logo 换成 demo 的「印章 + 字号」 */
     .brand { display: flex; min-width: 0; max-width: none; gap: 9px; align-items: center; }
-    /* ── 移动端品牌（2026-10-30 v5.0）────────────────────────────
-       换官方标准矢量 logo（红黑双色、透明底），高度锁 24px、宽度自适应。
+    /* ── 移动端品牌（2026-10-30 v5.0，10-31 放大 50%）────────────
+       换官方标准矢量 logo（红黑双色、透明底），高度 36px（原 24px）、宽度自适应。
+       头部胶囊 min-height 同步抬到 64px，避免 logo 撑破 56px 的胶囊。
        桌面横版 PNG（.brand-logo）在移动端隐藏，两者不同时出现。 */
     .brand-logo { display: none; }
-    .brand-logo-zh { display: block; width: auto; height: 24px; }
+    .brand-logo-zh { display: block; width: auto; height: 36px; }
     .brand { min-width: 0; }
     .brand-seal { display: none; }
     /* 汉堡按钮（demo .burger）：38px 圆形热区、三条 2px 线，替代旧文字方框 */
@@ -331,6 +333,13 @@ const chatSdkSrc = chatConfig.knocketIdentifier
     body.menu-open .site-header { z-index: 10; }
     nav a { padding: 11px 0; border-bottom: 1px solid var(--line); min-height: 0; }
     nav a small { display: none; }
+    /* 2026-10-31：移动抽屉菜单文案覆盖（navItems[].navLabel）。
+       桌面显示 .nav-zh-desk（如「机构合作」），移动抽屉显示 .nav-zh-mob（如「非遗合作」）。
+       未设 navLabel 的项两串相同，视觉无差别。 */
+    .nav-zh-mob { display: none; }
+    .nav-zh-desk { display: inline; }
+    nav .nav-zh-desk { display: none; }
+    nav .nav-zh-mob { display: inline; }
     .nav-item:last-child > a { border-bottom: 0; }
     .nav-dropdown { position: static; display: flex; flex-wrap: wrap; column-gap: 24px; opacity: 1; visibility: visible; transform: none; padding: 0 0 4px; border: 0; box-shadow: none; background: transparent; min-width: 0; }
     .nav-dropdown a { font-size: 13px; padding: 7px 0; border: 0; min-height: 0; color: var(--ink-soft); }

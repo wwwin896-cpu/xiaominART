@@ -36,6 +36,11 @@
 //     ⚠️ 企业侧地址**仍是 /business-gifts/**，不改 /custom/corporate ——
 //        该页已有收录与内链，改地址等于把 SEO/GEO 积累推倒重来（业主 2026-10-19 同意）
 //   · 「机构合作」「关于我们」保持不变
+//
+// 2026-10-31 v5.0 移动端：抽屉菜单第四项「机构合作」→「非遗合作」（业主指定）。
+//   用 navLabel 做移动端覆盖，而不是直接改 zh —— 桌面端九处（导航/面包屑/
+//   结构化数据/sitemap 注释/页脚）都读 zh，中文关键词「机构合作」已有半年
+//   收录积累，桌面端保持原样更稳。移动端抽屉渲染时优先取 navLabel ?? zh。
 export const navItems = [
   {
     href: '/zodiac/', zh: '一字一源', en: 'One Character', children: [
@@ -51,7 +56,7 @@ export const navItems = [
     ],
   },
   {
-    href: '/partners/', zh: '机构合作', en: 'Partnerships', children: [
+    href: '/partners/', zh: '机构合作', en: 'Partnerships', navLabel: '非遗合作', children: [
       // 2026-10-16 业主裁决：下拉只保留三条业务方向；「合作案例」不是一栏业务，
       // 其入口保留在 /partners/ 页面内的案例卡片里（不再出现在导航下拉）。
       { href: '/partners/publishing/', zh: '出版社插画', en: 'Publishing' },

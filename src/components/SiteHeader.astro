@@ -49,7 +49,7 @@ const { isCurrent } = Astro.props;
           淡朱砂底 + 印泥质感，悬停时吸过去、离开后回到当前项。
           aria-hidden：纯装饰，不进无障碍树。仅 ≥768px 且支持悬停时由 JS 激活。 */}
       <span class="nav-magnet" aria-hidden="true"></span>
-      {navItems.map((item) => <div class="nav-item"><a href={item.href} class:list={{ current: isCurrent(item.href) }} aria-current={isCurrent(item.href) ? 'page' : undefined}><span>{item.zh}</span><small lang="en">{item.en}</small></a>{item.children?.length ? <div class="nav-dropdown">{item.children.map((child) => <a href={child.href}><span>{child.zh}</span><small lang="en">{child.en}</small></a>)}</div> : null}</div>)}
+      {navItems.map((item) => <div class="nav-item"><a href={item.href} class:list={{ current: isCurrent(item.href) }} aria-current={isCurrent(item.href) ? 'page' : undefined}><span class="nav-zh"><span class="nav-zh-desk">{item.zh}</span><span class="nav-zh-mob">{item.navLabel ?? item.zh}</span></span><small lang="en">{item.en}</small></a>{item.children?.length ? <div class="nav-dropdown">{item.children.map((child) => <a href={child.href}><span>{child.zh}</span><small lang="en">{child.en}</small></a>)}</div> : null}</div>)}
     </nav>
     {/* 桌面端没有移动底栏，心愿单需要一个常驻入口：
         它不能塞进主导航（业主明确要求保持 4 个导航项不动），
