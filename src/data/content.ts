@@ -448,6 +448,158 @@ export const giftProducts: GiftProduct[] = [
           '随附风琴折页藏品证书与释读说明：证书一面为藏品登记页（作品编号、品名、艺术签名，钤朱红印鉴），一面为使用与养护说明；另配黑色信封一枚，以朱砂火漆封缄——写给老师的那段话装在信封里，拆封前谁也没有读过。',
           '棉绳手提袋、米白便签卡与棉质白手套一并提供。开箱次序我们在证书上写好了：先核证书，再戴手套取框，摆位之后，包装纸留着——那也是设计的一部分。'], image: '/assets/scenes/ink-breath-packaging.jpg', imageAlt: '墨有呼吸珍藏礼盒：黑胡桃框作品与黑色天地盖礼盒、棉绳手提袋一同陈列于案头，旁有茶壶与砚台' },
     ] },
+
+  // ── 2026-10-31 业主上新：案头横幅小品 14 件（现货，实景图入库）───────────
+  // 定价（业主指定，覆盖此前的「40.5×17.5 → ¥300–500」默认档）：
+  //   心静则泰（45×45 方幅 · 画芯 40×40）→ ¥299；
+  //   其余 13 件横幅（外框 40.5×17.5 · 画芯 38×15）→ ¥199。
+  // 均为已装裱现货：dispatch 含「现货」字样，GiftProductDetail 会自动识别为
+  // 「现货顺丰直发」交付模式（WO-P0-02 的正则判定，无需新增字段）。
+  // 归类：scene 取 giftScenes 既有键（housewarming/opening/birthday/festival），
+  // 保证场合页与移动端分类筛选（applyGroup）自动接住，不出现空类。
+  // SEO：详情页 title/description/Product JSON-LD/面包屑由 gifts/[slug].astro
+  // 按 meaning/recipient/packaging 自动拼装——各字段务必写成完整可读的句子，
+  // 不要写成关键词堆砌（写法要求已录入 xiaominart-visual-layout skill）。
+  { slug: 'xin-jing-ze-tai', name: '心静则泰 · 方幅静气', en: 'A Still Heart · Square Framed Work', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥299', meaning: '心一静，事情就顺了。竖排题字配一茎兰草，方幅居中，像给房间安了一个安静的锚点——茶室、玄关、书房案侧都放得住。', recipient: '适合送给常喝茶、爱读书的人，或为新居、新办公室添一份静气。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '心', image: '/assets/works/xin-jing-ze-tai.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「心静则泰」写的什么', paragraphs: ['语出《菜根谭》一路的修身话头：心安静下来，处境自然安泰。竖行行楷配工笔兰草一茎，字与画各占一半留白，是全系列里唯一一件方幅。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 45 × 45 cm（方幅），对角线误差 ≤ 1 mm' },
+        { label: '画芯尺寸', value: '约 40 × 40 cm，四边留白装裱' },
+        { label: '框体', value: '原木色实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '实木框条、棉麻卡纸留白、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'an-ning', name: '安寧 · 家宅平安', en: 'Peace at Home', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥199', meaning: '两个字，是给一个家最朴素的祝愿：身体安，心里宁。行草写得舒展，挂在客厅边柜或卧室斗柜，灯光下看一眼就安稳。', recipient: '适合乔迁、婚房布置，或送给牵挂家宅平安的长辈。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '安', image: '/assets/works/an-ning.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「安寧」写的什么', paragraphs: ['行草大字横幅，右侧小字纪年题款、钤名章闲章。「安」宝盖头下一女子，家有人气；「寧」从心从皿，心中有著落。二字合起来，是中国人给一个家最要紧的祝福。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'bao-pu-shou-zheng', name: '抱樸守正 · 书房铭', en: 'Hold to Simplicity, Keep Upright', scene: 'opening', sceneLabel: '开业贺礼', tier: 'entry', price: '¥199', meaning: '抱朴守正，出自《道德经》「见素抱朴」。生意场上滚过一圈还守得住本分的人，值得这四个字——挂在办公室，是提醒，也是底气。', recipient: '适合送给创业者、合伙人或新办公室落成的团队。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '樸', image: '/assets/works/bao-pu-shou-zheng.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「抱樸守正」写的什么', paragraphs: ['行楷横幅，笔势沉着。语本《老子》「见素抱朴，少私寡欲」：守住本真，路才走得长。开业送这四个字，比「财源广进」更有分量。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'shou-zheng-chu-qi', name: '守正出奇 · 事功语', en: 'Upright in Principle, Bold in Play', scene: 'opening', sceneLabel: '开业贺礼', tier: 'entry', price: '¥199', meaning: '以正合，以奇胜——守住正道，才出得了奇兵。挂在办公桌上方的横幅，谈判时余光能扫到，是做事的分寸，也是胆识。', recipient: '适合送给做经营、带团队的人，或乔迁新办公室的同仁。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '奇', image: '/assets/works/shou-zheng-chu-qi.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「守正出奇」写的什么', paragraphs: ['语本《孙子兵法》「凡战者，以正合，以奇胜」。行草写得开张，「奇」字最后一笔拉长，像一步出人意料的好棋。附释读卡一页，把出处讲给收礼的人。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'shou-zheng', name: '守正 · 二字箴言', en: 'Hold Upright', scene: 'opening', sceneLabel: '开业贺礼', tier: 'entry', price: '¥199', meaning: '两个字的分量，在于天天看得见。守正——守住做人的底、做事的线，办公室和书房都合适，送男生尤其稳。', recipient: '适合送给重视原则的师长、同事或合作伙伴。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '正', image: '/assets/works/shou-zheng.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「守正」写的什么', paragraphs: ['隶书大字横幅，墨色厚重、字距开阔，右上一枚朱印收气。二字千钧：守住正，其余都是手段。释读卡随附，出处与写法一并说明。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'wan-shi-hui-jiang', name: '萬事會講 · 好商量', en: 'Everything Is Negotiable', scene: 'opening', sceneLabel: '开业贺礼', tier: 'entry', price: '¥199', meaning: '篆书写的四个大白话：万事会讲。生意是谈出来的，家事是商量出来的——挂在店里、会议室外，客人见了会心一笑，话头就开了。', recipient: '适合送给开店做生意、做服务的朋友，也适合挂在会客区。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '萬', image: '/assets/works/wan-shi-hui-jiang.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「萬事會講」写的什么', paragraphs: ['以先秦篆意写一句大白话——万事，会讲。古文字的庄重和口语的松弛放在一处，是全系列里最有幽默感的一件。释读卡讲了这层反差，客人问起正好当故事讲。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'ban-cang', name: '半藏 · 茶室禅语', en: 'Half Hidden', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥199', meaning: '好东西，藏一半。半藏——茶席上留三分不说破，日子留一半不摆出来。隶书墨色极淡，是全系列里最安静的一件。', recipient: '适合送给懂茶、习茶的人，或挂在茶室、榻榻米一隅。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '藏', image: '/assets/works/ban-cang.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「半藏」写的什么', paragraphs: ['隶书二字，淡墨轻刷，像午后斜照在茶巾上的一道影。「藏一半」是茶人的分寸，也是做人的余地。小尺幅最宜近距离细看，纸纹与枯笔都看得清。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'bao-shou', name: '寶壽 · 祝寿之礼', en: 'Treasured Longevity', scene: 'birthday', sceneLabel: '生日心意', tier: 'entry', price: '¥199', meaning: '寶，是家里有他这座山；壽，是岁月肯多给他几年。篆隶合写的两个字端端正正，给长辈过寿，比红包郑重得多。', recipient: '适合送给过寿的长辈、敬重的师长，或作为家族纪念。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '壽', image: '/assets/works/bao-shou.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「寶壽」写的什么', paragraphs: ['篆书大字「寶壽」，旁以行书小字题「福如东海，寿比南山」并纪年钤印。祝寿的场面话被古文字收进两个字里，庄重而不俗气。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'na-mo-a-mi-tuo-fo', name: '南無阿彌陀佛 · 佛前供养', en: 'Homage to Amitabha', scene: 'festival', sceneLabel: '节日问候', tier: 'entry', price: '¥199', meaning: '六字洪名，以汉简笔意写就，淡茶色底配朱印。供在佛龛旁、玄关条案上，进门出门都能看到——是家里的定盘星。', recipient: '适合送给礼佛的长辈，或作为佛堂、禅室的空间供养。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '佛', image: '/assets/works/na-mo-a-mi-tuo-fo.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「南無阿彌陀佛」写的什么', paragraphs: ['汉简体六字横幅，笔势纵向取势、字字独立，写在淡茶色仿古纸上。写这六个字要屏息——一笔一画都是敬意。释读卡说明汉简书体的来处。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'hu-zhong-ri-yue-chang', name: '壺中日月長 · 茶事联句', en: 'Long Days in the Teapot', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥199', meaning: '壶里自有日月长——一泡茶的工夫，天大的事都先放一放。隶书五字写给爱茶的人，挂在茶室、厨房茶台边都合适。', recipient: '适合送给泡茶的人、开茶馆的朋友，或为新茶席开张贺喜。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '壺', image: '/assets/works/hu-zhong-ri-yue-chang.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「壺中日月長」写的什么', paragraphs: ['语出道家壶公典故：壶中别有日月。隶书五字，撇捺舒展，写在带帘纹的手撕纸上，纸边保留原生态毛边。一壶一字的组合，是茶席上最好讲的话题。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'jian-ding', name: '堅定 · 鼓劲二字', en: 'Steadfast', scene: 'birthday', sceneLabel: '生日心意', tier: 'entry', price: '¥199', meaning: '考学、创业、转行、渡难关——两个字不多说，站在他这边。行楷写得笃定，摆在书桌右上角，抬头就能借到一口气。', recipient: '适合送给备考的孩子、起步的朋友，或需要一点笃定的自己。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '堅', image: '/assets/works/jian-ding.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「堅定」写的什么', paragraphs: ['行楷二字，笔画咬得住纸，像咬得住牙的人。「堅」的土字底写得厚，「定」的宝盖收得稳——鼓励的话不用说满，两个字就够。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'jin-lan', name: '盡覽 · 案头观照', en: 'All Within Sight', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥199', meaning: '汉简写「盡覽」——尽收眼底。书桌上立着这两个字，手里的事再杂，抬头看一眼，就当是把自己重新摆正了。', recipient: '适合送给做研究、做管理的人，或挂在书房与办公桌前。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '覽', image: '/assets/works/jin-lan.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「盡覽」写的什么', paragraphs: ['汉简体二字，纵势取姿、笔笔见锋，写在素白仿绢纸上。覽字笔画繁，写得极密；盡字收笔极简——一密一疏，正是这件作品的看头。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'jin-lan-zhong', name: '盡覽中 · 客厅横幅', en: 'All Within Sight · Broad Version', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥199', meaning: '盡覽中——风景尽在眼里，格局也尽在眼里。三字横幅比两字版更开阔，配客厅矮柜、餐厅边柜的横向空间刚刚好。', recipient: '适合送新居入伙的朋友，或为客厅、餐厅选一件压得住的横幅。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '覽', image: '/assets/works/jin-lan-zhong.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「盡覽中」写的什么', paragraphs: ['汉简三字横幅，多一个「中」字，气象就松快了——风景也好、心事也好，都在看它、也在被看。纪年题款钤印在左，释读卡随附。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'tui-chuang-jiang-wu-ji', name: '推窗四面江無際 · 隶书横幅', en: 'Open the Window to the Boundless River', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥199', meaning: '窗一推开，江面无边——这是全系列尺幅最长、字最多的一件。隶书写七字，行气如江水横流，适合有进深的横墙：客厅长柜、书房案上方。', recipient: '适合送给事业 opening 一周年、搬进大办公室的人，或自家用作客厅主墙。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '江', image: '/assets/works/tui-chuang-jiang-wu-ji.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「推窗四面江無際」写的什么', paragraphs: ['隶书七字长句：窗一开，四面都是无边的江。字距拉开如行船，波磔如桨。释读卡把这七句的想象讲给收礼的人——推窗见江，不一定要真有一面江。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
 ];
 
 export const giftScenes = [
