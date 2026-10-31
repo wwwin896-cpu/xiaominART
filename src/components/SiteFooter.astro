@@ -41,13 +41,24 @@ const { isHome = false } = Astro.props;
           {siteContact.wechatQr ? <a class="wechat-qr-link" href={siteContact.wechatQr} target="_blank" rel="noopener" title="点击查看大图，长按识别添加"><img class="wechat-qr" src={siteContact.wechatQr} width="112" height="112" alt="小民艺术微信二维码" loading="lazy" /></a> : null}
           <p>{siteContact.wechatId ? <>微信 / 企业微信：<strong>{siteContact.wechatId}</strong></> : siteContact.wechatQr ? <>微信 / 企业微信：扫码添加</> : <>微信 / 企业微信：提交<a href="/custom-commission/">定制咨询表单</a>并留下你的微信号，我们会主动添加你。</>}<br />（备注来意，尽快回复）</p>
         </div>
-        <p class="footer-hint">送礼问题可先从<a href="/gift-guide/">送礼指南</a>开始；需要个性化建议，可<a href="/custom-commission/">提交咨询</a>。</p>
+        {/* 2026-11-01 业主：微信区下方的功能链接统一做成胶囊按钮（送礼指南 /
+            提交咨询 / 作品编码查询 / 帮助中心 / 售后 / 隐私），并新增「我的收藏」
+            ——data-wishlist-open 由 WishlistDrawer 脚本全局绑定，点击直接开心愿单抽屉。 */}
+        <div class="footer-pills" role="group" aria-label="常用功能">
+          <a class="footer-pill" href="/gift-guide/">送礼指南</a>
+          <a class="footer-pill" href="/custom-commission/">提交咨询</a>
+          <button class="footer-pill" type="button" data-wishlist-open>♡ 我的收藏</button>
+          <a class="footer-pill" href="/verify/">作品编码查询</a>
+          <a class="footer-pill" href="/help/">帮助中心</a>
+          <a class="footer-pill" href="/help/#after-sales">售后保障与退换须知</a>
+          <a class="footer-pill" href="/privacy/">隐私政策</a>
+        </div>
         {/* 2026-10-28 审计修复：/scenes/ /seasons/ /works/ 三个页面在 sitemap 与 llms.txt 里
             都收录了，但站内没有任何链接指向它们（旧的导航入口在 10-19 改版时移除，
             页面本身没下）。首页页脚是它们唯一合理的位置 —— 认知路径上也对：
             先看挂在哪，再看哪个节气，最后看作品档案。 */}
         <p class="footer-explore"><span class="eyebrow">Explore / 继续看</span><a href="/scenes/">书法挂在哪：书房·客厅·茶室·玄关 →</a><a href="/seasons/">四季节气与应时祝愿 →</a><a href="/works/">作品档案与字形考据 →</a></p>
-        <p class="footer-policy"><a href="/verify/">作品编码查询 →</a><a href="/help/">帮助中心 →</a><a href="/help/#after-sales">售后保障与退换须知 →</a><a href="/privacy/">隐私政策 →</a></p>
+        {/* 2026-11-01：原 footer-policy 四链接已并入上方 footer-pills（含「我的收藏」） */}
       </div>
     </div>
     <div class="container trust-signals" aria-label="信息边界 / Information boundaries"><div><span class="eyebrow">Artist / 艺术家</span><strong>由具体创作方向与沟通内容开始</strong></div><div><span class="eyebrow">Projects / 项目</span><strong>已确认内容才会公开呈现</strong></div><div class="trust-privacy"><span class="eyebrow">Privacy / 隐私</span><strong>客户故事与图像获得授权后发布</strong></div><p>我们不使用未经核验的客户数量、媒体曝光或合作机构作为背书。</p></div>

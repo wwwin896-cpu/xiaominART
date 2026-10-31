@@ -255,6 +255,17 @@ const chatSdkSrc = chatConfig.knocketIdentifier
   .footer-contact a[href^="/custom-commission"] { color: var(--cinnabar); border-bottom: 1px solid var(--cinnabar); }
   .footer-policy { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line-soft); display: flex; flex-wrap: wrap; gap: 4px 18px; }
   .footer-policy a { color: var(--cinnabar); font-size: 13px; border-bottom: 1px solid var(--cinnabar); display: inline-block; margin: 0; min-height: 0; }
+  /* 2026-11-01 业主：页脚微信区下方的功能入口统一成胶囊按钮组（含「我的收藏」）。
+     设计要点（skill 规范）：
+       · 淡纸底 + 细边框的轻胶囊，朱砂只做 hover 态——七个入口不能变成「按钮墙」；
+       · ⚠️ 必须覆盖 .footer-grid a 的 display:flex / min-height:44px（见上 10-16 注释），
+         否则胶囊被撑成高块；
+       · button 与 a 同样式，保证「我的收藏」和其他入口视觉完全一致。 */
+  .site-footer .footer-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line-soft); }
+  /* .site-footer .footer-pill（0-2-0/0-2-1）压过 .footer-grid a（0-1-1）的 flex + 44px 撑高 */
+  .site-footer .footer-pill, .footer-grid a.footer-pill { display: inline-flex; align-items: center; flex-direction: row; gap: 0; min-height: 0; margin: 0; padding: 7px 16px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255, 255, 255, .62); color: var(--ink-soft); font: inherit; font-size: 13px; letter-spacing: .03em; line-height: 1.4; text-decoration: none; cursor: pointer; transition: color .2s, border-color .2s, background-color .2s; }
+  .site-footer .footer-pill:hover, .footer-grid a.footer-pill:hover { color: var(--cinnabar); border-color: rgba(192, 57, 43, .45); background: rgba(192, 57, 43, .05); }
+  .footer-pill[hidden] { display: none; }
   /* 2026-10-28：页脚「继续看」区。给 /scenes/ /seasons/ /works/ 三个此前零入链的页面
      一个可见入口。字号与 footer-policy 同级但不用朱砂色，避免和合规链接抢注意力。 */
   .footer-explore { margin-top: 20px; display: flex; flex-direction: column; gap: 6px; }
