@@ -510,9 +510,9 @@ export const giftProducts: GiftProduct[] = [
         { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
         { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
     ] },
-  { slug: 'wan-shi-hui-jiang', name: '萬事會講 · 好商量', en: 'Everything Is Negotiable', scene: 'opening', sceneLabel: '开业贺礼', tier: 'entry', price: '¥199', meaning: '篆书写的四个大白话：万事会讲。生意是谈出来的，家事是商量出来的——挂在店里、会议室外，客人见了会心一笑，话头就开了。', recipient: '适合送给开店做生意、做服务的朋友，也适合挂在会客区。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '萬', image: '/assets/works/wan-shi-hui-jiang.jpg',
+  { slug: 'wan-shi-heng-tong', name: '萬事亨通 · 开业吉语', en: 'All Things Prosper', scene: 'opening', sceneLabel: '开业贺礼', tier: 'entry', price: '¥199', meaning: '萬事亨通——四个字写在开业那天最合适：进门的人顺，出门的事顺。古文字写吉语，庄重里带着人气，挂店里、会客区都不违和。', recipient: '适合送给开店做生意、做服务的朋友，也适合挂在会客区。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '萬', image: '/assets/works/wan-shi-heng-tong.jpg',
     deepDive: [
-      { eyebrow: 'Chapter 01 / 释读', heading: '「萬事會講」写的什么', paragraphs: ['以先秦篆意写一句大白话——万事，会讲。古文字的庄重和口语的松弛放在一处，是全系列里最有幽默感的一件。释读卡讲了这层反差，客人问起正好当故事讲。'] },
+      { eyebrow: 'Chapter 01 / 释读', heading: '「萬事亨通」写的什么', paragraphs: ['四字以古文字意写就：亨者，通达；通者，无阻。「萬事亨通」是开业、乔迁的老吉语，换成古文字写，既讨口彩，也压得住场面。释读卡逐字说明字形来路。'] },
       { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
         { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
         { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
@@ -530,7 +530,7 @@ export const giftProducts: GiftProduct[] = [
         { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
         { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
     ] },
-  { slug: 'bao-shou', name: '寶壽 · 祝寿之礼', en: 'Treasured Longevity', scene: 'birthday', sceneLabel: '生日心意', tier: 'entry', price: '¥199', meaning: '寶，是家里有他这座山；壽，是岁月肯多给他几年。篆隶合写的两个字端端正正，给长辈过寿，比红包郑重得多。', recipient: '适合送给过寿的长辈、敬重的师长，或作为家族纪念。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '壽', image: '/assets/works/bao-shou.jpg',
+  { slug: 'bao-shou', name: '寶壽 · 长寿之祝', en: 'Treasured Longevity', scene: 'birthday', sceneLabel: '生日心意', tier: 'entry', price: '¥199', meaning: '寶，是家里有他这座山；壽，是岁月肯多给他几年。篆隶合写的两个字端端正正，给长辈过寿，比红包郑重得多。', recipient: '适合送给过寿的长辈、敬重的师长，或作为家族纪念。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '壽', image: '/assets/works/bao-shou.jpg',
     deepDive: [
       { eyebrow: 'Chapter 01 / 释读', heading: '「寶壽」写的什么', paragraphs: ['篆书大字「寶壽」，旁以行书小字题「福如东海，寿比南山」并纪年钤印。祝寿的场面话被古文字收进两个字里，庄重而不俗气。'] },
       { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
@@ -550,9 +550,9 @@ export const giftProducts: GiftProduct[] = [
         { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
         { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
     ] },
-  { slug: 'hu-zhong-ri-yue-chang', name: '壺中日月長 · 茶事联句', en: 'Long Days in the Teapot', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥199', meaning: '壶里自有日月长——一泡茶的工夫，天大的事都先放一放。隶书五字写给爱茶的人，挂在茶室、厨房茶台边都合适。', recipient: '适合送给泡茶的人、开茶馆的朋友，或为新茶席开张贺喜。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '壺', image: '/assets/works/hu-zhong-ri-yue-chang.jpg',
+  { slug: 'hu-zhong-ri-yue-chang', name: '壺中日月長 · 茶室禅语', en: 'Long Days in the Teapot', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥199', meaning: '壶里自有日月长——一泡茶的工夫，天大的事都先放一放。五个字写给爱茶的人，挂在茶室、茶台边最合适。', recipient: '适合送给泡茶的人、开茶馆的朋友，或为自家茶室、茶台边添一件压得住的小品。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '壺', image: '/assets/works/hu-zhong-ri-yue-chang.jpg',
     deepDive: [
-      { eyebrow: 'Chapter 01 / 释读', heading: '「壺中日月長」写的什么', paragraphs: ['语出道家壶公典故：壶中别有日月。隶书五字，撇捺舒展，写在带帘纹的手撕纸上，纸边保留原生态毛边。一壶一字的组合，是茶席上最好讲的话题。'] },
+      { eyebrow: 'Chapter 01 / 释读', heading: '「壺中日月長」写的什么', paragraphs: ['语出道家壶公典故：壶中别有日月，一壶之内自成一世界。五个字写得疏朗，写在带帘纹的手撕纸上，纸边保留原生毛边。茶席上最好讲的一句话。'] },
       { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
         { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
         { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
@@ -560,7 +560,7 @@ export const giftProducts: GiftProduct[] = [
         { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
         { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
     ] },
-  { slug: 'jian-ding', name: '堅定 · 鼓劲二字', en: 'Steadfast', scene: 'birthday', sceneLabel: '生日心意', tier: 'entry', price: '¥199', meaning: '考学、创业、转行、渡难关——两个字不多说，站在他这边。行楷写得笃定，摆在书桌右上角，抬头就能借到一口气。', recipient: '适合送给备考的孩子、起步的朋友，或需要一点笃定的自己。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '堅', image: '/assets/works/jian-ding.jpg',
+  { slug: 'jian-ding', name: '堅定 · 励志二字', en: 'Steadfast', scene: 'birthday', sceneLabel: '生日心意', tier: 'entry', price: '¥199', meaning: '考学、创业、转行、渡难关——两个字不多说，站在他这边。行楷写得笃定，摆在书桌右上角，抬头就能借到一口气。', recipient: '适合送给备考的孩子、起步的朋友，或需要一点笃定的自己。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '堅', image: '/assets/works/jian-ding.jpg',
     deepDive: [
       { eyebrow: 'Chapter 01 / 释读', heading: '「堅定」写的什么', paragraphs: ['行楷二字，笔画咬得住纸，像咬得住牙的人。「堅」的土字底写得厚，「定」的宝盖收得稳——鼓励的话不用说满，两个字就够。'] },
       { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
@@ -580,9 +580,9 @@ export const giftProducts: GiftProduct[] = [
         { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
         { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
     ] },
-  { slug: 'jin-lan-zhong', name: '盡覽中 · 客厅横幅', en: 'All Within Sight · Broad Version', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥199', meaning: '盡覽中——风景尽在眼里，格局也尽在眼里。三字横幅比两字版更开阔，配客厅矮柜、餐厅边柜的横向空间刚刚好。', recipient: '适合送新居入伙的朋友，或为客厅、餐厅选一件压得住的横幅。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '覽', image: '/assets/works/jin-lan-zhong.jpg',
+  { slug: 'jin-lan-zhong', name: '盡覽中 · 案头长句', en: 'All Within Sight · Three Characters', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥199', meaning: '盡覽中——风景尽在眼里，格局也尽在眼里。三字比两字版多一处停顿，横着挂在矮柜上方，留白与居室一起松下来。', recipient: '适合送新居入伙的朋友，或为斗柜、边柜上方的横向墙面选一件小品。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '覽', image: '/assets/works/jin-lan-zhong.jpg',
     deepDive: [
-      { eyebrow: 'Chapter 01 / 释读', heading: '「盡覽中」写的什么', paragraphs: ['汉简三字横幅，多一个「中」字，气象就松快了——风景也好、心事也好，都在看它、也在被看。纪年题款钤印在左，释读卡随附。'] },
+      { eyebrow: 'Chapter 01 / 释读', heading: '「盡覽中」写的什么', paragraphs: ['汉简笔意的三个字：尽、览、中。多一个「中」字，气象就松快了——风景也好、心事也好，都在看它、也在被看。纪年题款钤印在左，释读卡随附。'] },
       { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
         { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
         { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
@@ -590,9 +590,9 @@ export const giftProducts: GiftProduct[] = [
         { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
         { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
     ] },
-  { slug: 'tui-chuang-jiang-wu-ji', name: '推窗四面江無際 · 隶书横幅', en: 'Open the Window to the Boundless River', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥199', meaning: '窗一推开，江面无边——这是全系列尺幅最长、字最多的一件。隶书写七字，行气如江水横流，适合有进深的横墙：客厅长柜、书房案上方。', recipient: '适合送给事业 opening 一周年、搬进大办公室的人，或自家用作客厅主墙。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '江', image: '/assets/works/tui-chuang-jiang-wu-ji.jpg',
+  { slug: 'tui-chuang-jiang-wu-ji', name: '推窗四面江無際 · 长句横幅', en: 'Open the Window to the Boundless River', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥199', meaning: '窗一推开，江面无边——这是全系列字最多的一件。七字一行写开，行气如江水横流，适合有进深的横墙：客厅长柜、书房案上方。', recipient: '适合送给事业 opening 一周年、搬进大办公室的人，或自家用作客厅主墙。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '江', image: '/assets/works/tui-chuang-jiang-wu-ji.jpg',
     deepDive: [
-      { eyebrow: 'Chapter 01 / 释读', heading: '「推窗四面江無際」写的什么', paragraphs: ['隶书七字长句：窗一开，四面都是无边的江。字距拉开如行船，波磔如桨。释读卡把这七句的想象讲给收礼的人——推窗见江，不一定要真有一面江。'] },
+      { eyebrow: 'Chapter 01 / 释读', heading: '「推窗四面江無際」写的什么', paragraphs: ['七字一行：窗一开，四面都是无边的江。字距拉开如行船，一笔一画都在往前推。释读卡把这句的想象讲给收礼的人——推窗见江，不一定要真有一面江。'] },
       { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
         { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
         { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
