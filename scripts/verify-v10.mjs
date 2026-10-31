@@ -1,4 +1,5 @@
 // 第四批四项改动 · 双端验证
+// @ts-nocheck —— 一次性验证脚本，CI 的 astro check 会扫描本目录（全局 playwright 无类型声明，隐式 any 会报错，2026-11-01 部署失败根因）
 import { chromium } from '/root/.nvm/versions/node/v22.13.1/lib/node_modules/playwright/index.mjs';
 
 const BASE = 'http://localhost:4173/';
