@@ -91,6 +91,20 @@ const itemCount = giftProducts.length + zodiacWorks.length + readyMadeWorks.leng
   <MobileHomeHero priceFrom={priceFrom} itemCount={itemCount} />
   {/* v5.0 双核分流（书法/非遗）+ 企业专区：仅移动端渲染 */}
   <div class="mcore-wrap"><MobileCoreCards /></div>
+  {/* 2026-11-01 业主：包装实拍图放在「企业商务礼赠·专属定制」（双核卡）下方、
+      「四时有序，一季一字」场景图上方 —— 让采购方先看到「到手是什么样」。
+      仅移动端渲染；桌面端 DOM 里也不该多一张图（display:none 兜底，lazy 图不会请求）。 */}
+  <figure class="mcore-pack">
+    <img
+      src="/assets/scenes/gift-packaging-set2.jpg"
+      alt="小民艺术黑礼盒装帧实拍：礼盒、手提袋、藏品证书与火漆信封"
+      width="1280" height="720" loading="lazy" decoding="async"
+    />
+    <figcaption class="mcore-pack-cap">
+      <span class="eyebrow">Packaging / 行装</span>
+      <strong class="serif">一件作品的体面行装</strong>
+    </figcaption>
+  </figure>
   <MobileShowcase />
 
   <section class="hero hero--desktop" aria-label="品牌横幅">
@@ -321,6 +335,9 @@ const itemCount = giftProducts.length + zodiacWorks.length + readyMadeWorks.leng
      直接在模板里写的裸 div，Astro 不会给它注入 data-astro-cid 属性，
      不写 :global 时这条规则永远不命中（实测：桌面/移动都被 display:none）。 */
   :global(.mcore-wrap) { display: none; }
+  /* 包装实拍图（2026-11-01）：同 mcore-wrap，仅移动端；样式参照 mshow-scene 的
+     淡化 + 底渐变托字方案（skill 规范：场景图 cover、文字压轻蒙层）。 */
+  :global(.mcore-pack) { display: none; }
   .hero { position: relative; min-height: min(88vh, 820px); overflow: hidden; }
   .hero-slide { position: absolute; inset: 0; display: flex; align-items: center; opacity: 0; transition: opacity 1.1s ease; pointer-events: none; }
   .hero-slide.is-active { opacity: 1; pointer-events: auto; }
@@ -509,6 +526,27 @@ const itemCount = giftProducts.length + zodiacWorks.length + readyMadeWorks.leng
        三张卡原来是贴边满宽，和下方 MobileShowcase 的 16px 内边距不对齐，
        视觉上像「卡从屏幕缝里长出来」。这里统一 16px，与商品卡左沿对齐。 */
     :global(.mcore-wrap) { display: block; padding: 20px 16px 4px; }
+    /* 包装实拍图（2026-11-01）：16:9 通栏 + 淡化蒙层，与 mshow-scene 同一视觉语言 */
+    :global(.mcore-pack) {
+      display: block; position: relative; margin: 14px 0 0;
+      aspect-ratio: 16 / 9; overflow: hidden; background: var(--paper-deep);
+    }
+    :global(.mcore-pack img) {
+      display: block; width: 100%; height: 100%;
+      object-fit: cover; object-position: 50% 50%;
+      opacity: .9; filter: saturate(.94) brightness(1.04);
+    }
+    :global(.mcore-pack::after) {
+      content: ''; position: absolute; inset: auto 0 0; height: 52%;
+      background: linear-gradient(180deg, transparent, rgba(28, 22, 14, .4));
+      pointer-events: none;
+    }
+    :global(.mcore-pack-cap) {
+      position: absolute; left: 16px; right: 16px; bottom: 12px; z-index: 2;
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    :global(.mcore-pack-cap .eyebrow) { color: rgba(255, 255, 255, .88); font-size: 10px; letter-spacing: .3em; }
+    :global(.mcore-pack-cap strong) { color: #fff; font-size: 18px; font-weight: 500; letter-spacing: .14em; text-shadow: 0 2px 10px rgba(0, 0, 0, .42); }
     /* 移动端首屏已换成 MobileHomeHero，这块轮播整段不参与渲染。
        用 display:none 而不是不渲染：轮播脚本按 [data-hero-slide] 取节点，
        节点还在，脚本不会因取不到元素报错（本页脚本有 hero? 判空，但保留更稳）。 */

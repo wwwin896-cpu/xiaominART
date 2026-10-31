@@ -41,14 +41,21 @@
 //   用 navLabel 做移动端覆盖，而不是直接改 zh —— 桌面端九处（导航/面包屑/
 //   结构化数据/sitemap 注释/页脚）都读 zh，中文关键词「机构合作」已有半年
 //   收录积累，桌面端保持原样更稳。移动端抽屉渲染时优先取 navLabel ?? zh。
+// 2026-11-01 v6.0 移动端（业主指定）：
+//   · 「一字一源」更名「一字一礼」——沿「机构合作→非遗合作」同一条 navLabel 覆盖
+//     方案：移动端抽屉显示新名，桌面端九处（导航/面包屑/结构化数据/sitemap/页脚）
+//     继续读 zh「一字一源」，保住已有收录关键词；
+//   · 首页移动端的「四时一笺」「生肖纪岁」两个板块整段隐藏（Layout.astro），
+//     入口收进本菜单 children：「字游记」承接生肖线，「小民好礼」从一级菜单
+//     合并进来（/gifts/ 地址不变，SEO 零影响）。
 export const navItems = [
   {
-    href: '/zodiac/', zh: '一字一源', en: 'One Character', children: [
+    href: '/zodiac/', zh: '一字一源', en: 'One Character', navLabel: '一字一礼', children: [
+      { href: '/gifts/', zh: '小民好礼', en: 'Xiaomin Gifts' },
       { href: '/zodiac/', zh: '字游记', en: 'Character Journal' },
       { href: '/notes/', zh: '创作笔记', en: 'Studio Notes' },
     ],
   },
-  { href: '/gifts/', zh: '小民好礼', en: 'Xiaomin Gifts' },
   {
     href: '/custom/', zh: '定制业务', en: 'Custom', children: [
       { href: '/business-gifts/', zh: '企业定制', en: 'For Business' },

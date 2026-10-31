@@ -286,6 +286,10 @@ const chatSdkSrc = chatConfig.knocketIdentifier
      中文主项保持 —— 移动端（767px）本来就隐藏英文，视觉一致。 */
   @media (max-width: 1000px) { nav a small { display: none; } }
   @media (max-width: 767px) {
+    /* 2026-11-01 业主：移动端首页「一字一源·四时一笺」「一字一源·生肖纪岁」
+       两个板块整段隐藏（桌面端不动）——入口收进抽屉菜单「一字一礼」里。
+       用 display:none 而非删节点：桌面端 DOM 与 SEO 一行不变。 */
+    .choices, .zodiac-block { display: none; }
     /* ── 移动端头部：demo 玻璃胶囊导航（2026-10-29 v2）─────────────
        旧版是通栏白底条。新版：脱离通栏、悬浮玻璃胶囊条（左印章品牌右汉堡）。
        ⚠️ backdrop-filter 必须放在 ::before 伪元素上——若放在 .header-inner 本体，
