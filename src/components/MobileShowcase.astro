@@ -55,7 +55,7 @@ const tiles: Tile[] = [];
 // 生肖十二件 slug：鼠牛虎兔龙蛇马羊猴鸡狗猪（与 zodiacWorks 一一对应）。
 const ZODIAC_TILE_IDS = new Set(['shu', 'niu', 'hu', 'tu', 'long', 'she', 'ma', 'yang', 'hou', 'ji', 'gou', 'zhu']);
 // 外宾组用现有 6 件商品里「符号感最强、最不涉私人关系」的四件（slug 已与 giftProducts 核对）。
-const FOREIGN_TILE_IDS = new Set(['quiet-entry-gift', 'cinnabar-note-gift', 'seasonal-letter-gift', 'ink-breath-teacher']);
+const FOREIGN_TILE_IDS = new Set(['nan-xi-xin-ji', 'cinnabar-note-gift', 'seasonal-letter-gift', 'ink-breath-teacher']);
 // 校园庆典：赠予学校的题字类（德馨雅居=校训/书房气、「长乐」=校庆吉语）+ 师生互赠的节气礼。
 const CAMPUS_TILE_IDS = new Set(['de-xin-ya-ju', 'chang-le', 'seasonal-letter-gift']);
 // 活动手伴：小尺幅现货（案头/挂墙小品，单价 ¥399 起、可单件带走、24h 直发），
@@ -72,8 +72,12 @@ const extraGroups = (id: string, kind: string): string[] => {
 };
 
 // ① 礼品线（/gifts/…）：每件本身就是一条业务详情页
+// 2026-10-31 业主：静入卡位换成「南谿新霁」（横版实景）——
+// 南谿新霁本就是现货线商品（有自己的卡），故这里直接把静入从
+// 今季之选移除，避免同一商品出现两张卡；南谿新霁随后提到首位。
 for (const p of giftProducts) {
   if (p.published === false) continue;
+  if (p.slug === 'quiet-entry-gift') continue;
   tiles.push({
     id: p.slug,
     kind: 'gift',
@@ -189,7 +193,10 @@ const recipientGroups = [
 ];
 
 // 首屏只发前 8 件：再多就是让首屏变回一条长列表。
-// 「看全部 30 件」按钮把其余的一并展开（不跳页，留在当前滚动位置）。
+// 「看全部」按钮把其余的一并展开（不跳页，留在当前滚动位置）。
+// 2026-10-31：静入移除后，把「南谿新霁」（横版实景）提到首位承接第一屏。
+const nanIdx = tiles.findIndex((t) => t.id === 'nan-xi-xin-ji');
+if (nanIdx > 0) tiles.unshift(...tiles.splice(nanIdx, 1));
 const FIRST_BATCH = 8;
 const tilesJson = JSON.stringify(tiles);
 ---
@@ -206,9 +213,9 @@ const tilesJson = JSON.stringify(tiles);
       换图只改 sceneImage 一个常量。 */}
   <figure class="mshow-scene">
     <img
-      src="/assets/scenes/four-seasons-cabinet.jpg"
-      alt="客厅四时之景：书法小品与四季陈设的同框实拍"
-      width="1200" height="675" loading="lazy" decoding="async"
+      src="/assets/scenes/seasonal-writing-desk.jpg"
+      alt="小民伏案书写的实拍场景：木案、笔墨与洒金笺"
+      width="1536" height="1024" loading="lazy" decoding="async"
     />
     <figcaption class="mshow-scene-cap">
       <span class="eyebrow">Seasonal / 今季</span>

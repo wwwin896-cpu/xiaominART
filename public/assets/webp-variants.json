@@ -126,6 +126,11 @@
   600,
   1200
  ],
+ "/assets/scenes/seasonal-writing-desk.jpg": [
+  600,
+  1000,
+  1536
+ ],
  "/assets/scenes/self-practice-writing.jpg": [
   600,
   1200
@@ -221,6 +226,10 @@
  "/assets/works/gift-ready-fan-wide.jpg": [
   600,
   1024
+ ],
+ "/assets/works/nan-xi-xin-ji-wide.jpg": [
+  600,
+  1200
  ],
  "/assets/works/work-chan.jpg": [
   800
