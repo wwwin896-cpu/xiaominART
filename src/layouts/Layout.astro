@@ -190,6 +190,11 @@ const chatSdkSrc = chatConfig.knocketIdentifier
   .mobile-tabbar { display: none; }
   .mobile-ask-fab { display: none; }
   .back-top { display: none; }
+  /* 2026-10-31：移动抽屉菜单文案覆盖（navItems[].navLabel）的基础开关。
+     ⚠️ 必须放在媒体查询之外 —— 否则桌面端两个 span 同时显示
+     （实测线上出现「机构合作非遗合作」连排）。桌面只看 desk、只看 mob。 */
+  .nav-zh-mob { display: none; }
+  .nav-zh-desk { display: inline; }
   nav { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-left: auto; font-size: 16px; }
   .nav-item { position: relative; }
   /* ── 磁吸印章滑块（2026-10-29）─────────────────────────────────
@@ -333,11 +338,8 @@ const chatSdkSrc = chatConfig.knocketIdentifier
     body.menu-open .site-header { z-index: 10; }
     nav a { padding: 11px 0; border-bottom: 1px solid var(--line); min-height: 0; }
     nav a small { display: none; }
-    /* 2026-10-31：移动抽屉菜单文案覆盖（navItems[].navLabel）。
-       桌面显示 .nav-zh-desk（如「机构合作」），移动抽屉显示 .nav-zh-mob（如「非遗合作」）。
-       未设 navLabel 的项两串相同，视觉无差别。 */
-    .nav-zh-mob { display: none; }
-    .nav-zh-desk { display: inline; }
+    /* 2026-10-31：抽屉里切到 mob 文案（desk 只在桌面 nav 生效，见上方基础规则；
+       这里 nav 选择器只在 ≤767px 的抽屉上下文里命中） */
     nav .nav-zh-desk { display: none; }
     nav .nav-zh-mob { display: inline; }
     .nav-item:last-child > a { border-bottom: 0; }
