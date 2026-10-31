@@ -78,7 +78,15 @@ const priceCandidates = readyMadeWorks
   .map((w) => Number(w.price))
   .filter((n) => Number.isFinite(n) && n > 0);
 const priceFrom = priceCandidates.length > 0 ? Math.min(...priceCandidates) : 199;
-const itemCount = giftProducts.length + zodiacWorks.length + readyMadeWorks.length;
+// 2026-10-31 业主：首屏「N 件在册」与今季之选「看全部 N 件」必须一致。
+// 今季之选（MobileShowcase）刻意跳过 quiet-entry-gift（静入已被南谿新霁替换，
+// 避免同一商品两张卡），而这里原先把 giftProducts 全量相加 → 44 vs 43 对不上。
+// 现在统一按「可展示件数」算：排除同一条排除规则，两处天然同源。
+const showcaseItemCount =
+  giftProducts.filter((p) => p.published !== false && p.slug !== 'quiet-entry-gift').length +
+  zodiacWorks.length +
+  readyMadeWorks.length;
+const itemCount = showcaseItemCount;
 ---
 <Layout title="小民艺术｜手写书法礼品与书画定制" description="每一幅字都亲笔手写，取自古文字有出处。送老师、送长辈，或为乔迁、开业、婚庆纪念备一份礼物，可选现货或定制，¥300 起。查看选礼指南 →">
   {/* ── 移动端首屏（2026-10-29）──────────────────────────────────────
@@ -307,7 +315,7 @@ const itemCount = giftProducts.length + zodiacWorks.length + readyMadeWorks.leng
     </div>
   </div>
   <section class="container section stories" aria-labelledby="stories-title">
-    <div class="section-lead"><span class="eyebrow">02 / 客户分享</span><h2 id="stories-title" class="serif">从一句话，到一件作品。</h2><p>每一份委托，都从委托人的那句话开始。下面是按常见送礼情境整理的客户分享，用来说明一份心意如何成形——你的定制，也将从你的那句话开始。</p></div>
+    <div class="section-lead"><span class="eyebrow">01 / 客户分享</span><h2 id="stories-title" class="serif">从一句话，到一件作品。</h2><p>每一份委托，都从委托人的那句话开始。下面是按常见送礼情境整理的客户分享，用来说明一份心意如何成形——你的定制，也将从你的那句话开始。</p></div>
     <div class="story-grid">
       {storyCards.map((card) => <article class="story-card"><figure><Pic src={card.image} alt={card.alt} loading="lazy" decoding="async" /></figure><div class="story-copy"><h3 class="serif">{card.title}</h3><blockquote>「{card.quote}」</blockquote><span class="story-tag">客户分享 · 按委托情境整理</span></div></article>)}
     </div>
@@ -315,14 +323,14 @@ const itemCount = giftProducts.length + zodiacWorks.length + readyMadeWorks.leng
   </section>
 
   <section class="container section process" aria-labelledby="process-title">
-    <div class="section-lead"><span class="eyebrow">03 / 我们的共创过程</span><h2 id="process-title" class="serif">一份作品的诞生。</h2><p>把心事交给我们，剩下的慢慢来。</p></div>
+    <div class="section-lead"><span class="eyebrow">02 / 我们的共创过程</span><h2 id="process-title" class="serif">一份作品的诞生。</h2><p>把心事交给我们，剩下的慢慢来。</p></div>
     <div class="process-rail">
       {steps.map((step) => <article class="process-card"><span class="mono step-no">{step.no}</span><h3 class="serif">{step.title}</h3><p>{step.body}</p></article>)}
     </div>
   </section>
 
   <section class="container section closing" aria-labelledby="closing-title">
-    <span class="eyebrow">04 / 与我们聊聊</span>
+    <span class="eyebrow">03 / 与我们聊聊</span>
     <h2 id="closing-title" class="serif">每一份心意，都值得被认真对待。</h2>
     <a class="btn btn-primary" href="/contact/" data-event="custom_inquiry_start">与我们聊聊</a>
   </section>

@@ -29,7 +29,7 @@ import Pic from '../../components/Pic.astro';
     </div>
   </section>
 
-  <section class="container section events" aria-labelledby="events-title">
+  <section class="container section events events--clay" aria-labelledby="events-title">
     <div class="section-lead">
       <span class="eyebrow">周末研学 / 月度排期</span>
       <h2 id="events-title" class="serif">线下雅集，坐进手艺里。</h2>
@@ -71,6 +71,36 @@ import Pic from '../../components/Pic.astro';
   .master-copy p { color: var(--ink-soft); line-height: 2; margin: 0 0 12px; }
   .master-note { font-family: var(--font-display-zh); color: var(--ink) !important; }
   .events { border-top: 1px solid var(--line-soft); }
+  /* ── 非遗研学区：美拉德 / 陶土色渐变（2026-11-01 业主指定）──────────────
+     基准色 RGB(180,116,62)，向暖棕与浅陶两端做 135° 斜向渐变，
+     模拟面塑未干的陶土在灯下的受光过渡；再叠一层极淡麻布纹理感（径向高光），
+     让整块不与上下纸白区块割裂。
+     文字自适应：正文用对陶土底对比度 ≥ 4.5:1 的深咖 #3a2415，
+     标题用更深的 #2b1a0e，装饰小字用 #6b4227（约 5:1 已达标）；
+     卡片改为半透明纸白，避免在深底上出现刺眼的白块。 */
+  .events.events--clay {
+    position: relative;
+    margin-top: 12px;
+    border-top: 0;
+    padding: 40px 0 44px;
+    background:
+      radial-gradient(120% 90% at 18% 8%, rgba(255, 233, 205, .30), transparent 62%),
+      linear-gradient(135deg, #d8a172 0%, rgb(180, 116, 62) 46%, #8f5729 100%);
+    border-radius: var(--radius-md);
+  }
+  .events.events--clay .section-lead h2 { color: #2b1a0e; }
+  .events.events--clay .section-lead p { color: rgba(58, 36, 21, .86); }
+  .events.events--clay .eyebrow { color: #5d371d; }
+  .events.events--clay .event-card {
+    background: rgba(255, 250, 243, .82);
+    border-color: rgba(120, 74, 38, .26);
+    box-shadow: 0 2px 10px rgba(74, 42, 18, .12);
+  }
+  .events.events--clay .event-copy h3 { color: #2b1a0e; }
+  .events.events--clay .event-copy p { color: rgba(58, 36, 21, .78); }
+  .events.events--clay .event-date { color: #8a3f18; }
+  .events.events--clay .event-note { color: rgba(43, 26, 14, .72); }
+  .events.events--clay .event-cta { box-shadow: 0 2px 8px rgba(74, 42, 18, .22); }
   .section-lead { max-width: 560px; margin-bottom: 26px; }
   .section-lead h2 { font-size: clamp(22px, 4.4vw, 34px); margin: 12px 0 10px; }
   .section-lead p { color: var(--ink-soft); margin: 0; line-height: 1.9; }
