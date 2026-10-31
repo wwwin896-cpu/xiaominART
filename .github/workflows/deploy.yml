@@ -152,26 +152,35 @@ jobs:
           TARGET: '/var/www/xiaominart/dist/'
           EXCLUDE: '/node_modules/'
 
+      # ── API 侧变更守卫（2026-11-01）：只有 functions/ 或 server/ 有改动才上传/重启。
+      # 线上 API 服务在这类无变更部署中保持当前版本运行，功能无损。
+      - name: Detect API-side changes
+        id: api_changes
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: |
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          CHANGED=$(git diff --name-only "$BEFORE" HEAD -- functions/ server/ | head -1)
+          if [ -z "$CHANGED" ]; then
+            echo "✓ 本次提交未改动 functions/ 或 server/，跳过 API bundle 上传与服务重启"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "API 侧有变更：$CHANGED"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
       # 2026-11-01（bb40c9f 后续）：重试 ×3 仍失败 → 不是瞬时抖动，是 server/ 目标路径
-      # 的服务端问题（磁盘/权限，需登录服务器排查）。API 侧与绝大多数前端迭代无关，
-      # 且线上 API 服务仍运行上一版本——加「本次无 API/服务端变更则跳过」守卫，
-      # 前端迭代不再因这一步亮红灯；真正改 functions//server/ 时仍会尝试上传并如实报错。
+      # 的服务端问题（磁盘/权限，需登录服务器排查）。改 bash 循环最多重试 3 次并如实报错。
       - name: Upload API bundle
+        if: steps.api_changes.outputs.changed == 'true'
         env:
           SSH_KEY: ${{ secrets.ALIYUN_SSH_KEY }}
           HOST: ${{ secrets.ALIYUN_SSH_HOST }}
           USER: ${{ secrets.ALIYUN_SSH_USER }}
           PORT: ${{ secrets.ALIYUN_SSH_PORT }}
-          BEFORE: ${{ github.event.before }}
         run: |
-          if [ -n "$BEFORE" ] && [ "$BEFORE" != "0000000000000000000000000000000000000000" ]; then
-            CHANGED=$(git diff --name-only "$BEFORE" HEAD -- functions/ server/ | head -1)
-            if [ -z "$CHANGED" ]; then
-              echo "✓ 本次提交未改动 functions/ 或 server/，跳过 API bundle 上传（线上服务继续运行当前版本）"
-              exit 0
-            fi
-            echo "API 侧有变更：$CHANGED"
-          fi
           install -m 600 /dev/null /tmp/deploy_key
           echo "$SSH_KEY" > /tmp/deploy_key
           ok=0
@@ -186,6 +195,7 @@ jobs:
           [ "$ok" = "1" ] || { echo "API bundle 上传 3 次均失败（服务端 server/ 路径待排查：磁盘/权限）"; exit 1; }
 
       - name: Restart API service
+        if: steps.api_changes.outputs.changed == 'true'
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.ALIYUN_SSH_HOST }}
