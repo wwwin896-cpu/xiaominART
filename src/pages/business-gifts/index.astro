@@ -19,7 +19,7 @@ import Layout from '../../layouts/Layout.astro';
 // FAQ：与页面展示同源。⚠️ 已删除原「怎么付款？可以在官网直接下单吗？」一条 ——
 // 该问答向访客解释了内部收付款规则，属于合同条款范畴，不应出现在官网。
 const faqItems: Array<{ q: string; a: string }> = [
-  { q: '起订量是多少？', a: '商务伴手礼与校园纪念礼 50 份起订，庆典墨宝礼 100 份起订。数量不足起订量的项目，请在需求表中说明用途与场合，我们评估后答复是否可以承接。' },
+  { q: '起订量是多少？', a: '不设固定起订量。按项目、场合与预算一起评估——先说清用途与大致数量即可，我们会给出合适的方案规模。' },
   { q: '可以定制企业 Logo 与品牌元素吗？', a: '可以。轻量规格配企业 Logo 卡片；定制规格可调整图案、尺寸与包装。需在设计稿确认后再进入打样。' },
   { q: '可以先打样再批量吗？', a: '可以。先看实物样或效果图，确认后再进入批量。打样的范围、费用与时间在开始前告知。' },
   { q: '可以开具增值税发票吗？', a: '可以，支持增值税普通发票与专用发票。开具专票需提供公司全称、纳税人识别号、地址电话与开户行账号。' },
@@ -42,6 +42,17 @@ const faqJsonLd = {
 };
 
 // 四条业务线 —— 各自链接到独立详情页（GEO 要求独立可寻址）
+//
+// 2026-10-31 业主修订（两条指令）：
+//   ① 业务线口径改为：商务伴手礼 / 校庆纪念 / 年会礼品 / 会客空间
+//   ② 全面去除起订量（原「50 份起」「100 份起」）——
+//      业主判断：起订量门槛会把还在评估阶段的采购需求直接拒之门外，
+//      削弱「先聊起来」的意愿。故 facts 只保留能力项，数量留到需求沟通时再谈。
+//   ⚠️ URL 不变（/gifts/ /keep/ /space/ /campus/）——四个页面均已被搜索引擎
+//      收录，换地址等于把积累推倒；只换展示名与文案，
+//      「庆典墨宝礼」→「年会礼品」沿用 keep 页（本就是周年/里程碑场景），
+//      「空间书法礼」→「会客空间」沿用 space 页（本就是前台/会客区场景）——
+//      名称更贴采购方的搜索词，页面内容本来就是讲这两件事。
 const businessLines = [
   {
     id: 'gifts',
@@ -49,38 +60,38 @@ const businessLines = [
     name: '商务伴手礼',
     href: '/business-gifts/gifts/',
     desc: '装裱小品、卡笺或扇面，配以企业名义手写的贺卡。适用于客户答谢、员工福利、会议与活动赠礼。',
-    facts: '50 份起 · 可定制 Logo · 可开专票 · 分地址寄送',
-  },
-  {
-    id: 'keep',
-    no: '02',
-    name: '庆典墨宝礼',
-    href: '/business-gifts/keep/',
-    desc: '把企业自己的那句话写成书法原作，每幅带唯一编号与藏品证书。适用于周年纪念、开业题字与里程碑。',
-    facts: '100 份起 · 书法原作 · 唯一编号 · 附藏品证书',
-  },
-  {
-    id: 'space',
-    no: '03',
-    name: '空间书法礼',
-    href: '/business-gifts/space/',
-    desc: '按空间尺度、光线与气质定制书法装置，含装裱方案与安装建议。适用于前台、会客区与走廊。',
-    facts: '按空间定尺寸 · 含勘测 · 可配合设计方',
+    facts: '可定制 Logo · 可开专票 · 分地址寄送',
   },
   {
     id: 'campus',
-    no: '04',
-    name: '校园纪念礼',
+    no: '02',
+    name: '校庆纪念',
     href: '/business-gifts/campus/',
     desc: '面向校庆、校友会周年与毕业季。校训或周年主题句写成书法，支持按校友名单分地址寄送。',
-    facts: '50 份起 · 重点作品带编号 · 可配合招标',
+    facts: '重点作品带编号 · 可配合招标 · 分地址寄送',
+  },
+  {
+    id: 'keep',
+    no: '03',
+    name: '年会礼品',
+    href: '/business-gifts/keep/',
+    desc: '把企业自己的那句话写成书法原作，每幅带唯一编号与藏品证书。适用于年会表彰、周年纪念与里程碑。',
+    facts: '书法原作 · 唯一编号 · 附藏品证书',
+  },
+  {
+    id: 'space',
+    no: '04',
+    name: '会客空间',
+    href: '/business-gifts/space/',
+    desc: '按空间尺度、光线与气质定制书法装置，含装裱方案与安装建议。适用于前台、会客区与走廊。',
+    facts: '按空间定尺寸 · 含勘测 · 可配合设计方',
   },
 ];
 ---
 
 <Layout
   title="企业礼品定制｜商务伴手礼与书法答谢礼批量定制｜小民艺术"
-  description="企业礼品定制与批量伴手礼：手写书法答谢礼、员工福利、会议伴手礼、开业庆典与校庆纪念礼。50 份起订，支持企业 Logo 定制、对公结算、增值税专票与分地址寄送，常规交付 25–45 个工作日。"
+  description="企业礼品定制与批量伴手礼：手写书法答谢礼、员工福利、会议伴手礼、年会礼品与校庆纪念。不设固定起订量，支持企业 Logo 定制、对公结算、增值税专票与分地址寄送，常规交付 25–45 个工作日。"
 >
   <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
 
@@ -90,7 +101,7 @@ const businessLines = [
     <h1 class="serif">企业礼品定制</h1>
     <p class="hero-lead">手写书法礼品批量定制，面向企业答谢、庆典纪念与校园活动。可定制企业标识，支持对公结算与分地址寄送。</p>
     <dl class="hero-conditions">
-      <div><dt>起订量</dt><dd>50 份起</dd></div>
+      <div><dt>起订</dt><dd>不设固定量 · 按项目评估</dd></div>
       <div><dt>定制范围</dt><dd>企业 Logo · 内容 · 尺寸 · 包装</dd></div>
       <div><dt>交付周期</dt><dd>常规 25–45 个工作日（含打样）</dd></div>
       <div><dt>结算与发票</dt><dd>对公结算 · 可开增值税专票</dd></div>
@@ -136,21 +147,21 @@ const businessLines = [
         <span class="mono">01</span>
         <span class="eyebrow">Light / 轻量规格</span>
         <h3 class="serif">标准字样，配企业 Logo 卡片</h3>
-        <strong>50 份起</strong>
+        <strong>按项目评估</strong>
         <p>会议伴手礼、节日福利、首次合作。</p>
       </article>
       <article>
         <span class="mono">02</span>
         <span class="eyebrow">Custom / 定制规格</span>
         <h3 class="serif">图案、尺寸与包装按场合定制</h3>
-        <strong>100 份起</strong>
+        <strong>按项目评估</strong>
         <p>客户答谢、员工福利、品牌活动。</p>
       </article>
       <article>
         <span class="mono">03</span>
         <span class="eyebrow">Bespoke / 专属规格</span>
         <h3 class="serif">内容与形制完全按项目定制</h3>
-        <strong>200 份起</strong>
+        <strong>按项目评估</strong>
         <p>周年纪念、开业庆典、重要合作。</p>
       </article>
     </div>
@@ -238,10 +249,11 @@ const businessLines = [
       </label>
       <label>预计数量
         <select name="quantity">
-          <option>50 份起</option>
-          <option>100 份起</option>
-          <option>200 份起</option>
           <option>尚未确定</option>
+          <option>20 份以内</option>
+          <option>20–50 份</option>
+          <option>50–200 份</option>
+          <option>200 份以上</option>
         </select>
       </label>
       <label>用途场景

@@ -237,7 +237,7 @@ const itemCount = giftProducts.length + zodiacWorks.length + readyMadeWorks.leng
       <li><a href="/partners/heritage/"><span class="mono">贰</span>非遗面塑传承</a></li>
       <li><a href="/about/"><span class="mono">叁</span>以书法解读历史</a></li>
     </ul>
-    <a class="btn btn-primary" href="/about/" data-reveal>走进小民艺术 →</a>
+    <a class="btn btn-primary brand-cta" href="/about/" data-reveal>走进小民艺术</a>
   </section>
 
   {/* ── 01 / 一字一源（2026-10-16 业主二次裁决定版）─────────────────────
@@ -404,6 +404,9 @@ const itemCount = giftProducts.length + zodiacWorks.length + readyMadeWorks.leng
   .brand-facts a:hover { color: var(--cinnabar); border-color: rgba(165, 72, 59, .3); transform: translateY(-4px); box-shadow: var(--lift-shadow-sm); }
   .brand-facts .mono { color: var(--cinnabar); font-size: 12px; }
   .brand-landing > .btn { grid-column: 1 / 6; grid-row: 3; justify-self: start; margin-top: 4px; }
+  /* 「走进小民艺术」：2026-10-31 业主指定居中、去掉箭头。
+     桌面从 grid 左列靠左改为跨满 12 列居中，与上方三张卡的中轴对称。 */
+  .brand-landing > .brand-cta { grid-column: 1 / -1; grid-row: 3; justify-self: center; margin-top: 4px; min-width: 240px; }
   .brand-lead { margin-left: 0; max-width: none; }
   /* ── 01 / 一字一源（2026-10-29 Bento 化）────────────────────────
      6 张业务入口卡 → 12 列 Bento：首卡（四时一笺）7 列大格，第二卡 5 列，
@@ -529,6 +532,8 @@ const itemCount = giftProducts.length + zodiacWorks.length + readyMadeWorks.leng
     .self-copy { padding: 26px 22px; }
     .brand-landing { display: block; }
     .brand-landing .section-lead, .brand-landing .brand-body { margin-bottom: 16px; padding: 24px 20px; }
+    /* 移动端：页面是 block 布局，按钮加左右 auto 才真正居中 */
+    .brand-landing > .brand-cta { display: flex; width: max-content; margin: 6px auto 0; }
     .brand-facts { grid-template-columns: 1fr 1fr; }
     .choice-grid { grid-template-columns: 1fr; gap: 22px; }
     .zodiac-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 12px; }

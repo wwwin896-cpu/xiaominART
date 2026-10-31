@@ -30,8 +30,8 @@ const { priceFrom, itemCount } = Astro.props;
   <span class="mhero-blot mhero-blot2" aria-hidden="true"></span>
 
   <div class="mhero-inner">
-    <span class="mhero-eyebrow">XIAOMINART / 手写书法礼品</span>
-    <h1 id="mhero-title" class="serif">一字一礼，<br />把心意写成<br />看得见的样子</h1>
+    <span class="mhero-eyebrow">小民艺术 ｜ 手写书法礼品与非遗手作定制</span>
+    <h1 id="mhero-title" class="serif">一字一礼<br />你的心意被看见</h1>
     <p class="mhero-sub">每一件都由小民亲笔书写 · 宣纸装裱 · 附赠手写贺语</p>
 
     <div class="mhero-cta">
@@ -72,8 +72,12 @@ const { priceFrom, itemCount } = Astro.props;
     @media (prefers-reduced-motion: reduce) { .mhero-blot { animation: none; } }
 
     .mhero-inner { position: relative; z-index: 1; }
-    .mhero-eyebrow { display: block; margin-bottom: 12px; color: var(--cinnabar); font-size: 11.5px; letter-spacing: .3em; font-family: var(--font-body-en), var(--font-body-zh); text-transform: uppercase; }
-    .mhero h1 { font-size: 30px; line-height: 1.5; font-weight: 500; letter-spacing: .12em; margin: 0 0 14px; }
+    .mhero-eyebrow { display: block; margin-bottom: 12px; color: var(--cinnabar); font-size: 11.5px; letter-spacing: .14em; font-family: var(--font-body-zh); }
+    /* 标题：2026-10-31 业主改两行（「一字一礼」+「你的心意被看见」），
+       字号由 30px 收一档到 26px——两行句子长度不同（4 字 / 7 字），
+       同字号下会显得头轻脚重，26px 时两行宽度差更收敛，
+       配合 letter-spacing 略收（.12em → .08em），整块更居中匀称。 */
+    .mhero h1 { font-size: 26px; line-height: 1.62; font-weight: 500; letter-spacing: .08em; margin: 0 0 14px; }
     .mhero-sub { margin: 0 0 20px; color: var(--ink-soft); font-size: 13px; line-height: 1.9; letter-spacing: .06em; }
 
     /* 双 CTA：朱砂渐变主胶囊 + 幽灵胶囊（demo .hero-cta） */
