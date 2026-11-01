@@ -600,9 +600,9 @@ export const giftProducts: GiftProduct[] = [
         { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
         { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
     ] },
-  { slug: 'qian-chang-zong-ma-xing', name: '前長縱馬行 · 纵马长行', en: 'Ride On, the Road Is Long', scene: 'opening', sceneLabel: '开业贺礼', tier: 'entry', price: '¥199', meaning: '前路正长，正好纵马。五个字给正在赶路的人：路还长，放开缰绳跑。隶书横幅纪年题款，挂在办公室或玄关，出门进门都提气。', recipient: '适合送给创业途中、转换赛道的朋友，或作为开业、升职的贺礼。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '馬', image: '/assets/works/qian-chang-zong-ma-xing.jpg',
+  { slug: 'dao-chang-zong-ma-xing', name: '道長縱馬行 · 纵马长行', en: 'Ride On, the Road Is Long', scene: 'opening', sceneLabel: '开业贺礼', tier: 'entry', price: '¥199', meaning: '道长，正好纵马。五个字给正在赶路的人：路还长，放开缰绳跑。隶书横幅纪年题款，挂在办公室或玄关，出门进门都提气。', recipient: '适合送给创业途中、转换赛道的朋友，或作为开业、升职的贺礼。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '馬', image: '/assets/works/dao-chang-zong-ma-xing.jpg',
     deepDive: [
-      { eyebrow: 'Chapter 01 / 释读', heading: '「前長縱馬行」写的什么', paragraphs: ['五字隶书横幅：前路正长，纵马而行。字形取汉隶横势，「行」字末笔纵长如扬鞭，落款「丙午八十秋」纪年钤印。写给赶路的人——不必快，但别停下。'] },
+      { eyebrow: 'Chapter 01 / 释读', heading: '「道長縱馬行」写的什么', paragraphs: ['五字隶书横幅：道路正长，纵马而行。「道」字上部昂起、走底一捺纵长如扬鞭，落款「丙午八十秋」纪年钤印。写给赶路的人——不必快，但别停下。'] },
       { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
         { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
         { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
@@ -670,9 +670,9 @@ export const giftProducts: GiftProduct[] = [
         { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
         { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
     ] },
-  { slug: 'mei-shou', name: '眉壽 · 古文字祝寿', en: 'Brow of Longevity', scene: 'birthday', sceneLabel: '生日心意', tier: 'entry', price: '¥199', meaning: '「眉壽」是《诗经》与青铜器里的老吉语——长寿的眉毛长出来，是岁月给人的勋章。古文字竖幅两字，送给长辈过寿，郑重而不俗。', recipient: '适合送给过寿的长辈、敬重的师长，或作为家族纪念。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '壽', image: '/assets/works/mei-shou.jpg',
+  { slug: 'bo-re', name: '般若 · 禅意二字', en: 'Prajna · Wisdom', scene: 'festival', sceneLabel: '节日问候', tier: 'entry', price: '¥199', meaning: '「般若」（读 bōrě）是佛家的最高智慧，《心经》全名即「般若波罗蜜多」。古文字竖幅两字，静置案头或禅室，是懂的人才接得住的一份心意。', recipient: '适合送给礼佛、习禅的长辈与友人，或挂在茶室、禅室一隅。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '若', image: '/assets/works/bo-re.jpg',
     deepDive: [
-      { eyebrow: 'Chapter 01 / 释读', heading: '「眉壽」写的什么', paragraphs: ['古文字二字竖幅。「眉壽」语出《诗经·豳风》「为此春酒，以介眉寿」，金器铭文里常见「眉壽萬年」——老人眉有豪毛，是长寿之相。竖幅两字挂在客厅或老人房，抬头即是祝愿。'] },
+      { eyebrow: 'Chapter 01 / 释读', heading: '「般若」写的什么', paragraphs: ['古文字二字竖幅。「般若」是洞见空性的智慧，与「南無阿彌陀佛」六字横幅恰成一对。竖幅两字挂在茶室、禅室或书房，抬头即是提醒：自在不在远处。'] },
       { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
         { label: '装裱外框', value: '约 17.5 × 40.5 cm（竖幅）' },
         { label: '画芯尺寸', value: '约 15 × 38 cm，四周留白装裱' },
