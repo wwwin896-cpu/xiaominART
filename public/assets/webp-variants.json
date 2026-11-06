@@ -242,10 +242,20 @@
   1000,
   1536
  ],
+ "/assets/works/bai-hua-qi-fang.jpg": [
+  600,
+  1000,
+  1600
+ ],
  "/assets/works/ban-cang.jpg": [
   600,
   1000,
   1536
+ ],
+ "/assets/works/bao-pu-han-zhang.jpg": [
+  600,
+  1000,
+  1600
  ],
  "/assets/works/bao-pu-shou-zheng.jpg": [
   600,
@@ -291,7 +301,17 @@
   600,
   1024
  ],
+ "/assets/works/guan-gu-zhi-jin.jpg": [
+  600,
+  1000,
+  1600
+ ],
  "/assets/works/he-qi-zai-tang.jpg": [
+  600,
+  1000,
+  1600
+ ],
+ "/assets/works/he-qi.jpg": [
   600,
   1000,
   1600
@@ -326,9 +346,19 @@
   1000,
   1536
  ],
+ "/assets/works/nan-de-hu-tu.jpg": [
+  600,
+  1000,
+  1600
+ ],
  "/assets/works/nan-xi-xin-ji-wide.jpg": [
   600,
   1200
+ ],
+ "/assets/works/nian-hua-yi-xiao.jpg": [
+  600,
+  1000,
+  1600
  ],
  "/assets/works/pin-ming-ting-qin.jpg": [
   600,
@@ -404,6 +434,11 @@
  "/assets/works/work-yi-hu-yi-xi.jpg": [
   600,
   1200
+ ],
+ "/assets/works/wu-kong.jpg": [
+  600,
+  1000,
+  1600
  ],
  "/assets/works/xin-jing-ze-tai.jpg": [
   600,

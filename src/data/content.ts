@@ -670,6 +670,66 @@ export const giftProducts: GiftProduct[] = [
         { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
         { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
     ] },
+  { slug: 'bao-pu-han-zhang', name: '抱樸含章 · 书房修养', en: 'Hold Simplicity, Harbor Excellence', scene: 'opening', sceneLabel: '开业贺礼', tier: 'entry', price: '¥199', meaning: '「抱朴」守本真，出自《老子》；「含章」敛光华，出自《易经》「含章可贞」。四个字是做事的人的修养：外面收敛，里面扎实——挂在书房、办公室，是一种不张扬的底气。', recipient: '适合送给踏实做事的伙伴、管理者，或挂在书房自勉。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '樸', image: '/assets/works/bao-pu-han-zhang.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「抱樸含章」写的什么', paragraphs: ['行楷四字横幅，墨色沉稳。「抱樸含章」——守住朴素，含藏文章：才华不必外露，本真自然动人。纪年题款钤印，释读卡随附。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'bai-hua-qi-fang', name: '百花齊放 · 厅堂生气', en: 'A Hundred Flowers in Bloom', scene: 'festival', sceneLabel: '节日问候', tier: 'entry', price: '¥199', meaning: '百花齐放，春满厅堂。四个字挂在客厅，一屋子的生机与热闹——好日子就该是这样：各开各的花，一起成个春天。', recipient: '适合乔迁、春节，或送给刚布置好客厅的朋友。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '花', image: '/assets/works/bai-hua-qi-fang.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「百花齊放」写的什么', paragraphs: ['隶书四字横幅，字势开张如花枝舒展。挂在客厅矮柜上方，与窗外的绿意互相呼应——热闹，但不吵。纪年题款钤印。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'nian-hua-yi-xiao', name: '拈花一笑 · 玄关禅语', en: 'A Flower Held, A Smile Shared', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥199', meaning: '佛家公案：拈花不语，一笑心知。四个字挂在玄关、走廊，是给懂的人看的——最好的默契，不必说破。', recipient: '适合送给心照不宣的老友，或挂在玄关端景。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '笑', image: '/assets/works/nian-hua-yi-xiao.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「拈花一笑」写的什么', paragraphs: ['隶书四字横幅。「拈花一笑」讲的是心传：迦叶尊者见佛拈花而微笑，禅便这样开始了。字写得轻松，像那声没说出口的笑。纪年题款钤印。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'nan-de-hu-tu', name: '難得糊塗 · 豁达横幅', en: 'Good to Be Foolish', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥199', meaning: '郑板桥的老话：聪明难，糊涂难，由聪明而转入糊涂更难。四个字挂在书房、餐桌，是过来人的豁达——较真的事放下一些，日子松一些。', recipient: '适合送给事事认真的朋友，或挂在书房自警。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '糊', image: '/assets/works/nan-de-hu-tu.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「難得糊塗」写的什么', paragraphs: ['隶书四字横幅。「難得糊塗」不是真糊涂，是知道什么该计较、什么该放过。字形朴拙，正合这句话的憨劲。纪年题款钤印。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'wu-kong', name: '悟空 · 禅室大字', en: 'Awakened to Emptiness', scene: 'festival', sceneLabel: '节日问候', tier: 'entry', price: '¥199', meaning: '「悟空」两个字，是佛家的功课，也是每个人的功课——悟得空处，才装得下万物。大字旁以行书小字题长款，挂在茶室、禅室，气象很大。', recipient: '适合送给礼佛、习禅的友人，或作为茶室禅房的空间供养。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '悟', image: '/assets/works/wu-kong.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「悟空」写的什么', paragraphs: ['古文字大字「悟空」横幅，旁以行书小字题写长款并纪年钤印。「色即是空，空即是色」——悟透一个「空」字，喝茶吃饭都是修行。与「般若」「南無阿彌陀佛」可成一组。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'guan-gu-zhi-jin', name: '觀古知今 · 书房箴言', en: 'Study the Past, Know the Present', scene: 'opening', sceneLabel: '开业贺礼', tier: 'entry', price: '¥199', meaning: '观古知今——历史里的事，今天还在发生。四个字挂在办公室、书房，是做决策的人的案头功夫：看得懂过去，才看得清前路。', recipient: '适合送给管理者、研究者，或挂在书房与会客区。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '古', image: '/assets/works/guan-gu-zhi-jin.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「觀古知今」写的什么', paragraphs: ['行书四字横幅，落款「丙午秋月小民」。觀字笔画开张，今字收束利落——一开一合，正是「以史为镜」的节奏。释读卡随附。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
   { slug: 'bo-re', name: '般若 · 禅意二字', en: 'Prajna · Wisdom', scene: 'festival', sceneLabel: '节日问候', tier: 'entry', price: '¥199', meaning: '「般若」（读 bōrě）是佛家的最高智慧，《心经》全名即「般若波罗蜜多」。古文字竖幅两字，静置案头或禅室，是懂的人才接得住的一份心意。', recipient: '适合送给礼佛、习禅的长辈与友人，或挂在茶室、禅室一隅。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '若', image: '/assets/works/bo-re.jpg',
     deepDive: [
       { eyebrow: 'Chapter 01 / 释读', heading: '「般若」写的什么', paragraphs: ['古文字二字竖幅。「般若」是洞见空性的智慧，与「南無阿彌陀佛」六字横幅恰成一对。竖幅两字挂在茶室、禅室或书房，抬头即是提醒：自在不在远处。'] },
@@ -713,6 +773,16 @@ export const giftProducts: GiftProduct[] = [
   { slug: 'da-yin-xi-sheng', name: '大音希聲 · 竖幅禅语', en: 'The Greatest Sound Is Silence', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥199', meaning: '语出《老子》「大音希声」——最大的声音反而听不见。竖幅挂在客厅、玄关，白卡黑字两三笔入眼，是懂的人才接得住的一句话。', recipient: '适合送给寡言而有力量的师长、朋友，或挂在需要一点静气的墙面。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '音', image: '/assets/works/da-yin-xi-sheng.jpg',
     deepDive: [
       { eyebrow: 'Chapter 01 / 释读', heading: '「大音希聲」写的什么', paragraphs: ['竖幅四字，白卡上以行楷书就，墨色极简。「希聲」二字收笔枯淡，正是「听不见」的那一分留白——最好的表达，是不必说满。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 17.5 × 40.5 cm（竖幅）' },
+        { label: '画芯尺寸', value: '约 15 × 38 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'he-qi', name: '和氣 · 古文字竖幅', en: 'Harmony in the Air', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥199', meaning: '「和氣」二字以古文字写就，竖幅立在玄关——进门是和气，出门也和气。家和万事兴，生意和气生财，都从这两个字开始。', recipient: '适合乔迁、开店的朋友，或送给希望家中和气的长辈。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '和', image: '/assets/works/he-qi.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「和氣」写的什么', paragraphs: ['古文字二字竖幅，纪年题款钤印。「和」字古文从龠从禾，本是乐器相和之音；「氣」字一笔纵长，如气息绵延。竖幅挂在玄关或堂屋，抬头即是一团和气。'] },
       { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
         { label: '装裱外框', value: '约 17.5 × 40.5 cm（竖幅）' },
         { label: '画芯尺寸', value: '约 15 × 38 cm，四周留白装裱' },
