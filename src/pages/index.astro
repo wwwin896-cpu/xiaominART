@@ -443,14 +443,10 @@ const itemCount = showcaseItemCount;
   .choice-card::before { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; background: var(--stroke-grad); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity .35s ease; z-index: 1; pointer-events: none; }
   .choice-card:hover { transform: translateY(-6px); box-shadow: var(--lift-shadow); }
   .choice-card:hover::before { opacity: 1; }
-  .choice-card:nth-child(1) { grid-column: span 7; }
-  .choice-card:nth-child(2) { grid-column: span 5; }
-  /* 第 6 卡（琴瑟和鸣）做全宽收尾横幅：图右文左，避免 6 卡在 7+5/4+4+4 后孤行 */
-  .choice-card:nth-child(6) { grid-column: span 12; flex-direction: row-reverse; }
-  .choice-card:nth-child(6) figure { width: 46%; aspect-ratio: 16 / 9; flex: 0 0 46%; }
-  .choice-card:nth-child(6) .choice-copy { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 26px 34px; }
+  /* 2026-11 业主指示：桌面 01 板块排版整齐，每排三张（6 卡 2 排），不再做 7+5/通栏的杂志式混排 */
+  .choice-card:nth-child(1), .choice-card:nth-child(2), .choice-card:nth-child(6) { grid-column: span 4; }
+  .choice-card:nth-child(1) figure { aspect-ratio: 4 / 3; }
   .choice-card figure { margin: 0; overflow: hidden; aspect-ratio: 4 / 3; background: var(--paper-deep); }
-  .choice-card:nth-child(1) figure { aspect-ratio: 16 / 10; }
   .choice-card :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease, filter .5s ease; }
   .choice-card:hover :global(img) { transform: scale(1.035); filter: brightness(1.05); }
   .choice-tag { display: block; color: var(--cinnabar); font-size: 12px; letter-spacing: .14em; margin: 0 0 6px; }
