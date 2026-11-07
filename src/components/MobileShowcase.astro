@@ -36,8 +36,6 @@ type Tile = {
   tag: string;
   /** 卡面右上角小签：场景/系列的短词（demo .tag 的语言） */
   tagShort: string;
-  /** 卡面标题上方的系列小签（2026-11-07 业主：优化标题属性与归类） */
-  kindLabel: string;
   price: string;
   desc: string;
   specs: Array<[string, string]>;
@@ -45,20 +43,13 @@ type Tile = {
   groups: string[];
 };
 
-// 系列分节（2026-11-07 业主：点入后要能清晰看到作品分布，又有舒适度与文艺感）。
-// 商品流按系列分节展示：节头细字 + 延伸细线，节内才是 2 列卡。
-const SECTIONS: Array<{ kind: Tile['kind']; label: string }> = [
-  { kind: 'gift', label: '小民好礼' },
-  { kind: 'zodiac', label: '字游记 · 十二生肖' },
-  { kind: 'oracle', label: '甲骨文集' },
-  { kind: 'ready', label: '现货小品' },
-];
-const KIND_LABELS: Record<Tile['kind'], string> = {
-  gift: '小民好礼',
-  zodiac: '字游记',
-  oracle: '甲骨文集',
-  ready: '现货小品',
-};
+// 系列分节（2026-11-07 业主第二轮）：站内没有线上支付，「现货」不成立，
+// 已写好的作品不再单列成节，与小民好礼合为一节；节头也不再写「小民好礼 / 字游记 /
+// 甲骨文集」这些字——一屏之内重复同一批词会让人疲，节头只留一根细线和一个真实件数，
+// 用它分隔、用它计数，不再用它说话。
+const SECTIONS: Tile['kind'][] = ['gift', 'zodiac', 'oracle'];
+// 「现货」并入「小民好礼」节内展示（kind 仍保留，用于分组筛选与链接）
+const SECTION_OF: Record<Tile['kind'], Tile['kind']> = { gift: 'gift', ready: 'gift', zodiac: 'zodiac', oracle: 'oracle' };
 
 const tiles: Tile[] = [];
 
@@ -105,7 +96,6 @@ for (const p of giftProducts) {
     title: p.name,
     tag: `${p.sceneLabel} · ${p.price}`,
     tagShort: p.sceneLabel,
-    kindLabel: KIND_LABELS.gift,
     price: p.price,
     desc: p.meaning,
     specs: [
@@ -129,13 +119,12 @@ for (const z of zodiacWorks) {
     title: z.name,
     tag: `生肖 · ${z.price}`,
     tagShort: '字游记',
-    kindLabel: KIND_LABELS.zodiac,
     price: z.price,
     desc: z.story,
     specs: [
       ['吉语', z.blessing],
       ['形制', '外框 A4 竖幅 · 画芯 16×8 cm · 胡桃木框'],
-      ['时间', '现货 48h 顺丰直发'],
+      ['时间', '写好的 48h 顺丰寄出'],
     ],
     groups: ['all', 'zodiac', 'festival', 'birthday', ...extraGroups(z.slug, 'zodiac')],
   });
@@ -163,19 +152,18 @@ for (const o of oracleWorks) {
     title: o.name,
     tag: `甲骨文 · ${o.price}`,
     tagShort: '甲骨文集',
-    kindLabel: KIND_LABELS.oracle,
     price: o.price,
     desc: o.tagline,
     specs: [
       ['释读', o.story.slice(0, 46) + '……'],
       ['形制', `A4 ${o.orientation} · 黑胡桃木框`],
-      ['时间', '现货 48h 顺丰直发'],
+      ['时间', '写好的 48h 顺丰寄出'],
     ],
     groups: ['all', 'oracle', 'festival', 'foreign-guests', ...(ORACLE_SCENE[o.slug] || [])],
   });
 }
 
-// ④ 现货线（已写完、可立即发货，每幅世间唯一）
+// ④ 已写好的（每幅世间唯一，可立即寄出；2026-11-07 起不再单列成节）
 for (const w of readyMadeWorks) {
   tiles.push({
     id: w.slug,
@@ -185,9 +173,8 @@ for (const w of readyMadeWorks) {
     alt: w.alt,
     char: w.title.slice(0, 1),
     title: w.title,
-    tag: `现货 · ¥${w.price}`,
+    tag: `已写就 · ¥${w.price}`,
     tagShort: w.form === '挂墙' ? '可挂' : '案头',
-    kindLabel: KIND_LABELS.ready,
     price: `¥${w.price}`,
     desc: w.note,
     specs: [
@@ -202,9 +189,10 @@ for (const w of readyMadeWorks) {
 // ── 分类 chip ──
 // 「全部 / 现货」两个常驻 + 三个最高频的送礼场景。
 // 完整场合与对象列表收进底部「分类」面板，避免首屏 chip 条变成横向垃圾场。
+// 2026-11-07 业主：站内没有线上支付，「现货可发」这个卖点不成立，chip 里去掉；
+// 余下三枚是最高频的送礼场合，首屏 chip 条保持短。
 const quickChips = [
   { key: 'all', label: '全部' },
-  { key: 'ready', label: '现货可发' },
   { key: 'housewarming', label: '乔迁' },
   { key: 'birthday', label: '生日' },
   { key: 'thanks', label: '谢师' },
@@ -228,7 +216,6 @@ const kindGroups = [
   { key: 'gift', label: '礼品套装', href: '/gifts/' },
   { key: 'zodiac', label: '十二生肖', href: '/zodiac/' },
   { key: 'oracle', label: '甲骨文集', href: '/oracle/' },
-  { key: 'ready', label: '现货小品', href: '/gifts/ready-made/' },
 ];
 // 2026-10-31 业主补充：「送给谁」+ 送孩子 / 送外宾。
 // 这两类暂未建独立落地页（/recipients/child/、/recipients/foreign-guests/ 不生成），
@@ -253,9 +240,9 @@ const recipientGroups = [
 const nanIdx = tiles.findIndex((t) => t.id === 'nan-xi-xin-ji');
 if (nanIdx > 0) tiles.unshift(...tiles.splice(nanIdx, 1));
 const FIRST_BATCH = 8;
-// 分节渲染顺序：小民好礼 → 字游记 → 甲骨文集 → 现货小品（与导航「一字一礼」同序）。
-// 南谿新霁已在上面提到 tiles 首位，分节后仍是「小民好礼」节的第一张卡。
-const orderedTiles = SECTIONS.flatMap((sec) => tiles.filter((t) => t.kind === sec.kind));
+// 分节渲染顺序：小民好礼（含已写好的现货） → 字游记 → 甲骨文集。
+// 南谿新霁已在上面提到 tiles 首位，分节后仍是第一节的第一张卡。
+const orderedTiles = SECTIONS.flatMap((sec) => tiles.filter((t) => SECTION_OF[t.kind] === sec));
 const tilesJson = JSON.stringify(tiles);
 ---
 
@@ -301,17 +288,17 @@ const tilesJson = JSON.stringify(tiles);
   <div class="mshow-grid" data-ms-grid>
     {SECTIONS.map((sec) => (
       <>
-        <p class="mshow-sec" data-ms-sec={sec.kind}>
-          <strong class="serif">{sec.label}</strong>
+        <p class="mshow-sec" data-ms-sec={sec}>
           <span class="mshow-sec-line" aria-hidden="true"></span>
-          <small><em data-ms-sec-count={sec.kind}>{tiles.filter((t) => t.kind === sec.kind).length}</em> 件</small>
+          <small><em data-ms-sec-count={sec}>{orderedTiles.filter((t) => SECTION_OF[t.kind] === sec).length}</em> 件</small>
         </p>
         {orderedTiles.map((tile, i) => (
-          tile.kind === sec.kind && (
+          SECTION_OF[tile.kind] === sec && (
             <article
               class:list={['mshow-tile', { 'is-extra': i >= FIRST_BATCH }]}
               data-ms-tile={tile.id}
               data-ms-kind={tile.kind}
+              data-ms-section={SECTION_OF[tile.kind]}
               data-ms-groups={tile.groups.join(' ')}
               hidden={i >= FIRST_BATCH ? true : undefined}
             >
@@ -319,15 +306,15 @@ const tilesJson = JSON.stringify(tiles);
                 <span class="mshow-tile-fig">
                   <img src={tile.image} alt={tile.alt} width="800" height="800" loading="lazy" decoding="async" />
                 </span>
-                <span class="mshow-tile-copy">
-                  <small class="mshow-tile-kind">{tile.kindLabel}</small>
-                  <strong class="serif">{tile.title}</strong>
-                  <small class="mshow-tile-price">{tile.price}</small>
-                </span>
+                <strong class="mshow-tile-title serif">{tile.title}</strong>
               </button>
-              <button class="mshow-fav" type="button" data-ms-wish={tile.id} aria-pressed="false" aria-label={`收藏 ${tile.title}`}>
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.6 4.9 13.7A4.6 4.6 0 0 1 12 7.4a4.6 4.6 0 0 1 7.1 6.3Z" /></svg>
-              </button>
+              {/* 2026-11-07 业主：收藏符号与单价放在同一水平线，像一行落款，不再一上一下 */}
+              <div class="mshow-tile-meta">
+                <small class="mshow-tile-price">{tile.price}</small>
+                <button class="mshow-fav" type="button" data-ms-wish={tile.id} aria-pressed="false" aria-label={`收藏 ${tile.title}`}>
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.6 4.9 13.7A4.6 4.6 0 0 1 12 7.4a4.6 4.6 0 0 1 7.1 6.3Z" /></svg>
+                </button>
+              </div>
             </article>
           )
         ))}
@@ -556,7 +543,7 @@ const tilesJson = JSON.stringify(tiles);
     grid.querySelectorAll<HTMLElement>('[data-ms-sec]').forEach((head) => {
       const kind = head.dataset.msSec || '';
       let n = 0;
-      grid.querySelectorAll<HTMLElement>(`[data-ms-kind="${kind}"]`).forEach((t) => {
+      grid.querySelectorAll<HTMLElement>(`[data-ms-section="${kind}"]`).forEach((t) => {
         if (!t.hidden) n += 1;
       });
       head.hidden = n === 0;
@@ -712,9 +699,12 @@ const tilesJson = JSON.stringify(tiles);
        · 底色由纯白调回极浅暖纸，与页面的宣纸基调之间只用阴影分层，不再靠描边；
        · 阴影改「近贴一层 + 远散一层」的双层柔影，浮起但不抢眼；
        · 边框降到发丝级透明度，只兜住图与字的边缘，视觉上是「一片纸」而不是「一个框」。 */
-    .mshow-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; padding: 0 16px; align-items: start; }
-    .mshow-tile { position: relative; background: #fffdf8; border: 1px solid rgba(196, 176, 134, .16); border-radius: 16px; box-shadow: 0 1px 2px rgba(74, 60, 34, .04), 0 10px 26px -14px rgba(74, 60, 34, .22); overflow: hidden; transition: transform .2s ease, box-shadow .2s ease; }
-    .mshow-tile:active { transform: scale(.98); box-shadow: 0 1px 2px rgba(74, 60, 34, .04), 0 4px 12px -8px rgba(74, 60, 34, .18); }
+    .mshow-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 12px; padding: 0 16px; align-items: start; }
+    /* 2026-11-07 业主二轮：悬浮感要更明显，但卡片本身更低、更扁。
+       做法是反差——卡面纯纸白，页面铺一层暖灰纸色，阴影拉长下缘；
+       卡内留白与字号同步收小，整卡高度比上一版矮约 1/4。 */
+    .mshow-tile { position: relative; background: #fffefb; border-radius: 13px; box-shadow: 0 1px 1px rgba(74, 60, 34, .05), 0 14px 26px -16px rgba(74, 60, 34, .38); overflow: hidden; transition: transform .18s ease, box-shadow .18s ease; }
+    .mshow-tile:active { transform: scale(.985); box-shadow: 0 1px 1px rgba(74, 60, 34, .05), 0 6px 12px -8px rgba(74, 60, 34, .3); }
     .mshow-tile[hidden] { display: none; }
     .mshow-tile-main { display: block; width: 100%; padding: 0; border: 0; background: transparent; text-align: left; font: inherit; color: inherit; }
     /* demo .art：卡面 = 作品实景图（2026-10-31 修订 v2）。
@@ -725,39 +715,37 @@ const tilesJson = JSON.stringify(tiles);
          · 横幅图（1200×800）左右留白，主体居中；
          · 两种比例在同一个 1:1 卡位里视觉重量接近，两列排列才匀称。
        留白用纸底渐变而不是纯白，与全站宣纸基调一致，不像"图没铺满"的 bug。 */
-    .mshow-tile-fig { position: relative; display: grid; place-items: center; aspect-ratio: 1 / 1; overflow: hidden; background: linear-gradient(160deg, #fbf8f0, #f1e9d6); border-bottom: 1px solid rgba(120, 100, 60, .15); }
-    .mshow-tile-fig img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; padding: 10px; box-sizing: border-box; transition: transform .4s var(--ease-out); }
+    .mshow-tile-fig { position: relative; display: grid; place-items: center; aspect-ratio: 5 / 4; overflow: hidden; background: linear-gradient(160deg, #fbf8f0, #f1e9d6); }
+    .mshow-tile-fig img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; padding: 8px; box-sizing: border-box; transition: transform .4s var(--ease-out); }
     .mshow-tile:active .mshow-tile-fig img { transform: scale(1.02); }
-    .mshow-tile-fig::after { content: ''; position: absolute; inset: 7px; z-index: 2; border: 1px solid rgba(120, 100, 60, .12); border-radius: 8px; pointer-events: none; }
+    .mshow-tile-fig::after { content: ''; position: absolute; inset: 6px; z-index: 2; border: 1px solid rgba(120, 100, 60, .1); border-radius: 6px; pointer-events: none; }
     .mshow-tile-char { font-size: clamp(58px, 18vw, 84px); color: var(--ink); text-shadow: 0 2px 6px rgba(43, 43, 43, .12); letter-spacing: .04em; }
-    .mshow-tile-copy { display: block; padding: 9px 12px 11px; }
-    /* 系列小签（2026-11-07 业主：优化标题属性与归类）——标题上方一行极小的系列名，
-       让「这一件属于哪个系列」不用点开就知道，也和分节头呼应。 */
-    .mshow-tile-kind { display: block; margin-bottom: 3px; color: var(--muted, #9a8f7a); font-size: 10px; letter-spacing: .26em; }
-    .mshow-tile-copy strong { display: block; font-family: var(--font-display-zh); font-size: 15px; font-weight: 500; letter-spacing: .06em; line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .mshow-tile-price { display: block; margin-top: 4px; color: var(--cinnabar); font: 600 13px var(--font-display-en), Georgia, serif; letter-spacing: .02em; }
+    /* 卡面只剩两行：一行标题（不再标系列、不再写横幅竖幅）、一行「价格 + 收藏」 */
+    .mshow-tile-title { display: block; padding: 8px 11px 0; font-family: var(--font-display-zh); font-size: 14px; font-weight: 500; letter-spacing: .04em; line-height: 1.45; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mshow-tile-meta { display: flex; align-items: center; justify-content: space-between; padding: 4px 8px 7px 11px; }
+    .mshow-tile-price { color: var(--cinnabar); font: 600 12px var(--font-display-en), Georgia, serif; letter-spacing: .02em; white-space: nowrap; }
 
     /* demo .tag：右上角朱砂细签 —— 2026-11-01 业主：卡面右上角标签去除，
        .mshow-tag 节点已从模板删除，这里只留注释防回加。 */
 
-    /* 右下角收藏（2026-11-07 业主：爱心外围的圈圈去除，别占用视觉）：
-       去掉描边圆底与毛玻璃，只留心形本身，像手账里顺手画下的一笔；
-       34px 命中区不变，收藏态仍以朱砂填色提示。 */
-    .mshow-fav { position: absolute; right: 7px; bottom: 8px; z-index: 2; width: 34px; height: 34px; display: grid; place-items: center; padding: 0; border: 0; background: transparent; box-shadow: none; }
-    .mshow-fav svg { width: 19px; height: 19px; display: block; }
+    /* 收藏（2026-11-07 业主两轮）：外围的圈圈早已去掉；本轮把它从「压在卡角」
+       挪进价格那一行，与单价齐平——一行字、一颗心，不再各占一处。
+       30px 视觉、34px 触控区（负外边距补足），收藏态以朱砂填色提示。 */
+    .mshow-fav { width: 34px; height: 34px; margin: -4px -4px -4px 0; display: grid; place-items: center; padding: 0; border: 0; background: transparent; box-shadow: none; }
+    .mshow-fav svg { width: 17px; height: 17px; display: block; }
     .mshow-fav svg path { fill: none; stroke: var(--ink-soft); stroke-width: 1.5; stroke-linejoin: round; }
     .mshow-fav.is-saved svg path { fill: var(--cinnabar); stroke: var(--cinnabar); }
     .mshow-fav:active { transform: scale(.86); }
 
-    /* ── 系列分节头（2026-11-07）──
-       细字标题 + 一根渐隐细线 + 真实件数：像册页的界签，
-       让 85 件商品流翻起来知道自己在哪个系列里。 */
-    .mshow-sec { grid-column: 1 / -1; display: flex; align-items: baseline; gap: 10px; margin: 8px 2px 0; }
+    /* ── 分节（2026-11-07 二轮：只隔断，不说话）──
+       业主：空间本来就小，小民好礼 / 字游记 / 甲骨文集 这些字反复出现会 boring。
+       现在节头只剩一根渐隐细线 + 一个极小件数：既告诉你「换了一组」，
+       又不抢标题的位置。 */
+    .mshow-sec { grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; margin: 6px 2px 0; }
     .mshow-sec:first-child { margin-top: 0; }
     .mshow-sec[hidden] { display: none; }
-    .mshow-sec strong { font-size: 14px; font-weight: 500; letter-spacing: .24em; color: var(--ink); white-space: nowrap; }
-    .mshow-sec-line { flex: 1; height: 1px; background: linear-gradient(90deg, rgba(150, 128, 86, .35), rgba(150, 128, 86, .05)); align-self: center; }
-    .mshow-sec small { color: var(--muted, #9a8f7a); font-size: 11px; letter-spacing: .08em; white-space: nowrap; }
+    .mshow-sec-line { flex: 1; height: 1px; background: linear-gradient(90deg, rgba(150, 128, 86, .28), rgba(150, 128, 86, .04)); }
+    .mshow-sec small { color: var(--muted, #9a8f7a); font-size: 10.5px; letter-spacing: .06em; white-space: nowrap; }
     .mshow-sec small em { font-style: normal; color: var(--ink-soft); }
 
     .mshow-all { display: block; width: calc(100% - 32px); margin: 18px 16px 0; min-height: 46px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255, 255, 255, .6); color: var(--ink); font: inherit; font-size: 14px; letter-spacing: .06em; }

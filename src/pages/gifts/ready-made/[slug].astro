@@ -77,6 +77,8 @@ const productSchema = {
       {work.sold && <p class="sold-notice"><strong>这一幅已经有主人了。</strong> 现货每幅只写一件，不再重复同样的内容——如果你喜欢它的气息，我们可以按你的空间与心意重新写一件。</p>}
       <p class="price"><span class="price-num">¥{work.price}</span><span class="price-meta">RMB · 含装裱 / {isWall ? '墙面悬挂' : '案头摆件'}{work.sold ? ' · 已售出' : ''}</span></p>
       <p class="note">{work.note}</p>
+      {/* 心境（2026-11-07 业主）：释读讲字的来处，这一行讲它落在人身上的意思 */}
+      {work.mood && <p class="mood serif">{work.mood}</p>}
       {work.sold
         ? <div class="detail-actions"><a class="btn btn-primary" href="/custom-commission/?context=礼赠或纪念&inspiration={encodeURIComponent(`类似「${work.title}」的定制`)}" data-event="custom_inquiry_start" data-slot={`${work.slug}_sold`}>定制一件类似的 →</a><button class="btn btn-secondary" type="button" data-wx-open data-event="ready_work_click" data-slot={work.slug}>想聊这一幅的来龙去脉 →</button><button class="btn btn-secondary wishlist-toggle" type="button" data-wishlist={work.slug} aria-pressed="false">♡ 先存个念想</button></div>
         : <div class="detail-actions"><button class="btn btn-primary" type="button" data-wx-open data-event="ready_work_click" data-slot={work.slug}>咨询这一幅 / 微信直聊 →</button><a class="btn btn-secondary" href="/custom-commission/?context=礼赠或纪念&inspiration={encodeURIComponent(`现货定制 · 类似「${work.title}」`)}">定制类似的 →</a><button class="btn btn-secondary wishlist-toggle" type="button" data-wishlist={work.slug} aria-pressed="false">♡ 先收进心愿单</button></div>}
@@ -214,7 +216,8 @@ const productSchema = {
   .price { display: flex; align-items: baseline; flex-wrap: wrap; gap: 12px; margin: 0 0 20px; padding: 16px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
   .price-num { font: 500 34px var(--font-display-en), var(--font-body-zh); color: var(--cinnabar); letter-spacing: .01em; }
   .price-meta { color: var(--ink-soft); font-size: 13px; }
-  .note { color: var(--ink-soft); font-size: 16px; line-height: 1.95; margin: 0 0 26px; }
+  .note { color: var(--ink-soft); font-size: 16px; line-height: 1.95; margin: 0 0 18px; }
+  .mood { margin: 0 0 26px; padding-left: 14px; border-left: 2px solid rgba(192, 57, 43, .3); color: var(--ink); font-size: 16.5px; line-height: 1.95; letter-spacing: .02em; }
   /* 已售出提示（B2）：一整块的温和说明，不用红色告警感 */
   .sold-notice { margin: 0 0 20px; padding: 14px 16px; border-left: 2px solid var(--ink-soft); background: var(--paper-deep); color: var(--ink-soft); font-size: 14px; line-height: 1.9; }
   .sold-notice strong { color: var(--ink); font-weight: 500; }

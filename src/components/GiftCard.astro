@@ -1,16 +1,16 @@
 ---
 import type { GiftProduct } from '../data/content';
-import { giftTierLabels } from '../data/content';
 const { product } = Astro.props as { product: GiftProduct };
-const tier = giftTierLabels[product.tier];
+// 2026-11-07 业主：卡片上不再标「入门款 / 心意款 / 珍藏款」档位——档位是内部定价口径，
+// 作品卡只交代它适合的场景（data-tier 仍保留给筛选脚本用，不显示）。
 ---
 <article class="gift-card" data-gift-card data-scene={product.scene} data-tier={product.tier} data-slug={product.slug}>
   <a class="gift-visual" href={`/gifts/${product.slug}/`} aria-label={`${product.name}详情`}>
     {product.image ? <img src={product.image} alt={`${product.name}｜${product.sceneLabel}场景`} loading="lazy" decoding="async" /> : <span class="serif">{product.visual}</span>}
-    <small>{product.sceneLabel} · {tier.name}</small>
+    <small>{product.sceneLabel}</small>
   </a>
   <div class="gift-card-body">
-    <span class="eyebrow">{product.sceneLabel} / {tier.name}</span>
+    <span class="eyebrow">{product.sceneLabel}</span>
       <h3 class="serif"><a href={`/gifts/${product.slug}/`}>{product.name}</a></h3>
     <p lang="en">{product.en}</p>
     <p>{product.meaning}</p>

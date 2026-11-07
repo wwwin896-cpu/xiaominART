@@ -18,7 +18,7 @@
 interface Props {
   /** 最低价，由 index.astro 从现货数据里算出 */
   priceFrom: number;
-  /** 在册件数（礼品 + 生肖 + 现货） */
+  /** 在册件数（小民好礼 + 生肖 + 甲骨文集） */
   itemCount: number;
 }
 
@@ -42,7 +42,7 @@ const { priceFrom, itemCount } = Astro.props;
     <ul class="mhero-facts">
       <li><strong>{priceFrom}</strong><span>元起</span></li>
       <li><strong>{itemCount}</strong><span>件在册</span></li>
-      <li><strong class="mhero-facts-zh">现货</strong><span>48h 直发</span></li>
+      <li><strong class="mhero-facts-zh">写好的</strong><span>48h 寄出</span></li>
     </ul>
 
     {/* 搜索胶囊（2026-10-31 业主指令隐藏）：
