@@ -1,12 +1,12 @@
 {
   "version": 1,
   "site": "https://xiaominart.com",
-  "updatedAt": "2026-11-06T00:27:10.223Z",
+  "updatedAt": "2026-11-07T08:32:05.350Z",
   "urls": {
     "https://xiaominart.com/": {
-      "pushedAt": "2026-10-31",
-      "lastmod": "2026-10-31",
-      "count": 3
+      "pushedAt": "2026-11-07",
+      "lastmod": "2026-11-06",
+      "count": 4
     },
     "https://xiaominart.com/gifts/": {
       "pushedAt": "2026-11-01",
@@ -171,6 +171,51 @@
     "https://xiaominart.com/intangible/": {
       "pushedAt": "2026-11-06",
       "lastmod": "2026-10-31",
+      "count": 1
+    },
+    "https://xiaominart.com/verify/": {
+      "pushedAt": "2026-11-07",
+      "lastmod": "2026-11-06",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/quiet-entry-gift/": {
+      "pushedAt": "2026-11-07",
+      "lastmod": "2026-11-06",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/cinnabar-note-gift/": {
+      "pushedAt": "2026-11-07",
+      "lastmod": "2026-11-06",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/seasonal-letter-gift/": {
+      "pushedAt": "2026-11-07",
+      "lastmod": "2026-11-06",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/qin-se-he-ming-gift/": {
+      "pushedAt": "2026-11-07",
+      "lastmod": "2026-11-06",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/desk-mountain-keepsake/": {
+      "pushedAt": "2026-11-07",
+      "lastmod": "2026-11-06",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/ink-breath-teacher/": {
+      "pushedAt": "2026-11-07",
+      "lastmod": "2026-11-06",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/xin-jing-ze-tai/": {
+      "pushedAt": "2026-11-07",
+      "lastmod": "2026-11-06",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/an-ning/": {
+      "pushedAt": "2026-11-07",
+      "lastmod": "2026-11-06",
       "count": 1
     }
   }
