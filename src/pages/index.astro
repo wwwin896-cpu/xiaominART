@@ -5,7 +5,7 @@ import MobileHomeHero from '../components/MobileHomeHero.astro';
 import MobileShowcase from '../components/MobileShowcase.astro';
 import MobileCoreCards from '../components/MobileCoreCards.astro';
 import WorkLightbox from '../components/WorkLightbox.astro';
-import { zodiacWorks, giftProducts, readyMadeWorks } from '../data/content';
+import { zodiacWorks, giftProducts, readyMadeWorks, oracleWorks } from '../data/content';
 // ── 01 / 一字一源（2026-10-16 业主二次裁决）──────────────────────────────
 // 演进路径，不要走回头路：
 //   ① 原版 = 「01 / 心意之选」6 张送礼场景卡（讲「什么时候送」）
@@ -85,7 +85,8 @@ const priceFrom = priceCandidates.length > 0 ? Math.min(...priceCandidates) : 19
 const showcaseItemCount =
   giftProducts.filter((p) => p.published !== false && p.slug !== 'quiet-entry-gift').length +
   zodiacWorks.length +
-  readyMadeWorks.length;
+  readyMadeWorks.length +
+  oracleWorks.length;
 const itemCount = showcaseItemCount;
 ---
 <Layout title="小民艺术｜手写书法礼品与书画定制" description="每一幅字都亲笔手写，取自古文字有出处。送老师、送长辈，或为乔迁、开业、婚庆纪念备一份礼物，可选现货或定制，¥199 起。查看选礼指南">

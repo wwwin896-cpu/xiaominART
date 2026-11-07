@@ -23,11 +23,11 @@
 //
 // 数据：giftProducts + zodiacWorks + readyMadeWorks 构建期烘焙，客户端只拿渲染好的 JSON。
 // ─────────────────────────────────────────────────────────────
-import { giftProducts, zodiacWorks, readyMadeWorks } from '../data/content';
+import { giftProducts, zodiacWorks, readyMadeWorks, oracleWorks } from '../data/content';
 
 type Tile = {
   id: string;
-  kind: 'gift' | 'zodiac' | 'ready';
+  kind: 'gift' | 'zodiac' | 'ready' | 'oracle';
   href: string;
   image: string;
   alt: string;
@@ -36,11 +36,28 @@ type Tile = {
   tag: string;
   /** 卡面右上角小签：场景/系列的短词（demo .tag 的语言） */
   tagShort: string;
+  /** 卡面标题上方的系列小签（2026-11-07 业主：优化标题属性与归类） */
+  kindLabel: string;
   price: string;
   desc: string;
   specs: Array<[string, string]>;
   /** 分类归属：场合 chip / 对象 chip 的并集，用于筛选 */
   groups: string[];
+};
+
+// 系列分节（2026-11-07 业主：点入后要能清晰看到作品分布，又有舒适度与文艺感）。
+// 商品流按系列分节展示：节头细字 + 延伸细线，节内才是 2 列卡。
+const SECTIONS: Array<{ kind: Tile['kind']; label: string }> = [
+  { kind: 'gift', label: '小民好礼' },
+  { kind: 'zodiac', label: '字游记 · 十二生肖' },
+  { kind: 'oracle', label: '甲骨文集' },
+  { kind: 'ready', label: '现货小品' },
+];
+const KIND_LABELS: Record<Tile['kind'], string> = {
+  gift: '小民好礼',
+  zodiac: '字游记',
+  oracle: '甲骨文集',
+  ready: '现货小品',
 };
 
 const tiles: Tile[] = [];
@@ -88,6 +105,7 @@ for (const p of giftProducts) {
     title: p.name,
     tag: `${p.sceneLabel} · ${p.price}`,
     tagShort: p.sceneLabel,
+    kindLabel: KIND_LABELS.gift,
     price: p.price,
     desc: p.meaning,
     specs: [
@@ -111,6 +129,7 @@ for (const z of zodiacWorks) {
     title: z.name,
     tag: `生肖 · ${z.price}`,
     tagShort: '字游记',
+    kindLabel: KIND_LABELS.zodiac,
     price: z.price,
     desc: z.story,
     specs: [
@@ -122,7 +141,41 @@ for (const z of zodiacWorks) {
   });
 }
 
-// ③ 现货线（已写完、可立即发货，每幅世间唯一）
+// ③ 甲骨文集（/oracle/，2026-11-07 归入在册总数与今季之选）：
+//    场合归属逐件核定（真实归类）：集福=乔迁/开业、天干地支=乔迁、玄鸟=生辰、
+//    酌酒=开业（待客）、乐艺=不挂场合签；五件都收「节日问候」与「送外宾」
+//    ——甲骨文是最直接的中国文化原生符号，与涉外往来重合。
+const ORACLE_SCENE: Record<string, string[]> = {
+  'le-yi': [],
+  'ji-fu': ['housewarming', 'opening'],
+  'tian-gan-di-zhi': ['housewarming'],
+  'xuan-niao': ['birthday'],
+  'zhuo-jiu': ['opening'],
+};
+for (const o of oracleWorks) {
+  tiles.push({
+    id: o.slug,
+    kind: 'oracle',
+    href: `/oracle/#${o.slug}`,
+    image: o.image,
+    alt: o.alt,
+    char: o.glyphs.slice(0, 1),
+    title: o.name,
+    tag: `甲骨文 · ${o.price}`,
+    tagShort: '甲骨文集',
+    kindLabel: KIND_LABELS.oracle,
+    price: o.price,
+    desc: o.tagline,
+    specs: [
+      ['释读', o.story.slice(0, 46) + '……'],
+      ['形制', `A4 ${o.orientation} · 黑胡桃木框`],
+      ['时间', '现货 48h 顺丰直发'],
+    ],
+    groups: ['all', 'oracle', 'festival', 'foreign-guests', ...(ORACLE_SCENE[o.slug] || [])],
+  });
+}
+
+// ④ 现货线（已写完、可立即发货，每幅世间唯一）
 for (const w of readyMadeWorks) {
   tiles.push({
     id: w.slug,
@@ -134,6 +187,7 @@ for (const w of readyMadeWorks) {
     title: w.title,
     tag: `现货 · ¥${w.price}`,
     tagShort: w.form === '挂墙' ? '可挂' : '案头',
+    kindLabel: KIND_LABELS.ready,
     price: `¥${w.price}`,
     desc: w.note,
     specs: [
@@ -173,6 +227,7 @@ const sceneGroups = [
 const kindGroups = [
   { key: 'gift', label: '礼品套装', href: '/gifts/' },
   { key: 'zodiac', label: '十二生肖', href: '/zodiac/' },
+  { key: 'oracle', label: '甲骨文集', href: '/oracle/' },
   { key: 'ready', label: '现货小品', href: '/gifts/ready-made/' },
 ];
 // 2026-10-31 业主补充：「送给谁」+ 送孩子 / 送外宾。
@@ -198,6 +253,9 @@ const recipientGroups = [
 const nanIdx = tiles.findIndex((t) => t.id === 'nan-xi-xin-ji');
 if (nanIdx > 0) tiles.unshift(...tiles.splice(nanIdx, 1));
 const FIRST_BATCH = 8;
+// 分节渲染顺序：小民好礼 → 字游记 → 甲骨文集 → 现货小品（与导航「一字一礼」同序）。
+// 南谿新霁已在上面提到 tiles 首位，分节后仍是「小民好礼」节的第一张卡。
+const orderedTiles = SECTIONS.flatMap((sec) => tiles.filter((t) => t.kind === sec.kind));
 const tilesJson = JSON.stringify(tiles);
 ---
 
@@ -241,33 +299,39 @@ const tilesJson = JSON.stringify(tiles);
   </div>
 
   <div class="mshow-grid" data-ms-grid>
-    {tiles.map((tile, i) => (
-      <article
-        class:list={['mshow-tile', { 'is-extra': i >= FIRST_BATCH }]}
-        data-ms-tile={tile.id}
-        data-ms-groups={tile.groups.join(' ')}
-        hidden={i >= FIRST_BATCH ? true : undefined}
-      >
-        {/* 卡面 = 商品实景图（2026-10-31 业主修正）：
-            原来这里是大字艺术卡（纸底 + 题字大字），业主指出
-            「今季之选列出的『静入』『朱』这些文字，要用完整的全景图片来呈现」——
-            即卡面本身就该是那件作品陈列在空间里的完整实景，
-            而不是把字做成一张字卡。
-            现在：整幅实景图 cover 撑满 1:1 卡面（卡位不变，网格整齐），
-            图上压一层轻渐变保证题名可读；点开详情的图改为 contain 完整呈现。 */}
-        <button class="mshow-tile-main" type="button" data-ms-open={tile.id}>
-          <span class="mshow-tile-fig">
-            <img src={tile.image} alt={tile.alt} width="800" height="800" loading="lazy" decoding="async" />
-          </span>
-          <span class="mshow-tile-copy">
-            <strong class="serif">{tile.title}</strong>
-            <small>{tile.price}</small>
-          </span>
-        </button>
-        <button class="mshow-fav" type="button" data-ms-wish={tile.id} aria-pressed="false" aria-label={`收藏 ${tile.title}`}>
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.6 4.9 13.7A4.6 4.6 0 0 1 12 7.4a4.6 4.6 0 0 1 7.1 6.3Z" /></svg>
-        </button>
-      </article>
+    {SECTIONS.map((sec) => (
+      <>
+        <p class="mshow-sec" data-ms-sec={sec.kind}>
+          <strong class="serif">{sec.label}</strong>
+          <span class="mshow-sec-line" aria-hidden="true"></span>
+          <small><em data-ms-sec-count={sec.kind}>{tiles.filter((t) => t.kind === sec.kind).length}</em> 件</small>
+        </p>
+        {orderedTiles.map((tile, i) => (
+          tile.kind === sec.kind && (
+            <article
+              class:list={['mshow-tile', { 'is-extra': i >= FIRST_BATCH }]}
+              data-ms-tile={tile.id}
+              data-ms-kind={tile.kind}
+              data-ms-groups={tile.groups.join(' ')}
+              hidden={i >= FIRST_BATCH ? true : undefined}
+            >
+              <button class="mshow-tile-main" type="button" data-ms-open={tile.id}>
+                <span class="mshow-tile-fig">
+                  <img src={tile.image} alt={tile.alt} width="800" height="800" loading="lazy" decoding="async" />
+                </span>
+                <span class="mshow-tile-copy">
+                  <small class="mshow-tile-kind">{tile.kindLabel}</small>
+                  <strong class="serif">{tile.title}</strong>
+                  <small class="mshow-tile-price">{tile.price}</small>
+                </span>
+              </button>
+              <button class="mshow-fav" type="button" data-ms-wish={tile.id} aria-pressed="false" aria-label={`收藏 ${tile.title}`}>
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.6 4.9 13.7A4.6 4.6 0 0 1 12 7.4a4.6 4.6 0 0 1 7.1 6.3Z" /></svg>
+              </button>
+            </article>
+          )
+        ))}
+      </>
     ))}
   </div>
 
@@ -308,9 +372,11 @@ const tilesJson = JSON.stringify(tiles);
     <div class="mshow-sheet-body">
       <p class="mshow-sheet-label">看哪一类</p>
       <div class="mshow-sheet-grid">
-        <a href="/gifts/" class="mshow-sheet-item"><span class="serif">礼</span>全部好礼<small>19 件</small></a>
+        {/* 全部好礼 = 回到当前商品流的全部分类视图（按系列分节），不再链接 /gifts/
+            ——旧版这里硬编码「19 件」，与真实在册数长期不符（2026-11-07 业主指正） */}
+        <button type="button" class="mshow-sheet-item" data-ms-chip-link="all"><span class="serif">礼</span>全部好礼<small>{tiles.length} 件</small></button>
         {kindGroups.map((g) => (
-          <a href={g.href} class="mshow-sheet-item"><span class="serif">字</span>{g.label}<small>点开看</small></a>
+          <a href={g.href} class="mshow-sheet-item"><span class="serif">字</span>{g.label}<small>{tiles.filter((t) => t.kind === g.key).length} 件</small></a>
         ))}
       </div>
       <p class="mshow-sheet-label">什么场合</p>
@@ -482,6 +548,23 @@ const tilesJson = JSON.stringify(tiles);
     syncWish();
   });
 
+  // ── 系列节头同步（2026-11-07 分节改版）──
+  // 统计每个系列当前可见件数：0 件时隐藏节头，>0 时更新节头计数。
+  // 筛选、展开、收起三处都要调用，保证节头永远与下方卡片一致。
+  const syncSections = () => {
+    if (!grid) return;
+    grid.querySelectorAll<HTMLElement>('[data-ms-sec]').forEach((head) => {
+      const kind = head.dataset.msSec || '';
+      let n = 0;
+      grid.querySelectorAll<HTMLElement>(`[data-ms-kind="${kind}"]`).forEach((t) => {
+        if (!t.hidden) n += 1;
+      });
+      head.hidden = n === 0;
+      const count = head.querySelector<HTMLElement>('[data-ms-sec-count]');
+      if (count) count.textContent = String(n);
+    });
+  };
+
   // ── 筛选 chip ──
   const applyGroup = (key: string) => {
     // 筛选即视为放弃「看全部」的展开态，避免折叠标记与筛选结果互相污染
@@ -516,6 +599,7 @@ const tilesJson = JSON.stringify(tiles);
     } else {
       empty?.remove();
     }
+    syncSections();
   };
 
   document.querySelectorAll<HTMLButtonElement>('[data-ms-chip]').forEach((chip) => {
@@ -561,6 +645,7 @@ const tilesJson = JSON.stringify(tiles);
     if (expandBtn) expandBtn.hidden = false;
     const after = document.documentElement.scrollHeight;
     window.scrollTo(0, Math.max(0, y - (before - after)));
+    syncSections();
   };
   document.querySelector('[data-ms-expand]')?.addEventListener('click', (event) => {
     const btn = event.currentTarget as HTMLButtonElement;
@@ -571,6 +656,7 @@ const tilesJson = JSON.stringify(tiles);
     });
     expanded = true;
     btn.hidden = true;
+    syncSections();
   });
   if (typeof IntersectionObserver !== 'undefined' && grid) {
     const gridWatcher = new IntersectionObserver((entries) => {
@@ -583,6 +669,7 @@ const tilesJson = JSON.stringify(tiles);
   }
 
   syncWish();
+  syncSections();
 </script>
 
 <style>
@@ -590,7 +677,7 @@ const tilesJson = JSON.stringify(tiles);
   .mshow, .mshow-detail, .mshow-sheet { display: none; }
 
   @media (max-width: 767px) {
-    .mshow { display: block; padding: 0 0 34px; border-top: 1px solid var(--line-soft); }
+    .mshow { display: block; padding: 0 0 34px; border-top: 1px solid var(--line-soft); background: linear-gradient(180deg, #faf6ec 0%, #f2ebdb 50%, #faf6ec 100%); }
 
     /* ── 全景场景图（2026-10-31 修订 v2）──────────────────────────
        业主反馈：这张图红色太深，视觉上不舒服。原实现两层都偏重——
@@ -621,10 +708,13 @@ const tilesJson = JSON.stringify(tiles);
     .mshow-chip.is-on { background: linear-gradient(135deg, var(--cinnabar), var(--cinnabar-deep)); border-color: transparent; color: #fff; box-shadow: 0 2px 8px rgba(160, 44, 32, .35); }
     .mshow-chip--more { color: var(--cinnabar); border-color: rgba(192, 57, 43, .4); background: rgba(192, 57, 43, .06); }
 
-    /* 2 列卡：圆角卡 + 阴影（demo .card：radius 14、白卡、浮起阴影） */
-    .mshow-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; padding: 0 16px; }
-    .mshow-tile { position: relative; background: var(--card, #fffdf7); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 2px 8px rgba(60, 50, 30, .08); overflow: hidden; transition: transform .2s ease, box-shadow .2s ease; }
-    .mshow-tile:active { transform: scale(.98); }
+    /* 2 列卡：悬浮纸卡（2026-11-07 业主：大量浏览不烦躁，可考虑悬浮感）
+       · 底色由纯白调回极浅暖纸，与页面的宣纸基调之间只用阴影分层，不再靠描边；
+       · 阴影改「近贴一层 + 远散一层」的双层柔影，浮起但不抢眼；
+       · 边框降到发丝级透明度，只兜住图与字的边缘，视觉上是「一片纸」而不是「一个框」。 */
+    .mshow-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; padding: 0 16px; align-items: start; }
+    .mshow-tile { position: relative; background: #fffdf8; border: 1px solid rgba(196, 176, 134, .16); border-radius: 16px; box-shadow: 0 1px 2px rgba(74, 60, 34, .04), 0 10px 26px -14px rgba(74, 60, 34, .22); overflow: hidden; transition: transform .2s ease, box-shadow .2s ease; }
+    .mshow-tile:active { transform: scale(.98); box-shadow: 0 1px 2px rgba(74, 60, 34, .04), 0 4px 12px -8px rgba(74, 60, 34, .18); }
     .mshow-tile[hidden] { display: none; }
     .mshow-tile-main { display: block; width: 100%; padding: 0; border: 0; background: transparent; text-align: left; font: inherit; color: inherit; }
     /* demo .art：卡面 = 作品实景图（2026-10-31 修订 v2）。
@@ -640,21 +730,35 @@ const tilesJson = JSON.stringify(tiles);
     .mshow-tile:active .mshow-tile-fig img { transform: scale(1.02); }
     .mshow-tile-fig::after { content: ''; position: absolute; inset: 7px; z-index: 2; border: 1px solid rgba(120, 100, 60, .12); border-radius: 8px; pointer-events: none; }
     .mshow-tile-char { font-size: clamp(58px, 18vw, 84px); color: var(--ink); text-shadow: 0 2px 6px rgba(43, 43, 43, .12); letter-spacing: .04em; }
-    .mshow-tile-copy { display: block; padding: 10px 12px 12px; }
+    .mshow-tile-copy { display: block; padding: 9px 12px 11px; }
+    /* 系列小签（2026-11-07 业主：优化标题属性与归类）——标题上方一行极小的系列名，
+       让「这一件属于哪个系列」不用点开就知道，也和分节头呼应。 */
+    .mshow-tile-kind { display: block; margin-bottom: 3px; color: var(--muted, #9a8f7a); font-size: 10px; letter-spacing: .26em; }
     .mshow-tile-copy strong { display: block; font-family: var(--font-display-zh); font-size: 15px; font-weight: 500; letter-spacing: .06em; line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .mshow-tile-copy small { display: block; margin-top: 4px; color: var(--cinnabar); font: 600 13px var(--font-display-en), Georgia, serif; letter-spacing: .02em; }
+    .mshow-tile-price { display: block; margin-top: 4px; color: var(--cinnabar); font: 600 13px var(--font-display-en), Georgia, serif; letter-spacing: .02em; }
 
     /* demo .tag：右上角朱砂细签 —— 2026-11-01 业主：卡面右上角标签去除，
        .mshow-tag 节点已从模板删除，这里只留注释防回加。 */
 
-    /* 右下角收藏：毛玻璃圆钮（demo .fav），38px 命中区。
-       2026-11-01 业主：收藏键与价格栏齐平（卡右下、价格同行），不再压在图上。 */
-    .mshow-fav { position: absolute; right: 8px; bottom: 9px; z-index: 2; width: 34px; height: 34px; display: grid; place-items: center; padding: 0; border: 1px solid rgba(120, 100, 60, .28); border-radius: 50%; background: rgba(255, 255, 255, .85); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); box-shadow: 0 2px 8px rgba(43, 41, 36, .12); }
-    .mshow-fav svg { width: 18px; height: 18px; display: block; }
-    .mshow-fav svg path { fill: none; stroke: var(--ink-soft); stroke-width: 1.6; stroke-linejoin: round; }
-    .mshow-fav.is-saved { background: rgba(192, 57, 43, .08); border-color: rgba(192, 57, 43, .5); }
+    /* 右下角收藏（2026-11-07 业主：爱心外围的圈圈去除，别占用视觉）：
+       去掉描边圆底与毛玻璃，只留心形本身，像手账里顺手画下的一笔；
+       34px 命中区不变，收藏态仍以朱砂填色提示。 */
+    .mshow-fav { position: absolute; right: 7px; bottom: 8px; z-index: 2; width: 34px; height: 34px; display: grid; place-items: center; padding: 0; border: 0; background: transparent; box-shadow: none; }
+    .mshow-fav svg { width: 19px; height: 19px; display: block; }
+    .mshow-fav svg path { fill: none; stroke: var(--ink-soft); stroke-width: 1.5; stroke-linejoin: round; }
     .mshow-fav.is-saved svg path { fill: var(--cinnabar); stroke: var(--cinnabar); }
     .mshow-fav:active { transform: scale(.86); }
+
+    /* ── 系列分节头（2026-11-07）──
+       细字标题 + 一根渐隐细线 + 真实件数：像册页的界签，
+       让 85 件商品流翻起来知道自己在哪个系列里。 */
+    .mshow-sec { grid-column: 1 / -1; display: flex; align-items: baseline; gap: 10px; margin: 8px 2px 0; }
+    .mshow-sec:first-child { margin-top: 0; }
+    .mshow-sec[hidden] { display: none; }
+    .mshow-sec strong { font-size: 14px; font-weight: 500; letter-spacing: .24em; color: var(--ink); white-space: nowrap; }
+    .mshow-sec-line { flex: 1; height: 1px; background: linear-gradient(90deg, rgba(150, 128, 86, .35), rgba(150, 128, 86, .05)); align-self: center; }
+    .mshow-sec small { color: var(--muted, #9a8f7a); font-size: 11px; letter-spacing: .08em; white-space: nowrap; }
+    .mshow-sec small em { font-style: normal; color: var(--ink-soft); }
 
     .mshow-all { display: block; width: calc(100% - 32px); margin: 18px 16px 0; min-height: 46px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255, 255, 255, .6); color: var(--ink); font: inherit; font-size: 14px; letter-spacing: .06em; }
     .mshow-all[hidden] { display: none; }
