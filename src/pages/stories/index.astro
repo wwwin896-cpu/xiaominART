@@ -94,17 +94,17 @@ const landscapeCases = storyCases.filter((c) => c.orientation === 'landscape');
 const facetEntries = Object.entries(FACETS) as [keyof typeof FACETS, (typeof FACETS)[keyof typeof FACETS]][];
 
 ---
-<Layout title="书法定制案例｜这些字是为谁写的、写了什么｜小民艺术" description="一幅字先属于一个人。这里记录真实委托：为什么写这一句、跋文写了什么、最后挂在哪里。人物与机构已获授权并脱敏，案例可按类型参考。">
+<Layout title="书法定制案例｜这些字是为谁写的、写了什么｜小民艺术" description="这里记录真实的委托故事：为什么写这一句、跋文写了什么、最后挂在哪里。人物与机构已获授权并脱敏，案例可按类型参考。">
   <section class="container page-head">
     <span class="eyebrow">Stories on the wall / 墙上的故事</span>
-    <h1 class="serif">每一幅字，<br />先属于一个人。</h1>
-    <p>下面是已经上墙的案例分享。你的故事若要在这里出现，永远需要你单独授权。</p>
+    <h1 class="serif">墙上的字，<br />都有它的来处。</h1>
+    <p>这里收录的委托案例，均经主人允许后公开。愿你在别人的来处里，遇见自己的那句话。</p>
   </section>
 
   <section class="container section cases" aria-labelledby="cases-title">
     <div class="section-lead">
       <span class="eyebrow">01 / 客户案例分享</span>
-      <h2 id="cases-title" class="serif">它们已经挂在别人家的墙上。</h2>
+      <h2 id="cases-title" class="serif">这些字，如今挂在各自的墙上。</h2>
       <p>每一幅都是为具体的空间、具体的人而写。按装裱形制分列——竖幅归竖幅，横幅归横幅，方便你想象它们落在自己墙上的样子。</p>
     </div>
 
@@ -179,8 +179,8 @@ const facetEntries = Object.entries(FACETS) as [keyof typeof FACETS, (typeof FAC
     <section class="container section stories-wall">
       <div class="section-lead">
         <span class="eyebrow">Authorised stories / 已获授权</span>
-        <h2 class="serif">下面这些，是主人同意分享的。</h2>
-        <p>每一则都经过本人授权后公开；未经授权的委托永远只留在沟通里。</p>
+        <h2 class="serif">经主人同意，与你分享。</h2>
+        <p>每一则都经过本人授权后公开；更多的故事，我们只留在与客人的来往里。</p>
       </div>
       <div class="wall-grid">
         {stories.map((story) => (

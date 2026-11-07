@@ -36,12 +36,12 @@ import { zodiacWorks, giftProducts, readyMadeWorks } from '../data/content';
 //     （⚠️ 事件白名单**只增不删**，那两条**保留在册**，不要从三处白名单里删掉 ——
 //       页面改版后不再发的事件也要留，否则会误伤可能仍在上线的旧页面）
 const sceneCards = [
-  { tag: '节日问候', title: '四季流转', body: '春写「新」，秋写「收」。一年一幅，挂在同一面墙上，看得见时间走过去。', image: '/assets/scenes/theme-four-seasons.jpg', href: '/gifts/seasonal-letter-gift/', alt: '书房木案上的四季题跋书法横幅，旁有兰草与砚台' },
-  { tag: '传情达意', title: '一点朱砂', body: '朱砂调进墨里，红得不艳。生辰、满月、升迁——值得用一张红纸的事，其实不多。', image: '/assets/scenes/theme-cinnabar.jpg', href: '/gifts/cinnabar-note-gift/', alt: '朱砂红卡的「欢喜」古文字书法框，旁有红梅与灯笼' },
-  { tag: '文房雅趣', title: '墨有呼吸', body: '墨分五色，一笔里就有干湿浓淡。挂在书桌边，看久了会想提笔。', image: '/assets/scenes/theme-ink-breath.jpg', href: '/gifts/ink-breath-teacher/', alt: '阳光下的毛边纸密字书法作品，笔触清晰可辨' },
-  { tag: '风生水起', title: '案上有山', body: '「山」字写满整纸，抬头就是一座山。想让屋子开阔，先让那面墙空出来。', image: '/assets/scenes/theme-desk-mountain.jpg', href: '/gifts/desk-mountain-keepsake/', alt: '茶室绿墙上的长卷书法与原木长案茶席' },
-  { tag: '校庆谢师', title: '桃李不言', body: '校训、班训、老师常说的那句话，都能写成字。谢师不必客套，一句原话最重。', image: '/assets/scenes/theme-teacher-calligraphy-desklamp.jpg', href: '/gifts/ink-breath-teacher/', alt: '书房木案上的洒金笺古文字书法横幅，黑色台灯暖光下旁有青瓷瓶插山茶、放大镜与笔记本' },
-  { tag: '婚庆纪念', title: '琴瑟和鸣', body: '两个姓、一个日子、一句只说给对方的话，写进同一张纸。', image: '/assets/scenes/theme-wedding-qin-se-he-ming.jpg', href: '/gifts/qin-se-he-ming-gift/', alt: '朱砂红底「琴瑟和鸣」古文字书法横幅，黑胡桃木框装裱，陈设于卧室边柜，旁有白瓷瓶红果与中式卧房' },
+  { tag: '节日问候', title: '四季流转', body: '岁有寒暑，月有圆缺——把四季的流转写成一幅字，让问候在案头留得久一点。', image: '/assets/scenes/theme-four-seasons.jpg', href: '/gifts/seasonal-letter-gift/', alt: '书房木案上的四季题跋书法横幅，旁有兰草与砚台' },
+  { tag: '传情达意', title: '一点朱砂', body: '朱砂作底，古字为凭——值得庆祝的事，就该这样郑重地讲出来。', image: '/assets/scenes/theme-cinnabar.jpg', href: '/gifts/cinnabar-note-gift/', alt: '朱砂红卡的「欢喜」古文字书法框，旁有红梅与灯笼' },
+  { tag: '文房雅趣', title: '墨有呼吸', body: '书房雅趣，自古值得被记录——一笔一画的浓淡停顿都看得见，写出来的字，才是活的书香。', image: '/assets/scenes/theme-ink-breath.jpg', href: '/gifts/ink-breath-teacher/', alt: '阳光下的毛边纸密字书法作品，笔触清晰可辨' },
+  { tag: '风生水起', title: '案上有山', body: '书房之内，自有山河——大境之气，亦有大静之气，把开阔与生长安放进日常。', image: '/assets/scenes/theme-desk-mountain.jpg', href: '/gifts/desk-mountain-keepsake/', alt: '茶室绿墙上的长卷书法与原木长案茶席' },
+  { tag: '校庆谢师', title: '桃李不言', body: '校庆周年、谢师情谊——把校训或写给恩师的那句话写成字。桃李不言，下自成蹊，深深的感谢不必多言。', image: '/assets/scenes/theme-teacher-calligraphy-desklamp.jpg', href: '/gifts/ink-breath-teacher/', alt: '书房木案上的洒金笺古文字书法横幅，黑色台灯暖光下旁有青瓷瓶插山茶、放大镜与笔记本' },
+  { tag: '婚庆纪念', title: '琴瑟和鸣', body: '订婚、结婚、周年——把两个人的名字与祝愿写成一幅。琴瑟在御，莫不静好，愿此后岁岁年年。', image: '/assets/scenes/theme-wedding-qin-se-he-ming.jpg', href: '/gifts/qin-se-he-ming-gift/', alt: '朱砂红底「琴瑟和鸣」古文字书法横幅，黑胡桃木框装裱，陈设于卧室边柜，旁有白瓷瓶红果与中式卧房' },
 ];
 const storyCards = [
   { title: '书房定制 · 给父母的周年纪念礼', quote: '想给结婚三十年的爸妈留一件东西，最后写了「康而寿」。康是平安，寿是长久——挂进书房那天，我爸说，这三个字比什么都实在。', image: '/assets/scenes/study-kang-er-shou.jpg', alt: '书房案头的「康而寿」书法横幅，旁有台灯与书卷' },
@@ -50,10 +50,10 @@ const storyCards = [
   { title: '企业礼赠 · 合作伙伴周年庆典', quote: '给合作了十年的伙伴选了一份「百福图」，对方收到后说「这比任何商务礼品都让我感动」。后来那份作品一直挂在他办公室最显眼的位置。', image: '/assets/scenes/dining-room-long-calligraphy.jpg', alt: '企业空间里的书法横幅' },
 ];
 const steps = [
-  { no: '壹', title: '倾听', body: '先说清挂在哪、送给谁、想留一句什么话。不用懂书法。' },
-  { no: '贰', title: '取意', body: '我们按字义、空间和预算给两三个方向，你挑一个。' },
-  { no: '叁', title: '创作', body: '小民写，写完拍照片给你看；不合适就重写。' },
-  { no: '肆', title: '抵达', body: '装裱、装盒、寄出，附释读卡与一张手写贺语。' },
+  { no: '壹', title: '倾听', body: '告诉我们空间、人物与想留下的情绪，不必先懂艺术。' },
+  { no: '贰', title: '取意', body: '从字、色、材质中，找到属于你的视觉方向。' },
+  { no: '叁', title: '创作', body: '匹配的艺术家为你专属创作，过程中保留必要的确认节点。' },
+  { no: '肆', title: '抵达', body: '作品以适合你的方式，带着温度抵达。' },
 ];
 // 见艺术 · 文字源流区的时间轴节点。
 // 史实口径：甲骨文（商）、金文（商周）、石鼓文（先秦，与首屏「秦王猎碣」同一出处）、秦篆（秦）。
@@ -274,7 +274,7 @@ const itemCount = showcaseItemCount;
     <div class="section-lead">
       <span class="eyebrow">01 / 一字一礼 · 四时一笺</span>
       <h2 id="works-title" class="serif">每个字，有它自己的来处。</h2>
-      <p>八十件现货，每幅都注明取字出处与跋文全文。挑字之前，先想清楚送给谁。</p>
+      <p>每一幅字都不是随手写下的。这些字从甲骨、青铜、石鼓与碑刻里长出来，走了几千年才落到你的案头。</p>
     </div>
     <div class="choice-grid">
       {sceneCards.map((card) => <a class="choice-card" href={card.href} data-event="scene_view"><figure><Pic src={card.image} alt={card.alt} loading="lazy" decoding="async" /><button class="lb-zoom" type="button" data-lb-zoom data-lb-group="choice" aria-label={`放大查看「${card.title}」`}><span aria-hidden="true">⤢</span></button></figure><div class="choice-copy"><span class="mono choice-tag">{card.tag}</span><h3 class="serif">{card.title}</h3><p>{card.body}</p><div class="choice-meta"><span class="card-link">以此为灵感</span></div></div></a>)}
@@ -315,7 +315,7 @@ const itemCount = showcaseItemCount;
     </div>
   </div>
   <section class="container section stories" aria-labelledby="stories-title">
-    <div class="section-lead"><span class="eyebrow">01 / 客户分享</span><h2 id="stories-title" class="serif">从一句话，到一件作品。</h2><p>下面四份委托，都是先有一句话，再有一幅字。看看别人是怎么开口的。</p></div>
+    <div class="section-lead"><span class="eyebrow">01 / 客户分享</span><h2 id="stories-title" class="serif">从一句话，到一件作品。</h2><p>每一份委托，都从委托人的那句话开始。下面是按常见送礼情境整理的客户分享，用来说明一份心意如何成形——你的定制，也将从你的那句话开始。</p></div>
     <div class="story-grid">
       {storyCards.map((card) => <article class="story-card"><figure><Pic src={card.image} alt={card.alt} loading="lazy" decoding="async" /></figure><div class="story-copy"><h3 class="serif">{card.title}</h3><blockquote>「{card.quote}」</blockquote><span class="story-tag">客户分享 · 按委托情境整理</span></div></article>)}
     </div>
@@ -323,7 +323,7 @@ const itemCount = showcaseItemCount;
   </section>
 
   <section class="container section process" aria-labelledby="process-title">
-    <div class="section-lead"><span class="eyebrow">02 / 我们的共创过程</span><h2 id="process-title" class="serif">一幅字，四步。</h2><p>定制不是猜谜。每一步都让你看见进度，确认了再往下走。</p></div>
+    <div class="section-lead"><span class="eyebrow">02 / 我们的共创过程</span><h2 id="process-title" class="serif">一份作品的诞生。</h2><p>把心事交给我们，剩下的慢慢来。</p></div>
     <div class="process-rail">
       {steps.map((step) => <article class="process-card"><span class="mono step-no">{step.no}</span><h3 class="serif">{step.title}</h3><p>{step.body}</p></article>)}
     </div>
@@ -331,7 +331,7 @@ const itemCount = showcaseItemCount;
 
   <section class="container section closing" aria-labelledby="closing-title">
     <span class="eyebrow">03 / 与我们聊聊</span>
-    <h2 id="closing-title" class="serif">不知道选哪个字，就说你要送给谁。</h2>
+    <h2 id="closing-title" class="serif">每一份心意，都值得被认真对待。</h2>
     <a class="btn btn-primary" href="/contact/" data-event="custom_inquiry_start">与我们聊聊</a>
   </section>
   <WorkLightbox />
