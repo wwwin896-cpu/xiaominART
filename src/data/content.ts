@@ -1144,6 +1144,41 @@ export type ReadyMadeWork = {
  * 题字为从图辨认并经素材夹归属核对；note 一句释出处、一句说适合空间，与画面场景对应，上线前请主人复核一遍。
  * 尺寸与纸墨细节不写在页面上，随作品档案在咨询时提供；价格已公开（form/price 字段）。
  */
+// ── 字游记 · 第二辑：甲骨文集（2026-11-07 业主定档）──────────────────
+// 与「第一辑 · 甲骨文十二生肖」同级别的系列合集：A4 框、¥199（业主指定）。
+// 版式：樂藝 / 集福 / 玄鸟 为 A4 竖幅；天干地支 / 酌酒 为 A4 横幅（横竖以实拍为准）。
+// 题字均从图逐件辨认核对（skill §12 流程）；故事文案按「实物题字」撰写。
+export type OracleWork = {
+  slug: string;
+  name: string;
+  en: string;
+  glyphs: string;
+  tagline: string;
+  orientation: '竖幅' | '横幅';
+  price: string;
+  story: string;
+  image: string;
+  alt: string;
+};
+
+export const oracleWorks: OracleWork[] = [
+  { slug: 'le-yi', name: '甲骨文 · 乐艺', en: 'Joy of Craft', glyphs: '樂 · 藝', tagline: '六艺之乐，先从手上开始', orientation: '竖幅', price: '¥199',
+    story: '甲骨文的「樂」上为两束丝、下为木——弦张于木，是琴瑟的雏形；「藝（埶）」像人跪坐种苗——技能的本义是亲手栽种。跋文题「君子六藝」，古人把礼乐射御书数叫六艺，每一艺都要从手上练起。挂在书房或工作室，提醒自己：一切热爱，皆从笨功夫开始。',
+    image: '/assets/oracle/le-yi.jpg', alt: '甲骨文「樂藝」二字书法摆件，黑胡桃木框 A4 竖幅，陈设于客厅边柜，旁有盆景与书籍' },
+  { slug: 'ji-fu', name: '甲骨文 · 集福', en: 'Gathering Blessings', glyphs: '集 · 福', tagline: '鸟落于木，福聚于家', orientation: '竖幅', price: '¥199',
+    story: '甲骨文的「集」是短尾鸟落在树上——本义就是群鸟栖木；「福」像双手捧酒尊灌祭于神主之前——以最郑重的方式祈求庇佑。二字连读：福气如鸟，聚于一木。跋文题「甲骨文字 集福」，是乔迁、开业都拿得出手的老吉语。',
+    image: '/assets/oracle/ji-fu.jpg', alt: '甲骨文「集福」二字书法摆件，黑胡桃木框 A4 竖幅，陈设于书房桌面，旁有笔架与线装书' },
+  { slug: 'tian-gan-di-zhi', name: '甲骨文 · 天干地支', en: 'Heavenly Stems & Earthly Branches', glyphs: '天干 · 地支', tagline: '岁月有历，起居有常', orientation: '横幅', price: '¥199',
+    story: '商人最了不起的发明之一，是把日子编成了序号：十个天干配十二地支，六十甲子循环不息——甲骨文里大量卜辞正是干支记日。跋文题「龜甲獸骨 天干地支」，画面撷取干支古字，人形负日、草木萌土，是三千年前的日历，也是今天的生活秩序。适合挂在玄关或茶室，见字如见岁月。',
+    image: '/assets/oracle/tian-gan-di-zhi.jpg', alt: '甲骨文干支古字书法摆件，黑胡桃木框 A4 横幅，陈设于文创空间展柜，旁有汉字之美书籍' },
+  { slug: 'xuan-niao', name: '甲骨文 · 玄鸟', en: 'Black Bird of Shang', glyphs: '玄 · 鳥', tagline: '天命玄鸟，降而生商', orientation: '竖幅', price: '¥199',
+    story: '《诗经·商颂》唱道：「天命玄鸟，降而生商。」商人相信自己的祖先诞生于一只黑色的燕鸟。画中甲骨文的「玄」是两束相对的丝，鸟形大字昂首挺胸、羽冠如旌——跋文题「殷墟契文 玄鳥作商」，把一段创世神话收进一只木框。适合送给属蛇、属鸡的朋友（鸟为羽族之长），或作为新生命降临的纪念。',
+    image: '/assets/oracle/xuan-niao.jpg', alt: '甲骨文「玄鸟」书法摆件，黑胡桃木框 A4 竖幅，陈设于文创展台，旁有「殷墟契文 鸟」标示牌' },
+  { slug: 'zhuo-jiu', name: '甲骨文 · 酌酒', en: 'Pouring Wine', glyphs: '酌', tagline: '且酌且歌，人间有味', orientation: '横幅', price: '¥199',
+    story: '甲骨文的「酉」是一只尖底酒尊，坛口网纹历历；旁有人俯身探臂，正往坛中取酒，点点酒滴欲坠。隶书题「酌酒」二字，画的是三千年前的一场小酌。李白说「举杯邀明月」，苏东坡说「一尊还酹江月」——中国人的一切诗意，都少不了一酌。挂在餐边柜或茶室，待客时正好讲个典故。',
+    image: '/assets/oracle/zhuo-jiu.jpg', alt: '甲骨文「酌酒」人形执器书法摆件，黑胡桃木框 A4 横幅，陈设于茶室柜面，旁有紫砂壶与茶杯' },
+];
+
 export const readyMadeWorks: ReadyMadeWork[] = [
   { slug: 'qing-huan', title: '清欢', en: 'Quiet Joy', code: 'XMA-CL-WA-26-0001-T2-0', year: 2026, note: '「人间有味是清欢」，苏轼写给寻常日子的七个字。不浓烈，却留得住——适合茶席、餐桌旁，或任何一个想慢下来的墙角。', material: '赭底宣纸 · 白色卡衬 · 榫卯结构柚木框', form: '挂墙', price: 399, size: { w: 60, h: 33 }, image: '/assets/works/work-qing-huan-2.jpg', alt: '赭底白卡柚木框书法小品《清欢》挂在墙上的空间实景，旁有青瓷瓶、座钟与书册',
     source: { char: '歡', origin: '商周金文', note: '「欢」的繁体作「歡」，从雚从欠：左旁「雚」是一种水鸟，右旁「欠」象人张口出气。古人以鸟鸣开口之形，记下欢愉这件事——原来「开心」这个意思，一开始是从声音里来的。' },

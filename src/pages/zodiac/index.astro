@@ -13,6 +13,10 @@ export const prerender = true;
     <span class="eyebrow">一字一源 · 生肖纪岁</span>
     <h1 class="serif">十二生肖，<br />刻在时光里的守护。</h1>
     <p>三千年前的龟甲上，先民刻下对万物的敬畏与祈愿。十二生肖，不仅是岁月的轮回，更是藏在汉字深处的生命图腾。我们把古老的象形文字亲笔写下、装进木框，让它带着远古的温度，守在你的案头。</p>
+    <nav class="collection-switch" aria-label="字游记系列">
+      <span class="is-current" aria-current="page">第一辑 · 十二生肖</span>
+      <a href="/oracle/">第二辑 · 甲骨文集</a>
+    </nav>
   </section>
 
   <section class="container section zoo-grid-wrap" aria-label="十二生肖作品">
@@ -62,6 +66,13 @@ export const prerender = true;
   .page-head { padding: 96px 0 56px; max-width: 780px; }
   .page-head h1 { font-size: clamp(46px, 6.4vw, 78px); line-height: 1.14; margin: 20px 0; }
   .page-head > p { color: var(--ink-soft); font-size: 17px; line-height: 1.9; margin: 0; }
+  .collection-switch { display: flex; gap: 12px; margin-top: 22px; flex-wrap: wrap; }
+  .collection-switch a, .collection-switch .is-current {
+    display: inline-block; padding: 7px 16px; border-radius: 999px; font-size: 13px; letter-spacing: .04em;
+    border: 1px solid var(--border); color: var(--ink-soft);
+  }
+  .collection-switch a:hover { color: var(--ink); border-color: var(--ink-soft); }
+  .collection-switch .is-current { background: var(--cinnabar); border-color: var(--cinnabar); color: #fff; }
   .zoo-grid-wrap { padding-top: 0; }
   .zoo-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 44px 30px; }
   .zoo-card { display: flex; flex-direction: column; }
