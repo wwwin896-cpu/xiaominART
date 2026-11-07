@@ -53,6 +53,8 @@ export const navItems = [
     href: '/zodiac/', zh: '一字一源', en: 'One Character', navLabel: '一字一礼', children: [
       { href: '/gifts/', zh: '小民好礼', en: 'Xiaomin Gifts' },
       { href: '/zodiac/', zh: '字游记', en: 'Character Journal' },
+      // 2026-11-07 业主指定：甲骨文集进「一字一礼」下拉，与字游记并列（字游记第二辑）
+      { href: '/oracle/', zh: '甲骨文集', en: 'Oracle Set' },
       { href: '/notes/', zh: '创作笔记', en: 'Studio Notes' },
     ],
   },
