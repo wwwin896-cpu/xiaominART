@@ -4,6 +4,13 @@
 
 ## 必读 skill
 
+**`xiaominart-quality-seo`** —— 网站品质与 SEO 规范（2026-11-07 新增）。以下任何一类任务，先加载它：
+
+- 新页面 / 新栏目的搭建与视觉升级
+- SEO、收录、排名、权重、301、结构化数据相关问题
+- 动效添加、审美参考（含 Vibe Coding 资源库使用法与分级表）
+- 「建站即 SEO」：新页面/新商品上线前硬清单（§4.2）与权重增长红线（§5）
+
 **`xiaominart-visual-layout`** —— 视觉排版与双端隔离规范。以下任何一类改动，先加载它：
 
 - 页面排版 / 卡片布局 / 网格 / 间距 / 图片比例
@@ -36,6 +43,8 @@ npm run guard -- diff --tag before --expect desktop     # 允许桌面变，移�
 ## 其他既有约定
 
 - 门禁：`npm run check`（0 errors）→ `npm run build` → `npm run check:sitemap`
+- 新页面必须登记 `src/pages/sitemap.xml.ts` 的 staticRoutes，否则 `check:sitemap` 报错
+- SEO 硬清单与风险红线见 `xiaominart-quality-seo` §4–§5；本站 SEO 已覆盖项见其 §4.1，勿重复建设
 - `git push` 成功 ≠ 已上线：必须查 GitHub Actions conclusion + 线上特征串验证
 - 新增 `scripts/*.mjs` 会被 `astro check` 扫描，首行加 `// @ts-nocheck`
 - `<Pic width height>` 必须传数字（`{1100}`），传字符串 CI 报 ts(2322)
