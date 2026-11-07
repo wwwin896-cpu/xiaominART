@@ -8,6 +8,7 @@
     "build": "node scripts/gen-webp.mjs && astro build && node scripts/build-search.mjs && node scripts/check-llms.mjs",
     "assets:webp": "node scripts/gen-webp.mjs",
     "check:sitemap": "node scripts/check-sitemap.mjs",
+    "guard": "node scripts/dual-view-guard.mjs",
     "push:baidu": "node scripts/baidu-push.mjs",
     "push:baidu:dry": "node scripts/baidu-push.mjs --dry-run",
     "test:baidu": "node scripts/tests/verify-baidu-cursor.mjs",
