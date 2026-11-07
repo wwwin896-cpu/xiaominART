@@ -730,6 +730,136 @@ export const giftProducts: GiftProduct[] = [
         { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
         { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
     ] },
+  { slug: 'chi-kui-shi-fu', name: '喫虧是福 · 餐厅吉语', en: 'A Loss Is a Blessing', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥199', meaning: '「喫虧是福」是流传已久的持家老话——肯吃亏的人，福气在后头。隶书横幅摆在餐桌边，一家人吃饭时抬头见一次，计较的事就淡一分。', recipient: '适合乔迁、新店开张，或送给事事要强、需要松一口气的朋友。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '虧', image: '/assets/works/chi-kui-shi-fu.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「喫虧是福」写的什么', paragraphs: ['隶书四字横幅，从右往左读：喫、虧、是、福。「喫」是「吃」的本字，「虧」是「亏」的繁体——全篇笔画最密的两个字都写得稳稳当当，这句话才立得住。落款纪年钤印，释读卡随附。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'chun-feng-de-yi', name: '春風得意 · 金文横幅', en: 'Riding the Spring Breeze', scene: 'opening', sceneLabel: '开业贺礼', tier: 'entry', price: '¥199', meaning: '「春风得意马蹄疾，一日看尽长安花」——孟郊登科后写下的快意。金文横幅四个字，送给正在上升期的人：风来了，跑起来。', recipient: '适合送给升职、中标、开业的朋友，或挂在办公室自我激励。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '春', image: '/assets/works/chun-feng-de-yi.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「春風得意」写的什么', paragraphs: ['金文四字横幅，从右往左读：春、風、得、意。「風」字保留凤鸟的古形——古人以凤鸟象风；「得」字从手从贝，手里拿到贝便是得。用两千多年前的字形，写今天的好消息。落款小字纪年钤印。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'du-xing-zhi-yuan', name: '篤行致遠 · 行胜于言', en: 'Walk Far, Walk Steady', scene: 'opening', sceneLabel: '开业贺礼', tier: 'entry', price: '¥199', meaning: '「篤行」出自《中庸》「博学之，审问之，慎思之，明辨之，笃行之」，「致遠」化自《诫子书》「非宁静无以致远」。认准的路一步一步走，自然走得远。', recipient: '适合送给做实业、做研究、备考上岸的人，或挂在书房与办公桌侧。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '行', image: '/assets/works/du-xing-zhi-yuan.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「篤行致遠」写的什么', paragraphs: ['金文四字横幅，从右往左读：篤、行、致、遠。「篤」从竹从马——马步沉稳谓之篤；「行」字就像一只脚跟着一只脚的象形。四个字自带马蹄的节奏，是写给赶路人的。落款纪年钤印。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'lan-qu-guan-shi', name: '覽趣觀世 · 隶书横幅', en: 'See the World with Delight', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥199', meaning: '从右往左读「覽趣觀世」——带一点趣味去看人世，日子就有滋味。隶书横幅挂在客厅、会客区，进门的人抬头一乐。', recipient: '适合乔迁新居、送给有趣味的友人，或挂在会客厅待客。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '趣', image: '/assets/works/lan-qu-guan-shi.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「覽趣觀世」写的什么', paragraphs: ['隶书四字横幅：覽、趣、觀、世。「趣」字走字底舒展开，像迈开步子去看热闹的样子。世相百般，趣者见趣——同样的日子，换个眼光就是另一番天地。落款纪年钤印，释读卡随附。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'mao-de-yan-nian', name: '懋德延年 · 祝寿横幅', en: 'Virtue and Long Years', scene: 'birthday', sceneLabel: '生日心意', tier: 'entry', price: '¥199', meaning: '「懋」读 mào，是勤勉、盛大的意思。懋德延年——勤勉修德的人，岁月也肯多给他几年。隶书横幅庄重大气，压得住客厅。', recipient: '适合送给过寿的长辈、敬重的师长，或作为家族纪念。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '德', image: '/assets/works/mao-de-yan-nian.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「懋德延年」写的什么', paragraphs: ['隶书四字横幅：懋、德、延、年。「懋」字笔画最多却写得从容，四字疏密有致，是祝寿横幅里难得的雅致写法。修德是因，延年是果——这四个字把祝寿说到了根上。纪年题款钤印，释读卡随附。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'ru-yu-de-shui', name: '如魚得水 · 金文横幅', en: 'Like Fish in Water', scene: 'opening', sceneLabel: '开业贺礼', tier: 'entry', price: '¥199', meaning: '刘备说「孤之有孔明，犹鱼之有水也」。如鱼得水，是人对环境最高的夸奖。金文横幅送给去了新地方、新岗位的人：愿你如鱼得水。', recipient: '适合送新入职、新合作、乔迁开业的朋友。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '水', image: '/assets/works/ru-yu-de-shui.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「如魚得水」写的什么', paragraphs: ['金文四字横幅，从右往左读：如、魚、得、水。「魚」字保留了鱼形的描画——头、身、鳍、尾俱全，是四个字里最生动的一个。人和环境对了，字也就活了。落款纪年钤印，释读卡随附。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'ting-ji-liang', name: '挺脊梁 · 励志三字', en: 'Stand Tall', scene: 'opening', sceneLabel: '开业贺礼', tier: 'entry', price: '¥199', meaning: '三个字，一句话：把脊梁挺起来。隶书横幅挂在玄关，出门进门各挺一次，日子再难也不弯腰。', recipient: '适合送给扛起担子的人——创业、转岗、顶门立户的朋友。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '挺', image: '/assets/works/ting-ji-liang.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「挺脊梁」写的什么', paragraphs: ['隶书三字横幅：挺、脊、梁。「梁」字底下的木字横画放得很长，像一根真正扛得住的梁木。字少，话重——这类作品最考验笔画里的骨头，这一幅立得住。落款纪年钤印，释读卡随附。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'xiong-huai-xu-ruo-shui', name: '胸懷虛若水 · 古文字横幅', en: 'A Heart Open as Water', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥199', meaning: '从右往左读：胸懷虛若水。胸怀虚空如水——水不争、能容、随物赋形，是「上善若水」的另一种说法。古文字横幅挂在客厅，静气十足。', recipient: '适合送给格局大、性子静的师长朋友，或挂在客厅沙发侧墙。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '水', image: '/assets/works/xiong-huai-xu-ruo-shui.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「胸懷虛若水」写的什么', paragraphs: ['金文五字横幅，从右往左读：胸、懷、虛、若、水。「水」字古文川流分明，其余四字围着它排开，像百川归海。虚怀的人，到处都是路。落款纪年钤印，释读卡随附。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'xuan-hu-ji-shi', name: '懸壺濟世 · 医者仁心', en: 'Healing the World', scene: 'opening', sceneLabel: '开业贺礼', tier: 'entry', price: '¥199', meaning: '《后汉书》里壶公悬壶行医，「悬壶济世」从此成为医者仁心的代称。隶书横幅送给医生、中医师，或挂在诊所、药堂，都是分量最重的一份敬意。', recipient: '适合送给医师、药师，或作为诊所、中医馆的开业挂牌。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '壺', image: '/assets/works/xuan-hu-ji-shi.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「懸壺濟世」写的什么', paragraphs: ['隶书四字横幅：懸、壺、濟、世。「壺」字方口圆腹，写得端庄——壶里装的是救人的心。这四个字送给穿白大褂的人，比任何锦旗都经看。纪年题款钤印，释读卡随附。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'yang-tian-di-zheng-qi', name: '養天地正氣 · 书房横幅', en: 'Nourish the Righteous Qi', scene: 'opening', sceneLabel: '开业贺礼', tier: 'entry', price: '¥199', meaning: '于右任先生书「養天地正氣，法古今完人」，百年校训由此而来。五字隶书横幅挂在书房，是读书人的案头底气。', recipient: '适合送给教师、学子、做学问的人，或挂在书房与办公室。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '養', image: '/assets/works/yang-tian-di-zheng-qi.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「養天地正氣」写的什么', paragraphs: ['隶书五字横幅：養、天、地、正、氣。「氣」字收笔纵长，一口真气贯穿到底。正气不是喊出来的，是一天天养出来的——这个「養」字，正是全篇的眼。落款纪年钤印，释读卡随附。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'yu-you-yuan-ren-lun-dao', name: '與有緣人論道 · 茶席横幅', en: 'Talk of the Way with Kindred Spirits', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥199', meaning: '从右往左读：與有緣人論道。一桌茶，两三知己，谈的都是心里的事。隶书横幅挂在茶室，来的都是对的人。', recipient: '适合送给茶友、开茶馆的朋友，或挂在自家茶席上方。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '道', image: '/assets/works/yu-you-yuan-ren-lun-dao.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「與有緣人論道」写的什么', paragraphs: ['隶书六字横幅：與、有、緣、人、論、道。「緣」字绞丝旁连笔不断——缘分本就是一线牵成的。茶凉了续上，话长了慢慢谈，道就在这一来一往里。落款纪年钤印，释读卡随附。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'yue-zhao-song-jian', name: '月照松間 · 王维诗意', en: 'Moonlight Among the Pines', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥199', meaning: '王维《山居秋暝》「明月松間照，清泉石上流」。四字隶书横幅，把山居的清凉气请进客厅——屋里再闹，墙上有一片松间月色。', recipient: '适合乔迁、送给心里住着山水的朋友。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '月', image: '/assets/works/yue-zhao-song-jian.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「月照松間」写的什么', paragraphs: ['隶书四字横幅：月、照、松、間。「間」的古字「閒」是门里一轮月——月光从松隙落进门来，正是这四个字的画面。字写得疏朗，留白处全是夜气。落款纪年钤印，释读卡随附。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'zong-heng-bi-mo', name: '縱橫筆墨 · 书房四字', en: 'Brush and Ink Unbound', scene: 'opening', sceneLabel: '开业贺礼', tier: 'entry', price: '¥199', meaning: '縱橫筆墨——写字的人最痛快的状态。隶书横幅压在书桌上方的墙上，笔一提起来，就有一股放开的手感。', recipient: '适合送给写字、画画、做设计的朋友，或挂在书房。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '墨', image: '/assets/works/zong-heng-bi-mo.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「縱橫筆墨」写的什么', paragraphs: ['隶书四字横幅：縱、橫、筆、墨。「縱」字竖画放开，「橫」字横画取势——四个字自己就在示范什么叫纵横。挂在案头，是给创作者的一句行话。纪年题款钤印，释读卡随附。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 40.5 × 17.5 cm（横幅）' },
+        { label: '画芯尺寸', value: '约 38 × 15 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
   { slug: 'bo-re', name: '般若 · 禅意二字', en: 'Prajna · Wisdom', scene: 'festival', sceneLabel: '节日问候', tier: 'entry', price: '¥199', meaning: '「般若」（读 bōrě）是佛家的最高智慧，《心经》全名即「般若波罗蜜多」。古文字竖幅两字，静置案头或禅室，是懂的人才接得住的一份心意。', recipient: '适合送给礼佛、习禅的长辈与友人，或挂在茶室、禅室一隅。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '若', image: '/assets/works/bo-re.jpg',
     deepDive: [
       { eyebrow: 'Chapter 01 / 释读', heading: '「般若」写的什么', paragraphs: ['古文字二字竖幅。「般若」是洞见空性的智慧，与「南無阿彌陀佛」六字横幅恰成一对。竖幅两字挂在茶室、禅室或书房，抬头即是提醒：自在不在远处。'] },
@@ -783,6 +913,56 @@ export const giftProducts: GiftProduct[] = [
   { slug: 'he-qi', name: '和氣 · 古文字竖幅', en: 'Harmony in the Air', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥199', meaning: '「和氣」二字以古文字写就，竖幅立在玄关——进门是和气，出门也和气。家和万事兴，生意和气生财，都从这两个字开始。', recipient: '适合乔迁、开店的朋友，或送给希望家中和气的长辈。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '和', image: '/assets/works/he-qi.jpg',
     deepDive: [
       { eyebrow: 'Chapter 01 / 释读', heading: '「和氣」写的什么', paragraphs: ['古文字二字竖幅，纪年题款钤印。「和」字古文从龠从禾，本是乐器相和之音；「氣」字一笔纵长，如气息绵延。竖幅挂在玄关或堂屋，抬头即是一团和气。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 17.5 × 40.5 cm（竖幅）' },
+        { label: '画芯尺寸', value: '约 15 × 38 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'huang-jin-tai-shang-bao', name: '黃金臺上報 · 竖幅五字', en: 'Repaid on the Golden Terrace', scene: 'opening', sceneLabel: '开业贺礼', tier: 'entry', price: '¥199', meaning: '李贺《雁门太守行》「報君黃金臺上意」——黄金台是燕昭王筑台招贤的地方。竖幅五字隶书，写的是知遇与报效的互相成全。', recipient: '适合送给提携过自己的师长、恩人，或挂在办公室提醒自己不负所托。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '報', image: '/assets/works/huang-jin-tai-shang-bao.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「黃金臺上報」写的什么', paragraphs: ['竖幅五字，从上到下：黃、金、臺、上、報。「報」字末笔沉沉压住全篇，像一句郑重的承诺。知遇难得，被记得的人最有力气——这五个字挂在墙上，是给奋斗人的提气句。纪年题款钤印，释读卡随附。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 17.5 × 40.5 cm（竖幅）' },
+        { label: '画芯尺寸', value: '约 15 × 38 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'shang-hua-pin-ming-zhu-feng', name: '賞花品茗 · 餘韻逐風', en: 'Sipping Tea, Chasing the Breeze', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥199', meaning: '竖幅十字隶书：賞花品茗，遣興餘韻逐風。赏花喝茶，兴尽了，余韵还随着风走——把茶席上最松弛的状态写成了字。', recipient: '适合送给爱茶的人、开茶馆的朋友，或挂在自家茶室。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '茗', image: '/assets/works/shang-hua-pin-ming-zhu-feng.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「賞花品茗 餘韻逐風」写的什么', paragraphs: ['竖幅十字，从上到下一气贯下。遣興，是把心事遣散；餘韻逐風，是杯底的香还跟着风跑。字势纵向排开，像一缕茶烟升起的样子。纪年题款钤印，释读卡随附。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 17.5 × 40.5 cm（竖幅）' },
+        { label: '画芯尺寸', value: '约 15 × 38 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'xi-jing-si-wei-cha', name: '習靜四圍茶 · 茶室竖幅', en: 'Stillness, and Tea on All Sides', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥199', meaning: '与「養心一澗水」恰成一对：養心一澗水，習靜四圍茶。心交给涧水，静交给四围的茶——化用古人联语的茶室好句。', recipient: '适合挂在茶室、送茶友；与「養心一澗水」配成一对更完整。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '茶', image: '/assets/works/xi-jing-si-wei-cha.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「習靜四圍茶」写的什么', paragraphs: ['竖幅五字，从上到下：習、靜、四、圍、茶。「習」字本义是雏鸟反复试飞——静也是练出来的。四围有茶，静就有了着落。隶笔方整，落款纪年钤印，释读卡随附。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 17.5 × 40.5 cm（竖幅）' },
+        { label: '画芯尺寸', value: '约 15 × 38 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'xuan-lan', name: '玄覽 · 老子二字', en: 'The Mystic Mirror', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥199', meaning: '《老子》第十章「滌除玄覽，能無疵乎」——把心里的镜子洗净，还有没有尘埃？古文字竖幅两字，名字里带着「玄」字，挂在玄关再合适不过。', recipient: '适合送给爱读老庄的朋友，或挂在玄关、书桌侧。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '覽', image: '/assets/works/xuan-lan.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「玄覽」写的什么', paragraphs: ['古文字二字竖幅。「玄」是幽深，「覽」是观照——玄覽即心底那面澄澈的镜子，涤除杂念，方能照见本真。落款小字抄出「滌除玄覽」原句，释读卡随附。'] },
+      { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
+        { label: '装裱外框', value: '约 17.5 × 40.5 cm（竖幅）' },
+        { label: '画芯尺寸', value: '约 15 × 38 cm，四周留白装裱' },
+        { label: '框体', value: '黑胡桃实木框 · 厚约 3 cm，桌面支架与挂墙两用' },
+        { label: '尺寸公差', value: '木框 ±0.5 cm，画芯 ±0.3 cm，以实物为准' },
+        { label: '选材', value: '黑胡桃实木框条、光学级玻璃面板' } ] },
+    ] },
+  { slug: 'yang-xin-yi-jian-shui', name: '養心一澗水 · 竖幅五字', en: 'A Stream to Nurture the Heart', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥199', meaning: '竖幅五字：養心一澗水。养心，不必远山大海，一涧水就够。与「習靜四圍茶」恰成一对，配齐了就是一幅完整的茶室联。', recipient: '适合乔迁、送长辈静养之居，或挂在客厅过道与茶室。', dispatch: '现货 · 48 小时内顺丰直发', packaging: '黑胡桃实木装裱 · 含藏品证书与释读卡 · 礼盒包装', visual: '澗', image: '/assets/works/yang-xin-yi-jian-shui.jpg',
+    deepDive: [
+      { eyebrow: 'Chapter 01 / 释读', heading: '「養心一澗水」写的什么', paragraphs: ['竖幅五字，从上到下：養、心、一、澗、水。「一」字在四个结构复杂的字中间，孤零零一笔横过，反倒是全篇最亮的留白——养心贵简，字也在讲这个理。纪年题款钤印，释读卡随附。'] },
       { eyebrow: 'Chapter 02 / 规格', heading: '产品规格', specs: [
         { label: '装裱外框', value: '约 17.5 × 40.5 cm（竖幅）' },
         { label: '画芯尺寸', value: '约 15 × 38 cm，四周留白装裱' },
