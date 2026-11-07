@@ -230,12 +230,12 @@ export type GiftProduct = {
 // ── 定价规则（业主 2026-10-17 定档）─────────────────────────────────────
 // 按「装裱外框尺寸」定价，不按系列定价：
 //   外尺寸 40.5 × 17.5 cm（横幅）→ ¥300–500
-//   生肖系列 A4 竖幅（21 × 29.7 cm，画芯 16×8）→ 业主 2026-10-17 裁决：同样 ¥300–500
-// 新作品若为以上两种尺寸之一，价格默认取 ¥300–500，无需再确认；
+//   生肖系列 A4 竖幅（21 × 29.7 cm，画芯 16×8）→ 业主 2026-11-07 裁决：统一 ¥199
+// 甲骨文系列（生肖 / 甲骨文集）新作品价格一律取 ¥199，无需再确认；
 // 其他尺寸（42×22、45×45、160×55 等）价格另定，不套用本条。
 export const giftProducts: GiftProduct[] = [
   { slug: 'quiet-entry-gift', name: '静入 · 书房小礼', en: 'A Quiet Entrance · Study Gift', scene: 'housewarming', sceneLabel: '乔迁之喜', tier: 'entry', price: '¥100–300', meaning: '以一处留白，为新居留住第一份安静。', recipient: '适合送给刚搬入新家的朋友、同事或长辈。', dispatch: '预计确认后 7–10 个工作日发出', packaging: '含基础礼盒与手写贺卡选项', visual: '静入', image: '/assets/scenes/study-desk-scroll.jpg' },
-  { slug: 'cinnabar-note-gift', name: '一点朱砂 · 生日心意', en: 'A Cinnabar Note · Birthday Gift', scene: 'birthday', sceneLabel: '生日心意', tier: 'thoughtful', price: '¥300–500', meaning: '朱砂作底，古字为凭——像那幅「欢喜」，把值得庆祝的事郑重地讲出来。', recipient: '适合送给朋友、伴侣或希望认真表达感谢的人。', dispatch: '预计确认后 7–10 个工作日发出', packaging: '含礼盒包装、祝福卡和贺卡文字预览', visual: '朱', image: '/assets/scenes/theme-cinnabar.jpg',
+  { slug: 'cinnabar-note-gift', name: '一点朱砂 · 生日心意', en: 'A Cinnabar Note · Birthday Gift', scene: 'birthday', sceneLabel: '生日心意', tier: 'thoughtful', price: '¥199', meaning: '朱砂作底，古字为凭——像那幅「欢喜」，把值得庆祝的事郑重地讲出来。', recipient: '适合送给朋友、伴侣或希望认真表达感谢的人。', dispatch: '预计确认后 7–10 个工作日发出', packaging: '含礼盒包装、祝福卡和贺卡文字预览', visual: '朱', image: '/assets/scenes/theme-cinnabar.jpg',
     gallery: [
       { src: '/assets/scenes/cinnabar-bedroom.jpg', alt: '古文字「欢喜」书法小品，赭色卡纸装裱，陈设于卧室边柜，旁有暖光台灯与郁金香', caption: '装裱形式一 · 卧室边柜｜赭卡暖调，夜灯下的「欢喜」' },
       { src: '/assets/scenes/cinnabar-tea.jpg', alt: '古文字「欢喜」书法小品，白底黑框装裱，陈设于茶席边柜，旁有兰花与白瓷茶壶', caption: '装裱形式二 · 茶席一角｜白卡黑框，与茶器为伴' },
@@ -279,7 +279,7 @@ export const giftProducts: GiftProduct[] = [
           '随附风琴折页藏品证书：一面为藏品登记页（作品编号、品名、艺术签名，钤朱红印鉴），一面为使用与养护说明；另配黑色信封一枚，以朱砂火漆封缄——生日祝辞写在信笺上，拆封前谁也没有读过。',
           '棉绳手提袋、米白便签卡与棉质白手套一并提供。开箱次序我们在证书上写好了：先核证书，再戴手套取框，摆位之后，包装纸留着——那也是设计的一部分。'], image: '/assets/scenes/packaging-set.jpg', imageAlt: 'xiaominART 包装系统：黑色天地盖礼盒与烫印标识、棉绳手提袋、风琴折页藏品证书与使用说明、朱砂火漆封缄信封与便签卡' },
     ] },
-  { slug: 'seasonal-letter-gift', name: '四季流转 · 节日问候', en: 'A Letter for the Season · Festival Gift', scene: 'festival', sceneLabel: '节日问候', tier: 'thoughtful', price: '¥300–500', meaning: '岁有寒暑，月有圆缺——从一个节气、一句问候开始，把四季的流转写成一幅字。', recipient: '适合节日送长辈、朋友或重要合作伙伴。', dispatch: '预计确认后 10–14 个工作日发出', packaging: '含节日主题包装与手写贺卡选项', visual: '笺', image: '/assets/scenes/theme-four-seasons.jpg',
+  { slug: 'seasonal-letter-gift', name: '四季流转 · 节日问候', en: 'A Letter for the Season · Festival Gift', scene: 'festival', sceneLabel: '节日问候', tier: 'thoughtful', price: '¥199', meaning: '岁有寒暑，月有圆缺——从一个节气、一句问候开始，把四季的流转写成一幅字。', recipient: '适合节日送长辈、朋友或重要合作伙伴。', dispatch: '预计确认后 10–14 个工作日发出', packaging: '含节日主题包装与手写贺卡选项', visual: '笺', image: '/assets/scenes/theme-four-seasons.jpg',
     gallery: [
       { src: '/assets/scenes/four-seasons-study.jpg', alt: '古文字「春夏秋冬」书法小品，极窄黑胡桃细框，摆在书房案头，旁有青苔盆景与砚台', caption: '装裱形式一 · 书房案头｜黑胡桃细框，与砚台笔山为伴' },
       { src: '/assets/scenes/four-seasons-tea.jpg', alt: '古文字「春夏秋冬」书法小品，朱红卡纸装裱，陈设于茶室长案，旁有铁壶与炭炉', caption: '装裱形式二 · 茶室长案｜朱红卡裱，茶席视觉重心' },
@@ -323,7 +323,7 @@ export const giftProducts: GiftProduct[] = [
           '随附风琴折页藏品证书：一面为藏品登记页（作品编号、品名、艺术签名，钤朱红印鉴），一面为使用与养护说明；另配黑色信封一枚，以朱砂火漆封缄——写给收礼人的话，拆封前谁也没有读过。',
           '棉绳手提袋、米白便签卡与棉质白手套一并提供。开箱次序我们在证书上写好了：先核证书，再戴手套取框，摆位之后，包装纸留着——那也是设计的一部分。'], image: '/assets/scenes/packaging-set.jpg', imageAlt: 'xiaominART 包装系统：黑色天地盖礼盒与烫印标识、棉绳手提袋、风琴折页藏品证书与使用说明、朱砂火漆封缄信封与便签卡' },
     ] },
-  { slug: 'qin-se-he-ming-gift', name: '琴瑟和鸣 · 婚庆纪念', en: 'In Harmony · Wedding Gift', scene: 'anniversary', sceneLabel: '婚庆纪念', tier: 'thoughtful', price: '¥300–500', meaning: '琴瑟在御，莫不静好——把两个人的名字与祝愿写成一幅，愿此后岁岁年年。', recipient: '适合送给订婚、新婚的伴侣，或作为结婚周年纪念。', dispatch: '预计确认后 7–10 个工作日发出', packaging: '含礼盒包装、祝福卡和贺卡文字预览', visual: '瑟', image: '/assets/scenes/theme-wedding-qin-se-he-ming.jpg',
+  { slug: 'qin-se-he-ming-gift', name: '琴瑟和鸣 · 婚庆纪念', en: 'In Harmony · Wedding Gift', scene: 'anniversary', sceneLabel: '婚庆纪念', tier: 'thoughtful', price: '¥199', meaning: '琴瑟在御，莫不静好——把两个人的名字与祝愿写成一幅，愿此后岁岁年年。', recipient: '适合送给订婚、新婚的伴侣，或作为结婚周年纪念。', dispatch: '预计确认后 7–10 个工作日发出', packaging: '含礼盒包装、祝福卡和贺卡文字预览', visual: '瑟', image: '/assets/scenes/theme-wedding-qin-se-he-ming.jpg',
     gallery: [
       { src: '/assets/scenes/theme-wedding-qin-se-he-ming.jpg', alt: '朱砂红底「琴瑟和鸣」古文字书法横幅，黑胡桃木框装裱，陈设于卧室边柜，旁有白瓷瓶红果与中式卧房', caption: '装裱形式一 · 卧室边柜｜朱砂红底，与喜色卧房同调' },
       { src: '/assets/scenes/theme-wedding-calligraphy-lantern.jpg', alt: '白底古文字书法横幅，陈设于柚木边柜，旁有暖光纸灯笼与蕨类绿植', caption: '装裱形式二 · 玄关边柜｜白底墨字，与灯笼暖光相伴' },
@@ -1034,7 +1034,7 @@ export const giftTierLabels = {
 
 // ── 字游记 · 第一辑：甲骨文十二生肖（2026-10-17 业主定档）──────────────────
 // 系列规格（全系列统一，业主 2026-10-17 文档）：外框 A4 竖幅、画芯 16×8 cm、胡桃木框。
-// 价格（业主 2026-10-17 裁决）：A4 生肖同样定价 ¥300–500（见上方 giftProducts 定价规则）。
+// 价格（业主 2026-11-07 裁决）：甲骨文系列全价统一 ¥199（此前 2026-10-17 定的 ¥300–500 已废除）。
 //    吉语亦经业主确认，十二件全采用现版本，无需再核。
 // 扩容方式：业主填 docs/作品批量素材/C-字游记扩容素材表.csv，助手按表批量追加。
 // 吉语已定版（业主 2026-10-17 确认「采用你这套语言」），后续扩容仍按「实物题字」为准。
@@ -1051,18 +1051,18 @@ export type ZodiacWork = {
 };
 
 export const zodiacWorks: ZodiacWork[] = [
-  { slug: 'shu', char: '鼠', name: '甲骨文 · 鼠', en: 'Rat', price: '¥300–500', blessing: '子鼠开天', story: '甲骨文的「鼠」张着尖嘴，垂着碎屑般的长尾，像刚从粮囤边溜过。传说天地混沌未开，是鼠咬破混沌漏下第一道光——「鼠咬天开」，一天时辰从子时开始。', image: '/assets/zodiac/zodiac-shu.jpg', alt: '甲骨文「鼠」字书法摆件，珊瑚橘暗纹笺，黑胡桃木框装裱，陈设于客厅木质边柜，旁有陶瓶花枝与碗' },
-  { slug: 'niu', char: '牛', name: '甲骨文 · 牛', en: 'Ox', price: '¥300–500', blessing: '俯首甘为孺子牛', story: '一对弯角是甲骨文「牛」字最醒目的笔画。牛拉动农耕文明三千年，古文字里的「物」字就从牛而来——万物之「物」，本义是一头毛色纯正的牛。', image: '/assets/zodiac/zodiac-niu.jpg', alt: '甲骨文「牛」字书法摆件，藕粉云纹笺，黑胡桃木框装裱，陈设于展厅木案，旁有陶瓶花枝与深色陶碗' },
-  { slug: 'hu', char: '虎', name: '甲骨文 · 虎', en: 'Tiger', price: '¥300–500', blessing: '虎啸风生', story: '甲骨文的「虎」张着巨口、遍体斑纹，威势扑面而来。先民画虎于门以驱邪祟——虎是山林之长，也是大人放在孩子枕边的勇气。', image: '/assets/zodiac/zodiac-hu.jpg', alt: '甲骨文「虎」字书法摆件，橘黄洒金笺，黑胡桃木框装裱，陈设于茶室木案，旁有黑陶茶壶与青瓷杯' },
-  { slug: 'tu', char: '兔', name: '甲骨文 · 兔', en: 'Rabbit', price: '¥300–500', blessing: '赤兔呈瑞', story: '长耳、短尾、腾跃的身姿，甲骨文的「兔」一眼可辨。月宫捣药的玉兔是温柔的仙兽——「兔」与「瑞」相伴，愿你所求皆有回响。', image: '/assets/zodiac/zodiac-tu.jpg', alt: '甲骨文「兔」字书法摆件，豆绿暗纹笺，黑胡桃木框装裱，陈设于茶室原木长桌，旁有青瓷茶杯' },
-  { slug: 'long', char: '龙', name: '甲骨文 · 龙', en: 'Dragon', price: '¥300–500', blessing: '飞龙在天', story: '顶着角冠、曲身昂首，甲骨文的「龙」是先民想象力的集大成：沟通天地、司掌风雨。十二生肖里唯一不存在于现实的神物，却活在每一个中国人的名字里。', image: '/assets/zodiac/zodiac-long.jpg', alt: '甲骨文「龙」字书法摆件，黄笺墨字，黑胡桃木框装裱，陈设于玄关端景木案，旁有铜鹤摆件与陶瓶' },
-  { slug: 'she', char: '蛇', name: '甲骨文 · 蛇', en: 'Snake', price: '¥300–500', blessing: '金蛇献瑞', story: '蜿蜒的线条是「蛇」的本形——古文字里「它」字本义就是蛇，古人见面互问「无它乎」，便是「最近没遇上蛇吧」。蛇蜕皮新生，被称作小龙，是智慧与蜕变。', image: '/assets/zodiac/zodiac-she.jpg', alt: '甲骨文「蛇」字书法摆件，朱红暗纹笺，黑胡桃木框装裱，陈设于书房木案，旁有陶壶书册与青瓷杯' },
-  { slug: 'ma', char: '马', name: '甲骨文 · 马', en: 'Horse', price: '¥300–500', blessing: '马到功成', story: '鬃毛飞扬、长尾奋蹄，甲骨文的「马」天生带着速度。《易》以乾卦配马，「天行健」的意象里始终有一匹奔跑的马——愿你不倦，一往无前。', image: '/assets/zodiac/zodiac-ma.jpg', alt: '甲骨文「马」字书法摆件，明黄笺墨字，黑胡桃木框装裱，陈设于茶室木案，旁有茶壶与青瓷茶杯' },
-  { slug: 'yang', char: '羊', name: '甲骨文 · 羊', en: 'Goat', price: '¥300–500', blessing: '三羊开泰', story: '一对温顺的弯角，是甲骨文「羊」的全部温柔。古文字里「美」从羊、「善」从羊、「祥」从羊——先民把世间一切美好，都托付给了这个字。', image: '/assets/zodiac/zodiac-yang.jpg', alt: '甲骨文「羊」字书法摆件，金黄洒金笺，黑胡桃木框装裱，陈设于书房木案，旁有白瓷茶杯与石镇纸' },
-  { slug: 'hou', char: '猴', name: '甲骨文 · 猴', en: 'Monkey', price: '¥300–500', blessing: '金猴献瑞', story: '灵长的手与目，在甲骨文里刻画得活灵活现。「猴」与「侯」相通，封侯进禄的期许都落在它身上——机敏、聪慧，自有主张。', image: '/assets/zodiac/zodiac-hou.jpg', alt: '甲骨文「猴」字书法摆件，朱红暗纹笺，黑胡桃木框装裱，陈设于书房书堆旁，旁有太湖石与毛笔' },
-  { slug: 'ji', char: '鸡', name: '甲骨文 · 鸡', en: 'Rooster', price: '¥300–500', blessing: '雄鸡一唱天下白', story: '高冠长尾，甲骨文的「鸡」昂首如鸣。雄鸡司晨，风雨无改——「守信」二字，先民最早是从一只鸡身上读懂的。', image: '/assets/zodiac/zodiac-ji.jpg', alt: '甲骨文「鸡」字书法摆件，素白宣笺，黑胡桃木框装裱，陈设于书房木案，旁有书堆、笔洗与文房清供' },
-  { slug: 'gou', char: '狗', name: '甲骨文 · 狗', en: 'Dog', price: '¥300–500', blessing: '犬守平安', story: '甲骨文的「狗（犬）」翘着尾巴、竖着耳朵，一副警觉的模样。犬是人类最古老的伙伴，守夜护院、不离不弃——它守的是家门，也是人心的安稳。', image: '/assets/zodiac/zodiac-gou.jpg', alt: '甲骨文「狗」字书法摆件，朱红暗纹笺，黑胡桃木框装裱，陈设于玄关木质边柜，旁有陶瓶花枝与石雕摆件' },
-  { slug: 'zhu', char: '猪', name: '甲骨文 · 猪', en: 'Pig', price: '¥300–500', blessing: '诸事如意', story: '圆润丰腴的甲骨文「猪（豕）」。屋下有豕方为「家」——「家」字的宝盖头下，住的就是这头猪。富足、安定、烟火气，都从它开始。', image: '/assets/zodiac/zodiac-zhu.jpg', alt: '甲骨文「猪」字书法摆件，橘黄云纹笺，黑胡桃木框装裱，陈设于玄关木柜，旁有铜环摆件与方形铜盒' },
+  { slug: 'shu', char: '鼠', name: '甲骨文 · 鼠', en: 'Rat', price: '¥199', blessing: '子鼠开天', story: '甲骨文的「鼠」张着尖嘴，垂着碎屑般的长尾，像刚从粮囤边溜过。传说天地混沌未开，是鼠咬破混沌漏下第一道光——「鼠咬天开」，一天时辰从子时开始。', image: '/assets/zodiac/zodiac-shu.jpg', alt: '甲骨文「鼠」字书法摆件，珊瑚橘暗纹笺，黑胡桃木框装裱，陈设于客厅木质边柜，旁有陶瓶花枝与碗' },
+  { slug: 'niu', char: '牛', name: '甲骨文 · 牛', en: 'Ox', price: '¥199', blessing: '俯首甘为孺子牛', story: '一对弯角是甲骨文「牛」字最醒目的笔画。牛拉动农耕文明三千年，古文字里的「物」字就从牛而来——万物之「物」，本义是一头毛色纯正的牛。', image: '/assets/zodiac/zodiac-niu.jpg', alt: '甲骨文「牛」字书法摆件，藕粉云纹笺，黑胡桃木框装裱，陈设于展厅木案，旁有陶瓶花枝与深色陶碗' },
+  { slug: 'hu', char: '虎', name: '甲骨文 · 虎', en: 'Tiger', price: '¥199', blessing: '虎啸风生', story: '甲骨文的「虎」张着巨口、遍体斑纹，威势扑面而来。先民画虎于门以驱邪祟——虎是山林之长，也是大人放在孩子枕边的勇气。', image: '/assets/zodiac/zodiac-hu.jpg', alt: '甲骨文「虎」字书法摆件，橘黄洒金笺，黑胡桃木框装裱，陈设于茶室木案，旁有黑陶茶壶与青瓷杯' },
+  { slug: 'tu', char: '兔', name: '甲骨文 · 兔', en: 'Rabbit', price: '¥199', blessing: '赤兔呈瑞', story: '长耳、短尾、腾跃的身姿，甲骨文的「兔」一眼可辨。月宫捣药的玉兔是温柔的仙兽——「兔」与「瑞」相伴，愿你所求皆有回响。', image: '/assets/zodiac/zodiac-tu.jpg', alt: '甲骨文「兔」字书法摆件，豆绿暗纹笺，黑胡桃木框装裱，陈设于茶室原木长桌，旁有青瓷茶杯' },
+  { slug: 'long', char: '龙', name: '甲骨文 · 龙', en: 'Dragon', price: '¥199', blessing: '飞龙在天', story: '顶着角冠、曲身昂首，甲骨文的「龙」是先民想象力的集大成：沟通天地、司掌风雨。十二生肖里唯一不存在于现实的神物，却活在每一个中国人的名字里。', image: '/assets/zodiac/zodiac-long.jpg', alt: '甲骨文「龙」字书法摆件，黄笺墨字，黑胡桃木框装裱，陈设于玄关端景木案，旁有铜鹤摆件与陶瓶' },
+  { slug: 'she', char: '蛇', name: '甲骨文 · 蛇', en: 'Snake', price: '¥199', blessing: '金蛇献瑞', story: '蜿蜒的线条是「蛇」的本形——古文字里「它」字本义就是蛇，古人见面互问「无它乎」，便是「最近没遇上蛇吧」。蛇蜕皮新生，被称作小龙，是智慧与蜕变。', image: '/assets/zodiac/zodiac-she.jpg', alt: '甲骨文「蛇」字书法摆件，朱红暗纹笺，黑胡桃木框装裱，陈设于书房木案，旁有陶壶书册与青瓷杯' },
+  { slug: 'ma', char: '马', name: '甲骨文 · 马', en: 'Horse', price: '¥199', blessing: '马到功成', story: '鬃毛飞扬、长尾奋蹄，甲骨文的「马」天生带着速度。《易》以乾卦配马，「天行健」的意象里始终有一匹奔跑的马——愿你不倦，一往无前。', image: '/assets/zodiac/zodiac-ma.jpg', alt: '甲骨文「马」字书法摆件，明黄笺墨字，黑胡桃木框装裱，陈设于茶室木案，旁有茶壶与青瓷茶杯' },
+  { slug: 'yang', char: '羊', name: '甲骨文 · 羊', en: 'Goat', price: '¥199', blessing: '三羊开泰', story: '一对温顺的弯角，是甲骨文「羊」的全部温柔。古文字里「美」从羊、「善」从羊、「祥」从羊——先民把世间一切美好，都托付给了这个字。', image: '/assets/zodiac/zodiac-yang.jpg', alt: '甲骨文「羊」字书法摆件，金黄洒金笺，黑胡桃木框装裱，陈设于书房木案，旁有白瓷茶杯与石镇纸' },
+  { slug: 'hou', char: '猴', name: '甲骨文 · 猴', en: 'Monkey', price: '¥199', blessing: '金猴献瑞', story: '灵长的手与目，在甲骨文里刻画得活灵活现。「猴」与「侯」相通，封侯进禄的期许都落在它身上——机敏、聪慧，自有主张。', image: '/assets/zodiac/zodiac-hou.jpg', alt: '甲骨文「猴」字书法摆件，朱红暗纹笺，黑胡桃木框装裱，陈设于书房书堆旁，旁有太湖石与毛笔' },
+  { slug: 'ji', char: '鸡', name: '甲骨文 · 鸡', en: 'Rooster', price: '¥199', blessing: '雄鸡一唱天下白', story: '高冠长尾，甲骨文的「鸡」昂首如鸣。雄鸡司晨，风雨无改——「守信」二字，先民最早是从一只鸡身上读懂的。', image: '/assets/zodiac/zodiac-ji.jpg', alt: '甲骨文「鸡」字书法摆件，素白宣笺，黑胡桃木框装裱，陈设于书房木案，旁有书堆、笔洗与文房清供' },
+  { slug: 'gou', char: '狗', name: '甲骨文 · 狗', en: 'Dog', price: '¥199', blessing: '犬守平安', story: '甲骨文的「狗（犬）」翘着尾巴、竖着耳朵，一副警觉的模样。犬是人类最古老的伙伴，守夜护院、不离不弃——它守的是家门，也是人心的安稳。', image: '/assets/zodiac/zodiac-gou.jpg', alt: '甲骨文「狗」字书法摆件，朱红暗纹笺，黑胡桃木框装裱，陈设于玄关木质边柜，旁有陶瓶花枝与石雕摆件' },
+  { slug: 'zhu', char: '猪', name: '甲骨文 · 猪', en: 'Pig', price: '¥199', blessing: '诸事如意', story: '圆润丰腴的甲骨文「猪（豕）」。屋下有豕方为「家」——「家」字的宝盖头下，住的就是这头猪。富足、安定、烟火气，都从它开始。', image: '/assets/zodiac/zodiac-zhu.jpg', alt: '甲骨文「猪」字书法摆件，橘黄云纹笺，黑胡桃木框装裱，陈设于玄关木柜，旁有铜环摆件与方形铜盒' },
 ];
 
 export type ReadyMadeWork = {
