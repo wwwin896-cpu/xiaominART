@@ -1,0 +1,19 @@
+---
+// 301 兜底：原「前長縱馬行」辨字有误，实为「道長縱馬行」（2026-11-07）。
+export const prerender = true;
+const TARGET = '/gifts/dao-chang-zong-ma-xing/';
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>已更正为「道長縱馬行」｜小民艺术</title>
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href={`https://xiaominart.com${TARGET}`} />
+    <meta http-equiv="refresh" content={`0; url=${TARGET}`} />
+    <script is:inline>location.replace('/gifts/dao-chang-zong-ma-xing/');</script>
+  </head>
+  <body>
+    <p>这件作品的字已更正为「道長縱馬行」，正在带你去 <a href={TARGET}>新页面</a>。</p>
+  </body>
+</html>

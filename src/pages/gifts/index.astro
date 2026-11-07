@@ -5,23 +5,23 @@ import PageFaq from '../../components/PageFaq.astro';
 import { pageFaqs } from '../../data/page-faqs';
 const craftSteps = [
   {
-    no: '第一步', title: '一笔一画皆自心出，飞白枯润墨见真性',
-    body: '从你的一句话开始。写什么、送给谁、为什么送——先聊清楚，再落笔。飞白是快意，枯润见性情，每一笔的轻重缓急都留在纸上，浓墨与纤丝的交替都是唯一的。',
+    no: '第一步', title: '先定字，再落笔',
+    body: '写什么、送给谁、挂在哪，先问清楚。字定错了，写得再好也不对——所以我们把一半时间花在这一步。',
     image: '/assets/craft/step-1-writing.jpg', alt: '毛笔在宣纸上落笔书写的特写',
   },
   {
-    no: '第二步', title: '素手抚宣，排气定型，宽境留白，气度自生',
-    body: '写完不等于完成。书写之后要上浆抚平、排实纸下的空气，让纸与墨真正安定下来；留白留多宽、字放哪里，决定这幅字最终的气度与呼吸感。',
+    no: '第二步', title: '托裱：让纸和墨定下来',
+    body: '上浆、抚平、排掉纸下的空气，阴干三天。这道工序决定这幅字十年后会不会起皱、发霉。',
     image: '/assets/craft/step-2-mounting.jpg', alt: '双手用棕刷抚平装裱中的书法作品',
   },
   {
-    no: '第三步', title: '实木装帧，成品入框',
-    body: '实木框、衬纸、留距，一步都省不得。装帧完成的作品，挂在墙上即是作品，摆在案头即是礼——你收到的就是可以直接送出的样子。',
+    no: '第三步', title: '装框：到手就能挂',
+    body: '黑胡桃实木框、衬纸、留边。装好之后挂在墙上就是作品，摆在案头就是礼，不用你再跑一趟装裱店。',
     image: '/assets/craft/step-3-framing.jpg', alt: '装裱入框后的书法小品',
   },
   {
-    no: '第四步', title: '一物一码一知音，见字如面不负卿',
-    body: '每幅作品附唯一编号与藏品证书，一物一码。它为谁而写、写在哪一天、用了什么纸墨，都有迹可循。世间没有第二幅与它相同，正如你要说的那句话。',
+    no: '第四步', title: '编号、证书、装盒',
+    body: '每幅附唯一编号与藏品证书，写明为谁而写、哪天写的、用的什么纸墨。同一个人再写一次，也不会一模一样。',
     image: '/assets/craft/step-4-packaging.jpg', alt: '小民艺术黑色礼盒与藏品证书包装',
   },
 ];
@@ -31,7 +31,7 @@ const rooms = [
   { char: '厅', title: '客厅 / Living room', body: '客厅是家里人待得最久的地方。一幅横批定下全屋的调子，家人窝在沙发上抬眼看见的那句话，才是这个家真正的语气。' },
   { char: '茶', title: '茶室 / Tea room', body: '茶席之上，字与茶同席。壶起水落之间，抬眼见字，心便静了三分——茶室里的字，讲究的从来是静气。' },
   { char: '房', title: '卧室 / Bedroom', body: '卧室要的不是气派，是安放。一呼一吸之间，一幅小品让床头多一份温柔的静气，陪自己入睡，也陪自己醒来。' },
-  { char: '客', title: '会客厅 / Reception room', body: '待客之处，最见分寸。会客厅里的字不求张扬，只求让人一坐下就松下来——书法是一种褪去火气的表达，主客之间，也当如此。' },
+  { char: '客', title: '会客厅 / Reception room', body: '待客之处最见分寸。会客厅的字不必张扬，让人一坐下就松下来，比什么都有用。' },
   { char: '玄', title: '玄关 / Foyer', body: '进门的第一口呼吸。玄关的字，替你把外头的火气留在门外——一方圆光或小横批，安静地迎人进门，也安静地送人出门。' },
 ];
 const paths = [
@@ -49,12 +49,12 @@ const paths = [
   },
 ];
 ---
-<Layout title="小民好礼｜手写书法礼品定制与东方心意礼盒｜小民艺术" description="每一幅字都亲笔手写，含黑胡桃实木装裱与藏品证书。送老师、送长辈，或为乔迁、开业、婚庆纪念备一份礼物，提供现货直发与专属定制两条路径，¥300 起。">
-  <section class="container page-head"><span class="eyebrow">Xiaomin Gifts / 小民好礼</span><h1 class="serif">把一份心意，<br />送进真实的日常。</h1><p lang="en">Thoughtful gifts for everyday rituals.</p></section>
-  <section class="container section craft-section" id="craft-journey"><div class="craft-head" data-reveal><span class="eyebrow">Handmade Journey / 手作匠心</span><h2 class="serif craft-title">手作匠心｜开始旅程</h2><p class="craft-sub serif">「你的心意，会被认真解读，认真看见」</p><p class="craft-note">每一幅，都是世间唯一的相遇</p></div><div class="craft-steps">{craftSteps.map((step, i) => <div class:list={['craft-row', { reverse: i % 2 === 1 }]} data-reveal><figure class="craft-fig"><Pic src={step.image} alt={step.alt} loading="lazy" decoding="async" /></figure><div class="craft-copy"><span class="craft-no">{step.no}</span><h3 class="serif">{step.title}</h3><p>{step.body}</p></div></div>)}</div></section>
-  <section class="container section rooms-section" aria-labelledby="rooms-title"><div class="section-lead"><span class="eyebrow">Rooms & Intentions / 空间与心意</span><h2 id="rooms-title" class="serif">一个字，就是一个去处。</h2><p>书法是一种褪去火气的表达。六个方向，各有各的安放方式——先看看你的心事属于哪一个。</p></div><div class="rooms-grid">{rooms.map((room) => <article class="room-card"><span class="room-char serif">{room.char}</span><div class="room-copy"><h3 class="serif">{room.title}</h3><p>{room.body}</p></div></article>)}</div></section>
-  <section class="container section paths-section" aria-labelledby="paths-title"><div class="section-lead"><span class="eyebrow">Two Paths / 小民好礼</span><h2 id="paths-title" class="serif">小民好礼，现货与定制。</h2><p>看中了已经写好的，直接带走；心里有一句话还没被写出来，我们一起把它写出来。</p></div><div class="path-grid">{paths.map((path) => <a class="path-card" href={path.href} data-event={path.event}><figure><Pic src={path.image} alt={path.alt} loading="lazy" decoding="async" /></figure><div class="path-copy"><span class="eyebrow">{path.eyebrow}</span><h3 class="serif">{path.title}</h3><p>{path.body}</p><span class="path-meta">{path.meta} →</span></div></a>)}</div></section>
-  <section class="container section next-step"><span class="eyebrow">Not sure yet / 还不确定</span><h2 class="serif">如果你还不知道送什么，先从对象、场合和预算告诉我们。</h2><a class="btn btn-primary" href="/custom-commission/?context=送礼建议" data-event="gift_advice_click">获取送礼建议 →</a></section>
+<Layout title="小民好礼｜手写书法礼品定制与东方心意礼盒｜小民艺术" description="每一幅字都亲笔手写，含黑胡桃实木装裱与藏品证书。送老师、送长辈，或为乔迁、开业、婚庆纪念备一份礼物，提供现货直发与专属定制两条路径，¥199 起。">
+  <section class="container page-head"><span class="eyebrow">Xiaomin Gifts / 小民好礼</span><h1 class="serif">写好的字，<br />直接送得出手。</h1><p lang="en">Thoughtful gifts for everyday rituals.</p></section>
+  <section class="container section craft-section" id="craft-journey"><div class="craft-head" data-reveal><span class="eyebrow">Handmade Journey / 手作匠心</span><h2 class="serif craft-title">手作匠心｜开始旅程</h2><p class="craft-sub serif">一幅字从一句话变成一件东西，中间有这四道手。</p><p class="craft-note">全程一个人做，不外包</p></div><div class="craft-steps">{craftSteps.map((step, i) => <div class:list={['craft-row', { reverse: i % 2 === 1 }]} data-reveal><figure class="craft-fig"><Pic src={step.image} alt={step.alt} loading="lazy" decoding="async" /></figure><div class="craft-copy"><span class="craft-no">{step.no}</span><h3 class="serif">{step.title}</h3><p>{step.body}</p></div></div>)}</div></section>
+  <section class="container section rooms-section" aria-labelledby="rooms-title"><div class="section-lead"><span class="eyebrow">Rooms & Intentions / 空间与心意</span><h2 id="rooms-title" class="serif">挂在哪，决定写什么。</h2><p>同一句话，挂在书房和挂在客厅，意思不一样。六个位置，六种分寸。</p></div><div class="rooms-grid">{rooms.map((room) => <article class="room-card"><span class="room-char serif">{room.char}</span><div class="room-copy"><h3 class="serif">{room.title}</h3><p>{room.body}</p></div></article>)}</div></section>
+  <section class="container section paths-section" aria-labelledby="paths-title"><div class="section-lead"><span class="eyebrow">Two Paths / 小民好礼</span><h2 id="paths-title" class="serif">小民好礼，现货与定制。</h2><p>写好的，看中就发；没写的，说一句，我们写。</p></div><div class="path-grid">{paths.map((path) => <a class="path-card" href={path.href} data-event={path.event}><figure><Pic src={path.image} alt={path.alt} loading="lazy" decoding="async" /></figure><div class="path-copy"><span class="eyebrow">{path.eyebrow}</span><h3 class="serif">{path.title}</h3><p>{path.body}</p><span class="path-meta">{path.meta} →</span></div></a>)}</div></section>
+  <section class="container section next-step"><span class="eyebrow">Not sure yet / 还不确定</span><h2 class="serif">如果你还不知道送什么，先从对象、场合和预算告诉我们。</h2><a class="btn btn-primary" href="/custom-commission/?context=送礼建议" data-event="gift_advice_click">获取送礼建议</a></section>
   <PageFaq items={pageFaqs['gifts']} heading="常见问题｜价格、时效与现货定制" />
 </Layout>
 <style>

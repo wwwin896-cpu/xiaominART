@@ -23,6 +23,10 @@ const ALLOWLIST = new Set([
   '/wishlist',      // 心愿单（noindex，localStorage 本地功能页；有移动端底栏入口，故不入 sitemap）
   '/me',            // 「我的」Tab（2026-10-30 v5.0：noindex 本地功能页——收藏/预约/进度聚合，不入 sitemap）
   '/admin/progress', // 定制进度录入后台（noindex，内部使用，需 ADMIN_ACCESS_KEY）
+  // 已更名商品的 301 兜底页（noindex + meta refresh，权重导向新地址；2026-11-07）
+  '/gifts/bao-shou',
+  '/gifts/qian-chang-zong-ma-xing',
+  '/gifts/mei-shou',
 ]);
 
 // ---------- 收集 dist 里的页面 ----------

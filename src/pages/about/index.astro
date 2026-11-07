@@ -85,8 +85,8 @@ const capabilities = [
     <div><span class="eyebrow">Brand story / 品牌故事</span><h2 class="serif">两个人，<br />两门手艺，<br />一个品牌。</h2></div>
     <div>
       <p>小民艺术由两位创作者共同创建。她们也是这里所有作品的主理人：一位是升斗小民，致力于用书法解读历史的书者；一位是非遗小宁，致力于非遗面塑的传承。</p>
-      <p>她们的手艺并不相同，关注的东西却很像——都舍不得那些正在被日常生活忽略的细节。一个人从纸本上读历史，一个人从材料里传手艺；一个让字成为可以留下的表达，一个让手艺成为可以被亲手做过一次的记忆。</p>
-      <p>于是有了 XIAOMINART。没有宏大的叙事，只有各自手上那一点确定的功夫：用自己的专业和技艺，用力所能及的方式对外表达；也借这样的方式，往更大的美学空间里走一走。所以对我们来说，品牌不只是一个名字，更像一场还没写完的共同创作。</p>
+      <p>两人手艺不一样，脾气倒是接近：都舍不得那些被日常忽略的细节。一个在纸本上读历史，一个在材料里传手艺。</p>
+      <p>于是有了 XIAOMINART。没有宏大的叙事，只有各自手上那点确定的功夫：字要写对，面要捏得住。品牌对我们来说不是招牌，是两个人还没做完的一件活。</p>
     </div>
   </section>
 
@@ -99,7 +99,7 @@ const capabilities = [
     <div class="creed-head">
       <span class="eyebrow">From the calligrapher / 书者如是说</span>
       <h2 id="creed-title" class="serif">字写得好不好，<br />看它在日子里作不作数。</h2>
-      <p>下面两则，是主理人升斗小民谈书写时说过的话。一则是她怎么看「把格言挂上墙」这件事，一则是她自己的手上功夫从哪里来。放在这里，是想让你在决定要不要请我们写字之前，先知道我们怎么看待这支笔。</p>
+      <p>两则，都是升斗小民谈书写时说过的话：一则是她怎么看「把格言挂上墙」，一则是她的手上功夫从哪来。请我们写字之前，先看看我们怎么看这支笔。</p>
     </div>
 
     <div class="creed-list">
@@ -153,7 +153,7 @@ const capabilities = [
 
   <section class="container section values"><div><span class="mono">01</span><h2 class="serif">慢一点，没关系</h2><p>好的字和好的手艺都急不来。等得起的事，我们慢慢做；等不起的心意，我们有现货。</p></div><div><span class="mono">02</span><h2 class="serif">一人一作</h2><p>同一个词，不同的人写出来是不一样的心事。</p></div><div><span class="mono">03</span><h2 class="serif">字有来处</h2><p>写什么、怎么写，先弄清这句话的来路与去处。懂得多一点，笔下的分寸才稳一点。</p></div><div><span class="mono">04</span><h2 class="serif">一次委托，一段来往</h2><p>很多客人写完一幅，还会回来写第二幅。比起做成一单生意，我们更喜欢这样的来往。</p></div></section>
 
-  <section class="container section capability" id="capability" aria-labelledby="capability-title"><div class="capability-lead"><span class="eyebrow">Where to begin / 从哪里开始</span><h2 id="capability-title" class="serif">不知道从哪里开始？<br />从你心里那句话开始。</h2><p>有人想尽快送出一份心意，有人想把一面空墙安顿好，有人想带孩子亲手摸一摸传统，也有人想替一群人说声谢谢。这四件事我们都在做，也都乐意做——选不选得好，来了聊几句就知道了。</p></div><div class="capability-grid">{capabilities.map((item) => <article class="cap-card"><span class="eyebrow">{item.tag}</span><h3 class="serif">{item.title}</h3><dl><dt>适合谁</dt><dd>{item.fit}</dd><dt>你会得到</dt><dd>{item.gain}</dd></dl><a class="btn btn-link" href={item.href}>{item.cta} →</a></article>)}</div></section>
+  <section class="container section capability" id="capability" aria-labelledby="capability-title"><div class="capability-lead"><span class="eyebrow">Where to begin / 从哪里开始</span><h2 id="capability-title" class="serif">四条路，看你手上<br />是哪件事。</h2><p>赶着送礼、安顿一面空墙、带孩子摸一次传统、替一群人说声谢谢——这四件事我们都在做。不确定属于哪条，说一句，我们帮你归位。</p></div><div class="capability-grid">{capabilities.map((item) => <article class="cap-card"><span class="eyebrow">{item.tag}</span><h3 class="serif">{item.title}</h3><dl><dt>适合谁</dt><dd>{item.fit}</dd><dt>你会得到</dt><dd>{item.gain}</dd></dl><a class="btn btn-link" href={item.href}>{item.cta} →</a></article>)}</div></section>
 </Layout>
 <style>
 .page-head{padding:94px 0 72px}

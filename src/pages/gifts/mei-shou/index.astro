@@ -1,0 +1,19 @@
+---
+// 301 兜底：原误辨「眉壽」，实为「般若」（2026-11-07）。
+export const prerender = true;
+const TARGET = '/gifts/bo-re/';
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>已更正为「般若」｜小民艺术</title>
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href={`https://xiaominart.com${TARGET}`} />
+    <meta http-equiv="refresh" content={`0; url=${TARGET}`} />
+    <script is:inline>location.replace('/gifts/bo-re/');</script>
+  </head>
+  <body>
+    <p>这件作品的字已更正为「般若」，正在带你去 <a href={TARGET}>新页面</a>。</p>
+  </body>
+</html>

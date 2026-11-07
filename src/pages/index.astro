@@ -36,12 +36,12 @@ import { zodiacWorks, giftProducts, readyMadeWorks } from '../data/content';
 //     （⚠️ 事件白名单**只增不删**，那两条**保留在册**，不要从三处白名单里删掉 ——
 //       页面改版后不再发的事件也要留，否则会误伤可能仍在上线的旧页面）
 const sceneCards = [
-  { tag: '节日问候', title: '四季流转', body: '岁有寒暑，月有圆缺——把四季的流转写成一幅字，让问候在案头留得久一点。', image: '/assets/scenes/theme-four-seasons.jpg', href: '/gifts/seasonal-letter-gift/', alt: '书房木案上的四季题跋书法横幅，旁有兰草与砚台' },
-  { tag: '传情达意', title: '一点朱砂', body: '朱砂作底，古字为凭——值得庆祝的事，就该这样郑重地讲出来。', image: '/assets/scenes/theme-cinnabar.jpg', href: '/gifts/cinnabar-note-gift/', alt: '朱砂红卡的「欢喜」古文字书法框，旁有红梅与灯笼' },
-  { tag: '文房雅趣', title: '墨有呼吸', body: '书房雅趣，自古值得被记录——一笔一画的浓淡停顿都看得见，写出来的字，才是活的书香。', image: '/assets/scenes/theme-ink-breath.jpg', href: '/gifts/ink-breath-teacher/', alt: '阳光下的毛边纸密字书法作品，笔触清晰可辨' },
-  { tag: '风生水起', title: '案上有山', body: '书房之内，自有山河——大境之气，亦有大静之气，把开阔与生长安放进日常。', image: '/assets/scenes/theme-desk-mountain.jpg', href: '/gifts/desk-mountain-keepsake/', alt: '茶室绿墙上的长卷书法与原木长案茶席' },
-  { tag: '校庆谢师', title: '桃李不言', body: '校庆周年、谢师情谊——把校训或写给恩师的那句话写成字。桃李不言，下自成蹊，深深的感谢不必多言。', image: '/assets/scenes/theme-teacher-calligraphy-desklamp.jpg', href: '/gifts/ink-breath-teacher/', alt: '书房木案上的洒金笺古文字书法横幅，黑色台灯暖光下旁有青瓷瓶插山茶、放大镜与笔记本' },
-  { tag: '婚庆纪念', title: '琴瑟和鸣', body: '订婚、结婚、周年——把两个人的名字与祝愿写成一幅。琴瑟在御，莫不静好，愿此后岁岁年年。', image: '/assets/scenes/theme-wedding-qin-se-he-ming.jpg', href: '/gifts/qin-se-he-ming-gift/', alt: '朱砂红底「琴瑟和鸣」古文字书法横幅，黑胡桃木框装裱，陈设于卧室边柜，旁有白瓷瓶红果与中式卧房' },
+  { tag: '节日问候', title: '四季流转', body: '春写「新」，秋写「收」。一年一幅，挂在同一面墙上，看得见时间走过去。', image: '/assets/scenes/theme-four-seasons.jpg', href: '/gifts/seasonal-letter-gift/', alt: '书房木案上的四季题跋书法横幅，旁有兰草与砚台' },
+  { tag: '传情达意', title: '一点朱砂', body: '朱砂调进墨里，红得不艳。生辰、满月、升迁——值得用一张红纸的事，其实不多。', image: '/assets/scenes/theme-cinnabar.jpg', href: '/gifts/cinnabar-note-gift/', alt: '朱砂红卡的「欢喜」古文字书法框，旁有红梅与灯笼' },
+  { tag: '文房雅趣', title: '墨有呼吸', body: '墨分五色，一笔里就有干湿浓淡。挂在书桌边，看久了会想提笔。', image: '/assets/scenes/theme-ink-breath.jpg', href: '/gifts/ink-breath-teacher/', alt: '阳光下的毛边纸密字书法作品，笔触清晰可辨' },
+  { tag: '风生水起', title: '案上有山', body: '「山」字写满整纸，抬头就是一座山。想让屋子开阔，先让那面墙空出来。', image: '/assets/scenes/theme-desk-mountain.jpg', href: '/gifts/desk-mountain-keepsake/', alt: '茶室绿墙上的长卷书法与原木长案茶席' },
+  { tag: '校庆谢师', title: '桃李不言', body: '校训、班训、老师常说的那句话，都能写成字。谢师不必客套，一句原话最重。', image: '/assets/scenes/theme-teacher-calligraphy-desklamp.jpg', href: '/gifts/ink-breath-teacher/', alt: '书房木案上的洒金笺古文字书法横幅，黑色台灯暖光下旁有青瓷瓶插山茶、放大镜与笔记本' },
+  { tag: '婚庆纪念', title: '琴瑟和鸣', body: '两个姓、一个日子、一句只说给对方的话，写进同一张纸。', image: '/assets/scenes/theme-wedding-qin-se-he-ming.jpg', href: '/gifts/qin-se-he-ming-gift/', alt: '朱砂红底「琴瑟和鸣」古文字书法横幅，黑胡桃木框装裱，陈设于卧室边柜，旁有白瓷瓶红果与中式卧房' },
 ];
 const storyCards = [
   { title: '书房定制 · 给父母的周年纪念礼', quote: '想给结婚三十年的爸妈留一件东西，最后写了「康而寿」。康是平安，寿是长久——挂进书房那天，我爸说，这三个字比什么都实在。', image: '/assets/scenes/study-kang-er-shou.jpg', alt: '书房案头的「康而寿」书法横幅，旁有台灯与书卷' },
@@ -50,10 +50,10 @@ const storyCards = [
   { title: '企业礼赠 · 合作伙伴周年庆典', quote: '给合作了十年的伙伴选了一份「百福图」，对方收到后说「这比任何商务礼品都让我感动」。后来那份作品一直挂在他办公室最显眼的位置。', image: '/assets/scenes/dining-room-long-calligraphy.jpg', alt: '企业空间里的书法横幅' },
 ];
 const steps = [
-  { no: '壹', title: '倾听', body: '告诉我们空间、人物与想留下的情绪，不必先懂艺术。' },
-  { no: '贰', title: '取意', body: '从字、色、材质中，找到属于你的视觉方向。' },
-  { no: '叁', title: '创作', body: '匹配的艺术家为你专属创作，过程中保留必要的确认节点。' },
-  { no: '肆', title: '抵达', body: '作品以适合你的方式，带着温度抵达。' },
+  { no: '壹', title: '倾听', body: '先说清挂在哪、送给谁、想留一句什么话。不用懂书法。' },
+  { no: '贰', title: '取意', body: '我们按字义、空间和预算给两三个方向，你挑一个。' },
+  { no: '叁', title: '创作', body: '小民写，写完拍照片给你看；不合适就重写。' },
+  { no: '肆', title: '抵达', body: '装裱、装盒、寄出，附释读卡与一张手写贺语。' },
 ];
 // 见艺术 · 文字源流区的时间轴节点。
 // 史实口径：甲骨文（商）、金文（商周）、石鼓文（先秦，与首屏「秦王猎碣」同一出处）、秦篆（秦）。
@@ -88,7 +88,7 @@ const showcaseItemCount =
   readyMadeWorks.length;
 const itemCount = showcaseItemCount;
 ---
-<Layout title="小民艺术｜手写书法礼品与书画定制" description="每一幅字都亲笔手写，取自古文字有出处。送老师、送长辈，或为乔迁、开业、婚庆纪念备一份礼物，可选现货或定制，¥300 起。查看选礼指南 →">
+<Layout title="小民艺术｜手写书法礼品与书画定制" description="每一幅字都亲笔手写，取自古文字有出处。送老师、送长辈，或为乔迁、开业、婚庆纪念备一份礼物，可选现货或定制，¥199 起。查看选礼指南">
   {/* ── 移动端首屏（2026-10-29）──────────────────────────────────────
       手机端不再用下面那块三屏轮播做首屏：网购习惯的访客要立刻看到
       「卖什么 / 多少钱 / 能不能马上要」。品牌叙事一点没删，只是下移。
@@ -120,30 +120,30 @@ const itemCount = showcaseItemCount;
       <div class="hero-media" aria-hidden="true"><Pic src="/assets/scenes/hero-shiguwen-light.jpg" alt="" width={1536} height={1024} loading="eager" /></div>
       <div class="container hero-inner">
         <span class="eyebrow">XIAOMINART / 书画礼品定制</span>
-        <h1 class="serif">方寸藏境，<br />山河入章。</h1>
-        <p class="hero-sub">取自秦王猎碣——「吾车既工，吾马既同；<br />吾车既好，吾马既阜。」最古老的石刻文字，就悬在这方寸之间。</p>
+        <h1 class="serif">把一句要紧的话，<br />写成能挂起来的字。</h1>
+        <p class="hero-sub">小民亲笔，宣纸装裱，附一张手写贺语。<br />现货 ¥199 起，48 小时发出；想写自己的那句话，可以定制。</p>
       </div>
     </div>
     <div class="hero-slide" data-hero-slide aria-hidden="true">
       <div class="hero-media" aria-hidden="true"><Pic src="/assets/scenes/bird-seal-tearoom.jpg" alt="" width={1280} height={720} loading="lazy" /></div>
       <div class="container hero-inner">
         <span class="eyebrow">XIAOMINART / 书画礼品定制</span>
-        <p class="serif hero-title">线条藏界，<br />意趣无疆。</p>
-        <p class="hero-sub">融古老鸟虫篆意趣，字如游鱼，昂首摆尾，穿梭自如。<br />在生活的洪流里，愿你也能找到自己的节奏，游刃有余。</p>
+        <p class="serif hero-title">鸟虫篆的笔画，<br />要像鱼摆尾。</p>
+        <p class="hero-sub">起笔细、行笔盘、收笔拖出一截尖——一笔走完不能停，<br />所以它看着像活的。</p>
       </div>
     </div>
     <div class="hero-slide" data-hero-slide aria-hidden="true">
       <div class="hero-media" aria-hidden="true"><Pic src="/assets/scenes/imperfect-real.jpg" alt="" width={1280} height={720} loading="lazy" /></div>
       <div class="container hero-inner">
         <span class="eyebrow">XIAOMINART / 书画礼品定制</span>
-        <p class="serif hero-title">字里藏光，<br />岁月无恙。</p>
-        <p class="hero-sub">一方魏晋碑刻，记下一纸寻常地契，文字若记得，时光便记得。<br />记录，让我们看见过去，也被未来看见。</p>
+        <p class="serif hero-title">一张地契，<br />记着一千年前的家。</p>
+        <p class="hero-sub">谁家几亩地、卖给谁、多少钱，都刻在上面。<br />字还在，人早换了——把日常写下来，比写漂亮话长久。</p>
       </div>
     </div>
     <div class="hero-dots" aria-label="横幅切换">
-      <button class="hero-dot is-active" type="button" data-hero-dot aria-label="第一屏：方寸藏境，山河入章"></button>
-      <button class="hero-dot" type="button" data-hero-dot aria-label="第二屏：线条藏界，意趣无疆"></button>
-      <button class="hero-dot" type="button" data-hero-dot aria-label="第三屏：字里藏光，岁月无恙"></button>
+      <button class="hero-dot is-active" type="button" data-hero-dot aria-label="第一屏：把一句要紧的话写成字"></button>
+      <button class="hero-dot" type="button" data-hero-dot aria-label="第二屏：鸟虫篆的笔画像鱼摆尾"></button>
+      <button class="hero-dot" type="button" data-hero-dot aria-label="第三屏：一千年前的地契"></button>
     </div>
   </section>
   <script>
@@ -212,10 +212,10 @@ const itemCount = showcaseItemCount;
   <section class="art-hero" aria-labelledby="art-hero-title">
     <div class="art-hero-texture" aria-hidden="true"></div>
     <div class="container art-hero-inner" data-reveal>
-      <span class="eyebrow">见山河 / 笔墨之根</span>
-      <h2 id="art-hero-title" class="serif"><span class="hp-line">溯字之源，</span><span class="hp-line">以书载道。</span></h2>
-      <p class="art-hero-sub serif"><span class="hp-line">笔墨之根，源于天地造化与礼乐文明。</span></p>
-      <p class="art-hero-note">从殷商甲骨的契刻，到周秦钟鼎的熔铸；从石鼓猎碣的苍茫，到秦汉小篆的规矩——<br class="art-hero-note-br" />书法在汉字生长的脉络中，生生不息。</p>
+      <span class="eyebrow">字的来处 / 刀 · 模 · 凿 · 笔</span>
+      <h2 id="art-hero-title" class="serif"><span class="hp-line">甲骨用刀，</span><span class="hp-line">金文用模。</span></h2>
+      <p class="art-hero-sub serif"><span class="hp-line">同一道横，刀刻出来是尖的，浇铸出来是圆的。</span></p>
+      <p class="art-hero-note">石鼓用凿，边缘起毛；秦篆用笔，线条匀圆。<br class="art-hero-note-br" />看懂这四种工具，再去看任何一幅字，都知道它站在哪一段路上。</p>
     </div>
   </section>
 
@@ -223,9 +223,9 @@ const itemCount = showcaseItemCount;
       附件原拟 CTA「字游记」页面尚不存在，先链到祝愿字典（最接近的现有内容）。 ── */}
   <section class="container section origins" aria-labelledby="origins-title">
     <div class="section-lead" data-reveal>
-      <span class="eyebrow">见艺术 / 文字源流</span>
-      <h2 id="origins-title" class="serif">回到源头的观看方式。</h2>
-      <p>从甲骨文的苍茫、金文的厚重、石鼓文的古拙，到秦篆的雄浑——每一笔都不是凭空而来，而是从千年文字里提炼出的秩序、气韵与美感。小民艺术不只是一门书法，更是一种回到源头的观看方式：在古文字的法度里，看见中国美学的根基。</p>
+      <span class="eyebrow">字形谱系 / 甲骨 · 金文 · 石鼓 · 秦篆</span>
+      <h2 id="origins-title" class="serif">四种字，四种脾气。</h2>
+      <p>甲骨文瘦硬，因为刀在骨上走不了圆转；金文厚重，因为字要先翻进陶模再浇铜；石鼓文古拙，凿子一下一下敲出来；秦篆匀圆，是毛笔写在简牍上的秩序。这四段路，是我们落笔前的家底。</p>
     </div>
     <ol class="origin-rail" data-reveal>
       {originNodes.map((node) => <li class="origin-node"><span class="mono origin-era">{node.era}</span><strong class="serif origin-name">{node.name}</strong><span class="origin-key">{node.keyword}</span><p>{node.body}</p></li>)}
@@ -237,10 +237,10 @@ const itemCount = showcaseItemCount;
     <div class="self-grid">
       <figure class="self-fig" data-reveal><Pic src="/assets/scenes/self-writing-gold-paper.jpg" alt="书写现场实拍：手执毛笔在洒金笺上落墨，案上有砚台、香炉、青瓷瓶与笔架，暖光下的书写一角" loading="lazy" decoding="async" /></figure>
       <div class="self-copy" data-reveal>
-        <span class="eyebrow">见自己 / 修身入口</span>
-        <h2 id="self-title" class="serif">看见，是理解的开始；<br />理解，是修身的入口。</h2>
-        <p>当文化有了形，便成了你案头的一幅字。</p>
-        <p class="self-close">当一个字被认真辨认，一段历史便不再遥远；<br />当一种书写被慢慢临习，心性也会随之沉静下来。</p>
+        <span class="eyebrow">为什么挂字 / 一面墙的性格</span>
+        <h2 id="self-title" class="serif">墙上挂什么，<br />日子就是什么样。</h2>
+        <p>一幅字每天经过眼睛，慢慢就成了家里的背景音。</p>
+        <p class="self-close">挑字之前先想一件事：你希望这面墙说什么——<br />是让自己进门慢下来，还是让客人一眼看出这家人的讲究。</p>
       </div>
     </div>
   </section>
@@ -249,11 +249,11 @@ const itemCount = showcaseItemCount;
       三条背书均与站内既有事实页对应，不做无凭据的夸示。 ── */}
   <section class="container section brand-landing" aria-labelledby="brand-title">
     <div class="section-lead brand-lead" data-reveal>
-      <span class="eyebrow">见来处 / 品牌来处</span>
-      <h2 id="brand-title" class="serif">见来处，方知去向。</h2>
+      <span class="eyebrow">我们怎么做事 / 认字 · 考据 · 书写 · 装裱</span>
+      <h2 id="brand-title" class="serif">字要有出处，<br />装裱要经得起十年。</h2>
     </div>
-    <p class="brand-body" data-reveal>小民艺术承接的，不只是古文字的形，更是它背后的来处：看见文明的源头，理解汉字的深意，解读先人的智慧，并在书写中安顿自己。</p>
-    <p class="brand-body brand-close" data-reveal>我们希望，每一个走进小民艺术的人，都能在方寸之间，找到属于自己的心意之选。</p>
+    <p class="brand-body" data-reveal>小民艺术只做一件窄事：认字、考据、书写、装裱。每个字注明取自哪片甲骨、哪件青铜器；跋文写清出处与年份；纸用宣纸，框用黑胡桃。十年后打开，还是这个样子。</p>
+    <p class="brand-body brand-close" data-reveal>我们不做流水线装饰画。一幅字一个人写，写坏了重写。</p>
     <ul class="brand-facts" data-reveal>
       <li><a href="/partners/museum-tourism/"><span class="mono">壹</span>博物馆与文旅合作</a></li>
       <li><a href="/partners/heritage/"><span class="mono">贰</span>非遗面塑传承</a></li>
@@ -272,12 +272,12 @@ const itemCount = showcaseItemCount;
       索引条已删除，避免同一批入口在首页出现两遍。 ── */}
   <section class="container section choices" aria-labelledby="works-title">
     <div class="section-lead">
-      <span class="eyebrow">01 / 一字一源 · 四时一笺</span>
+      <span class="eyebrow">01 / 一字一礼 · 四时一笺</span>
       <h2 id="works-title" class="serif">每个字，有它自己的来处。</h2>
-      <p>每一幅字都不是随手写下的。这些字从甲骨、青铜、石鼓与碑刻里长出来，走了几千年才落到你的案头。</p>
+      <p>八十件现货，每幅都注明取字出处与跋文全文。挑字之前，先想清楚送给谁。</p>
     </div>
     <div class="choice-grid">
-      {sceneCards.map((card) => <a class="choice-card" href={card.href} data-event="scene_view"><figure><Pic src={card.image} alt={card.alt} loading="lazy" decoding="async" /><button class="lb-zoom" type="button" data-lb-zoom data-lb-group="choice" aria-label={`放大查看「${card.title}」`}><span aria-hidden="true">⤢</span></button></figure><div class="choice-copy"><span class="mono choice-tag">{card.tag}</span><h3 class="serif">{card.title}</h3><p>{card.body}</p><div class="choice-meta"><span class="card-link">以此为灵感 →</span></div></div></a>)}
+      {sceneCards.map((card) => <a class="choice-card" href={card.href} data-event="scene_view"><figure><Pic src={card.image} alt={card.alt} loading="lazy" decoding="async" /><button class="lb-zoom" type="button" data-lb-zoom data-lb-group="choice" aria-label={`放大查看「${card.title}」`}><span aria-hidden="true">⤢</span></button></figure><div class="choice-copy"><span class="mono choice-tag">{card.tag}</span><h3 class="serif">{card.title}</h3><p>{card.body}</p><div class="choice-meta"><span class="card-link">以此为灵感</span></div></div></a>)}
     </div>
   </section>
 
@@ -286,7 +286,7 @@ const itemCount = showcaseItemCount;
       不进「文字源流」文化区。卡片链接 /zodiac/ 聚合页（12 件全览+系列规格）。
 
       2026-10-17 三改（业主明确指示）：
-      · 标题保留「一字一源 · 生肖纪岁」不变，主标题 2026-10-17 由「十二兽语」改「十二生肖」；
+      · 标题保留「一字一礼 · 生肖纪岁」不变，主标题 2026-10-17 由「十二兽语」改「十二生肖」；
       · 排版按「客户分享」（story-card）的范式做：边框卡、左图右文；
       · 首页不显示价格，价格只放 /zodiac/ 内页。
 
@@ -296,10 +296,10 @@ const itemCount = showcaseItemCount;
       · 网格改 4 列 3 排，卡片改竖向（图上文下），图压小。 ── */}
   <div class="container zodiac-block">
     <div class="zodiac-head">
-      <span class="eyebrow">一字一源 · 生肖纪岁</span>
+      <span class="eyebrow">一字一礼 · 生肖纪岁</span>
       <h3 class="serif">十二生肖，刻在时光里的守护。</h3>
       <p>三千年前的龟甲上，先民刻下对万物的敬畏。十二个甲骨文字，如今亲笔写下、装进木框——本命年的祈愿、贺岁的心意，都在这一个字里。</p>
-      <a class="zodiac-more" href="/zodiac/">看十二件全貌与系列规格 →</a>
+      <a class="zodiac-more" href="/zodiac/">看十二件全貌与系列规格</a>
     </div>
     <div class="zodiac-grid">
       {zodiacWorks.map((w) => (
@@ -315,15 +315,15 @@ const itemCount = showcaseItemCount;
     </div>
   </div>
   <section class="container section stories" aria-labelledby="stories-title">
-    <div class="section-lead"><span class="eyebrow">01 / 客户分享</span><h2 id="stories-title" class="serif">从一句话，到一件作品。</h2><p>每一份委托，都从委托人的那句话开始。下面是按常见送礼情境整理的客户分享，用来说明一份心意如何成形——你的定制，也将从你的那句话开始。</p></div>
+    <div class="section-lead"><span class="eyebrow">01 / 客户分享</span><h2 id="stories-title" class="serif">从一句话，到一件作品。</h2><p>下面四份委托，都是先有一句话，再有一幅字。看看别人是怎么开口的。</p></div>
     <div class="story-grid">
       {storyCards.map((card) => <article class="story-card"><figure><Pic src={card.image} alt={card.alt} loading="lazy" decoding="async" /></figure><div class="story-copy"><h3 class="serif">{card.title}</h3><blockquote>「{card.quote}」</blockquote><span class="story-tag">客户分享 · 按委托情境整理</span></div></article>)}
     </div>
-    <a class="btn btn-link stories-more" href="/stories/">看看更多客户分享 →</a>
+    <a class="btn btn-link stories-more" href="/stories/">看看更多客户分享</a>
   </section>
 
   <section class="container section process" aria-labelledby="process-title">
-    <div class="section-lead"><span class="eyebrow">02 / 我们的共创过程</span><h2 id="process-title" class="serif">一份作品的诞生。</h2><p>把心事交给我们，剩下的慢慢来。</p></div>
+    <div class="section-lead"><span class="eyebrow">02 / 我们的共创过程</span><h2 id="process-title" class="serif">一幅字，四步。</h2><p>定制不是猜谜。每一步都让你看见进度，确认了再往下走。</p></div>
     <div class="process-rail">
       {steps.map((step) => <article class="process-card"><span class="mono step-no">{step.no}</span><h3 class="serif">{step.title}</h3><p>{step.body}</p></article>)}
     </div>
@@ -331,7 +331,7 @@ const itemCount = showcaseItemCount;
 
   <section class="container section closing" aria-labelledby="closing-title">
     <span class="eyebrow">03 / 与我们聊聊</span>
-    <h2 id="closing-title" class="serif">每一份心意，都值得被认真对待。</h2>
+    <h2 id="closing-title" class="serif">不知道选哪个字，就说你要送给谁。</h2>
     <a class="btn btn-primary" href="/contact/" data-event="custom_inquiry_start">与我们聊聊</a>
   </section>
   <WorkLightbox />

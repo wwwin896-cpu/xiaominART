@@ -9,6 +9,7 @@
     "assets:webp": "node scripts/gen-webp.mjs",
     "check:sitemap": "node scripts/check-sitemap.mjs",
     "guard": "node scripts/dual-view-guard.mjs",
+    "copy:lint": "node scripts/copy-lint.mjs",
     "push:baidu": "node scripts/baidu-push.mjs",
     "push:baidu:dry": "node scripts/baidu-push.mjs --dry-run",
     "test:baidu": "node scripts/tests/verify-baidu-cursor.mjs",

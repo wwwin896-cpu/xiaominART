@@ -49,11 +49,14 @@
 //     入口收进本菜单 children：「字游记」承接生肖线，「小民好礼」从一级菜单
 //     合并进来（/gifts/ 地址不变，SEO 零影响）。
 export const navItems = [
+  // 2026-11-07：一级落地页由 /zodiac/ 改为 /gifts/ —— 原先一级与二级「字游记」
+  // 指向同一地址，等于同一次点击被拆成两层，用户点两次还在原地。
+  // 现在一级 = 作品总览（现货 + 定制），二级各项各有独立落地页：
+  //   全部 → 现货小品 / 字游记（生肖） / 甲骨文集 / 创作笔记。
   {
-    href: '/zodiac/', zh: '一字一源', en: 'One Character', navLabel: '一字一礼', children: [
-      { href: '/gifts/', zh: '小民好礼', en: 'Xiaomin Gifts' },
+    href: '/gifts/', zh: '一字一源', en: 'One Character', navLabel: '一字一礼', children: [
+      { href: '/gifts/ready-made/', zh: '现货小品', en: 'Ready to Ship' },
       { href: '/zodiac/', zh: '字游记', en: 'Character Journal' },
-      // 2026-11-07 业主指定：甲骨文集进「一字一礼」下拉，与字游记并列（字游记第二辑）
       { href: '/oracle/', zh: '甲骨文集', en: 'Oracle Set' },
       { href: '/notes/', zh: '创作笔记', en: 'Studio Notes' },
     ],
