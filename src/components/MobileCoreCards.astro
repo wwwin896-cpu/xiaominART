@@ -5,7 +5,7 @@
 // v5.0 规范的核心结构：首页把两大业务直接摆出来——
 //   [书法小品 · 美学空间]  小民主理（现货+定制）
 //   [南京面塑 · 非遗研学]  小宁主理（线下雅集+团建，墨绿底 = 全站唯一深色卡）
-//   [企业商务礼赠 · 专属定制] B 端入口
+//   [商务礼赠 · 专属定制] B 端入口（2026-11-09 业主：去掉「企业」二字，保留专属定制）
 // 仅 767px 以下渲染；桌面端不受影响。
 //
 // 2026-10-31 业主修订：
@@ -23,7 +23,7 @@
   <a class="mcore-card mcore-calli" href="/gifts/">
     <span class="mcore-tag" aria-hidden="true">小民主理</span>
     <strong class="serif">书法小品 · 美学空间</strong>
-    <small>秦篆石鼓文小品 · 宣纸手写真迹装裱<br />¥199 起现货 · 私人/企业定制 · 24h 现货直发</small>
+    <small>秦篆石鼓文小品 · 宣纸手写真迹装裱<br />¥199 起现货 · 私人/企业定制 · 48h 现货直发</small>
     <span class="mcore-cta">去看小品</span>
   </a>
   <a class="mcore-card mcore-heritage" href="/intangible/">
@@ -34,7 +34,7 @@
   </a>
   <a class="mcore-card mcore-biz" href="/business-gifts/">
     <span class="mcore-tag" aria-hidden="true">企业专线</span>
-    <strong class="serif">企业商务礼赠 · 专属定制</strong>
+    <strong class="serif">商务礼赠 · 专属定制</strong>
     <small>商务伴手礼 · 校庆纪念 · 年会礼品 · 会客空间<br />可定制企业标识 · 对公开票 · 分地址寄送</small>
     <span class="mcore-cta">看企业方案</span>
   </a>
@@ -45,7 +45,7 @@
      ① grid 行默认 stretch，三卡本身已同高（同一网格同一行的话）；
         这里三行各自成行，所以用「结构同构」对齐——
         每卡都是 [tag 绝对定位] + strong(1 行) + small(固定 2 行) + cta，
-        标题都控制在 1 行（390px 下「企业商务礼赠 · 专属定制」11 字 × 19px ≈ 209px，放得下），
+        标题都控制在 1 行（390px 下「商务礼赠 · 专属定制」9 字 × 19px ≈ 171px，放得下），
         小字都写死 2 行（<br /> 断行），因此三卡高度天然一致。 */
   .mcore { display: grid; gap: 12px; }
   .mcore-card {
@@ -56,11 +56,22 @@
   }
   .mcore-card:active { transform: scale(.98); }
   .mcore-card:hover { box-shadow: var(--lift-shadow-sm); }
+  /* 三个胶囊（2026-11-09 业主：悬浮感增强）——
+     药丸从「一块染色底」改成「一枚盖在纸上的小签」：
+     双层阴影（近贴一层 + 远散一层）把它抬离卡面，发丝描边勾出边界，
+     背景微透 + 轻磨砂，底下的纸色还能透出一点。卡片悬停时再抬 2px。 */
   .mcore-tag {
-    position: absolute; top: 14px; right: 14px;
-    font-size: 10px; letter-spacing: .18em; padding: 4px 8px;
+    position: absolute; top: 13px; right: 13px;
+    display: inline-flex; align-items: center;
+    font-size: 10px; letter-spacing: .18em; line-height: 1; padding: 5px 9px 5px 10px;
     border-radius: 999px;
+    -webkit-backdrop-filter: blur(8px) saturate(1.05);
+    backdrop-filter: blur(8px) saturate(1.05);
+    box-shadow: 0 1px 1px rgba(74, 60, 34, .10), 0 8px 18px -8px rgba(74, 60, 34, .42);
+    transition: transform .3s var(--ease-out), box-shadow .3s var(--ease-out);
   }
+  .mcore-card:hover .mcore-tag,
+  .mcore-card:active .mcore-tag { transform: translateY(-2px); box-shadow: 0 1px 1px rgba(74, 60, 34, .10), 0 13px 24px -10px rgba(74, 60, 34, .5); }
   .mcore-card strong { font-size: 19px; font-weight: 500; letter-spacing: .02em; line-height: 1.4; white-space: nowrap; }
   /* 小字固定 2 行高：三卡行数一致，卡高才一致（1.8 行高 × 2 = 3.6em） */
   .mcore-card small { font-size: 12px; line-height: 1.8; opacity: .8; min-height: 3.6em; }
@@ -68,17 +79,18 @@
   .mcore-cta { font-size: 13px; margin-top: auto; padding-top: 4px; }
   /* 书法卡：宣纸浅底 */
   .mcore-calli { background: var(--paper-light); border: 1px solid var(--line-soft); color: var(--ink); }
-  .mcore-calli .mcore-tag { background: rgba(165, 72, 59, .08); color: var(--cinnabar); }
+  .mcore-calli .mcore-tag { background: rgba(255, 253, 247, .9); border: 1px solid rgba(165, 72, 59, .22); color: var(--cinnabar); }
   .mcore-calli .mcore-cta { color: var(--cinnabar); }
   /* 非遗卡：墨绿深底（全站唯一深色卡，专用段） */
   .mcore-heritage { background: var(--mo-green); border: 1px solid rgba(255, 255, 255, .14); color: var(--paper); }
-  .mcore-heritage .mcore-tag { background: rgba(255, 255, 255, .12); color: var(--mo-gold); }
+  /* 墨绿底上的胶囊：白色微透 + 墨影，浮在深色上也不脏 */
+  .mcore-heritage .mcore-tag { background: rgba(255, 255, 255, .17); border: 1px solid rgba(255, 255, 255, .3); color: var(--mo-gold); box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 9px 20px -8px rgba(0, 0, 0, .6); }
   .mcore-heritage .mcore-cta { color: var(--mo-gold); }
   /* 企业卡（2026-10-31）：从细横条升级为整卡——
      与书法卡同版面同字号，只在底色/描边上区分「B 端」：
      淡朱砂底 + 实线朱砂边（比主卡更"商务"，但仍是同一族纸色，不引入新色系）。
      无箭头：前进语义交给 .mcore-cta 文字，三卡一致。 */
   .mcore-biz { background: rgba(165, 72, 59, .055); border: 1px solid rgba(165, 72, 59, .28); color: var(--ink); }
-  .mcore-biz .mcore-tag { background: rgba(165, 72, 59, .1); color: var(--cinnabar); }
+  .mcore-biz .mcore-tag { background: rgba(255, 251, 246, .92); border: 1px solid rgba(165, 72, 59, .26); color: var(--cinnabar); }
   .mcore-biz .mcore-cta { color: var(--cinnabar); }
 </style>

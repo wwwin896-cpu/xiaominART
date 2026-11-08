@@ -241,7 +241,7 @@ const itemCount = showcaseItemCount;
         <span class="eyebrow">见自己 / 修身入口</span>
         <h2 id="self-title" class="serif">看见，是理解的开始；<br />理解，是修身的入口。</h2>
         <p>当文化有了形，便成了你案头的一幅字。</p>
-        <p class="self-close">当一个字被认真辨认，一段历史便不再遥远；<br />当一种书写被慢慢临习，心性也会随之沉静下来。</p>
+        <p class="self-close">当书写被慢慢临习，心性会随之沉静下来。</p>
       </div>
     </div>
   </section>
@@ -255,10 +255,13 @@ const itemCount = showcaseItemCount;
     </div>
     <p class="brand-body" data-reveal>小民艺术承接的，不只是古文字的形，更是它背后的来处：看见文明的源头，理解汉字的深意，解读先人的智慧，并在书写中安顿自己。</p>
     <p class="brand-body brand-close" data-reveal>我们希望，每一个走进小民艺术的人，都能在方寸之间，找到属于自己的心意之选。</p>
+    {/* 2026-11-09 业主：三枚入口文案重写、字面要整齐。
+        每枚统一为「编号 + 四/五字题 + 一行三词」，三个小字都是「· · ·」同节奏，
+        左缘对齐、行距一致，扫一眼就是一组，不是三条长短不齐的句子。 */}
     <ul class="brand-facts" data-reveal>
-      <li><a href="/partners/museum-tourism/"><span class="mono">壹</span>博物馆与文旅合作</a></li>
-      <li><a href="/partners/heritage/"><span class="mono">贰</span>非遗面塑传承</a></li>
-      <li><a href="/about/"><span class="mono">叁</span>以书法解读历史</a></li>
+      <li><a href="/partners/museum-tourism/"><strong class="serif fact-title"><span class="mono fact-no">壹</span>博物馆合作</strong><small class="fact-sub">展览 · 研学 · 文旅</small></a></li>
+      <li><a href="/partners/heritage/"><strong class="serif fact-title"><span class="mono fact-no">贰</span>非遗面塑</strong><small class="fact-sub">雅集 · 团建 · 校园</small></a></li>
+      <li><a href="/about/"><strong class="serif fact-title"><span class="mono fact-no">叁</span>字源解读</strong><small class="fact-sub">甲骨 · 金文 · 石鼓</small></a></li>
     </ul>
     <a class="btn btn-primary brand-cta" href="/about/" data-reveal>走进小民艺术</a>
   </section>
@@ -426,9 +429,15 @@ const itemCount = showcaseItemCount;
   .brand-landing .brand-body { grid-column: 6 / -1; grid-row: 1; margin: 0; padding: 26px 30px; border: 1px solid var(--line-soft); border-radius: var(--radius-md); background: var(--paper-light); font-size: 15px; line-height: 2.05; align-self: stretch; display: flex; align-items: center; }
   .brand-landing .brand-body.brand-close { grid-column: 1 / 6; grid-row: 2; font-family: var(--font-display-zh); color: var(--ink); }
   .brand-landing .brand-facts { grid-column: 6 / -1; grid-row: 2; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; list-style: none; margin: 0; padding: 0; }
-  .brand-facts a { display: flex; flex-direction: column; justify-content: center; gap: 6px; min-height: 84px; padding: 14px 18px; border: 1px solid var(--line-soft); border-radius: var(--radius-md); background: var(--paper-light); color: var(--ink-soft); font-size: 13.5px; letter-spacing: .04em; transition: transform .35s var(--ease-out), box-shadow .35s var(--ease-out), color .3s ease, border-color .3s ease; }
-  .brand-facts a:hover { color: var(--cinnabar); border-color: rgba(165, 72, 59, .3); transform: translateY(-4px); box-shadow: var(--lift-shadow-sm); }
-  .brand-facts .mono { color: var(--cinnabar); font-size: 12px; }
+  /* 三枚入口（2026-11-09 业主：突出悬浮感、字面排列舒适整齐）——
+     从「描边小盒」改成「浮起的纸片」：常驻一层柔影把卡托起，
+     悬停时整片再抬 5px、影子拉长，边界用发丝线勾住而不是重描边。
+     每片内部是「编号 + 题」一行、「三词」一行，两行左缘对齐、间距统一。 */
+  .brand-facts a { display: flex; flex-direction: column; justify-content: center; gap: 7px; min-height: 88px; padding: 15px 17px; border: 1px solid var(--line-soft); border-radius: var(--radius-md); background: var(--paper-light); color: var(--ink); text-decoration: none; box-shadow: 0 1px 1px rgba(74, 60, 34, .04), 0 10px 22px -16px rgba(74, 60, 34, .32); transition: transform .35s var(--ease-out), box-shadow .35s var(--ease-out), border-color .3s ease; }
+  .brand-facts a:hover { border-color: rgba(165, 72, 59, .3); transform: translateY(-5px); box-shadow: 0 2px 2px rgba(74, 60, 34, .05), 0 20px 34px -18px rgba(74, 60, 34, .42); }
+  .brand-facts .fact-title { display: flex; align-items: baseline; gap: 8px; font-size: 15.5px; font-weight: 500; letter-spacing: .05em; line-height: 1.45; }
+  .brand-facts .fact-no { flex: none; color: var(--cinnabar); font-size: 11px; letter-spacing: .08em; }
+  .brand-facts .fact-sub { color: var(--muted); font-size: 11.5px; letter-spacing: .05em; line-height: 1.5; }
   .brand-landing > .btn { grid-column: 1 / 6; grid-row: 3; justify-self: start; margin-top: 4px; }
   /* 「走进小民艺术」：2026-10-31 业主指定居中、去掉箭头。
      桌面从 grid 左列靠左改为跨满 12 列居中，与上方三张卡的中轴对称。 */
@@ -577,7 +586,11 @@ const itemCount = showcaseItemCount;
     .brand-landing .section-lead, .brand-landing .brand-body { margin-bottom: 16px; padding: 24px 20px; }
     /* 移动端：页面是 block 布局，按钮加左右 auto 才真正居中 */
     .brand-landing > .brand-cta { display: flex; width: max-content; margin: 6px auto 0; }
-    .brand-facts { grid-template-columns: 1fr 1fr; }
+    /* 注意特异性：桌面规则是 .brand-landing .brand-facts（0,2,0），
+       单类名 .brand-facts 压不过它——旧版移动端 3 列挤排、标题折行就是这一处失守 */
+    .brand-landing .brand-facts { grid-template-columns: 1fr; gap: 10px; }
+    .brand-facts a { min-height: 0; padding: 14px 18px; }
+    .brand-facts .fact-title { justify-content: center; }
     .choice-grid { grid-template-columns: 1fr; gap: 22px; }
     .zodiac-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 12px; }
     .zodiac-copy { padding: 11px 11px 13px; gap: 6px; }
@@ -586,7 +599,13 @@ const itemCount = showcaseItemCount;
     .zodiac-tag { font-size: 10px; }
     .story-grid { grid-template-columns: 1fr; gap: 20px; }
     .process-rail { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 16px; padding-bottom: 8px; margin: 0 -16px; padding-inline: 16px; }
-    .process-card { flex: 0 0 74%; scroll-snap-align: start; }
+    /* 2026-11-09 业主：壹贰叁肆 的文字排列要紧凑居中。
+       原卡右侧留 18px 内边距，居中文字整体偏左 9px；改成左右等距，
+       编号与标题、标题与正文的间距一并收紧。 */
+    .process-card { flex: 0 0 74%; scroll-snap-align: start; padding: 15px 12px 0; }
+    .step-no { display: block; margin-bottom: 5px; font-size: 12px; letter-spacing: .1em; }
+    .process-card h3 { font-size: 18px; letter-spacing: .06em; margin: 6px 0 7px; }
+    .process-card p { font-size: 13px; line-height: 1.8; max-width: 21em; margin: 0 auto; }
     /* ── 2026-11-08 业主：移动端首页每个栏目的文字一律居中对齐（桌面不动）──
        栏目导语、品牌正文、壹贰叁背书卡、见自己/客户分享/01 板块/四步流程/
        见艺术 bento/生肖区块，以及双核卡，全部居中。 */
