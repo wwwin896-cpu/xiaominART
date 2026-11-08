@@ -587,5 +587,19 @@ const itemCount = showcaseItemCount;
     .story-grid { grid-template-columns: 1fr; gap: 20px; }
     .process-rail { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 16px; padding-bottom: 8px; margin: 0 -16px; padding-inline: 16px; }
     .process-card { flex: 0 0 74%; scroll-snap-align: start; }
+    /* ── 2026-11-08 业主：移动端首页每个栏目的文字一律居中对齐（桌面不动）──
+       栏目导语、品牌正文、壹贰叁背书卡、见自己/客户分享/01 板块/四步流程/
+       见艺术 bento/生肖区块，以及双核卡，全部居中。 */
+    .section-lead { text-align: center; }
+    .brand-landing .brand-body { text-align: center; }
+    .brand-facts a { align-items: center; text-align: center; }
+    .self-copy { text-align: center; align-items: center; }
+    .story-copy { text-align: center; align-items: center; }
+    .choice-copy { text-align: center; }
+    .process-card { text-align: center; }
+    .origin-node { text-align: center; align-items: center; }
+    .zodiac-head { text-align: center; }
+    .zodiac-copy { text-align: center; }
+    :global(.mcore-card) { text-align: center; align-items: center; }
   }
 </style>
