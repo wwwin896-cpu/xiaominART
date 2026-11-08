@@ -96,7 +96,8 @@ for (const p of giftProducts) {
     alt: `${p.name}｜${p.sceneLabel}`,
     char: p.visual || '禮',
     title: p.name,
-    tag: `${p.sceneLabel} · ${p.price}`,
+    // 场景标签改后为「甲、乙、丙」多场景串：弹层小签只取首项，整串放详情页
+    tag: `${p.sceneLabel.split(/[、，]/)[0]} · ${p.price}`,
     tagShort: p.sceneLabel,
     price: p.price,
     desc: p.meaning,
@@ -347,11 +348,12 @@ const tilesJson = JSON.stringify(tiles);
       <strong class="mshow-price" data-ms-detail-price></strong>
       <p data-ms-detail-desc></p>
       <dl class="mshow-specs" data-ms-detail-specs></dl>
+      {/* 2026-11-09 业主：去掉「就这件，问问看」；「详情」放前、「收藏」放后，
+          两枚做成胶囊并排 —— 详情是主去处的入口，收藏是顺手的一下 */}
       <div class="mshow-detail-actions">
-        <button class="btn btn-primary" type="button" data-dm-open>就这件，问问看</button>
-        <button class="btn btn-secondary mshow-detail-fav" type="button" data-ms-detail-fav aria-pressed="false">♡ 收藏</button>
+        <a class="mshow-pill mshow-pill-solid" data-ms-detail-link href="/gifts/">详情</a>
+        <button class="mshow-pill mshow-pill-ghost mshow-detail-fav" type="button" data-ms-detail-fav aria-pressed="false">♡ 收藏</button>
       </div>
-      <a class="mshow-detail-link" data-ms-detail-link href="/gifts/">看完整介绍</a>
     </div>
   </div>
 </div>
@@ -801,10 +803,13 @@ const tilesJson = JSON.stringify(tiles);
     .mshow-specs div { display: block; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--card, #fffdf7); }
     .mshow-specs dt { display: block; margin: 0 0 2px; color: var(--ink); font-size: 13px; font-weight: 600; }
     .mshow-specs dd { margin: 0; color: var(--ink-soft); font-size: 12px; line-height: 1.6; }
-    .mshow-detail-actions { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; }
-    .mshow-detail-actions .btn { min-height: 48px; font-size: 14px; letter-spacing: .06em; padding: 10px 12px; }
-    .mshow-detail-fav.is-saved { border-color: rgba(192, 57, 43, .5); color: var(--cinnabar); background: rgba(192, 57, 43, .06); }
-    .mshow-detail-link { display: block; margin: 14px 0 4px; color: var(--cinnabar); font-size: 13px; text-align: center; }
+    /* 胶囊双键（2026-11-09）：详情实心在前、收藏描边在后，居中并排 */
+    .mshow-detail-actions { display: flex; gap: 10px; justify-content: center; margin: 4px 0 6px; }
+    .mshow-pill { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 10px 30px; border-radius: 999px; font-size: 14px; letter-spacing: .1em; text-decoration: none; transition: transform .18s ease; }
+    .mshow-pill:active { transform: scale(.96); }
+    .mshow-pill-solid { background: var(--cinnabar); color: var(--paper-light); border: 1px solid var(--cinnabar); }
+    .mshow-pill-ghost { background: transparent; color: var(--ink); border: 1px solid rgba(120, 100, 60, .4); }
+    .mshow-detail-fav.is-saved { color: var(--cinnabar); border-color: rgba(192, 57, 43, .5); background: rgba(192, 57, 43, .06); }
 
     /* ── 分类面板（2026-11-08 二轮）──
        四格瓷片+字模图标改成流式药丸：信息密度低、扫读快，
