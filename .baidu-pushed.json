@@ -1,7 +1,7 @@
 {
   "version": 1,
   "site": "https://xiaominart.com",
-  "updatedAt": "2026-11-08T03:15:26.784Z",
+  "updatedAt": "2026-11-11T12:14:12.923Z",
   "urls": {
     "https://xiaominart.com/": {
       "pushedAt": "2026-11-08",
@@ -14,9 +14,9 @@
       "count": 5
     },
     "https://xiaominart.com/gifts/ready-made/": {
-      "pushedAt": "2026-11-08",
-      "lastmod": "2026-11-07",
-      "count": 8
+      "pushedAt": "2026-11-11",
+      "lastmod": "2026-11-08",
+      "count": 9
     },
     "https://xiaominart.com/gift-guide/": {
       "pushedAt": "2026-10-28",
@@ -29,9 +29,9 @@
       "count": 2
     },
     "https://xiaominart.com/artists/": {
-      "pushedAt": "2026-11-08",
-      "lastmod": "2026-11-07",
-      "count": 8
+      "pushedAt": "2026-11-11",
+      "lastmod": "2026-11-08",
+      "count": 9
     },
     "https://xiaominart.com/business-gifts/": {
       "pushedAt": "2026-10-31",
@@ -144,14 +144,14 @@
       "count": 1
     },
     "https://xiaominart.com/privacy/": {
-      "pushedAt": "2026-11-06",
-      "lastmod": "2026-10-12",
-      "count": 1
+      "pushedAt": "2026-11-11",
+      "lastmod": "2026-11-11",
+      "count": 2
     },
     "https://xiaominart.com/works/": {
-      "pushedAt": "2026-11-08",
-      "lastmod": "2026-11-07",
-      "count": 2
+      "pushedAt": "2026-11-11",
+      "lastmod": "2026-11-08",
+      "count": 3
     },
     "https://xiaominart.com/stories/": {
       "pushedAt": "2026-11-08",
@@ -164,9 +164,9 @@
       "count": 1
     },
     "https://xiaominart.com/zodiac/": {
-      "pushedAt": "2026-11-08",
-      "lastmod": "2026-11-07",
-      "count": 2
+      "pushedAt": "2026-11-11",
+      "lastmod": "2026-11-08",
+      "count": 3
     },
     "https://xiaominart.com/intangible/": {
       "pushedAt": "2026-11-06",
@@ -174,24 +174,24 @@
       "count": 1
     },
     "https://xiaominart.com/verify/": {
-      "pushedAt": "2026-11-08",
-      "lastmod": "2026-11-07",
-      "count": 2
+      "pushedAt": "2026-11-11",
+      "lastmod": "2026-11-08",
+      "count": 3
     },
     "https://xiaominart.com/gifts/quiet-entry-gift/": {
-      "pushedAt": "2026-11-07",
-      "lastmod": "2026-11-06",
-      "count": 1
+      "pushedAt": "2026-11-11",
+      "lastmod": "2026-11-08",
+      "count": 2
     },
     "https://xiaominart.com/gifts/cinnabar-note-gift/": {
-      "pushedAt": "2026-11-07",
-      "lastmod": "2026-11-06",
-      "count": 1
+      "pushedAt": "2026-11-11",
+      "lastmod": "2026-11-08",
+      "count": 2
     },
     "https://xiaominart.com/gifts/seasonal-letter-gift/": {
-      "pushedAt": "2026-11-07",
-      "lastmod": "2026-11-06",
-      "count": 1
+      "pushedAt": "2026-11-11",
+      "lastmod": "2026-11-08",
+      "count": 2
     },
     "https://xiaominart.com/gifts/qin-se-he-ming-gift/": {
       "pushedAt": "2026-11-07",
@@ -219,9 +219,9 @@
       "count": 1
     },
     "https://xiaominart.com/oracle/": {
-      "pushedAt": "2026-11-08",
-      "lastmod": "2026-11-07",
-      "count": 1
+      "pushedAt": "2026-11-11",
+      "lastmod": "2026-11-08",
+      "count": 2
     }
   }
 }
