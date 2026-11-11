@@ -201,7 +201,19 @@ async function main() {
   }
 
   // ④ 详情浏览
-  const detailPath = LIVE ? '/gifts/' : await pickGiftDetail();
+  // v30 后 /gifts/ 主列表已不放商品卡，商品详情入口集中在 /gifts/ready-made/（现货）；
+  // 统一从 ready-made 列表页抓第一个详情链接，本地与线上同一套逻辑。
+  let detailPath = null;
+  try {
+    await page.goto(`${base}/gifts/ready-made/`, { waitUntil: 'networkidle' });
+    detailPath = await page.evaluate(() => {
+      const links = [...document.querySelectorAll('a[href*="/gifts/ready-made/"]')]
+        .map((a) => a.getAttribute('href'))
+        .filter((h) => h && !/\/gifts\/ready-made\/?$/.test(h));
+      return links[0] || null;
+    });
+  } catch { /* 线上抓取失败时跳过详情段 */ }
+  if (!detailPath && !LIVE) detailPath = await pickGiftDetail();
   if (detailPath) {
     await page.goto(`${base}${detailPath}`, { waitUntil: 'networkidle' });
     await page.waitForTimeout(600);
@@ -220,14 +232,15 @@ async function main() {
       check('加入心愿单 wishlist_add 已上报', false, '页面上找不到 [data-wishlist]');
     }
 
-    // ⑥ 点击获取方案（详情页 CTA）
-    const cta = page.locator('[data-event="gift_advice_click"], [data-event="custom_inquiry_start"]').first();
+    // ⑥ 点击获取方案（详情页 CTA：好礼是获取送礼建议，现货是「咨询这一幅」）
+    const CTA_EVENTS = ['gift_advice_click', 'custom_inquiry_start', 'ready_work_click'];
+    const cta = page.locator(CTA_EVENTS.map((e) => `[data-event="${e}"]`).join(', ')).first();
     if (await cta.count()) {
       await Promise.all([
         page.waitForTimeout(1200),
         cta.click({ force: true }).catch(() => undefined),
       ]);
-      const advice = events.find((e) => ['gift_advice_click', 'custom_inquiry_start'].includes(e.name));
+      const advice = events.find((e) => CTA_EVENTS.includes(e.name));
       check('点击获取方案事件已上报', Boolean(advice), advice ? `${advice.name}` : '未收到');
     } else {
       check('点击获取方案事件已上报', false, '详情页找不到对应 CTA');
