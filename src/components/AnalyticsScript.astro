@@ -36,6 +36,14 @@ const { gaId, umamiSrc, umamiId, clarityId, baiduId } = Astro.props;
 
 <script is:inline set:html={`(function(){
   var consent=window.__xmConsent===true;
+  // ⚠ 2026-11-02 修（严重）：本脚本在 <head> 执行，而 CookieConsent 的
+  //   内联脚本在 <body> 末尾才跑 —— 所以除了「用户刚在本页点了同意」那一次，
+  //   window.__xmConsent 永远是 undefined。后果是：用户同意过一次之后，
+  //   只要跳转到任何新页面，hm.js 就再也不会加载（首访那页有数据，之后全无）。
+  //   这正是「统计基本没数据」的第二个根因。
+  //   修法：head 里直接读 localStorage（同步、无需等 CookieConsent），
+  //   让它成为不依赖脚本顺序的判据。
+  if(!consent){try{consent=localStorage.getItem('xiaominart-consent')==='accept';}catch(e){}}
   var BAIDU=${baiduId ? JSON.stringify(baiduId) : 'null'};
   var GA=${gaId ? JSON.stringify(gaId) : 'null'};
   var UMAMI_SRC=${umamiSrc ? JSON.stringify(umamiSrc) : 'null'};

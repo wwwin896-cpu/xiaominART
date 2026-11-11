@@ -270,12 +270,22 @@ const EVENT_URL = '/api/event';
  *
  * 未同意统计（或百度脚本未加载）时 `_hmt.push` 会被忽略，
  * 不影响第一方上报 —— 这条链路不依赖第三方。
+ *
+ * ⚠ 2026-11-02 修：这里原本写的是 `if (!Array.isArray(hmt)) return;`，
+ * 是错的 —— hm.js 一旦加载完成，百度会把 `window._hmt` 从**数组**换成
+ * 一个带 `push` 方法的**对象**（实测 keys: id / cmd / push）。
+ * 于是「同意之后」发生的所有事件（详情浏览、加心愿单、点 CTA、表单提交）
+ * 全被这行判断挡掉，一条都没进百度后台 —— 表现就是业主看到的
+ * 「事件分析里没有这项指标」。现在只要求「有 push 方法」，
+ * 数组（脚本加载前，push 即入队）与对象（加载后）都能进。
  */
 function mirrorToBaidu(name: string, data: Record<string, unknown>): void {
   try {
-    const hmt = (window as unknown as { _hmt?: Array<unknown[]> })._hmt;
-    if (!Array.isArray(hmt)) return;
-    const label = [data.ch, data.slot || data.slug || data.form].filter(Boolean).join('/');
+    const hmt = (window as unknown as { _hmt?: { push?: (args: unknown[]) => void } })._hmt;
+    if (!hmt || typeof hmt.push !== 'function') return;
+    // 百度事件四元组：类别 / 动作 / 标签 / 数值。
+    // 类别固定 funnel，后台「事件分析」按类别筛即可看到全部四段漏斗。
+    const label = [data.ch, data.slot || data.slug || data.form].filter(Boolean).join('/').slice(0, 120);
     hmt.push(['_trackEvent', 'funnel', name, label, 1]);
   } catch {
     /* 忽略 */

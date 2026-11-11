@@ -117,6 +117,27 @@ async function main() {
   const { chromium } = await loadPlaywright();
   const browser = await chromium.launch();
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 960 } });
+  // 在文档创建前钩住 window._hmt：百度把 _hmt 从数组换成对象（带 push）后，
+  // 事件是靠这个 push 出去的。包装它，就能确认「_trackEvent 真的被推给了百度」，
+  // 而不是只确认「我们调用了 trackEvent」—— 上一版验收就漏了这一层。
+  await ctx.addInitScript(() => {
+    window.__hmtCalls = [];
+    let real;
+    Object.defineProperty(window, '_hmt', {
+      configurable: true,
+      get() { return real; },
+      set(value) {
+        real = value;
+        if (value && typeof value.push === 'function') {
+          const orig = value.push.bind(value);
+          value.push = (...args) => {
+            try { window.__hmtCalls.push(args[0]); } catch { /* 忽略 */ }
+            return orig(...args);
+          };
+        }
+      },
+    });
+  });
   const page = await ctx.newPage();
 
   const events = [];
@@ -249,7 +270,21 @@ async function main() {
     check('商品详情浏览 gift_detail_view 已上报', false, 'dist 里找不到商品详情页');
   }
 
-  // ⑦ 表单提交成功（本地拦截 /api/lead 返回 ok）
+  // ⑦ 百度镜像：事件是否真的进了 _hmt（业主看到「事件分析里没有这项指标」的直接原因
+  //    就是这里曾有一行 Array.isArray 判断把加载后的事件全挡掉了）
+  if (detailPath) {
+    const hmtCalls = await page.evaluate(() => (window.__hmtCalls || []).map((a) => (Array.isArray(a) ? a.join('|') : String(a))));
+    const funnelCalls = hmtCalls.filter((s) => s.startsWith('_trackEvent|funnel|'));
+    check('百度镜像 _trackEvent 已推进 _hmt', funnelCalls.length > 0, funnelCalls.length ? `${funnelCalls.length} 条 · ${funnelCalls.slice(0, 3).join(' , ')}` : '一条都没有（_hmt.push 未被调用）');
+    const mirrored = ['gift_detail_view', 'wishlist_add'];
+    check('详情浏览与加心愿单均已镜像给百度', mirrored.every((n) => funnelCalls.some((s) => s.includes(`|${n}|`))), funnelCalls.map((s) => s.split('|')[2]).join(','));
+    // 百度自定义事件打点：hm.gif?…&ep=funnel*<事件名>*<标签>*1&et=4
+    // （et=0 页面浏览、et=3 停留/滚动，只有 et=4 且 ep 以 funnel* 开头才是我们的漏斗事件）
+    const eventHit = baiduReqs.find((u) => /[?&]ep=funnel\*/.test(u));
+    check('百度收到事件打点请求（ep=funnel*…&et=4）', Boolean(eventHit), eventHit ? decodeURIComponent(eventHit).replace(/^.*(ep=[^&]*).*$/, '$1') : '只看到页面浏览打点，未看到 funnel 事件');
+  }
+
+  // ⑧ 表单提交成功（本地拦截 /api/lead 返回 ok）
   if (!LIVE) {
     await page.goto(`${base}/custom-commission/`, { waitUntil: 'networkidle' });
     // 选择器必须限定在 .commission-form 内：页面上还有订阅表单，
@@ -268,7 +303,7 @@ async function main() {
     check('表单提交确实调用了 /api/lead', Boolean(lastLead), lastLead ? `${String(lastLead).slice(0, 60)}…` : '未发出');
   }
 
-  // ⑧ 汇总
+  // ⑨ 汇总
   const total = results.filter((r) => r.pass).length;
   console.log(`\n结果：${total}/${results.length} 通过\n`);
   if (events.length) {
