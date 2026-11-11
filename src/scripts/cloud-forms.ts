@@ -3,6 +3,8 @@
 // 为什么不直连云端：云服务端强制精确 Origin 匹配，www.xiaominart.com 不在白名单，
 // 浏览器直连会在预检阶段被 403 拦截。同源代理请求无 CORS 限制。
 // publishableKey 已收敛到服务端，不再进入前端打包产物。
+import { attributionFields } from './attribution';
+
 export type SubmitOutcome = { ok: boolean; message?: string };
 
 const FALLBACK_EMAIL = 'hi@xiaominart.com';
@@ -94,6 +96,9 @@ async function postToApi(body: Record<string, unknown>): Promise<SubmitOutcome> 
   }
 }
 
+/** 同一会话内的提交尝试序号：失败重试也要计数，不能被 trackEvent 的会话内去重吃掉。 */
+let leadAttempts = 0;
+
 /** 提交线索到 leads 表（formType: quick_message / commission / business_gift） */
 export async function submitLead(
   formType: string,
@@ -105,6 +110,14 @@ export async function submitLead(
   // 表单是否成功，本身就是最重要的一类转化事件（失败会吃掉线索）
   if (formType === 'commission') trackEvent('consultation_submit', { status: result.ok ? 'success' : 'error' });
   if (formType === 'business_gift') trackEvent('business_brief_submit', { status: result.ok ? 'success' : 'error' });
+  // 2026-11-02（漏斗闭环）：上面两条是「业务口径」，只覆盖两类表单；这里补一条
+  // **全表单通用**的成功/失败事件，让四个漏斗的最后一环在任何表单上都能统计到。
+  // 失败必须单独记：失败会真实吃掉线索，只统计成功等于把问题藏起来。
+  trackEvent(result.ok ? 'lead_submit_success' : 'lead_submit_fail', {
+    form: formType,
+    reason: result.ok ? undefined : String(result.message || '').slice(0, 60),
+    attempt: ++leadAttempts,
+  } as Record<string, unknown>);
   return result;
 }
 
@@ -234,23 +247,58 @@ const TRACKED_EVENTS = new Set([
   'archive_share_click',
   'archive_follow_click',
   'archive_query_click',
+  // ── 2026-11-02：四段核心漏斗（渠道 → 详情 → 心愿单 → 方案 → 提交）──
+  // 此前这四环各有缺口：详情页浏览从未上报、加心愿单完全没有埋点、
+  // 表单失败不计数、且所有事件都不带渠道。事件含义见 docs/事件字典.md。
+  'landing_view',          // 落地（带 ch 渠道，用于算各渠道的访问量分母）
+  'gift_detail_click',     // 列表/卡片 → 详情（原挂在 gift_detail_view 上，语义含混）
+  'gift_detail_view',      // 详情页浏览（真正的「商品详情浏览」）
+  'wishlist_add',          // 加入心愿单（卡片 / 详情页 / 抽屉，统一由 wishlist.ts 广播）
+  'wishlist_remove',       // 移出心愿单（同上）
+  'lead_submit_success',   // 任意表单提交成功
+  'lead_submit_fail',      // 任意表单提交失败（失败会吃掉线索，必须单列）
 ]);
 
 const EVENT_URL = '/api/event';
+
+/**
+ * 把事件镜像到百度统计的「事件分析」。
+ *
+ * 为什么还要镜像：第一方 /api/event 能回答「谁点了什么」，但回答不了
+ * 「这次访问从哪个渠道来、停留多久、跳出在哪」—— 那些是 hm.js 的活。
+ * 两套各记一份，靠事件名与渠道字段对齐，才能把渠道 → 漏斗串起来。
+ *
+ * 未同意统计（或百度脚本未加载）时 `_hmt.push` 会被忽略，
+ * 不影响第一方上报 —— 这条链路不依赖第三方。
+ */
+function mirrorToBaidu(name: string, data: Record<string, unknown>): void {
+  try {
+    const hmt = (window as unknown as { _hmt?: Array<unknown[]> })._hmt;
+    if (!Array.isArray(hmt)) return;
+    const label = [data.ch, data.slot || data.slug || data.form].filter(Boolean).join('/');
+    hmt.push(['_trackEvent', 'funnel', name, label, 1]);
+  } catch {
+    /* 忽略 */
+  }
+}
 
 /** 上报一个转化事件；同一事件在同一会话内只发一次，避免重复计数 */
 const sent = new Set<string>();
 export function trackEvent(name: string, data: Record<string, unknown> = {}): void {
   if (!TRACKED_EVENTS.has(name)) return;
-  const key = `${name}:${JSON.stringify(data)}`;
+  // 每条事件自动带上渠道（ch/src/cmp/lp）—— 调用方不必逐处传，
+  // 也不会出现「某个新加的按钮忘了带来源」这种半途而废的归因。
+  const enriched: Record<string, unknown> = { ...data, ...attributionFields() };
+  const key = `${name}:${JSON.stringify(enriched)}`;
   if (sent.has(key)) return;
   sent.add(key);
+  mirrorToBaidu(name, enriched);
   try {
     void fetch(EVENT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       keepalive: true,
-      body: JSON.stringify({ name, page: window.location.pathname, data }),
+      body: JSON.stringify({ name, page: window.location.pathname, data: enriched }),
     }).catch(() => undefined);
   } catch {
     // 忽略：统计不影响任何业务操作

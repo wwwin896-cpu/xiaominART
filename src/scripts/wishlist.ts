@@ -47,6 +47,15 @@ export function toggleWishlist(slug: string): boolean {
   const items = readWishlist();
   const saved = items.includes(slug);
   writeWishlist(saved ? items.filter((item) => item !== slug) : [...items, slug]);
+  // 2026-11-02（漏斗第二环）：加入/移出心愿单此前**完全没有埋点**——
+  // 卡片、详情页、抽屉三处各写了一遍点击逻辑，没有任何一处上报。
+  // 与其在三处各加一行调用（下次再接第四个入口又会漏），不如在唯一的
+  // 状态变更点广播：任何入口的收藏动作都会经过这里。
+  try {
+    window.dispatchEvent(new CustomEvent('xiaominart:wishlist-toggle', { detail: { slug, saved: !saved } }));
+  } catch {
+    /* 忽略：广播失败不影响收藏本身 */
+  }
   return !saved;
 }
 

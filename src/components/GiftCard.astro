@@ -19,7 +19,7 @@ const { product } = Astro.props as { product: GiftProduct };
     <div class="gift-card-meta"><strong>{product.price}</strong><span>{product.dispatch}</span></div>
     <div class="gift-card-actions">
       <button class="wishlist-button btn btn-secondary" type="button" data-wishlist={product.slug} aria-pressed="false">♡ 加入心愿单</button>
-      <a class="btn btn-link" href={`/gifts/${product.slug}/`} data-event="gift_detail_view">查看详情 →</a>
+      <a class="btn btn-link" href={`/gifts/${product.slug}/`} data-event="gift_detail_click">查看详情 →</a>
     </div>
   </div>
 </article>

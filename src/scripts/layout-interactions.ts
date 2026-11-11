@@ -21,10 +21,31 @@
 import { trackEvent } from './cloud-forms';
 import { readWishlist, onWishlistChange } from './wishlist';
 import { initFormSuccessDialog } from './form-success-dialog';
+import { captureAttribution } from './attribution';
 
 // 表单成功弹层：集中在此初始化一次，各表单成功后派发
 // 'xiaominart:form-success' 事件即可弹出（见 form-success-dialog.ts）。
 initFormSuccessDialog();
+
+// ── ⓪ 渠道归因 + 落地上报（2026-11-02）──────────────────────────
+// 必须在任何事件之前跑：后面所有上报都要读这份归因（见 cloud-forms 的 trackEvent）。
+// 只写 sessionStorage，不设 Cookie —— 归因只回答「这一次访问从哪来」。
+captureAttribution();
+trackEvent('landing_view', { path: window.location.pathname, ref: document.referrer ? 1 : 0 });
+
+// 心愿单加入/移出：唯一的状态变更点在 scripts/wishlist.ts，这里只负责上报，
+// 因此卡片、详情页、抽屉、移动端作品流四处入口自动覆盖，不需要逐个挂。
+window.addEventListener('xiaominart:wishlist-toggle', (event) => {
+  const detail = ((event as CustomEvent).detail || {}) as { slug?: string; saved?: boolean };
+  if (!detail.slug) return;
+  // 判断「在哪收藏的」：作品详情页的收藏意图最强，和列表页刷到顺手收藏要分开看
+  const place = /^\/gifts\/[^/]+\/$|^\/gifts\/ready-made\/[^/]+\/$/.test(window.location.pathname)
+    ? 'detail'
+    : window.location.pathname === '/wishlist/'
+      ? 'wishlist'
+      : 'list';
+  trackEvent(detail.saved ? 'wishlist_add' : 'wishlist_remove', { slug: detail.slug, place });
+});
 
 // ── ① 移动端菜单开合 ──────────────────────────────────────────
 const toggle = document.querySelector('.menu-toggle');

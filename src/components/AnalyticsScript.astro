@@ -26,6 +26,14 @@ interface Props {
 const { gaId, umamiSrc, umamiId, clarityId, baiduId } = Astro.props;
 ---
 
+{/* 站点 ID 显式写进 HTML（下面这段注释 + meta），是为了让「到底接没接统计」
+    可以被任何人 30 秒内核实：查源码搜 baidu-tongji-id 即可。
+    此前 ID 只以 JS 变量形式存在于内联脚本里，肉眼搜不到，容易被误判为「没接」。
+    站点 ID 是公开标识（等同 GA4 measurement id），不是密钥。 */}
+{baiduId && <meta name="baidu-tongji-id" content={baiduId} />}
+<!-- 百度统计脚本在用户点「同意并启用」后才注入 hm.js（PIPL 单独同意要求）。
+     未同意时页面不会发出任何 hm.baidu.com 请求 —— 这是合规设计，不是未接入。 -->
+
 <script is:inline set:html={`(function(){
   var consent=window.__xmConsent===true;
   var BAIDU=${baiduId ? JSON.stringify(baiduId) : 'null'};

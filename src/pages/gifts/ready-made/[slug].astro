@@ -178,6 +178,15 @@ const productSchema = {
   </dialog>
   <script>
     import { isWishlisted, toggleWishlist, onWishlistChange } from '../../../scripts/wishlist';
+    import { trackEvent } from '../../../scripts/cloud-forms';
+    // 现货作品详情浏览：与「小民好礼」共用 gift_detail_view，靠 kind 区分。
+    // 两者是同一段漏斗（看作品 → 收藏 → 问价），分开会得到两条无法对比的曲线。
+    // 注意：Astro 的 <script> 是独立模块，读不到 frontmatter 的 work，
+    // slug 从已有的心愿单按钮 data-wishlist 取（该页一定有这一颗）。
+    const detailSlug = document.querySelector<HTMLElement>('[data-wishlist]')?.dataset.wishlist
+      || window.location.pathname.split('/').filter(Boolean).pop()
+      || '';
+    trackEvent('gift_detail_view', { slug: detailSlug, kind: 'ready' });
     const dialog = document.querySelector('[data-wx-dialog]') as HTMLDialogElement | null;
     document.querySelectorAll('[data-wx-open]').forEach((btn) => btn.addEventListener('click', () => dialog?.showModal()));
     dialog?.querySelector('[data-wx-close]')?.addEventListener('click', () => dialog?.close());

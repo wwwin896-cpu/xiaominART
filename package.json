@@ -20,7 +20,8 @@
     "build:server": "node server/build.mjs",
     "deploy:aliyun": "bash deploy/deploy.sh",
     "nginx:redirects": "node deploy/gen-nginx-redirects.mjs",
-    "check:llms": "node scripts/check-llms.mjs"
+    "check:llms": "node scripts/check-llms.mjs",
+    "verify:analytics": "node scripts/verify-analytics.mjs"
   },
   "dependencies": {
     "@astrojs/check": "latest",

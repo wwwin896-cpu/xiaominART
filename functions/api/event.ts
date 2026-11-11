@@ -102,6 +102,15 @@ const ALLOWED_EVENTS = new Set([
   'archive_share_click',
   'archive_follow_click',
   'archive_query_click',
+  // ── 2026-11-02：四段核心漏斗（渠道 → 详情 → 心愿单 → 方案 → 提交）──
+  // 与 src/scripts/cloud-forms.ts 的 TRACKED_EVENTS 同步登记；漏登记会被静默丢弃。
+  'landing_view',          // 落地（data.ch 为归一渠道：xiaohongshu / wechat / offline / search / referral / direct）
+  'gift_detail_click',     // 列表/卡片 → 详情
+  'gift_detail_view',      // 详情页浏览
+  'wishlist_add',          // 加入心愿单
+  'wishlist_remove',       // 移出心愿单
+  'lead_submit_success',   // 任意表单提交成功
+  'lead_submit_fail',      // 任意表单提交失败
 ]);
 
 // /api/* 是接口，不应被搜索引擎收录、也不应被缓存。

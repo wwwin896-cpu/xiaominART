@@ -49,8 +49,13 @@ const headlineSpecs = (specChapter?.specs || []).slice(0, 5);
 <section class="container section card-faq"><span class="eyebrow">Gift FAQ / 礼物常见问题</span><h2 class="serif">还有几个问题，直接在这里看。</h2><div class="faq-grid"><details><summary>可以写贺卡吗？</summary><p>可以。咨询时提交贺卡文字，我们会在确认礼物方向时一起确认字数、版式与包装。</p></details><details><summary>可以直接寄给收礼人吗？</summary><p>可以提出直寄需求；收件信息、是否去除价格信息和物流时效需根据具体方案确认。</p></details><details><summary>这件礼物可以退换吗？</summary><p>个性化内容和包装方案的售后边界不同。确认前会说明可退换范围，再决定是否进入下一步。</p></details><details><summary>如何开始？</summary><p>点击“获取送礼建议”，告诉我们送给谁、什么场景、预算和时间，我们会先阅读再回复。</p></details></div></section>
 <script>
   import { isWishlisted, toggleWishlist, onWishlistChange } from '../scripts/wishlist';
+  import { trackEvent } from '../scripts/cloud-forms';
   const button = document.querySelector<HTMLButtonElement>('[data-wishlist]');
   const slug = button?.dataset.wishlist || '';
+  // 商品详情浏览（漏斗第一环）。此前这一环是空的：列表卡的「查看详情」链接挂了
+  // gift_detail_view，真正的详情页反而没有任何上报 —— 拿到的只是「点击意向」，
+  // 不是「看了几件、看了哪些」。现在点击与浏览分成两个事件。
+  trackEvent('gift_detail_view', { slug, kind: 'gift', name: document.querySelector('h1')?.textContent?.trim().slice(0, 40) || '' });
   const sync = () => { if (!button) return; const saved = isWishlisted(slug); button.classList.toggle('is-saved', saved); button.setAttribute('aria-pressed', String(saved)); button.textContent = saved ? '♥ 已加入礼物清单' : '♡ 加入礼物清单'; };
   sync();
   button?.addEventListener('click', () => { toggleWishlist(slug); sync(); });
