@@ -27,6 +27,10 @@ const ALLOWLIST = new Set([
   '/gifts/bao-shou',
   '/gifts/qian-chang-zong-ma-xing',
   '/gifts/mei-shou',
+  // 博客空态页（2026-11-14）：后台「博客页面已上线」未打开时 /blog/ 渲染空态且
+  // noindex，sitemap 不输出 —— 属于故意为之（宁可少提交，不提交软 404）。
+  // 文章上线后 /blog/ 与 /blog/{slug}/ 会自动进 sitemap，本条无需删除。
+  '/blog',
 ]);
 
 // ---------- 收集 dist 里的页面 ----------

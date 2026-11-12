@@ -4,6 +4,7 @@ import { artists, work, channelPages, seasons } from '../data/content';
 import { getReadyMadeWorks } from '../lib/ready-made';
 import { getArchives } from '../lib/code-registry';
 import { lastmodFor } from '../lib/seo';
+import { getBlogPosts, type BlogPost } from '../lib/blog';
 
 // sitemap 只收录真实存在、未被重定向、且只有一个 URL 的最终页面。
 //
@@ -35,6 +36,20 @@ import { lastmodFor } from '../lib/seo';
 const P = (p: string) => `src/pages/${p}`;
 const GH = (p: string) => `src/components/${p}`;
 const CONTENT = ['src/data/content.ts'];
+
+/** 博客 lastmod：取所有文章里最新的发布/更新时间，退回今天。 */
+function blogLastmod(posts: BlogPost[]): string {
+  const dates = posts
+    .flatMap((p) => [p.updatedAt, p.publishedAt])
+    .filter((d): d is string => typeof d === 'string')
+    .map((d) => d.slice(0, 10))
+    .sort();
+  return dates.at(-1) || today();
+}
+
+function today(): string {
+  return new Date().toISOString().slice(0, 10);
+}
 
 // 静态路由：lastmod 只看该页自身模板（+ 确实驱动它内容的数据文件）
 const staticRoutes: { path: string; files: string[] }[] = [
@@ -146,8 +161,14 @@ const dynamicRoutes: { path: string; files: string[] }[] = [
 //   · occasions|recipients 的索引页（/occasions/ /recipients/）已整体 301 到 gift-guide/
 //   · progress/ wishlist/ keystatic/  功能页与后台，不需要收录
 // 发布校验：npm run check:sitemap（CI 在 build 后自动跑），任何可索引页漏图会直接报错
+//
+// 博客（2026-11-14）：文章存在运营后台数据库，构建期经 src/lib/blog.ts 拉取。
+// 后台「站点设置 · 博客页面已上线」未打开或接口不可达时返回 0 篇，
+// 此时 /blog/ 页面存在但 noindex，sitemap 一条 /blog/ 都不输出 ——
+// 「宁可少提交，也不提交软 404」（见《内容策略与选题库》第十节）。
+// lastmod 用后台的发布/更新时间（文章内容不在这套 git 仓库里，git 时间源失真）。
 
-export const GET: APIRoute = ({ site }) => {
+export const GET: APIRoute = async ({ site }) => {
   const base = (site ?? new URL('https://xiaominart.com')).toString().replace(/\/$/, '');
   const routes = [...staticRoutes, ...dynamicRoutes];
   const seen = new Set<string>();
@@ -156,10 +177,21 @@ export const GET: APIRoute = ({ site }) => {
     .map(({ path, files }) => {
       const lastmod = lastmodFor(files);
       return `  <url><loc>${base}/${path}</loc><lastmod>${lastmod}</lastmod></url>`;
-    })
-    .join('\n');
+    });
+
+  const blogPosts = await getBlogPosts();
+  if (blogPosts.length > 0) {
+    body.push(
+      `  <url><loc>${base}/blog/</loc><lastmod>${blogLastmod(blogPosts)}</lastmod></url>`
+    );
+    for (const post of blogPosts) {
+      const lastmod = (post.updatedAt || post.publishedAt || '').slice(0, 10) || today();
+      body.push(`  <url><loc>${base}/blog/${post.slug}/</loc><lastmod>${lastmod}</lastmod></url>`);
+    }
+  }
+
   return new Response(
-    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>`,
+    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body.join('\n')}\n</urlset>`,
     { headers: { 'Content-Type': 'application/xml; charset=utf-8' } },
   );
 };

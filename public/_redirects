@@ -20,9 +20,9 @@
 /faq/ /help/ 301
 /art-gift /gift-guide/ 301
 /art-gift/ /gift-guide/ 301
-/blog /about/ 301
-/blog/ /about/ 301
-/blog/* /about/ 301
+# 2026-11-14：/blog 三条 301 已删除 —— 博客页面正式启用（/blog/ 与 /blog/{slug}/）。
+# 注意：_redirects 的优先级高于静态页面，留着这三条会把真页面全部压成 /about/。
+# Cloudflare Pages 重定向优先于静态资源，故博客上线必须先删规则再发页面。
 /journal /about/ 301
 /journal/ /about/ 301
 /journal/* /about/ 301

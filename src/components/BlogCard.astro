@@ -1,10 +1,20 @@
 ---
+// 博客文章卡（2026-11-14 接入真实数据源）：字段全部可选——后台哪篇文章缺了
+// pillar/en，卡面就少渲染那一行，不留空标签。
 const { post } = Astro.props;
 ---
-<article class="blog-card"><span class="eyebrow">{post.pillar}</span><h3 class="serif">{post.title}</h3><p lang="en">{post.en}</p><p>{post.excerpt}</p><a class="btn btn-link" href={`/blog/${post.slug}/`}>阅读 / Read →</a></article>
+<article class="blog-card">
+  {post.pillar && <span class="eyebrow">{post.pillar}</span>}
+  <h3 class="serif"><a href={`/blog/${post.slug}/`}>{post.title}</a></h3>
+  {post.en && <p lang="en">{post.en}</p>}
+  {post.excerpt && <p>{post.excerpt}</p>}
+  <a class="btn btn-link" href={`/blog/${post.slug}/`}>阅读全文 →</a>
+</article>
 <style>
   .blog-card { border-top: 1px solid var(--line); padding: 18px 0 24px; }
   h3 { font-size: 29px; font-weight: 500; line-height: 1.35; margin: 12px 0 4px; }
+  h3 a { color: inherit; text-decoration: none; }
+  h3 a:hover { text-decoration: underline; text-underline-offset: 4px; }
   p { color: var(--ink-soft); font-size: 14px; margin: 7px 0; }
   p[lang='en'] { font: 17px var(--font-display-en), Georgia, serif; color: var(--ink); }
   .btn-link { display: inline-flex; margin-top: 14px; font-size: 12px; }

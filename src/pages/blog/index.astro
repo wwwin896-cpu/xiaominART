@@ -1,0 +1,60 @@
+---
+/**
+ * 博客索引（2026-11-14）
+ *
+ * 内容源：运营后台数据库，构建期经 src/lib/blog.ts 拉取。
+ * 后台「站点设置 · 博客页面已上线」打开、接口返回文章后，下一次构建本页
+ * 即列出文章并进 sitemap；拉不到文章时渲染空态并 noindex —— sitemap 不输出，
+ * 检查器经 ALLOWLIST 放行（scripts/check-sitemap.mjs）。宁缺毋滥，不出软 404。
+ */
+import Layout from '../../layouts/Layout.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import { getBlogPosts } from '../../lib/blog';
+
+const posts = await getBlogPosts();
+const hasPosts = posts.length > 0;
+---
+
+<Layout
+  title={hasPosts ? '小民艺术 · 手记' : '文章筹备中'}
+  description="写在你决定之前的话：送礼的字怎么选、挂多高、为什么手写比印刷贵。每篇文章都从真实的选择讲起。"
+  canonical={`${Astro.site?.toString().replace(/\/$/, '') ?? 'https://xiaominart.com'}/blog/`}
+  noindex={!hasPosts}
+>
+  <main class="wrap blog-page">
+    <header class="blog-head">
+      <span class="eyebrow">手记 · Notes</span>
+      <h1 class="serif">写在你决定之前</h1>
+      {
+        hasPosts ? (
+          <p class="blog-lead">
+            送礼的字怎么选、挂多高、怎么保养——这些是客人在买之前真正会问的问题。
+            我们把它们一篇一篇写下来，文章里的尺寸、价格、周期，都与作品页一致。
+          </p>
+        ) : (
+          <p class="blog-lead">文章正在一篇一篇写。第一篇写好之后，会出现在这里。</p>
+        )
+      }
+    </header>
+
+    {
+      hasPosts && (
+        <section class="blog-list">
+          {posts.map((post) => (
+            <BlogCard
+              post={{ slug: post.slug, title: post.title, en: post.en, pillar: post.pillar, excerpt: post.description }}
+            />
+          ))}
+        </section>
+      )
+    }
+  </main>
+</Layout>
+
+<style>
+  .blog-page { max-width: 720px; margin: 0 auto; padding: 64px 24px 96px; }
+  .blog-head { border-bottom: 1px solid var(--line); padding-bottom: 26px; }
+  h1 { font-size: 40px; font-weight: 500; margin: 12px 0 0; }
+  .blog-lead { color: var(--ink-soft); font-size: 15px; line-height: 1.9; margin: 14px 0 0; }
+  .blog-list { padding-top: 8px; }
+</style>

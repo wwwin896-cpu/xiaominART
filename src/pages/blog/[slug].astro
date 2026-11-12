@@ -1,0 +1,96 @@
+---
+/**
+ * 博客详情 /blog/{slug}/（2026-11-14）
+ *
+ * 静态构建：getStaticPaths 由后台文章列表驱动（构建期拉取）。
+ * · canonical 显式指向 /blog/{slug}/ 自己 —— 旧站 /blog/* 曾整体 301 到 /about/，
+ *   若不显式声明，一旦被别处覆盖就会重复《内容策略与选题库》诊断的软 404 问题。
+ * · 正文由 src/lib/blog.ts 的 renderBody 渲染：转义在先，md 语法在后。
+ * · 结构化数据 BlogPosting，帮助搜索引擎与 AI 助手把这篇文章当「文章」理解。
+ */
+import Layout from '../../layouts/Layout.astro';
+import { getBlogPosts, getBlogPostDetail, type BlogPost } from '../../lib/blog';
+
+export async function getStaticPaths() {
+  const posts = await getBlogPosts();
+  // 正文以详情接口为准（后台可能只把全文放在详情端点）；详情拉不到就用列表记录
+  const full = await Promise.all(
+    posts.map(async (p) => (await getBlogPostDetail(p.slug)) ?? p)
+  );
+  return full.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: BlogPost;
+}
+
+const { post } = Astro.props;
+const base = Astro.site?.toString().replace(/\/$/, '') ?? 'https://xiaominart.com';
+const canonical = `${base}/blog/${post.slug}/`;
+const dateStr = post.publishedAt?.slice(0, 10) ?? '';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.title,
+  description: post.description || undefined,
+  url: canonical,
+  datePublished: dateStr || undefined,
+  dateModified: post.updatedAt?.slice(0, 10) || dateStr || undefined,
+  author: { '@type': 'Organization', name: '小民艺术' },
+  publisher: { '@type': 'Organization', name: '小民艺术' },
+  keywords: post.keywords || undefined,
+};
+---
+
+<Layout
+  title={post.seoTitle}
+  description={post.description || post.title}
+  canonical={canonical}
+  ogType="article"
+>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <main class="wrap post-page">
+    <article>
+      <header class="post-head">
+        {post.pillar && <span class="eyebrow">{post.pillar}</span>}
+        <h1 class="serif">{post.title}</h1>
+        {(dateStr || post.en) && (
+          <p class="post-meta">
+            {post.en && <span lang="en">{post.en}</span>}
+            {dateStr && <time datetime={dateStr}>{dateStr}</time>}
+          </p>
+        )}
+      </header>
+
+      <div class="post-body" set:html={post.html} />
+
+      <footer class="post-foot">
+        <a class="btn btn-link" href="/blog/">返回手记 →</a>
+      </footer>
+    </article>
+  </main>
+</Layout>
+
+<style>
+  .post-page { max-width: 720px; margin: 0 auto; padding: 64px 24px 96px; }
+  .post-head { border-bottom: 1px solid var(--line); padding-bottom: 24px; }
+  h1 { font-size: 34px; font-weight: 500; line-height: 1.4; margin: 12px 0 0; }
+  .post-meta { color: var(--ink-soft); font-size: 13px; margin: 12px 0 0; }
+  .post-meta span[lang='en'] { font: 15px var(--font-display-en), Georgia, serif; color: var(--ink); margin-right: 12px; }
+  .post-body { padding-top: 26px; }
+  .post-body :global(p) { color: var(--ink); font-size: 15px; line-height: 2.0; margin: 14px 0; }
+  .post-body :global(h2) { font-size: 24px; font-weight: 500; margin: 36px 0 6px; }
+  .post-body :global(h3) { font-size: 19px; font-weight: 500; margin: 28px 0 6px; }
+  .post-body :global(h4) { font-size: 16px; font-weight: 500; margin: 24px 0 4px; }
+  .post-body :global(ul),
+  .post-body :global(ol) { padding-left: 22px; margin: 14px 0; }
+  .post-body :global(li) { color: var(--ink); font-size: 15px; line-height: 2.0; margin: 6px 0; }
+  .post-body :global(blockquote) { border-left: 2px solid var(--line); color: var(--ink-soft); margin: 18px 0; padding: 2px 0 2px 16px; }
+  .post-body :global(a) { text-decoration: underline; text-underline-offset: 3px; }
+  .post-body :global(img) { max-width: 100%; height: auto; border-radius: 6px; }
+  .post-foot { border-top: 1px solid var(--line); margin-top: 44px; padding-top: 20px; }
+</style>
