@@ -1,7 +1,7 @@
 {
   "version": 1,
   "site": "https://xiaominart.com",
-  "updatedAt": "2026-11-11T12:14:12.923Z",
+  "updatedAt": "2026-11-12T02:13:31.055Z",
   "urls": {
     "https://xiaominart.com/": {
       "pushedAt": "2026-11-08",
@@ -194,34 +194,59 @@
       "count": 2
     },
     "https://xiaominart.com/gifts/qin-se-he-ming-gift/": {
-      "pushedAt": "2026-11-07",
-      "lastmod": "2026-11-06",
-      "count": 1
+      "pushedAt": "2026-11-12",
+      "lastmod": "2026-11-08",
+      "count": 2
     },
     "https://xiaominart.com/gifts/desk-mountain-keepsake/": {
-      "pushedAt": "2026-11-07",
-      "lastmod": "2026-11-06",
-      "count": 1
+      "pushedAt": "2026-11-12",
+      "lastmod": "2026-11-08",
+      "count": 2
     },
     "https://xiaominart.com/gifts/ink-breath-teacher/": {
-      "pushedAt": "2026-11-07",
-      "lastmod": "2026-11-06",
-      "count": 1
+      "pushedAt": "2026-11-12",
+      "lastmod": "2026-11-08",
+      "count": 2
     },
     "https://xiaominart.com/gifts/xin-jing-ze-tai/": {
-      "pushedAt": "2026-11-07",
-      "lastmod": "2026-11-06",
-      "count": 1
+      "pushedAt": "2026-11-12",
+      "lastmod": "2026-11-08",
+      "count": 2
     },
     "https://xiaominart.com/gifts/an-ning/": {
-      "pushedAt": "2026-11-07",
-      "lastmod": "2026-11-06",
-      "count": 1
+      "pushedAt": "2026-11-12",
+      "lastmod": "2026-11-08",
+      "count": 2
     },
     "https://xiaominart.com/oracle/": {
       "pushedAt": "2026-11-11",
       "lastmod": "2026-11-08",
       "count": 2
+    },
+    "https://xiaominart.com/gifts/bao-pu-shou-zheng/": {
+      "pushedAt": "2026-11-12",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/shou-zheng-chu-qi/": {
+      "pushedAt": "2026-11-12",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/shou-zheng/": {
+      "pushedAt": "2026-11-12",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/wan-shi-heng-tong/": {
+      "pushedAt": "2026-11-12",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/ban-cang/": {
+      "pushedAt": "2026-11-12",
+      "lastmod": "2026-11-08",
+      "count": 1
     }
   }
 }
