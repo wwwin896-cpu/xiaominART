@@ -152,6 +152,42 @@ jobs:
           TARGET: '/var/www/xiaominart/dist/'
           EXCLUDE: '/node_modules/'
 
+      # ── nginx 301 规则同步（2026-11-14）──
+      # 单一事实源是 public/_redirects（deploy/gen-nginx-redirects.mjs 从它生成
+      # deploy/redirects.conf）。redirects 属于服务器 nginx 层，rsync dist 覆盖不到 ——
+      # 此前只靠手动跑 deploy.sh，_redirects 改了线上 nginx 不跟（/blog 三条 301
+      # 就是这么残留的，把新页面全压成了 /about/）。每次部署都同步一次：
+      # 文件小、nginx -t 守门、reload 不断连接。规则有变时 scp 内容会变，
+      # 无变化时远端安装同一内容，reload 是幂等的。
+      - name: 'Sync nginx redirects (source of truth: public/_redirects)'
+        env:
+          SSH_KEY: ${{ secrets.ALIYUN_SSH_KEY }}
+          HOST: ${{ secrets.ALIYUN_SSH_HOST }}
+          USER: ${{ secrets.ALIYUN_SSH_USER }}
+          PORT: ${{ secrets.ALIYUN_SSH_PORT }}
+        run: |
+          install -m 600 /dev/null /tmp/deploy_key
+          printf '%s\n' "$SSH_KEY" | sed 's/\r$//' > /tmp/deploy_key
+          # 与 Preflight 相同的规范化：非 OPENSSH 格式（如 base64 单行）先解码
+          if ! grep -q "BEGIN OPENSSH PRIVATE KEY" /tmp/deploy_key; then
+            if base64 -d <(tr -d ' \n\r' < /tmp/deploy_key) > /tmp/deploy_key.real 2>/dev/null; then
+              mv /tmp/deploy_key.real /tmp/deploy_key && chmod 600 /tmp/deploy_key
+            fi
+          fi
+          ssh-keygen -y -f /tmp/deploy_key > /dev/null   # 格式不对在这里就报错，别把锅甩给服务器
+          node deploy/gen-nginx-redirects.mjs
+          SSH_OPTS="ssh -i /tmp/deploy_key -p $PORT -o StrictHostKeyChecking=no -o ConnectTimeout=15"
+          scp -q -i /tmp/deploy_key -P "$PORT" -o StrictHostKeyChecking=no \
+            deploy/redirects.conf "$USER@$HOST:/tmp/xiaominart-redirects.conf"
+          ssh -i /tmp/deploy_key -p "$PORT" -o StrictHostKeyChecking=no -o BatchMode=yes \
+            "$USER@$HOST" 'set -e
+              mkdir -p /etc/nginx/snippets
+              cp /tmp/xiaominart-redirects.conf /etc/nginx/snippets/xiaominart-redirects.conf
+              rm -f /tmp/xiaominart-redirects.conf
+              nginx -t
+              systemctl reload nginx
+              echo "✓ nginx 301 规则已同步并重载"'
+
       # ── API 侧变更守卫（2026-11-01）：只有 functions/ 或 server/ 有改动才上传/重启。
       # 线上 API 服务在这类无变更部署中保持当前版本运行，功能无损。
       - name: Detect API-side changes
