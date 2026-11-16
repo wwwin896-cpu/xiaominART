@@ -74,13 +74,60 @@ if ($host = 'www.${CANONICAL_HOST}') {
 }
 `;
 
-const out = `# ⚠️ 自动生成，勿手改 —— 源文件 public/_redirects
-# 重新生成：node deploy/gen-nginx-redirects.mjs
-# 共 ${rules.length} 条 301
+// ─────────────────────────────────────────────────────────────
+// 旧作品路径归一（2026-11-14 新增，GSC「找不到网页 (404)」主因）
+//
+// 历史：两代旧 sitemap 曾提交过 /artworks/{slug}/（后台版）与
+// /gift-guide/{slug}/（Astro 2026-09-28 前），详情页改版后这些路径
+// 全部 404，被 Google 记作大量「找不到网页」。
+//
+// 来源：dist/sitemap.xml 里所有 /gifts/ 开头的详情页（当前 69 条）——
+// 产品列表以 sitemap 为单一事实源，产品增删后重跑生成器即同步。
+// 每个作品输出两条精确 301；slug 不匹配的旧地址落到通配兜底
+// （301 → /gifts/{slug}，若确不存在则 404，不会误伤真实页面）。
+//
+// 注意：/gift-guide/ 与 /artworks/ 的**索引页**不受影响（正则要求
+// /(.+)/ 至少一段 slug）；这两组规则只存在于 nginx 层（redirects.conf），
+// 不写进 public/_redirects —— Cloudflare Pages 的 :splat 通配会连
+// /gift-guide/ 索引页一起重定向，且 CF 通道已停用，无需同步。
+// ─────────────────────────────────────────────────────────────
+
+const legacy = [];
+try {
+  const sitemap = readFileSync('dist/sitemap.xml', 'utf8');
+  const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+  const slugToPath = new Map();
+  for (const loc of locs) {
+    const m = loc.match(/\/gifts\/(ready-made\/)?([a-z0-9-]+)\/$/);
+    if (!m) continue;
+    const slug = m[2];
+    if (slug === 'ready-made') continue;
+    // ready-made 优先写入；同名 slug 冲突时保留先到的（当前无冲突）
+    if (!slugToPath.has(slug)) {
+      slugToPath.set(slug, m[1] ? `/gifts/ready-made/${slug}/` : `/gifts/${slug}/`);
+    }
+  }
+  for (const [slug, path] of slugToPath) {
+    const p = escapeRe(slug);
+    legacy.push(`rewrite ^/artworks/${p}/?$ ${path} permanent;  # /artworks/${slug}`);
+    legacy.push(`rewrite ^/gift-guide/${p}/?$ ${path} permanent;  # /gift-guide/${slug}`);
+  }
+  legacy.push('rewrite ^/artworks/(.+)$ /gifts/$1 permanent;   # 兜底：未匹配 slug 的旧作品地址');
+  legacy.push('rewrite ^/gift-guide/(.+)$ /gifts/$1 permanent;  # 兜底：未匹配 slug 的旧选礼地址');
+} catch {
+  console.warn('⚠️ 未找到 dist/sitemap.xml（先 npm run build 再跑本脚本），跳过旧作品路径归一');
+}
+
+const out = `# ⚠️ 自动生成，勿手改 —— 源文件 public/_redirects + dist/sitemap.xml
+# 重新生成：npm run build && node deploy/gen-nginx-redirects.mjs
+# 共 ${rules.length} 条 301（_redirects） + ${legacy.length - 2} 条旧作品路径
 
 ${hostBlock}
 ${body}
+
+# ── 旧作品路径 301（源自 dist/sitemap.xml，产品增删后随构建自动更新）──
+${legacy.join('\n')}
 `;
 
 writeFileSync('deploy/redirects.conf', out, 'utf8');
-console.log(`已生成 deploy/redirects.conf：${rules.length} 条 301 + 主机归一（www → ${CANONICAL_HOST}）`);
+console.log(`已生成 deploy/redirects.conf：${rules.length} 条 301 + ${legacy.length - 2} 条旧作品路径 + 主机归一（www → ${CANONICAL_HOST}）`);
