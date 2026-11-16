@@ -1,7 +1,7 @@
 {
   "version": 1,
   "site": "https://xiaominart.com",
-  "updatedAt": "2026-11-12T02:13:31.055Z",
+  "updatedAt": "2026-11-16T03:53:10.134Z",
   "urls": {
     "https://xiaominart.com/": {
       "pushedAt": "2026-11-08",
@@ -245,6 +245,56 @@
     },
     "https://xiaominart.com/gifts/ban-cang/": {
       "pushedAt": "2026-11-12",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/he-shou/": {
+      "pushedAt": "2026-11-16",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/na-mo-a-mi-tuo-fo/": {
+      "pushedAt": "2026-11-16",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/hu-zhong-ri-yue-chang/": {
+      "pushedAt": "2026-11-16",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/jian-ding/": {
+      "pushedAt": "2026-11-16",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/jin-lan/": {
+      "pushedAt": "2026-11-16",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/jin-lan-zhong/": {
+      "pushedAt": "2026-11-16",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/tui-chuang-jiang-wu-ji/": {
+      "pushedAt": "2026-11-16",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/dao-chang-zong-ma-xing/": {
+      "pushedAt": "2026-11-16",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/wo-shi-guan-yun/": {
+      "pushedAt": "2026-11-16",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/zhuo-jiu-yu-wei/": {
+      "pushedAt": "2026-11-16",
       "lastmod": "2026-11-08",
       "count": 1
     }
