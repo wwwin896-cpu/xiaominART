@@ -1,7 +1,7 @@
 {
   "version": 1,
   "site": "https://xiaominart.com",
-  "updatedAt": "2026-11-16T03:53:10.134Z",
+  "updatedAt": "2026-11-24T08:47:01.629Z",
   "urls": {
     "https://xiaominart.com/": {
       "pushedAt": "2026-11-08",
@@ -19,9 +19,9 @@
       "count": 9
     },
     "https://xiaominart.com/gift-guide/": {
-      "pushedAt": "2026-10-28",
-      "lastmod": "2026-10-29",
-      "count": 3
+      "pushedAt": "2026-11-24",
+      "lastmod": "2026-11-24",
+      "count": 4
     },
     "https://xiaominart.com/scenes/": {
       "pushedAt": "2026-10-18",
@@ -295,6 +295,51 @@
     },
     "https://xiaominart.com/gifts/zhuo-jiu-yu-wei/": {
       "pushedAt": "2026-11-16",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/calligraphy-gifts/": {
+      "pushedAt": "2026-11-24",
+      "lastmod": "2026-11-24",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/yi-ru-luan-feng/": {
+      "pushedAt": "2026-11-24",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/pin-ming-ting-qin/": {
+      "pushedAt": "2026-11-24",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/he-qi-zai-tang/": {
+      "pushedAt": "2026-11-24",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/da-qiao-ruo-zhuo/": {
+      "pushedAt": "2026-11-24",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/bao-pu-han-zhang/": {
+      "pushedAt": "2026-11-24",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/bai-hua-qi-fang/": {
+      "pushedAt": "2026-11-24",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/nian-hua-yi-xiao/": {
+      "pushedAt": "2026-11-24",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/nan-de-hu-tu/": {
+      "pushedAt": "2026-11-24",
       "lastmod": "2026-11-08",
       "count": 1
     }
