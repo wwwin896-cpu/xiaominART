@@ -1,0 +1,168 @@
+---
+/**
+ * 书法礼品落地页（2026-11-14 新建）
+ *
+ * 目标词：「书法礼品」。此前该词只有首页 title 一处支撑，没有可排名的落地页；
+ * 本页承接「想送一件手写的书法礼物、还没想好送谁送什么」的搜索意图。
+ *
+ * 关键词纪律（quality-seo §5）：「书法礼品」全页合计 ≤ 3 次
+ * （title 1 + description 1 + H1 1），正文一律用变体（书法礼物 / 手写的字 /
+ * 这份礼物），不做堆砌。
+ *
+ * 结构：hero → 按对象筛作品（真实商品卡，数据来自 getGiftCatalog）→
+ * 按场合走路线（内链 occasions / recipients）→ 两条路径 → FAQ（PageFaq
+ * 组件：可见问答与 FAQPage JSON-LD 同源）。
+ */
+import Layout from '../../layouts/Layout.astro';
+import GiftCard from '../../components/GiftCard.astro';
+import PageFaq from '../../components/PageFaq.astro';
+import { getGiftCatalog } from '../../lib/keystatic';
+
+const catalog = getGiftCatalog();
+
+// 精选六件：覆盖长辈 / 谢师 / 客户 / 婚庆 / 乔迁 / 静心六个真实送礼方向。
+// slug 缺失时自动跳过，不占位。
+const FEATURED_SLUGS = [
+  'fu-shou-kang-ning', // 福寿康宁 · 长辈
+  'ink-breath-teacher', // 墨息 · 谢师
+  'jin-lan', // 金兰 · 挚友与客户
+  'qin-se-he-ming-gift', // 琴瑟和鸣 · 婚庆
+  'tui-chuang-jiang-wu-ji', // 推窗 · 乔迁
+  'xin-jing-ze-tai', // 心经 · 静心
+];
+const featured = FEATURED_SLUGS.map(
+  (slug) => catalog.products.find((p) => p.slug === slug)
+).filter((p): p is NonNullable<typeof p> => Boolean(p));
+
+const faqItems = [
+  {
+    q: '价格大概在什么区间？',
+    a: '现货 ¥199 起，一物一件，含实木装裱与藏品证书；定制按篇幅、字体与装裱单独报价，提交需求后会先给明确的价格区间再动笔。',
+  },
+  {
+    q: '赶时间来得及吗？',
+    a: '现货作品 48 小时内发出，适合临近日期的礼物；定制需要书写与装裱周期，具体天数在提交需求时确认，重要日期请提前一周以上开始沟通。',
+  },
+  {
+    q: '想写指定的话，可以吗？',
+    a: '可以。定制从你要的那句话开始，写给谁、为什么写，都会落在落款与释读里。还没想好写什么，可以只说对象与场合，我们先给两三个题字方向。',
+  },
+  {
+    q: '包装与贺卡怎么处理？',
+    a: '作品配黑胡桃实木装裱与藏品证书，礼盒与手写贺卡随附，收礼人拿到即可挂起。企业批量赠送的包装规格在确认件数时一并定。',
+  },
+  {
+    q: '公司要送一批，能做吗？',
+    a: '能。商务答谢、年会伴手礼与校庆纪念都可以批量定制，不设固定起订量，对公结算、可开增值税专用发票，见商务礼赠页面的四步流程。',
+  },
+];
+---
+
+<Layout
+  title="书法礼品｜手写的字，送得出手的礼物｜小民艺术"
+  description="书法礼品，把一句要紧的话写成能挂起来的字。亲笔手写、黑胡桃实木装裱、附藏品证书，现货 ¥199 起 48 小时内发出，定制按对象与场合给题字建议。送长辈、谢师、乔迁、婚庆与商务答谢，都能找到合适的写法。"
+>
+  <main>
+    <section class="container cg-hero">
+      <span class="eyebrow">Calligraphy Gifts / 选礼专题</span>
+      <h1 class="serif">书法礼品：把要紧的话，写成送得出手的字</h1>
+      <p class="cg-lead">
+        先想收字的人，再想写什么字。这里的手写书法礼物都配黑胡桃实木装裱与藏品证书，
+        现货 ¥199 起、48 小时内发出；定制从你的一句话开始，写给谁、为什么写，
+        都留在落款里。
+      </p>
+      <div class="cg-cta">
+        <a class="btn btn-primary" href="/gifts/">先看现货</a>
+        <a class="btn btn-secondary" href="/gift-guide/">从对象和场合开始选</a>
+      </div>
+    </section>
+
+    {
+      featured.length > 0 && (
+        <section class="container section cg-grid">
+          <span class="eyebrow">Featured / 精选方向</span>
+          <h2 class="serif">按收字的人，先筛一遍</h2>
+          <div class="gift-grid">
+            {featured.map((product) => (
+              <GiftCard product={product} />
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    <section class="container section cg-routes">
+      <span class="eyebrow">Occasions / 常见时刻</span>
+      <h2 class="serif">四个最常见的送礼时刻</h2>
+      <div class="cg-route-grid">
+        <a href="/occasions/housewarming/"><b>乔迁新居</b><p>安、雅一类的词最合适，尺寸随玄关与客厅定。</p></a>
+        <a href="/occasions/teacher-thanks/"><b>谢师</b><p>一份有分量的谢礼，写在纸上比写在贺卡里留得住。</p></a>
+        <a href="/occasions/anniversary/"><b>婚庆纪念</b><p>琴瑟和鸣一类的词有出处，双字与四字的排布各有讲究。</p></a>
+        <a href="/occasions/opening/"><b>开业</b><p>四字为上限，避开行业的忌字，牌匾与挂轴是两种规格。</p></a>
+      </div>
+      <p class="cg-more">
+        按人挑：送<a href="/recipients/parents/">长辈</a>、<a href="/recipients/teachers/">老师</a>、
+        <a href="/recipients/clients/">客户</a>、<a href="/recipients/friends/">朋友</a>，
+        各有各的写法；挂的位置看<a href="/scenes/">书法挂在哪</a>。
+      </p>
+    </section>
+
+    <section class="container section cg-paths">
+      <span class="eyebrow">Two paths / 两条路径</span>
+      <h2 class="serif">现货马上有，定制慢慢写</h2>
+      <div class="cg-path-grid">
+        <article>
+          <b>现货</b>
+          <h3 class="serif">48 小时内发出</h3>
+          <p>已经写好、装裱完成，一物一件，¥199 起。时间紧或者还没想好写什么，从这里开始看。</p>
+          <a class="btn btn-secondary" href="/gifts/ready-made/">看写好的作品</a>
+        </article>
+        <article>
+          <b>定制</b>
+          <h3 class="serif">从一句话开始</h3>
+          <p>单幅起做，按对象与场合给题字建议，含装裱与包装。这封信要对某个人说一件具体的事，选这里。</p>
+          <a class="btn btn-secondary" href="/custom/personal/">了解个人定制</a>
+        </article>
+      </div>
+      <p class="cg-more">公司批量赠送走<a href="/business-gifts/">商务礼赠</a>，不设固定起订量，对公结算。</p>
+    </section>
+
+    <PageFaq items={faqItems} heading="先把几件事说清楚" />
+  </main>
+</Layout>
+
+<style>
+  .cg-hero { padding: 96px 0 64px; }
+  .cg-hero h1 { max-width: 900px; font-size: clamp(42px, 6vw, 72px); font-weight: 500; line-height: 1.2; margin: 20px 0; }
+  .cg-lead { max-width: 680px; color: var(--ink-soft); font-size: 17px; line-height: 1.9; }
+  .cg-cta { display: flex; gap: 14px; margin-top: 24px; flex-wrap: wrap; }
+  .cg-grid h2, .cg-routes h2, .cg-paths h2 { font-size: 34px; font-weight: 500; margin: 12px 0 24px; }
+  .cg-grid { border-top: 1px solid var(--line); }
+  .cg-routes { border-top: 1px solid var(--line); }
+  .cg-route-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .cg-route-grid a { padding: 20px 20px 24px 0; text-decoration: none; }
+  .cg-route-grid a + a { border-left: 1px solid var(--line); padding-left: 20px; }
+  .cg-route-grid a:hover b { color: var(--cinnabar); }
+  .cg-route-grid b { font-size: 18px; font-weight: 500; color: var(--ink); }
+  .cg-route-grid p { color: var(--ink-soft); font-size: 13px; line-height: 1.8; margin: 10px 0 0; }
+  .cg-paths { border-top: 1px solid var(--line); }
+  .cg-path-grid { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--line); }
+  .cg-path-grid article { padding: 24px 32px 28px 0; }
+  .cg-path-grid article + article { border-left: 1px solid var(--line); padding-left: 32px; }
+  .cg-path-grid b { color: var(--cinnabar); font: 13px var(--font-mono); }
+  .cg-path-grid h3 { font-size: 26px; font-weight: 500; margin: 14px 0 8px; }
+  .cg-path-grid p { color: var(--ink-soft); font-size: 14px; line-height: 1.85; margin: 0 0 16px; max-width: 40em; }
+  .cg-more { color: var(--ink-soft); font-size: 14px; margin-top: 18px; }
+  .cg-more a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+  @media (max-width: 767px) {
+    .cg-hero { padding: 56px 0 44px; }
+    .cg-hero h1 { font-size: 40px; }
+    .cg-lead { font-size: 15px; }
+    .cg-route-grid { grid-template-columns: 1fr; }
+    .cg-route-grid a, .cg-route-grid a + a { padding: 16px 0; border-left: 0; border-bottom: 1px solid var(--line); }
+    .cg-route-grid a:last-child { border-bottom: 0; }
+    .cg-path-grid { grid-template-columns: 1fr; }
+    .cg-path-grid article + article { border-left: 0; border-top: 1px solid var(--line); padding-left: 0; }
+    .cg-grid h2, .cg-routes h2, .cg-paths h2 { font-size: 27px; }
+  }
+</style>

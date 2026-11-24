@@ -110,6 +110,10 @@ const decisionData = { products, recipients: recipientOptions, occasions: occasi
       <span class="eyebrow">Recipients / 按对象</span>
       <ul class="entry-list">{recipientOptions.map((item) => <li><a href={`/recipients/${item.slug}/`}>{item.title}</a></li>)}</ul>
     </div>
+    <div class="entry-group">
+      <span class="eyebrow">Topic / 专题</span>
+      <ul class="entry-list"><li><a href="/calligraphy-gifts/">书法礼品：把要紧的话写成字</a></li><li><a href="/scenes/">书法挂在哪：书房、客厅、茶室与玄关</a></li></ul>
+    </div>
   </section>
 
   <section class="container section gift-faq"><span class="eyebrow">Gift FAQ / 送礼常见问题</span><h2 class="serif">包装、时效和心意，提前说清楚。</h2><div class="faq-grid">{faqItems.map((item) => <details><summary>{item.q}</summary><p>{item.a}</p></details>)}</div></section>

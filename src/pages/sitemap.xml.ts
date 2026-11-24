@@ -58,6 +58,8 @@ const staticRoutes: { path: string; files: string[] }[] = [
   { path: 'gifts/', files: [P('gifts/index.astro'), 'src/lib/keystatic.ts'] },
   { path: 'gifts/ready-made/', files: [P('gifts/ready-made/index.astro'), ...CONTENT] },
   { path: 'gift-guide/', files: [P('gift-guide/index.astro'), 'src/lib/keystatic.ts'] },
+  // 书法礼品落地页（2026-11-14）：承接「书法礼品」确切搜索词，含 FAQPage 结构化数据
+  { path: 'calligraphy-gifts/', files: [P('calligraphy-gifts/index.astro'), 'src/lib/keystatic.ts', ...CONTENT] },
   { path: 'scenes/', files: [P('scenes/index.astro')] },
   { path: 'artists/', files: [P('artists/index.astro'), ...CONTENT] },
   { path: 'business-gifts/', files: [P('business-gifts/index.astro')] },
