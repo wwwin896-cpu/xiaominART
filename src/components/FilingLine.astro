@@ -29,7 +29,11 @@ const show = Boolean(icp || police);
           href={`https://beian.mps.gov.cn/#/query/webSearch?code=${policeCode}`}
           target="_blank"
           rel="noopener noreferrer nofollow"
-        >{police}</a>
+        >
+          {/* 公安备案规范要求徽标与备案号一并展示（20×20 官方图，显示 13px 与文字齐平） */}
+          <img src="/ghs.png" alt="公安联网备案徽标" width="13" height="13" loading="lazy" style="vertical-align:-2px;margin-right:4px;" />
+          {police}
+        </a>
       ) : (
         <span>{police}</span>
       )
