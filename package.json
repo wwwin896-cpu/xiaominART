@@ -21,7 +21,8 @@
     "deploy:aliyun": "bash deploy/deploy.sh",
     "nginx:redirects": "node deploy/gen-nginx-redirects.mjs",
     "check:llms": "node scripts/check-llms.mjs",
-    "verify:analytics": "node scripts/verify-analytics.mjs"
+    "verify:analytics": "node scripts/verify-analytics.mjs",
+    "push:indexnow": "node scripts/indexnow-push.mjs"
   },
   "dependencies": {
     "@astrojs/check": "latest",

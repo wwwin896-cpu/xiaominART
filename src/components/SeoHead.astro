@@ -52,6 +52,10 @@ const { title, description, url, image, noindex, breadcrumbs, ogType = 'website'
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={new URL(image, Astro.site ?? Astro.url).href} />
 <meta name="theme-color" content="#f4efe5" />
+{/* AI 内容地图声明（2026-11-14）——原先只在 robots.txt 写非标准的
+    「LLMs-Txt:」指令，Lighthouse 判为无效语法（SEO 分被白扣）。
+    改为规范做法：head 里 <link rel="llms"> + robots.txt 注释说明。 */}
+<link rel="llms" href="/llms.txt" />
 {/* 百度站长平台站点所有权验证（2026-10-09）——
     放在 Layout 里而非仅首页：站长平台支持验证任意页面，全站携带更稳妥，
     且不影响 SEO（该 meta 对搜索引擎无索引语义）。

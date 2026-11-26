@@ -80,4 +80,8 @@ Allow: /
 # --- AI 内容地图 ---
 # llms.txt 是给 AI 的「内容地图」，指明哪些页面最值得引用。
 # 规范说明：https://llmstxt.org/
-LLMs-Txt: https://xiaominart.com/llms.txt
+# 发现方式：sitellm 约定直接取站点根 /llms.txt，另在每页 <head> 用
+# <link rel="llms"> 声明（见 SeoHead.astro）。此处只作注释说明 ——
+# robots.txt 的「LLMs-Txt:」是非标准指令，会被 Lighthouse 判为无效语法，
+# 白白扣掉 SEO 分，且没有任何爬虫依赖它。
+# llms.txt → https://xiaominart.com/llms.txt
