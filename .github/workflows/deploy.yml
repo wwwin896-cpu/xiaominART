@@ -178,14 +178,16 @@ jobs:
           ssh-keygen -y -f /tmp/deploy_key > /dev/null   # 格式不对在这里就报错，别把锅甩给服务器
           node deploy/gen-nginx-redirects.mjs
           SSH_OPTS="ssh -i /tmp/deploy_key -p $PORT -o StrictHostKeyChecking=no -o ConnectTimeout=15"
+          # 注意：scp 多源会保留源文件名，目标名必须逐个写明（deploy.sh 同款约定）
           scp -q -i /tmp/deploy_key -P "$PORT" -o StrictHostKeyChecking=no \
-            deploy/redirects.conf deploy/security-headers.conf "$USER@$HOST:/tmp/"
+            deploy/redirects.conf "$USER@$HOST:/tmp/xiaominart-redirects.conf"
+          scp -q -i /tmp/deploy_key -P "$PORT" -o StrictHostKeyChecking=no \
+            deploy/security-headers.conf "$USER@$HOST:/tmp/xiaominart-security.conf"
           ssh -i /tmp/deploy_key -p "$PORT" -o StrictHostKeyChecking=no -o BatchMode=yes \
             "$USER@$HOST" 'set -e
               mkdir -p /etc/nginx/snippets
               cp /tmp/xiaominart-redirects.conf /etc/nginx/snippets/xiaominart-redirects.conf
-              cp /tmp/xiaominart-security-headers.conf /etc/nginx/snippets/xiaominart-security.conf
-              rm -f /tmp/xiaominart-redirects.conf /tmp/xiaominart-security-headers.conf
+              rm -f /tmp/xiaominart-redirects.conf /tmp/xiaominart-security.conf
               nginx -t
               systemctl reload nginx
               echo "✓ nginx 301 规则 + 安全头 snippet 已同步并重载"'
