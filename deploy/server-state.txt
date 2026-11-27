@@ -1,0 +1,28 @@
+✓ nginx 301 规则 + 安全头 snippet 已同步并重载
+checkedAt: 2026-11-27T01:21:14Z
+── 站点配置 include/add_header 布局（地面真值，随进度文件提交）:
+19:    listen 80;
+20:    listen [::]:80;
+21:    server_name xiaominart.com www.xiaominart.com;
+36:    listen 443 ssl http2;
+37:    listen [::]:443 ssl http2;
+38:    server_name xiaominart.com www.xiaominart.com;
+88:        add_header Cache-Control "no-store" always;
+89:        add_header X-Robots-Tag  "noindex, nofollow" always;
+90:        include snippets/xiaominart-security.conf;
+98:    include snippets/xiaominart-redirects.conf;
+103:    # ⚠️ nginx 的 add_header 有"覆盖"语义：location 里只要出现一条
+104:    #    add_header，server 级的所有 add_header 全部失效。所以每个
+110:        include snippets/xiaominart-security.conf;
+111:        add_header Cache-Control "public, max-age=31536000, immutable" always;
+117:        include snippets/xiaominart-security.conf;
+118:        add_header Cache-Control "public, max-age=3600, stale-while-revalidate=86400" always;
+124:        include snippets/xiaominart-security.conf;
+125:        add_header Cache-Control "public, max-age=1209600, stale-while-revalidate=604800" always;
+131:        include snippets/xiaominart-security.conf;
+132:        add_header Cache-Control "public, max-age=3600, must-revalidate" always;
+138:        include snippets/xiaominart-security.conf;
+139:        add_header Cache-Control "public, max-age=600, must-revalidate" always;
+146:        include snippets/xiaominart-security.conf;
+152:        add_header Cache-Control "public, max-age=0, must-revalidate" always;
+158:        include snippets/xiaominart-security.conf;
