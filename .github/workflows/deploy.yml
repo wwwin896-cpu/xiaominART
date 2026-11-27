@@ -30,6 +30,7 @@ on:
     paths-ignore:
       - '.baidu-pushed.json'
       - '.indexnow-pushed.json'
+      - 'deploy/server-state.txt'
   workflow_dispatch: {}
 
 permissions:
@@ -190,7 +191,13 @@ jobs:
               rm -f /tmp/xiaominart-redirects.conf /tmp/xiaominart-security.conf
               nginx -t
               systemctl reload nginx
-              echo "✓ nginx 301 规则 + 安全头 snippet 已同步并重载"'
+              echo "✓ nginx 301 规则 + 安全头 snippet 已同步并重载"
+              # 把线上真实配置回传（随进度文件提交，供仓库侧核对 include 与 add_header 布局）
+              echo "checkedAt: $(date -u +%FT%TZ)"
+              echo "── 站点配置 include/add_header 布局（地面真值，随进度文件提交）:"
+              grep -nE "include snippets|add_header|listen |server_name" /etc/nginx/sites-enabled/xiaominart | head -50
+          ' > deploy/server-state.txt
+          tail -8 deploy/server-state.txt
 
       # ── 蜘蛛到访诊断（2026-11-14）─────────────────────────
       # 回答业主最关心的问题：「百度蜘蛛到底来过没有？」
@@ -350,13 +357,13 @@ jobs:
         if: ${{ always() && github.ref == 'refs/heads/main' }}
         run: |
           set -euo pipefail
-          if [ -z "$(git status --porcelain -- .baidu-pushed.json .indexnow-pushed.json)" ]; then
+          if [ -z "$(git status --porcelain -- .baidu-pushed.json .indexnow-pushed.json deploy/server-state.txt)" ]; then
             echo "进度无变化，无需提交。"
             exit 0
           fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .baidu-pushed.json .indexnow-pushed.json
+          git add .baidu-pushed.json .indexnow-pushed.json deploy/server-state.txt
           git commit -m "chore(push): 更新百度/IndexNow 主动推送进度 [skip ci]"
           for i in 1 2 3; do
             git fetch origin main
