@@ -1,5 +1,5 @@
 ✓ nginx 301 规则 + 安全头 snippet 已同步并重载
-checkedAt: 2026-11-27T01:21:14Z
+checkedAt: 2026-11-27T01:27:35Z
 ── 站点配置 include/add_header 布局（地面真值，随进度文件提交）:
 19:    listen 80;
 20:    listen [::]:80;
@@ -26,3 +26,11 @@ checkedAt: 2026-11-27T01:21:14Z
 146:        include snippets/xiaominart-security.conf;
 152:        add_header Cache-Control "public, max-age=0, must-revalidate" always;
 158:        include snippets/xiaominart-security.conf;
+── snippet 文件实际内容（前 12 行有效指令）:
+add_header X-Content-Type-Options "nosniff" always;
+add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+add_header X-Frame-Options "DENY" always;
+add_header Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), interest-cohort=()" always;
+add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://hm.baidu.com https://trtc.io https://*.trtc.io; style-src 'self' 'unsafe-inline' https://trtc.io https://*.trtc.io; img-src 'self' data: https://hm.baidu.com https://*.baidu.com https://trtc.io https://*.trtc.io https://*.qcloud.com https://console.trtc.io; font-src 'self' data: https://fonts.gstatic.com; media-src 'self' blob: https://trtc.io https://*.trtc.io https://*.qcloud.com; connect-src 'self' https://hm.baidu.com https://*.baidu.com https://trtc.io https://*.trtc.io https://*.qcloud.com https://*.myqcloud.com https://*.my-imcloud.com https://*.tencent.cn https://*.tim.qq.com https://console.trtc.io wss:; frame-src 'self' https://trtc.io https://*.trtc.io https://*.qcloud.com; worker-src 'self' blob:; form-action 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'" always;
+── 源站直测（绕过 CDN）:
+content-security-policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://hm.baidu.com https://trtc.io https://*.trtc.io; style-src 'self' 'unsafe-inline' https://trtc.io https://*.trtc.io; img-src 'self' data: https://hm.baidu.com https://*.baidu.com https://trtc.io https://*.trtc.io https://*.qcloud.com https://console.trtc.io; font-src 'self' data: https://fonts.gstatic.com; media-src 'self' blob: https://trtc.io https://*.trtc.io https://*.qcloud.com; connect-src 'self' https://hm.baidu.com https://*.baidu.com https://trtc.io https://*.trtc.io https://*.qcloud.com https://*.myqcloud.com https://*.my-imcloud.com https://*.tencent.cn https://*.tim.qq.com https://console.trtc.io wss:; frame-src 'self' https://trtc.io https://*.trtc.io https://*.qcloud.com; worker-src 'self' blob:; form-action 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'
