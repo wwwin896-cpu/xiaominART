@@ -1,5 +1,5 @@
 ✓ nginx 301 规则 + 安全头 snippet 已同步并重载
-checkedAt: 2026-11-27T01:54:30Z
+checkedAt: 2026-11-27T02:09:54Z
 ── 站点配置 include/add_header 布局（地面真值，随进度文件提交）:
 19:    listen 80;
 20:    listen [::]:80;
