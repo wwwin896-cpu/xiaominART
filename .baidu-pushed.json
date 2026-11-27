@@ -1,7 +1,7 @@
 {
   "version": 1,
   "site": "https://xiaominart.com",
-  "updatedAt": "2026-11-26T02:57:33.566Z",
+  "updatedAt": "2026-11-27T00:27:08.482Z",
   "urls": {
     "https://xiaominart.com/": {
       "pushedAt": "2026-11-08",
@@ -129,9 +129,9 @@
       "count": 2
     },
     "https://xiaominart.com/custom-commission/": {
-      "pushedAt": "2026-11-01",
-      "lastmod": "2026-10-29",
-      "count": 1
+      "pushedAt": "2026-11-27",
+      "lastmod": "2026-11-26",
+      "count": 2
     },
     "https://xiaominart.com/contact/": {
       "pushedAt": "2026-11-06",
@@ -390,6 +390,51 @@
     },
     "https://xiaominart.com/gifts/xiong-huai-xu-ruo-shui/": {
       "pushedAt": "2026-11-26",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/xuan-hu-ji-shi/": {
+      "pushedAt": "2026-11-27",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/yang-tian-di-zheng-qi/": {
+      "pushedAt": "2026-11-27",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/yu-you-yuan-ren-lun-dao/": {
+      "pushedAt": "2026-11-27",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/yue-zhao-song-jian/": {
+      "pushedAt": "2026-11-27",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/zong-heng-bi-mo/": {
+      "pushedAt": "2026-11-27",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/bo-re/": {
+      "pushedAt": "2026-11-27",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/fu-shou-kang-ning/": {
+      "pushedAt": "2026-11-27",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/da-dao-zhi-jian/": {
+      "pushedAt": "2026-11-27",
+      "lastmod": "2026-11-08",
+      "count": 1
+    },
+    "https://xiaominart.com/gifts/cha-li-qian-kun-da/": {
+      "pushedAt": "2026-11-27",
       "lastmod": "2026-11-08",
       "count": 1
     }
