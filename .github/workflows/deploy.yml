@@ -179,15 +179,16 @@ jobs:
           node deploy/gen-nginx-redirects.mjs
           SSH_OPTS="ssh -i /tmp/deploy_key -p $PORT -o StrictHostKeyChecking=no -o ConnectTimeout=15"
           scp -q -i /tmp/deploy_key -P "$PORT" -o StrictHostKeyChecking=no \
-            deploy/redirects.conf "$USER@$HOST:/tmp/xiaominart-redirects.conf"
+            deploy/redirects.conf deploy/security-headers.conf "$USER@$HOST:/tmp/"
           ssh -i /tmp/deploy_key -p "$PORT" -o StrictHostKeyChecking=no -o BatchMode=yes \
             "$USER@$HOST" 'set -e
               mkdir -p /etc/nginx/snippets
               cp /tmp/xiaominart-redirects.conf /etc/nginx/snippets/xiaominart-redirects.conf
-              rm -f /tmp/xiaominart-redirects.conf
+              cp /tmp/xiaominart-security-headers.conf /etc/nginx/snippets/xiaominart-security.conf
+              rm -f /tmp/xiaominart-redirects.conf /tmp/xiaominart-security-headers.conf
               nginx -t
               systemctl reload nginx
-              echo "✓ nginx 301 规则已同步并重载"'
+              echo "✓ nginx 301 规则 + 安全头 snippet 已同步并重载"'
 
       # ── 蜘蛛到访诊断（2026-11-14）─────────────────────────
       # 回答业主最关心的问题：「百度蜘蛛到底来过没有？」

@@ -121,14 +121,10 @@ try {
 const out = `# ⚠️ 自动生成，勿手改 —— 源文件 public/_redirects + dist/sitemap.xml
 # 重新生成：npm run build && node deploy/gen-nginx-redirects.mjs
 # 共 ${rules.length} 条 301（_redirects） + ${legacy.length - 2} 条旧作品路径
+# 注：HSTS 等安全头不在此文件 —— server 级 add_header 会被 location 级覆盖
+# （见 security-headers.conf 头注释），安全头统一走 snippets/xiaominart-security.conf
 
 ${hostBlock}
-# ── HSTS（claude-seo 审计 2026-11-14：全站仅缺这一项安全头）──
-# snippet 同时 include 在 :80 与 :443 两个 server 块；浏览器只在 https 上
-# 采纳 HSTS，:80 上多发一行无害。max-age 1 年 + includeSubDomains；
-# 不加 preload —— 收进 preload 清单是单向门，等权重稳定后再评估。
-add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
-
 ${body}
 
 # ── 旧作品路径 301（源自 dist/sitemap.xml，产品增删后随构建自动更新）──
