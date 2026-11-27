@@ -188,6 +188,7 @@ jobs:
             "$USER@$HOST" 'set -e
               mkdir -p /etc/nginx/snippets
               cp /tmp/xiaominart-redirects.conf /etc/nginx/snippets/xiaominart-redirects.conf
+              cp /tmp/xiaominart-security.conf /etc/nginx/snippets/xiaominart-security.conf
               rm -f /tmp/xiaominart-redirects.conf /tmp/xiaominart-security.conf
               nginx -t
               systemctl reload nginx
