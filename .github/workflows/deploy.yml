@@ -196,6 +196,10 @@ jobs:
               echo "checkedAt: $(date -u +%FT%TZ)"
               echo "── 站点配置 include/add_header 布局（地面真值，随进度文件提交）:"
               grep -nE "include snippets|add_header|listen |server_name" /etc/nginx/sites-enabled/xiaominart | head -50
+              echo "── snippet 文件实际内容（前 12 行有效指令）:"
+              grep -E "^add_header" /etc/nginx/snippets/xiaominart-security.conf
+              echo "── 源站直测（绕过 CDN）:"
+              curl -skI https://127.0.0.1/ -H "Host: xiaominart.com" | grep -iE "strict-transport|content-security" || echo "  （源站也未返回 HSTS）"
           ' > deploy/server-state.txt
           tail -8 deploy/server-state.txt
 
