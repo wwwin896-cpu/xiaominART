@@ -52,8 +52,9 @@ const { isCurrent } = Astro.props;
       {navItems.map((item) => <div class="nav-item"><a href={item.href} class:list={{ current: isCurrent(item.href) }} aria-current={isCurrent(item.href) ? 'page' : undefined}><span class="nav-zh"><span class="nav-zh-desk">{item.navLabel ?? item.zh}</span><span class="nav-zh-mob">{item.navLabel ?? item.zh}</span></span><small lang="en">{item.en}</small></a>{item.children?.length ? <div class="nav-dropdown">{item.children.map((child) => <a href={child.href}><span>{child.zh}</span><small lang="en">{child.en}</small></a>)}</div> : null}</div>)}
     </nav>
     {/* 桌面端没有移动底栏，心愿单需要一个常驻入口：
-        它不能塞进主导航（业主明确要求保持 4 个导航项不动），
-        因此做成导航右侧的图标按钮，与移动底栏的「心愿单」开的是同一个抽屉。 */}
+        它不能塞进主导航（业主此前定版导航项；2026-11-20 经业主要求
+        已扩为 5 项，新增「手记」），因此做成导航右侧的图标按钮，
+        与移动底栏的「心愿单」开的是同一个抽屉。 */}
     <div class="header-tools">
       <button class="wishlist-entry" type="button" data-wishlist-open aria-label="打开心愿单">
         <span aria-hidden="true">♡</span>

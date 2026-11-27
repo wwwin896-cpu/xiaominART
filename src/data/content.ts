@@ -83,6 +83,12 @@ export const navItems = [
       { href: '/artists/xiaoning/', zh: '非遗小宁', en: 'Xiao Ning' },
     ],
   },
+  // 2026-11-20 业主要求：导航加博客入口。此前定版「4 个导航项不动」，现在业主
+  // 主动要求加博客 → 手记成为第 5 项。后台文章未上线前 /blog/ 是空态页（noindex），
+  // 「站点设置 · 博客页面已上线」打开后下一次构建自动列出文章，入口无需再改。
+  {
+    href: '/blog/', zh: '手记', en: 'Notes',
+  },
 ];
 
 export const processSteps = [
